@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/lyt_container"
+    android:background="@color/head_color"
+    android:padding="20dp"
+    android:gravity="bottom">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="40dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/what_want_post"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                style="@style/boldtextTheme"/>
+            <ImageView
+                android:id="@+id/imv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_close"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/lyt_advice"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"
+                android:src="@drawable/icon_advice" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/advice"
+                    android:textColor="@color/head_color"
+                    style="@style/btn_buttonStyle"
+                    android:singleLine="true"
+                    android:layout_gravity="center" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/advice1"
+                    android:textColor="@color/head_color"
+                    android:textSize="16sp"
+                    style="@style/btn_buttonStyle"
+                    android:singleLine="true"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lyt_sale_post"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"
+                android:src="@drawable/icon_sales" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sales"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_serviceoffer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"
+                android:src="@drawable/icon_serviceoffer" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/service_offer"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_pool"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"
+                android:src="@drawable/icon_poll" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/poll_votting"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/post_background"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/white"
+                android:src="@drawable/icon_addpost" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Post"
+                android:textColor="@color/white"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

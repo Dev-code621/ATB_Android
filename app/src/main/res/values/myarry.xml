@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="email_list" >
+        <item name="0">"@gmail.com"</item>
+        <item name="1">"@outlook.com</item>
+        <item name="2">"@icloud.com"</item>
+        <item name="3">"@hotmail.com"</item>
+        <item name="4">"@yahoo.com"</item>
+    </string-array>
+
+
+    <string-array name="media_type" >
+        <item name="1">Text</item>
+        <item name="2">Image</item>
+        <item name="3">Video</item>
+    </string-array>
+
+    <string-array name="category_type" >
+        <item name="0">Beauty</item>
+        <item name="1">Ladieswear</item>
+        <item name="2">Menswear</item>
+        <item name="4">Hair</item>
+        <item name="5">kids</item>
+        <item name="6">Home</item>
+        <item name="7">Events</item>
+        <item name="8">Health &amp; Well-Being</item>
+        <item name="9">Sesonal</item>
+        <item name="10">General</item>
+    </string-array>
+    <string-array name="condition_type" >
+        <item name="0">New</item>
+        <item name="1">Newarly New</item>
+        <item name="2">Used</item>
+        <item name="3">Damaged</item>
+        <item name="3">Broke</item>
+    </string-array>
+</resources>

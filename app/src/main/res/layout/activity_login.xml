@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lyt_container"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.LoginActivity"
+    android:orientation="vertical"
+    android:background="@drawable/splash">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="150dp">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="75dp"
+            android:src="@drawable/logo_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp">
+
+        <EditText android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_address"
+            style="@style/edit_inputtext" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <EditText android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:hint="@string/password"
+                style="@style/edit_inputtext" />
+        </FrameLayout>
+        <TextView
+            android:id="@+id/txv_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/login"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            style="@style/btn_buttonStyle"
+            android:background="@drawable/login_button_rectangle_round"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/or_login"
+                android:gravity="center"
+                android:theme="@style/textTheme" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_rectangle_round"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/facebook_brands"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/txv_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/facebook"
+                android:gravity="center"
+                android:textColor="@color/white"
+                style="@style/btn_buttonStyle" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/txv_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next_user"
+                android:gravity="center"
+                android:textColor="@color/white"
+                style="@style/btn_buttonStyle"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:fontFamily="@font/segoe_ui_light"
+                android:background="@drawable/under_line"/>
+        </LinearLayout>
+    </LinearLayout>>
+</RelativeLayout>

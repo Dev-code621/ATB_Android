@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feed"
+            android:id="@+id/tv_title"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textColor="@color/txt_color"/>
+        <ImageView
+            android:src="@drawable/close"
+            android:layout_width="40dp"
+            android:id="@+id/iv_close"
+            android:layout_alignParentRight="true"
+            android:layout_height="40dp" />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/txv_myatb"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/my_atb"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        style="@style/btn_buttonStyle"
+        android:background="@drawable/button_rectangle_round"
+        android:layout_marginBottom="30dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerView_categories"/>
+    </RelativeLayout>
+</LinearLayout>

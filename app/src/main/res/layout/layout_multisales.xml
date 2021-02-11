@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/lyt_container"
+    android:background="@color/signup_popup_color">
+    <ListView
+        android:id="@+id/list_multipost"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+        <LinearLayout
+            android:id="@+id/lyt_addproduct"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_plus" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newproduct"
+                android:layout_centerVertical="true"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_publish"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/button_rectangle_round"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:tint="@color/white"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_whitepost" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_allitem"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

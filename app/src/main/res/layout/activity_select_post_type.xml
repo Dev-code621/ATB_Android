@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/lyt_container"
+    android:background="@color/head_color"
+    android:padding="20dp"
+    android:gravity="bottom">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="40dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/want_post"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                style="@style/boldtextTheme"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lyt_newpost"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/txv_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newproduct"
+                android:layout_centerVertical="true"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:tint="@color/head_color"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/leftdetail" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lyt_repost"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/edit_rectangle_round"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/txv_repost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/exist_product"
+                android:layout_centerVertical="true"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:singleLine="true"
+                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:tint="@color/head_color"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/btn_arrow" />
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/txv_cancel"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            style="@style/btn_buttonStyle"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</LinearLayout>

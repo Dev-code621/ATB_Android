@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/lyt_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/signup_popup_color"
+    android:padding="20dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup2"
+        android:gravity="center"
+        android:textColor="@color/signup_textcolor"
+        android:theme="@style/boldtextTheme" />
+    <LinearLayout
+        android:id="@+id/lyt_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_rectangle_round"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/facebook_brands"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/txv_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/facebook"
+            android:gravity="center"
+            android:textColor="@color/white"
+            style="@style/btn_buttonStyle" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/signup_textcolor" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or"
+            android:gravity="center"
+            android:textColor="@color/signup_textcolor"
+            android:theme="@style/textTheme" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@color/signup_textcolor" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txv_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/use_email"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        style="@style/btn_buttonStyle"
+        android:background="@drawable/button_rectangle_round"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/signup_textcolor"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/have_accout"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/signup_textcolor"
+            android:theme="@style/textTheme" />
+        <TextView
+            android:id="@+id/txv_signin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/singin_instead"
+            android:gravity="center"
+            android:textColor="@color/btn_color"
+            style="@style/btn_buttonStyle"
+            android:textSize="18sp"
+            android:fontFamily="@font/segoe_ui_bold" />
+    </LinearLayout>
+</LinearLayout>
