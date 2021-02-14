@@ -34,7 +34,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.newsfeedpost.ExitServiceofferPostActivity"></activity>
         <activity android:name=".activities.newsfeedpost.ExistSalesPostActivity" />
         <activity android:name=".activities.newsfeedpost.NewPollVotingActivity" />
         <activity android:name=".activities.newsfeedpost.NewServiceOfferActivity" />

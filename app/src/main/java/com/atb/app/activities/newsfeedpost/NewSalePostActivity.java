@@ -17,6 +17,11 @@ import com.atb.app.activities.register.Signup2Activity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.dialog.SelectProfileDialog;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
+import java.util.ArrayList;
+
 public class NewSalePostActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_header;
     FrameLayout lyt_profile;
@@ -25,6 +30,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     ViewGroup sceneRoot;
     Scene aScene,anotherScene;
     int multitype = 0;
+    ArrayList<ImageView> imageViews = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,33 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         TextView txv_add = sceneRoot.findViewById(R.id.txv_add);
         ImageView icon_back = sceneRoot.findViewById(R.id.icon_back);
         TextView txv_discard = sceneRoot.findViewById(R.id.txv_discard);
+        NiceSpinner spiner_media_type = sceneRoot.findViewById(R.id.spiner_media_type);
+        ImageView imv_videothumnail = sceneRoot.findViewById(R.id.imv_videothumnail);
+        ImageView imv_videoicon = sceneRoot.findViewById(R.id.imv_videoicon);
+        FrameLayout lyt_video = sceneRoot.findViewById(R.id.lyt_video);
+        ImageView imv_imageicon = sceneRoot.findViewById(R.id.imv_imageicon);
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image1));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image2));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image3));
+        LinearLayout lyt_image = sceneRoot.findViewById(R.id.lyt_image);
+
+
+        spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                // This example uses String, but your type can be any
+                String item = String.valueOf(parent.getItemAtPosition(position));
+                 if(position==0){
+                    lyt_image.setVisibility(View.VISIBLE);
+                    lyt_video.setVisibility(View.GONE);
+
+                }else{
+                    lyt_image.setVisibility(View.GONE);
+                    lyt_video.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         if(multitype>0) lyt_addtitle.setVisibility(View.VISIBLE);
 
@@ -99,18 +132,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 loadlayout1();
                 break;
             case R.id.lyt_profile:
-                SelectProfileDialog selectProfileDialog = new SelectProfileDialog();
-                selectProfileDialog.OnSelectListener(new SelectProfileDialog.OnSelectListener() {
-                    @Override
-                    public void OnSelectProfile(boolean flag) {
-                        if(flag){
-
-                        }else{
-
-                        }
-                    }
-                });
-                selectProfileDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                SelectprofileDialog(this);
                 break;
             case R.id.lyt_addproduct:
                 activityAnimation(aScene,R.id.lyt_container);

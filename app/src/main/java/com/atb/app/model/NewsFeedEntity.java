@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class NewsFeedEntity {
     int id;
     boolean type;
+    boolean select = false;
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
 
     public int getId() {
@@ -29,5 +30,13 @@ public class NewsFeedEntity {
 
     public void setPostEntities(ArrayList<NewsFeedEntity> postEntities) {
         this.postEntities = postEntities;
+    }
+
+    public boolean isSelect() {
+        return select;
+    }
+
+    public void setSelect(boolean select) {
+        this.select = select;
     }
 }

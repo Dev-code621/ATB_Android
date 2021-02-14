@@ -1,6 +1,7 @@
 package com.atb.app.base;
 
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.SelectProfileDialog;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 
 import org.json.JSONArray;
@@ -116,6 +118,21 @@ public abstract class CommonActivity extends BaseActivity {
         set.setDuration(350);
         TransitionManager.go(anotherScene, set);
 
+    }
+
+    public void SelectprofileDialog(Context context){
+        SelectProfileDialog selectProfileDialog = new SelectProfileDialog();
+        selectProfileDialog.OnSelectListener(new SelectProfileDialog.OnSelectListener() {
+            @Override
+            public void OnSelectProfile(boolean flag) {
+                if(flag){
+
+                }else{
+
+                }
+            }
+        });
+        selectProfileDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
 

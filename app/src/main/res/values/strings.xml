@@ -107,4 +107,24 @@
     <string name="tag_description">Type a tag in</string>
     <string name="complete_missing">Complete missing fields to post</string>
     <string name="publish_allitem">Publish all items</string>
+    <string name="all_product">All created your products</string>
+    <string name="publish_all">Publish all as post</string>
+    <string name="post_selected_product">Post selected Products</string>
+
+
+    <string name="post_a_service">Post a Service</string>
+    <string name="all_service">All created your services</string>
+    <string name="add_title">Add a Title</string>
+    <string name="depost_require">Deposit Required NO/YES</string>
+    <string name="cancel_day">Cancellation Within Day(s)</string>
+    <string name="area_covered">Area Covered</string>
+    <string name="require_insurance">Does This Service Require Insurance?</string>
+    <string name="require_quality">Does This Service Require Qualitifications?</string>
+
+    <string name="no_insurance">No Insurances Added</string>
+    <string name="no_quality">No Qualitifications Added</string>
+    <string name="make_question">Make a question...</string>
+    <string name="add_picture">Add Picture</string>
+    <string name="options">Options</string>
+    <string name="poll_duration">Poll duration</string>
 </resources>

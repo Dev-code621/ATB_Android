@@ -104,19 +104,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 finish(this);
                 break;
             case R.id.lyt_profile:
-                SelectProfileDialog selectProfileDialog = new SelectProfileDialog();
-                selectProfileDialog.OnSelectListener(new SelectProfileDialog.OnSelectListener() {
-                    @Override
-                    public void OnSelectProfile(boolean flag) {
-                        if(flag){
-
-                        }else{
-
-                        }
-                    }
-                });
-
-                selectProfileDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                SelectprofileDialog(this);
 
                 break;
             case R.id.txv_post:

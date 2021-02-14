@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.ExistSalesPostActivity;
-import com.atb.app.activities.newsfeedpost.ExitServiceofferPostActivity;
 import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
 import com.atb.app.activities.newsfeedpost.NewPollVotingActivity;
 import com.atb.app.activities.newsfeedpost.NewSalePostActivity;
@@ -104,10 +103,9 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                     goTo(this, NewServiceOfferActivity.class,false);
                 break;
             case R.id.lyt_repost:
-                if(type ==1 )
-                    goTo(this, ExistSalesPostActivity.class,false);
-                else
-                    goTo(this, ExitServiceofferPostActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type",type);
+                goTo(this, ExistSalesPostActivity.class,false,bundle);
                 break;
         }
     }

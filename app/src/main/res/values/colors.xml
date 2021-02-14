@@ -2,9 +2,12 @@
 <resources>
     <color name="colorPrimaryDark">#A6BFDE</color>
     <color name="colorPrimary">#A6BFDE</color>
+    <color name="colorAccent">#A6BFDE</color>
     <color name="lite_gray">#8B434541</color>
     <color name="colorPrimaryPix">#A6BFDE</color>
     <color name="colorPrimaryLightPix">#A6BFDE</color>
+
+
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

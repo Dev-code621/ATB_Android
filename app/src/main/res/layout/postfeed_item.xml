@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="90dp"
+   android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:id="@+id/lyt_container">
+    <ImageView
+        android:id="@+id/imv_selector"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/edit_category_selector"
+        android:layout_gravity="right|center"
+        android:layout_marginLeft="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/edit_rectangle_round"
+        android:layout_marginLeft="20dp">
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_thumnail"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp">
+            <TextView
+                android:id="@+id/txv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keyboard"
+                style="@style/textTheme"
+                android:textColor="@color/txt_color"/>
+            <TextView
+                android:id="@+id/txv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$100"
+                style="@style/boldtextTheme"
+                android:textColor="@color/head_color"/>
+            <ImageView
+                android:id="@+id/imv_type"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_sales"
+                android:tint="@color/txt_color"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
