@@ -99,7 +99,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 setColor(3);
                 break;
             case R.id.imv_profile:
-
+                goTo(this, ProfileNaviagationActivity.class,false);
                 break;
             case R.id.imv_post:
                 setColor(1);

@@ -197,7 +197,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
         overridePendingTransition(0, 0);
     }
 
-
     public int dp(float value) {
         if (value == 0) {
             return 0;

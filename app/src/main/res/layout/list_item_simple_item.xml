@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/edit_rectangle_round"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/imv_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/imv_background"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_user_info_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp"
+                        app:cardUseCompatPadding="false">
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/imv_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:actualImageScaleType="centerCrop"
+                            app:placeholderImage="@drawable/profile_pic"/>
+                    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/txv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="JESSICA MCLAURENCE"
+                        style="@style/textTheme"
+                        android:textColor="@color/txt_color"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txv_itemnumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 Items"
+                    style="@style/textTheme"
+                    android:textColor="@color/txt_color"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/txv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Order Total: $4.90"
+                    style="@style/textTheme"
+                    android:textColor="@color/head_color"
+                    android:textSize="15sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/txt_color" />
+                    <TextView
+                        android:id="@+id/txv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="21.08.20 ORDER 13456478"
+                        style="@style/textTheme"
+                        android:textColor="@color/txt_color"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/btn_arrow"
+                android:layout_gravity="right|center_vertical" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

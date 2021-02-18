@@ -34,6 +34,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.navigationItems.SavePostActivity"></activity>
+        <activity android:name=".activities.navigationItems.ContactAdminActivity" />
+        <activity android:name=".activities.navigationItems.TransactionHistoryActivity" />
+        <activity android:name=".activities.navigationItems.SetPostRangeActivity" />
+        <activity android:name=".activities.navigationItems.CreateAmendBioActivity" />
+        <activity android:name=".activities.navigationItems.ItemSoldActivity" />
+        <activity android:name=".activities.navigationItems.BookingActivity" />
+        <activity android:name=".activities.navigationItems.UpdateBusinessActivity" />
+        <activity android:name=".activities.navigationItems.NotificationActivity" />
+        <activity
+            android:name=".activities.ProfileNaviagationActivity"
+            android:label="@string/title_activity_profile_naviagation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.navigationItems.ProfileActivity" />
         <activity android:name=".activities.newsfeedpost.ExistSalesPostActivity" />
         <activity android:name=".activities.newsfeedpost.NewPollVotingActivity" />
         <activity android:name=".activities.newsfeedpost.NewServiceOfferActivity" />

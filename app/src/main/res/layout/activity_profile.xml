@@ -1,0 +1,201 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/lyt_container"
+    tools:context=".activities.navigationItems.ProfileActivity"
+    android:background="@color/signup_popup_color">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <LinearLayout
+            android:id="@+id/lyt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_back2"
+                android:paddingLeft="20dp"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_setting"
+            android:layout_gravity="center"
+            style="@style/boldtextTheme"
+            android:textColor="@color/txt_color"
+            android:textSize="24sp"
+            android:orientation="vertical"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <FrameLayout
+            android:id="@+id/lyt_addpicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_user_info_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                app:cardCornerRadius="50dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/imv_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:actualImageScaleType="centerCrop"
+                    app:placeholderImage="@drawable/profile_pic"/>
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/camera"
+                android:layout_gravity="right|bottom"
+                android:padding="10dp"
+                android:background="@drawable/round_button_theme"/>
+        </FrameLayout>
+        <EditText android:id="@+id/edt_firstname"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:hint="@string/first_name"
+            style="@style/edit_inputtext"
+            android:layout_marginTop="10dp"/>
+        <EditText android:id="@+id/edt_lastname"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:hint="@string/last_name"
+            style="@style/edit_inputtext"
+            android:layout_marginTop="10dp"/>
+        <EditText android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:hint="@string/email_address"
+            android:layout_marginTop="10dp"
+            style="@style/edit_inputtext" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText android:id="@+id/edt_location"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:hint="@string/location"
+                style="@style/edit_inputtext" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_mappin"
+                android:layout_gravity="right|center"
+                android:layout_marginRight="10dp" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView android:id="@+id/txv_male"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/male"
+                    style="@style/edit_inputtext" />
+                <ImageView
+                    android:id="@+id/imv_selector1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_checked"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="10dp" />
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginLeft="20dp">
+                <TextView android:id="@+id/txv_female"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/female"
+                    style="@style/edit_inputtext" />
+                <ImageView
+                    android:id="@+id/imv_selector2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_checked"
+                    android:visibility="gone"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="10dp" />
+            </FrameLayout>
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <EditText android:id="@+id/edt_birthday"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:inputType="date"
+                android:hint="@string/birthday"
+                style="@style/edit_inputtext" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_birthday"
+                android:layout_gravity="right|center"
+                android:layout_marginRight="10dp" />
+        </FrameLayout>
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/txv_update"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/update_profile"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            style="@style/btn_buttonStyle"
+            android:background="@drawable/button_rectangle_round"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
+</LinearLayout>

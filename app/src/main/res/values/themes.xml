@@ -22,6 +22,7 @@
         <item name="colorAccent">@color/colorPrimary</item>
 
     </style>
+
     <style name="CustomAlertDialogStyle">
         <item name="android:bottomBright">@color/transparent</item>
         <item name="android:bottomDark">@color/transparent</item>
@@ -34,16 +35,17 @@
         <item name="android:topBright">@color/transparent</item>
         <item name="android:topDark">@color/transparent</item>
     </style>
+
     <style name="AppTheme.FullScreen" parent="AppTheme.NoActionBar">
         <item name="android:windowFullscreen">true</item>
     </style>
+
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="AppTheme.Screen" parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.Screen" parent="AppTheme.NoActionBar"></style>
 
     <style name="edit_inputtext">
         <item name="android:textColor">@color/txt_color</item>
@@ -81,11 +83,17 @@
         <item name="android:windowIsFloating">false</item>
         >
     </style>
+
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
     </style>
+
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
