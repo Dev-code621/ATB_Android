@@ -1,14 +1,20 @@
 package com.atb.app.commons;
 
 import com.atb.app.base.CommonActivity;
+import com.atb.app.preference.Preference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Commons {
     public static boolean g_isAppRunning=false;
     public static CommonActivity g_commentActivity = null;
-
+    public static boolean traffic = true;
+    public static float zoom = 0f;
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);
@@ -40,5 +46,16 @@ public class Commons {
 
         return sb.toString();
     }
-
+    public static String getWeekday(String date){
+        String dayName = "";
+        SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date myDate = inFormat.parse(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE");
+            dayName=simpleDateFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  dayName;
+    }
 }

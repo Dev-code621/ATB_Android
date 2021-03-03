@@ -35,13 +35,14 @@
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:background="@drawable/under_line2"/>
+
         <ImageView
             android:id="@+id/imv_selector"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/edit_category_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="right|center"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/edit_category_selector" />
     </LinearLayout>
 
     <RelativeLayout

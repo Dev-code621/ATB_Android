@@ -1,6 +1,7 @@
 package com.atb.app.activities;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,6 +39,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -299,13 +302,27 @@ public class ProfileNaviagationActivity extends CommonActivity implements View.O
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
-    void setColor(int type){
+    void setColor(int id){
+        imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_feed));
+        imv_post.setImageDrawable(getResources().getDrawable(R.drawable.icon_addpost));
+        imv_chat.setImageDrawable(getResources().getDrawable(R.drawable.icon_message));
+        imv_feed.clearColorFilter();
+        imv_post.clearColorFilter();
+        imv_chat.clearColorFilter();
+        if(id==2){
+            imv_chat.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+        }else if(id==1){
+            imv_post.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
 
+        }else {
+            imv_feed.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        setColor(0);
 
     }
 }

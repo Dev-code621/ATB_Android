@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,6 +30,8 @@ import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class NewAdviceActivity extends CommonActivity implements View.OnClickListener {
     NiceSpinner spiner_media_type,spiner_category_type;
@@ -73,7 +76,6 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         imageViews.get(0).setOnClickListener(this);
         imv_videothumnail.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
-
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
@@ -92,6 +94,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                     lyt_video.setVisibility(View.VISIBLE);
                 }
             }
+
         });
 
         Keyboard();

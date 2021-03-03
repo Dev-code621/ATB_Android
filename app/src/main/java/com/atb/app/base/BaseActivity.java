@@ -192,6 +192,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
             ((Activity) context).finish();
         }
     }
+
     public void finish(Context context){
         ((Activity)context).finish();
         overridePendingTransition(0, 0);

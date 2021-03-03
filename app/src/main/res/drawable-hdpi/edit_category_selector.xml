@@ -3,6 +3,6 @@
     <item android:state_enabled="true"
         android:drawable="@drawable/icon_select" />
     <item android:state_enabled="false"
-        android:drawable="@drawable/icon_unselect" /> ***button_gray is a Drawable image***
+        android:drawable="@drawable/icon_unselect1" /> ***button_gray is a Drawable image***
 
 </selector>

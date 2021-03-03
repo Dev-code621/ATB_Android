@@ -2,6 +2,8 @@ package com.atb.app.commons;
 
 import com.atb.app.R;
 
+import java.util.Locale;
+
 public class Constants {
     public static int MY_PEQUEST_CODE = 123;
     public static final String DEFAULT_GROUPNAME = "Group";
