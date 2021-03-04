@@ -21,9 +21,15 @@ public class PollEmageAdapter extends RecyclerView.Adapter<PollEmageAdapter.View
     private final Context context;
     private ArrayList<String> list = new ArrayList<>();
     private SelectListener listener;
+    int maxsize =5;
     public PollEmageAdapter(Context context,SelectListener listener) {
         this.context = context;
         this.listener = listener;
+    }
+    public PollEmageAdapter(Context context,SelectListener listener,int maxsize) {
+        this.context = context;
+        this.listener = listener;
+        this.maxsize = maxsize;
     }
 
 
@@ -73,7 +79,7 @@ public class PollEmageAdapter extends RecyclerView.Adapter<PollEmageAdapter.View
     }
     @Override
     public int getItemCount() {
-        if(list.size()==5)return  list.size();
+        if(list.size()==maxsize)return  list.size();
         else
             return list.size()+1;
     }

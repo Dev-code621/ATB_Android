@@ -221,5 +221,6 @@
     <string name="cancel_booking1">Are you sure you want to\ncancel this booking?</string>
     <string name="cancel_booking2">We will let the user know that this is going to finished the booking and in case he wants to book again he have to select a different option</string>
     <string name="modification_booking">[Send a modification request to the\nbooking instead]</string>
+    <string name="write_a_comment">Write a comment</string>
 
 </resources>

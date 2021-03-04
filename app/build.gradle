@@ -132,5 +132,8 @@ dependencies {
     //matarialsearchview
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 
+    //slideimage
+    implementation 'com.github.smarteist:autoimageslider:1.4.0-appcompat'
+
 
 }
