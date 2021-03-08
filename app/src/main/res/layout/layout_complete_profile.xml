@@ -104,17 +104,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
-                <EditText android:id="@+id/edt_location"
+                <TextView android:id="@+id/txv_location"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:inputType="textPassword"
                     android:hint="@string/location"
                     style="@style/edit_inputtext" />
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_mappin"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icon_location"
                     android:layout_gravity="right|center"
                     android:layout_marginRight="10dp" />
             </FrameLayout>
@@ -171,12 +171,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
-                <EditText android:id="@+id/edt_birthday"
+                <TextView android:id="@+id/edt_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:singleLine="true"
-                    android:inputType="date"
                     android:hint="@string/birthday"
+                    android:gravity="center_vertical"
                     style="@style/edit_inputtext" />
                 <ImageView
                     android:layout_width="wrap_content"
@@ -219,8 +219,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:text="@string/lets_began"
+                android:enabled="false"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/white_transparent"
                 android:layout_marginTop="20dp"
                 style="@style/btn_buttonStyle"
                 android:background="@drawable/button_rectangle_round"

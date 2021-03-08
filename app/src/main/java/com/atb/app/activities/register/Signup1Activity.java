@@ -30,6 +30,8 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.adapter.EmailAdapter;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.model.UserModel;
 
 import java.util.ArrayList;
 
@@ -72,6 +74,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
     }
     void  loadLayout2(){
         txv_next = sceneRoot.findViewById(R.id.txv_next);
+        txv_next.setEnabled(false);
         imv_back1 = sceneRoot.findViewById(R.id.imv_back1);
         imv_selector1 = sceneRoot.findViewById(R.id.imv_selector1);
         imv_selector2 = sceneRoot.findViewById(R.id.imv_selector2);
@@ -95,7 +98,32 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
             }
         }));
 
+        edt_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(edt_email.getText().toString().equals(edit_confirm_email.getText().toString()) && edt_email.getText().toString().length()>0){
+                    imv_selector1.setEnabled(false);
+                    imv_selector2.setEnabled(false);
+                    txv_next.setEnabled(true);
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.white));
+                }else {
+                    imv_selector1.setEnabled(true);
+                    imv_selector2.setEnabled(true);
+                    txv_next.setEnabled(false);
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         edit_confirm_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -104,12 +132,17 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(edt_email.getText().toString().equals(edit_confirm_email.getText().toString())){
+                if(edt_email.getText().toString().equals(edit_confirm_email.getText().toString()) && edt_email.getText().toString().length()>0){
                     imv_selector1.setEnabled(false);
                     imv_selector2.setEnabled(false);
+                    txv_next.setEnabled(true);
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.white));
                 }else {
                     imv_selector1.setEnabled(true);
                     imv_selector2.setEnabled(true);
+                    txv_next.setEnabled(false);
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+
                 }
             }
 
@@ -163,6 +196,9 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                 edit_confirm_email.setText("");
                 break;
             case R.id.txv_next:
+                UserModel userModel = new UserModel();
+                userModel.setEmail(edt_email.getText().toString());
+                Commons.g_user = userModel;
                 goTo(this, Signup2Activity.class,false);
                 break;
 

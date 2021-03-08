@@ -3,12 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragement.MainListFragment"
     android:background="@color/main_color1">
-    <ListView
-        android:id="@+id/list_main"
+    <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null" />
+        app:srl_direction="both">
+        <ListView
+            android:id="@+id/list_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null" />
+    </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
 </FrameLayout>

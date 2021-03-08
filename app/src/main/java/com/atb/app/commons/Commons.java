@@ -1,6 +1,7 @@
 package com.atb.app.commons;
 
 import com.atb.app.base.CommonActivity;
+import com.atb.app.model.UserModel;
 import com.atb.app.preference.Preference;
 
 import java.text.ParseException;
@@ -15,6 +16,11 @@ public class Commons {
     public static CommonActivity g_commentActivity = null;
     public static boolean traffic = true;
     public static float zoom = 0f;
+    public static UserModel g_user ;
+    public static String token = "";
+    public static int location_code = 1100;
+    public static String[] Months;
+    public static String main_category ="MY ATB";
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

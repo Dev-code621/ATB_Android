@@ -30,12 +30,12 @@ public class MultiPartRequest extends Request<String> {
     private final File mFilePart;
     private final String mStringPart;
     private Map<String, String> parameters;
-    private Map<String, String> mHeader;
+
     MultipartEntity entity = new MultipartEntity();
 
     public MultiPartRequest(String url, Response.ErrorListener eListener,
                             Response.Listener<String> rListener, File file, String stringPart,
-                            Map<String, String> param, Map<String, String> header) {
+                            Map<String, String> param) {
 
         super(Method.POST, url, eListener);
         mListener = rListener;
@@ -43,7 +43,7 @@ public class MultiPartRequest extends Request<String> {
         mFilePart = file;
         mStringPart = stringPart;
         parameters = param;
-        mHeader = header;
+
         buildMultipartEntity();
     }
 
@@ -73,11 +73,6 @@ public class MultiPartRequest extends Request<String> {
         mEListener.onErrorResponse(volleyError);
 
         return super.parseNetworkError(volleyError);
-    }
-
-    @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
-        return mHeader;
     }
 
     @Override

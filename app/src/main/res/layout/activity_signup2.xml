@@ -105,8 +105,9 @@
         android:layout_height="50dp"
         android:text="@string/complete_user"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/white_transparent"
         android:layout_marginTop="10dp"
+        android:enabled="false"
         style="@style/btn_buttonStyle"
         android:background="@drawable/button_rectangle_round"
         android:layout_marginBottom="80dp"/>

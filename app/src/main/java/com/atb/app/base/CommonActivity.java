@@ -4,6 +4,7 @@ package com.atb.app.base;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 
@@ -101,12 +102,10 @@ public abstract class CommonActivity extends BaseActivity {
         String localtime= new SimpleDateFormat("dd/MM/yy HH:mm").format(d);
         return localtime;
     }
+    public boolean emailInvalied(String email){
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 
-    public String getUserString(boolean type){
-        if(type) return "Supervisor Mandante";
-        else return "Supervisor Contratista";
     }
-
 
     public void activityAnimation(Scene anotherScene,int layout_id){
         TransitionSet set = new TransitionSet();

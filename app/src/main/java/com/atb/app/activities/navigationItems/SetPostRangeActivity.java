@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.MainActivity;
+import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
@@ -173,6 +175,9 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.txv_update:
+                setResult(Commons.location_code);
+                Commons.g_user.setLocation(edt_serach.getText().toString());
+
                 finish(this);
                 break;
             case R.id.lyt_send:

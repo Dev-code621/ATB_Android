@@ -29,6 +29,7 @@ import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.PickImageDialog;
@@ -53,6 +54,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     EditText edt_serach;
     LinearLayout lyt_title,lyt_title1;
     ImageView imv_selector;
+    MainListFragment mainListFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         imv_post.setOnClickListener(this);
         imv_chat.setOnClickListener(this);
         imv_selector.setOnClickListener(this);
+        mainListFragment = new MainListFragment();
         Keyboard();
         setColor(0);
     }
@@ -127,9 +130,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         selectCategoryDialog.dismiss();
         if(posstion<0){
             txv_category.setText(getResources().getString(R.string.my_atb));
+            Commons.main_category = getResources().getString(R.string.my_atb);
         }else {
             txv_category.setText(Constants.category_word[posstion]);
+            Commons.main_category = Constants.category_word[posstion];
         }
+        mainListFragment.onResume();
     }
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){
@@ -137,9 +143,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         lyt_title1.setVisibility(View.GONE);
         if(id==0){
             main_flag = true;
-            MainListFragment mFragment = new MainListFragment();
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.lyt_fragement,mFragment).commit();
+            ft.replace(R.id.lyt_fragement,mainListFragment).commit();
         }
         else if(id==2){
             main_flag = false;

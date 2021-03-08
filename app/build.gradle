@@ -77,6 +77,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation project(path: ':cropper')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -135,5 +136,6 @@ dependencies {
     //slideimage
     implementation 'com.github.smarteist:autoimageslider:1.4.0-appcompat'
 
-
+    //swipy refresh
+    implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
 }

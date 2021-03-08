@@ -5,8 +5,6 @@ public class API {
     public static String API_BASE_URL = "https://test.myatb.co.uk/api/";
     public static final String USERSESSION = "userSession";
     public static final String LOGIN = "User/login/authenticate";
-
-
     public static final String INVITE_URL = DOMAIN_URL + "invite?code=";
 
 //public static final String DOMAIN_URL = "http://localhost/ATB"

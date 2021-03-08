@@ -69,6 +69,10 @@ public class MainFeedAdapter extends BaseAdapter {
             }
         }));
 
+
+
+
+
         return convertView;
     }
 

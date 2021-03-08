@@ -21,6 +21,7 @@ import com.atb.app.activities.register.CreateFeedActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Constants;
 import com.atb.app.model.NewsFeedEntity;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,18 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        NewsFeedEntity newsFeedEntity = newsFeedEntities.get(position);
+        Glide.with(context).load(newsFeedEntity.getProfile_image()).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imv_profile);
+        holder.txv_name.setText(newsFeedEntity.getProfile_name());
+        holder.txv_time.setText(newsFeedEntity.getRead_created());
+        holder.txv_comment.setText(String.valueOf(newsFeedEntity.getComments()));
+        holder.txv_heart.setText(String.valueOf(newsFeedEntity.getLikes()));
+        if(newsFeedEntity.getPostImageModels().size()>0){
+            holder.lyt_image.setVisibility(View.VISIBLE);
+            Glide.with(context).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imv_imageview);
+        }else {
+            holder.lyt_image.setVisibility(View.GONE);
+        }
         holder.lyt_container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,13 +76,26 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txv_text;
-        ImageView imv_image,imv_selector;
+        TextView txv_name,txv_time,txv_description,txv_price,txv_deposit,txv_heart,txv_comment;
+        ImageView imv_profile,imv_imageview,imv_atb_approved,imv_group,imv_type;
         LinearLayout lyt_container;
+        FrameLayout lyt_image;
         public ViewHolder(View itemView) {
             super(itemView);
             lyt_container=itemView.findViewById(R.id.lyt_container);
-
+            txv_name = itemView.findViewById(R.id.txv_name);
+            txv_time = itemView.findViewById(R.id.txv_time);
+            txv_description = itemView.findViewById(R.id.txv_description);
+            txv_price = itemView.findViewById(R.id.txv_price);
+            txv_deposit = itemView.findViewById(R.id.txv_deposit);
+            txv_heart = itemView.findViewById(R.id.txv_heart);
+            txv_comment = itemView.findViewById(R.id.txv_comment);
+            imv_profile = itemView.findViewById(R.id.imv_profile);
+            imv_imageview = itemView.findViewById(R.id.imv_imageview);
+            imv_atb_approved = itemView.findViewById(R.id.imv_atb_approved);
+            imv_group = itemView.findViewById(R.id.imv_group);
+            imv_type = itemView.findViewById(R.id.imv_type);
+            lyt_image = itemView.findViewById(R.id.lyt_image);
             if(getItemCount()>1){
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
                 DisplayMetrics metrics = new DisplayMetrics();
@@ -81,6 +107,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 p.setMargins(0, 0, 30, 0);
                 lyt_container.requestLayout();
 
+                imv_group.setVisibility(View.VISIBLE);
+
             }else {
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -88,7 +116,9 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) lyt_container.getLayoutParams();
                 p.setMargins(0, 0, 0, 0);
                 lyt_container.requestLayout();
+                imv_group.setVisibility(View.GONE);
             }
+
         }
     }
 

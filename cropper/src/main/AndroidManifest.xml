@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.theartofdev.edmodo.cropper"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:theme="@style/AppTheme"
+        android:supportsRtl="true">
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"  android:label="Image Cropper"/>
+    </application>
+
+</manifest>

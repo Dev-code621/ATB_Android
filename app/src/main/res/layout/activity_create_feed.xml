@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/imv_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="right|center"
             android:layout_marginLeft="10dp"
             android:src="@drawable/edit_category_selector" />
