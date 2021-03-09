@@ -3,6 +3,7 @@ package com.atb.app.model;
 import android.util.Log;
 
 import com.atb.app.model.submodel.PostImageModel;
+import com.atb.app.model.submodel.VotingModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class NewsFeedEntity {
+    // postType:  "Advice", "Sales", "Service", "Poll"
     int id,user_id,post_type,poster_profile_type,media_type;
     boolean type;
     boolean select = false;
@@ -25,6 +27,23 @@ public class NewsFeedEntity {
     String multi_group,service_id,product_id,insurance_id,qualification_id,cancellations;
 
     ArrayList<PostImageModel>postImageModels = new ArrayList<>();
+    ArrayList <VotingModel>poll_options = new ArrayList<>();
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public ArrayList<VotingModel> getPoll_options() {
+        return poll_options;
+    }
+
+    public void setPoll_options(ArrayList<VotingModel> poll_options) {
+        this.poll_options = poll_options;
+    }
 
     public int getUser_id() {
         return user_id;
@@ -480,6 +499,15 @@ public class NewsFeedEntity {
             read_created = jsonObject.getString("read_created");
             profile_image = jsonObject.getString("profile_img");
             profile_name = jsonObject.getString("profile_name");
+            if(jsonObject.has("poll_options")){
+                JSONArray poll_options =jsonObject.getJSONArray("poll_options");
+                this.poll_options.clear();
+                for(int i =0;i<poll_options.length();i++){
+                    VotingModel votingModel = new VotingModel();
+                    votingModel.initModel(poll_options.getJSONObject(i));
+                    this.poll_options.add(votingModel);
+                }
+            }
             if(jsonObject.has("group_posts")){
                 JSONArray group_posts =jsonObject.getJSONArray("group_posts");
                 postEntities.clear();

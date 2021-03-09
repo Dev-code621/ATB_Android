@@ -138,4 +138,7 @@ dependencies {
 
     //swipy refresh
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
+    //progressView
+    implementation 'com.diffey.view.progressview:progressview:0.3.1'
+
 }

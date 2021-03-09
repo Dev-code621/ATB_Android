@@ -2,6 +2,7 @@ package com.atb.app.commons;
 
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
+import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
 
 import java.text.ParseException;
@@ -63,5 +64,12 @@ public class Commons {
             e.printStackTrace();
         }
         return  dayName;
+    }
+
+    public static boolean myVoting(VotingModel votingModel){
+        for(int i =0;i<votingModel.getVotes().size();i++){
+            if(votingModel.getVotes().get(i) == Commons.g_user.getId())return true;
+        }
+        return false;
     }
 }
