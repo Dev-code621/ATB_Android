@@ -1,7 +1,21 @@
 package com.atb.app.model;
 
+import android.util.Log;
+
+import com.atb.app.activities.LoginActivity;
+import com.atb.app.activities.MainActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.model.submodel.DisableSlotModel;
 import com.atb.app.model.submodel.FeedInfoModel;
+import com.atb.app.model.submodel.HolidayModel;
+import com.atb.app.model.submodel.OpeningTimeModel;
 import com.atb.app.model.submodel.SettingInfoModel;
+import com.atb.app.model.submodel.SocialModel;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -311,5 +325,114 @@ public class UserModel {
 
     public void setCreated_at(Long created_at) {
         this.created_at = created_at;
+    }
+
+    public void initModel(JSONObject userObject){
+        try {
+            setId(userObject.getInt("id"));
+            setUserName(userObject.getString("user_name"));
+            setComplete(userObject.getInt("complete"));
+            setFb_user_id(userObject.getString("fb_user_id"));
+            setFacebook_token(userObject.getString("facebook_token"));
+            setEmail(userObject.getString("user_email"));
+            setPassword(userObject.getString("user_password"));
+            setImvUrl(userObject.getString("pic_url"));
+            setFirstname(userObject.getString("first_name"));
+            setLastname(userObject.getString("last_name"));
+            setLocation(userObject.getString("country"));
+            setBirhtday(userObject.getString("birthday"));
+            setSex(userObject.getString("gender"));
+            setDescription(userObject.getString("description"));
+            setPost_search_region(userObject.getString("post_search_region"));
+            setAccount_type(userObject.getInt("account_type"));
+            setStatus(userObject.getInt("status"));
+            setStatus_reason(userObject.getString("status_reason"));
+            setOnline(userObject.getInt("online"));
+            setUpdate_at(userObject.getLong("updated_at"));
+            setCreated_at(userObject.getLong("created_at"));
+//                userModel.setLatitude(userObject.getDouble("latitude"));
+//                userModel.setLongitude(userObject.getDouble("longitude"));
+            setStripe_customer_token(userObject.getString("stripe_customer_token"));
+            setStripe_connect_account(userObject.getString("stripe_connect_account"));
+            setPush_tokenm(userObject.getString("push_token"));
+            setInvitecode(userObject.getString("invite_code"));
+            setInvited_by(userObject.getString("invited_by"));
+            setPost_count(userObject.getInt("post_count"));
+            setFollow_count(userObject.getInt("follow_count"));
+            setFollowers_count(userObject.getInt("followers_count"));
+            if(!userObject.getString("business_info").equals("null")){
+                JSONObject business_info = userObject.getJSONObject("business_info");
+                BusinessModel businessModel = new BusinessModel();
+                businessModel.setId(business_info.getInt("id"));
+                businessModel.setUser_id(business_info.getInt("user_id"));
+                businessModel.setBusiness_logo(business_info.getString("business_logo"));
+                businessModel.setBusiness_name(business_info.getString("business_name"));
+                businessModel.setBusiness_website(business_info.getString("business_website"));
+                businessModel.setBusiness_bio(business_info.getString("business_bio"));
+                businessModel.setBusiness_profile_name(business_info.getString("business_profile_name"));
+                businessModel.setPaid(business_info.getInt("paid"));
+                businessModel.setApproved(business_info.getInt("approved"));
+                businessModel.setApproval_reason(business_info.getString("approval_reason"));
+                businessModel.setUpdated_at(business_info.getLong("updated_at"));
+                businessModel.setCreated_at(business_info.getLong("created_at"));
+                JSONArray opening_times = business_info.getJSONArray("opening_times");
+                for(int i =0;i<opening_times.length();i++){
+                    JSONObject opening_time = opening_times.getJSONObject(i);
+                    OpeningTimeModel openingTimeModel = new OpeningTimeModel();
+                    openingTimeModel.setId(opening_time.getInt("id"));
+                    openingTimeModel.setUser_id(opening_time.getInt("user_id"));
+                    openingTimeModel.setDay(opening_time.getInt("day"));
+                    openingTimeModel.setIs_available(opening_time.getInt("is_available"));
+                    openingTimeModel.setStart(opening_time.getString("start"));
+                    openingTimeModel.setEnd(opening_time.getString("end"));
+                    openingTimeModel.setUpdated_at(opening_time.getLong("updated_at"));
+                    openingTimeModel.setCreated_at(opening_time.getLong("created_at"));
+                    businessModel.getOpeningTimeModels().add(openingTimeModel);
+                }
+                JSONArray holidays = business_info.getJSONArray("holidays");
+                for(int i =0;i<holidays.length();i++){
+                    JSONObject holiday = holidays.getJSONObject(i);
+                    HolidayModel holidayModel = new HolidayModel();
+                    holidayModel.setId(holiday.getInt("id"));
+                    holidayModel.setUser_id(holiday.getInt("user_id"));
+                    holidayModel.setName(holiday.getString("name"));
+                    holidayModel.setDay_off(holiday.getLong("day_off"));
+                    holidayModel.setUpdated_at(holiday.getLong("updated_at"));
+                    holidayModel.setCreated_at(holiday.getLong("created_at"));
+                    businessModel.getHolidayModels().add(holidayModel);
+                }
+                JSONArray disabled_slots = business_info.getJSONArray("disabled_slots");
+                for(int i =0;i<disabled_slots.length();i++){
+                    JSONObject disable_slot = disabled_slots.getJSONObject(i);
+                    DisableSlotModel disableSlotModel = new DisableSlotModel();
+                    disableSlotModel.setId(disable_slot.getInt("id"));
+                    disableSlotModel.setUser_id(disable_slot.getInt("user_id"));
+                    disableSlotModel.setDay_timestamp(disable_slot.getLong("day_timestamp"));
+                    disableSlotModel.setStart(disable_slot.getString("start"));
+                    disableSlotModel.setEnd(disable_slot.getString("end"));
+                    disableSlotModel.setCreated_at(disable_slot.getLong("created_at"));
+                    disableSlotModel.setUpdated_at(disable_slot.getLong("updated_at"));
+                    businessModel.getDisableSlotModels().add(disableSlotModel);
+                }
+                JSONArray socials = business_info.getJSONArray("socials");
+                for(int i =0;i<socials.length();i++){
+                    JSONObject social = socials.getJSONObject(i);
+                    SocialModel socialModel = new SocialModel();
+                    socialModel.setId(social.getInt("id"));
+                    socialModel.setUser_id(social.getInt("user_id"));
+                    socialModel.setSocial_name(social.getString("social_name"));
+                    socialModel.setType(social.getInt("type"));
+                    socialModel.setCreated_at(social.getLong("created_at"));
+                    businessModel.getSocialModels().add(socialModel);
+                }
+                businessModel.setPost_count(business_info.getInt("post_count"));
+                businessModel.setFollowers_count(business_info.getInt("followers_count"));
+                businessModel.setFollow_count(business_info.getInt("follow_count"));
+
+            }
+
+        }catch (Exception e){
+            Log.d("aaaaaaa",e.toString());
+        }
     }
 }

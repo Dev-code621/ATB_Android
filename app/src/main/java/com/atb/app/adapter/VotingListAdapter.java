@@ -37,7 +37,9 @@ public class VotingListAdapter  extends BaseAdapter {
 
 
     public void setRoomData(ArrayList<VotingModel> data) {
-        _roomDatas = data;
+        _roomDatas.clear();
+        _roomDatas.addAll(data);
+        totalUser = 0 ;
         for(int i =0;i<_roomDatas.size();i++){
             totalUser +=_roomDatas.get(i).getVotes().size();
         }
@@ -92,7 +94,7 @@ public class VotingListAdapter  extends BaseAdapter {
 
         if(Commons.myVoting(votingModel)){
             holder.card_check.setVisibility(View.VISIBLE);
-            holder.card_progress.setCardBackgroundColor(_context.getResources().getColor(R.color.head_color));
+            holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.head_color));
             holder.txv_percentage.setTextColor(_context.getResources().getColor(R.color.white));
             holder.txv_name.setTextColor(_context.getResources().getColor(R.color.white));
         }else{
@@ -101,7 +103,7 @@ public class VotingListAdapter  extends BaseAdapter {
                 holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.boder_color));
             }
             else {
-                holder.card_progress.setCardBackgroundColor(_context.getResources().getColor(R.color.main_color1));
+                holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.main_color1));
 
             }
         }

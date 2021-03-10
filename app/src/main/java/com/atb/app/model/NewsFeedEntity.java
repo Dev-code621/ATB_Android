@@ -2,6 +2,7 @@ package com.atb.app.model;
 
 import android.util.Log;
 
+import com.atb.app.commons.Commons;
 import com.atb.app.model.submodel.PostImageModel;
 import com.atb.app.model.submodel.VotingModel;
 
@@ -17,7 +18,7 @@ public class NewsFeedEntity {
     boolean select = false;
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
     String title,description,brand,post_tags,post_condition,post_size,post_location,status_reason;
-    String price,deposit,is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
+    String price,deposit,delivery_cost,is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
     int payment_options,delivery_option,is_active,is_sold;
     double lat,lng;
     int is_multi,multi_pos,scheduled,likes,comments;
@@ -28,6 +29,50 @@ public class NewsFeedEntity {
 
     ArrayList<PostImageModel>postImageModels = new ArrayList<>();
     ArrayList <VotingModel>poll_options = new ArrayList<>();
+    ArrayList <CommentModel>commentModels = new ArrayList<>();
+    boolean feedLike = false;
+    boolean feedSave =false;
+    UserModel userModel = new UserModel();
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    public ArrayList<CommentModel> getCommentModels() {
+        return commentModels;
+    }
+
+    public void setCommentModels(ArrayList<CommentModel> commentModels) {
+        this.commentModels = commentModels;
+    }
+
+    public boolean isFeedLike() {
+        return feedLike;
+    }
+
+    public void setFeedLike(boolean feedLike) {
+        this.feedLike = feedLike;
+    }
+
+    public boolean isFeedSave() {
+        return feedSave;
+    }
+
+    public void setFeedSave(boolean feedSave) {
+        this.feedSave = feedSave;
+    }
+
+    public String getDelivery_cost() {
+        return delivery_cost;
+    }
+
+    public void setDelivery_cost(String delivery_cost) {
+        this.delivery_cost = delivery_cost;
+    }
 
     public double getLng() {
         return lng;
@@ -463,7 +508,7 @@ public class NewsFeedEntity {
             post_condition = jsonObject.getString("post_condition");
             post_size = jsonObject.getString("post_size");
             post_location = jsonObject.getString("post_location");
-            post_postage = jsonObject.getString("post_postage");
+            delivery_cost = jsonObject.getString("delivery_cost");
             is_active = jsonObject.getInt("is_active");
             status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
@@ -522,4 +567,111 @@ public class NewsFeedEntity {
             Log.d("aaaa",e.toString());
         }
     }
+
+
+    public void initDetailModel(JSONObject jsonObject){
+        try {
+            id = jsonObject.getInt("id");
+            user_id = jsonObject.getInt("user_id");
+            post_type = jsonObject.getInt("post_type");
+            poster_profile_type = jsonObject.getInt("poster_profile_type");
+            media_type = jsonObject.getInt("media_type");
+            title = jsonObject.getString("title");
+            description = jsonObject.getString("description");
+            brand = jsonObject.getString("brand");
+            price = jsonObject.getString("price");
+            deposit = jsonObject.getString("deposit");
+            is_deposit_required = jsonObject.getString("is_deposit_required");
+            category_title = jsonObject.getString("category_title");
+            item_title = jsonObject.getString("item_title");
+            size_title = jsonObject.getString("size_title");
+            payment_options = jsonObject.getInt("payment_options");
+            location_id = jsonObject.getString("location_id");
+            delivery_option = jsonObject.getInt("delivery_option");
+            post_brand = jsonObject.getString("post_brand");
+            post_item = jsonObject.getString("post_item");
+            post_tags = jsonObject.getString("post_tags");
+            post_condition = jsonObject.getString("post_condition");
+            post_size = jsonObject.getString("post_size");
+            post_location = jsonObject.getString("post_location");
+            delivery_cost = jsonObject.getString("delivery_cost");
+            is_active = jsonObject.getInt("is_active");
+            status_reason = jsonObject.getString("status_reason");
+            is_sold = jsonObject.getInt("is_sold");
+            if(!jsonObject.getString("lat").equals("null"))
+                lat = jsonObject.getDouble("lat");
+            if(!jsonObject.getString("lng").equals("null"))
+                lng = jsonObject.getDouble("lng");
+            is_multi = jsonObject.getInt("is_multi");
+            multi_pos = jsonObject.getInt("multi_pos");
+            multi_group = jsonObject.getString("multi_group");
+            service_id = jsonObject.getString("service_id");
+            product_id = jsonObject.getString("product_id");
+            insurance_id = jsonObject.getString("insurance_id");
+            qualification_id = jsonObject.getString("qualification_id");
+            cancellations = jsonObject.getString("cancellations");
+            scheduled = jsonObject.getInt("scheduled");
+            updated_at = jsonObject.getLong("updated_at");
+            created_at = jsonObject.getLong("created_at");
+
+            JSONArray arrayList = jsonObject.getJSONArray("post_imgs");
+            postImageModels.clear();
+            for(int i =0;i<arrayList.length();i++){
+                JSONObject postImages = arrayList.getJSONObject(i);
+                PostImageModel postImageModel = new PostImageModel();
+                postImageModel.setId(postImages.getInt("id"));
+                postImageModel.setPost_id(postImages.getInt("post_id"));
+                postImageModel.setPath(postImages.getString("path"));
+                postImageModel.setCreated_at(postImages.getLong("created_at"));
+                postImageModels.add(postImageModel);
+            }
+
+            read_created = jsonObject.getString("read_created");
+            if(jsonObject.has("poll_options")){
+                JSONArray poll_options =jsonObject.getJSONArray("poll_options");
+                this.poll_options.clear();
+                for(int i =0;i<poll_options.length();i++){
+                    VotingModel votingModel = new VotingModel();
+                    votingModel.initModel(poll_options.getJSONObject(i));
+                    this.poll_options.add(votingModel);
+                }
+            }
+            if(jsonObject.has("group_posts")){
+                JSONArray group_posts =jsonObject.getJSONArray("group_posts");
+                postEntities.clear();
+                for(int i =0;i<group_posts.length();i++){
+                    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+                    newsFeedEntity.initModel(group_posts.getJSONObject(i));
+                    postEntities.add(newsFeedEntity);
+                }
+            }
+            if(jsonObject.has("likes")){
+                JSONArray array_like = jsonObject.getJSONArray("likes");
+                likes = array_like.length();
+                for(int i =0;i<array_like.length();i++){
+                    if(array_like.getJSONObject(i).getInt("follower_user_id") == Commons.g_user.getId())
+                        feedLike =true;
+                }
+            }
+            if(jsonObject.has("comments")){
+                JSONArray array_comment = jsonObject.getJSONArray("comments");
+                comments = array_comment.length();
+                commentModels.clear();
+                for(int i =array_comment.length()-1;i>=0;i--){
+                    JSONObject jsonObject_comment = array_comment.getJSONObject(i);
+                    CommentModel commentModel = new CommentModel();
+                    commentModel.initModel(jsonObject_comment,commentModels.size());
+                    commentModels.add(commentModel);
+                }
+            }
+            if(jsonObject.has("user")){
+                JSONArray array_user = jsonObject.getJSONArray("user");
+                JSONObject jsonObject_user = array_user.getJSONObject(0);
+                userModel.initModel(jsonObject_user);
+            }
+        }catch (Exception e){
+            Log.d("aaaa",e.toString());
+        }
+    }
+
 }

@@ -62,7 +62,7 @@ public class API {
     public static final String REPORT_POST_API = API_BASE_URL + "post/add_report_post";
     public static final String POST_LIKE_API = API_BASE_URL + "post/add_like_post";
     public static final String WRITE_COMMENT_API = API_BASE_URL + "post/add_comment_post";
-    public static final String REPLY_COMMENT_API = API_BASE_URL + "post/reply_comment_post";
+    public static final String REPLY_COMMENT_API = API_BASE_URL + "post/add_comment_reply";
     public static final String LOAD_REPLIES_API = API_BASE_URL + "post/get_sub_comment";
 
     public static final String GET_USER_BOOKMARKS = API_BASE_URL + "profile/get_user_bookmarks";

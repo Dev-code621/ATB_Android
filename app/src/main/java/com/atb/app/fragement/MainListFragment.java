@@ -64,6 +64,7 @@ public class MainListFragment extends Fragment {
         list_main = (ListView)view.findViewById(R.id.list_main);
         ui_refreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
         ui_refreshLayout.setDirection(SwipyRefreshLayoutDirection.TOP);
+        getList();
         ui_refreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(SwipyRefreshLayoutDirection direction) {
@@ -82,10 +83,10 @@ public class MainListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         context =getActivity();
-        getList();
     }
 
-    void getList(){
+
+    public void getList(){
         String apilink = API.GET_ALL_FEED_API;
         if(!Commons.main_category.equals("MY ATB")) {
             apilink = API.GET_SELECTED_FEED_API;

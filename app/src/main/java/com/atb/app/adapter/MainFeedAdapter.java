@@ -1,6 +1,7 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,9 @@ public class MainFeedAdapter extends BaseAdapter {
         holder.recyclerView.setAdapter(new NewsFeedItemAdapter(context, arrayList, new NewsFeedItemAdapter.OnSelectListener() {
             @Override
             public void onSelect(NewsFeedEntity entity) {
-                ((MainActivity)context).goTo(context, NewsDetailActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId",entity.getId());
+                ((MainActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
             }
         }));
 

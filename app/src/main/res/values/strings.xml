@@ -222,5 +222,12 @@
     <string name="cancel_booking2">We will let the user know that this is going to finished the booking and in case he wants to book again he have to select a different option</string>
     <string name="modification_booking">[Send a modification request to the\nbooking instead]</string>
     <string name="write_a_comment">Write a comment</string>
+    <string name="your_own_comment">You can not reply to your own comments</string>
 
+    <string name="price_start">Price, starting from</string>
+    <string name="need_deposit">Needs a deposit of</string>
+    <string name="cancel_within">Cancellations Within</string>
+    <string name="insured">Insured</string>
+    <string name="qualified">Qualified</string>
+    <string name="book_service">Book this service</string>
 </resources>

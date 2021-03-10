@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -22,8 +23,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.view.zoom.ImageZoomButton;
+import com.atb.app.view.zoom.ZoomAnimation;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 
 import org.json.JSONArray;
@@ -116,7 +121,6 @@ public abstract class CommonActivity extends BaseActivity {
         set.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
         set.setDuration(350);
         TransitionManager.go(anotherScene, set);
-
     }
 
     public void SelectprofileDialog(Context context){
@@ -134,5 +138,13 @@ public abstract class CommonActivity extends BaseActivity {
         selectProfileDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
+
+    private ZoomAnimation zoomAnimation;
+    private boolean isZoom=false;
+    public void showPicture(View view, String url) {
+        zoomAnimation = new ZoomAnimation(this);
+        zoomAnimation.zoom(view, url, 400, R.drawable.image_thumnail, this);
+        isZoom = true;
+    }
 
 }

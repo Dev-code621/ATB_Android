@@ -135,7 +135,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             txv_category.setText(Constants.category_word[posstion]);
             Commons.main_category = Constants.category_word[posstion];
         }
-        mainListFragment.onResume();
+        mainListFragment.getList();
     }
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){

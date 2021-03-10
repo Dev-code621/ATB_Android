@@ -72,4 +72,9 @@ public class Commons {
         }
         return false;
     }
+
+    public static boolean mediaVideoType(String str){
+        if(str.contains(".mp4")) return  true;
+        return false;
+    }
 }

@@ -208,7 +208,6 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
 
     void register(){
         showProgress();
-        //Commons.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NDIsImlhdCI6MTYxNDk1NTU1MywiZXhwIjoxNjE1Mzg3NTUzfQ.YoedSSH-X3B-_0I5XDEEvmJvP4EDAb6n24DhNIODI-E";
         try {
             File file = null;
             file = new File(photoPath);

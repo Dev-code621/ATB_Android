@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.TransactionEntity;
 import com.bumptech.glide.Glide;
@@ -87,7 +88,16 @@ public class CommentAdapter extends BaseAdapter {
         String comment = commentModel.getComment();
         holder.view_reply.setVisibility(View.GONE);
         holder.txv_comment.setVisibility(View.GONE);
-        for(int i =0;i<3;i++)holder.imageViews.get(i).setVisibility(View.GONE);
+        for(int i =0;i<3;i++){
+            holder.imageViews.get(i).setVisibility(View.GONE);
+            int finalI = i;
+            holder.imageViews.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _context.showPicture(v,commentModel.getImage_url().get(finalI));
+                }
+            });
+        }
         if(commentModel.getLevel()==1)
             holder.view_reply.setVisibility(View.VISIBLE);
         if(comment.length()>0) {
@@ -102,12 +112,15 @@ public class CommentAdapter extends BaseAdapter {
             Glide.with(_context).load(commentModel.getImage_url().get(i)).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imageViews.get(i));
             holder.imageViews.get(i).setVisibility(View.VISIBLE);
         }
+        Glide.with(_context).load(commentModel.getUserImage()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+        holder.txv_time.setText(commentModel.getRead_created());
         holder.lyt_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _context.replyComment(commentModel.getParentPosstion());
+                _context.replyComment(commentModel.getParentPosstion(),_roomDatas.get(position));
             }
         });
+
         return convertView;
     }
 

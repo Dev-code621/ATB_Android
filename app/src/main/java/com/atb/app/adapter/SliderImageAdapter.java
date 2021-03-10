@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atb.app.R;
+import com.atb.app.base.CommonActivity;
+import com.atb.app.model.submodel.PostImageModel;
 import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
@@ -20,24 +22,14 @@ public class SliderImageAdapter extends
         SliderViewAdapter<SliderImageAdapter.SliderAdapterVH> {
 
     private Context context;
-    private ArrayList<String> mSliderItems = new ArrayList<>();
+    private ArrayList<PostImageModel> mSliderItems = new ArrayList<>();
 
     public SliderImageAdapter(Context context) {
         this.context = context;
     }
 
-    public void renewItems(ArrayList<String> sliderItems) {
+    public void renewItems(ArrayList<PostImageModel> sliderItems) {
         this.mSliderItems = sliderItems;
-        notifyDataSetChanged();
-    }
-
-    public void deleteItem(int position) {
-        this.mSliderItems.remove(position);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(String sliderItem) {
-        this.mSliderItems.add(sliderItem);
         notifyDataSetChanged();
     }
 
@@ -50,18 +42,18 @@ public class SliderImageAdapter extends
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, final int position) {
 
-        String sliderItem = mSliderItems.get(position);
+        PostImageModel sliderItem = mSliderItems.get(position);
         Glide.with(viewHolder.itemView)
-                .load(sliderItem)
+                .load(sliderItem.getPath())
                 .fitCenter()
                 .into(viewHolder.imageViewBackground);
 
-//        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)context).showPicture(v,sliderItem.getPath());
+            }
+        });
     }
 
     @Override
