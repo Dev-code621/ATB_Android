@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
 import com.atb.app.adapter.ImageAdapter;
+import com.atb.app.commons.Commons;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -45,7 +47,10 @@ public class SelectProfileDialog extends DialogFragment {
         TextView txv_name = (TextView)view.findViewById(R.id.txv_name);
         ImageView imv_check2=(ImageView)view.findViewById(R.id.imv_check2);
         ImageView imv_check1=(ImageView)view.findViewById(R.id.imv_check1);
-
+        Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+        txv_name.setText(Commons.g_user.getUserName());
+        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_business_profile);
+        txv_businessname.setText(Commons.g_user.getBusinessModel().getBusiness_name());
         lyt_business.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

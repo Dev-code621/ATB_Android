@@ -1,6 +1,7 @@
 package com.atb.app.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,11 +21,14 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
+import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.activities.register.Signup1Activity;
@@ -106,7 +110,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 break;
             case R.id.imv_post:
                 setColor(1);
-                goTo(this, SelectPostCategoryActivity.class,false);
+                startActivityForResult(new Intent(this, SelectPostCategoryActivity.class),1);
                 break;
             case R.id.imv_feed:
                 if(main_flag)selectCategory();
@@ -200,5 +204,21 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             }
         },getString(R.string.finish_app));
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            onResume();
+            mainListFragment.getList();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setColor(0);
+
     }
 }

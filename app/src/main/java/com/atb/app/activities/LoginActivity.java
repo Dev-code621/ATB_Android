@@ -288,6 +288,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     businessModel.setPost_count(business_info.getInt("post_count"));
                     businessModel.setFollowers_count(business_info.getInt("followers_count"));
                     businessModel.setFollow_count(business_info.getInt("follow_count"));
+                    userModel.setBusinessModel(businessModel);
 
                 }
 

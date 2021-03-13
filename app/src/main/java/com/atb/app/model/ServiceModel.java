@@ -14,7 +14,6 @@ public class ServiceModel {
     double price,lat,lng ;
     long created_at;
     ArrayList<InsuranceModel>insuranceModels = new ArrayList<>();
-    ArrayList<InsuranceModel>qualifications = new ArrayList<>();
     ArrayList<PostImageModel>postImageModels = new ArrayList<>();
 
 }

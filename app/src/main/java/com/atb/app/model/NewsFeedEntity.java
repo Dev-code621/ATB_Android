@@ -2,7 +2,9 @@ package com.atb.app.model;
 
 import android.util.Log;
 
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.submodel.AttributeModel;
 import com.atb.app.model.submodel.PostImageModel;
 import com.atb.app.model.submodel.VotingModel;
 
@@ -10,9 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NewsFeedEntity {
     // postType:  "Advice", "Sales", "Service", "Poll"
+    // "Text", "Image", "Video"
     int id,user_id,post_type,poster_profile_type,media_type;
     boolean type;
     boolean select = false;
@@ -33,6 +37,33 @@ public class NewsFeedEntity {
     boolean feedLike = false;
     boolean feedSave =false;
     UserModel userModel = new UserModel();
+    ArrayList<VariationModel> variationModels = new ArrayList<>();
+    ArrayList<String>attribute_titles = new ArrayList<>();
+
+    public ArrayList<String> getAttribute_titles() {
+        return attribute_titles;
+    }
+
+    public void setAttribute_titles(ArrayList<String> attribute_titles) {
+        this.attribute_titles = attribute_titles;
+    }
+
+    public HashMap<String, ArrayList<AttributeModel>> getAttribute_map() {
+        return attribute_map;
+    }
+
+    public void setAttribute_map(HashMap<String, ArrayList<AttributeModel>> attribute_map) {
+        this.attribute_map = attribute_map;
+    }
+
+    HashMap<String, ArrayList<AttributeModel>> attribute_map =  new HashMap<>();
+    public ArrayList<VariationModel> getVariationModels() {
+        return variationModels;
+    }
+
+    public void setVariationModels(ArrayList<VariationModel> variationModels) {
+        this.variationModels = variationModels;
+    }
 
     public UserModel getUserModel() {
         return userModel;
@@ -72,6 +103,7 @@ public class NewsFeedEntity {
 
     public void setDelivery_cost(String delivery_cost) {
         this.delivery_cost = delivery_cost;
+        if(delivery_cost.equals("") || delivery_cost.equals("null"))this.delivery_cost = "0.00";
     }
 
     public double getLng() {
@@ -594,7 +626,7 @@ public class NewsFeedEntity {
             post_condition = jsonObject.getString("post_condition");
             post_size = jsonObject.getString("post_size");
             post_location = jsonObject.getString("post_location");
-            delivery_cost = jsonObject.getString("delivery_cost");
+            setDelivery_cost(jsonObject.getString("delivery_cost"));
             is_active = jsonObject.getInt("is_active");
             status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
@@ -669,9 +701,40 @@ public class NewsFeedEntity {
                 JSONObject jsonObject_user = array_user.getJSONObject(0);
                 userModel.initModel(jsonObject_user);
             }
+            if(jsonObject.has("variations")){
+                JSONArray jsonArray = jsonObject.getJSONArray("variations");
+                variationModels.clear();
+                ArrayList<AttributeModel> attributeModels = new ArrayList<>();
+                for(int i =0;i<jsonArray.length();i++){
+                    VariationModel variationModel = new VariationModel();
+                    variationModel.initModel(jsonArray.getJSONObject(i));
+                    for(int j =0;j<variationModel.getAttributeModels().size();j++){
+                        AttributeModel attributeModel = variationModel.getAttributeModels().get(j);
+                        if(!attribueContain(attributeModels,attributeModel))attributeModels.add(attributeModel);
+                        if(i==0)
+                            attribute_titles.add(attributeModel.getAttribute_title());
+                    }
+                    variationModels.add(variationModel);
+                }
+                for(int i=0;i<attribute_titles.size();i++){
+                    ArrayList<AttributeModel> mapValue = new ArrayList<>();
+                    for(int j =0;j<attributeModels.size();j++){
+                        if(attributeModels.get(j).getAttribute_title().equals(attribute_titles.get(i))){
+                            mapValue.add(attributeModels.get(j));
+                        }
+                    }
+                    attribute_map.put(attribute_titles.get(i),mapValue);
+                }
+            }
         }catch (Exception e){
             Log.d("aaaa",e.toString());
         }
     }
 
+    boolean attribueContain(ArrayList<AttributeModel> attributeModels,AttributeModel attributeModel){
+        for(int i =0;i<attributeModels.size();i++){
+            if(attributeModels.get(i).getAttribute_title().equals(attributeModel.getAttribute_title()) && attributeModels.get(i).getVariant_attirbute_value().equals(attributeModel.getVariant_attirbute_value()))return  true;
+        }
+        return false;
+    }
 }

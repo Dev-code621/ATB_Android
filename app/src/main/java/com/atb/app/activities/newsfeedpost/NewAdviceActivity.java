@@ -1,5 +1,6 @@
 package com.atb.app.activities.newsfeedpost;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.CommentModel;
+import com.atb.app.util.CustomMultipartRequest;
 import com.bumptech.glide.Glide;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
@@ -27,18 +41,23 @@ import com.fxn.pix.Pix;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NewAdviceActivity extends CommonActivity implements View.OnClickListener {
     NiceSpinner spiner_media_type,spiner_category_type;
     LinearLayout lyt_back;
     ImageView imv_profile;
     FrameLayout lyt_image_video,lyt_video,lyt_profile;
-    ImageView imv_videothumnail,imv_videoicon,imv_imageicon,imv_business;
+    ImageView imv_videothumnail,imv_videoicon,imv_imageicon;
+    CardView card_business;
     ArrayList<ImageView>imageViews = new ArrayList<>();
     LinearLayout lyt_image;
     EditText edt_title,edt_description;
@@ -47,6 +66,9 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     ArrayList<String>completedValue = new ArrayList<>();
     String videovalue ="";
     File uploadThumbImage;
+    boolean business_user = false;
+    int maxImagecount = 3;
+    int media_type =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,16 +86,21 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         imageViews.add(findViewById(R.id.imv_image1));
         imageViews.add(findViewById(R.id.imv_image2));
         imageViews.add(findViewById(R.id.imv_image3));
+        imageViews.add(findViewById(R.id.imv_image4));
+        imageViews.add(findViewById(R.id.imv_image5));
+        imageViews.add(findViewById(R.id.imv_image6));
+        imageViews.add(findViewById(R.id.imv_image7));
+        imageViews.add(findViewById(R.id.imv_image8));
+
         lyt_image = findViewById(R.id.lyt_image);
         edt_title = findViewById(R.id.edt_title);
         edt_description = findViewById(R.id.edt_description);
         txv_post = findViewById(R.id.txv_post);
-        imv_business = findViewById(R.id.imv_business);
+        card_business = findViewById(R.id.card_business);
         lyt_profile = findViewById(R.id.lyt_profile);
 
         lyt_back.setOnClickListener(this);
         txv_post.setOnClickListener(this);
-        imageViews.get(0).setOnClickListener(this);
         imv_videothumnail.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
@@ -81,6 +108,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
                 // This example uses String, but your type can be any
                 String item = String.valueOf(parent.getItemAtPosition(position));
+                media_type = position;
                 if(position==0){
                     lyt_image_video.setVisibility(View.GONE);
                 }else if(position==1){
@@ -96,8 +124,40 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             }
 
         });
-
+        for(int i =0;i<imageViews.size();i++){
+            int finalI = i;
+            imageViews.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectImage(finalI);
+                }
+            });
+        }
+        initLayout();
         Keyboard();
+    }
+
+    void initLayout(){
+        for(int i =0;i<imageViews.size();i++){
+            imageViews.get(i).setVisibility(View.VISIBLE);
+            if(!business_user && i>3)imageViews.get(i).setVisibility(View.GONE);
+        }
+        if(business_user)
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+        else
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+        if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public boolean selectProfile(boolean flag){
+        business_user = flag;
+        if(flag)maxImagecount = 9 ;
+        else maxImagecount = 3;
+        initLayout();
+
+        return flag;
     }
 
     @Override
@@ -107,53 +167,165 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 finish(this);
                 break;
             case R.id.lyt_profile:
-                SelectprofileDialog(this);
-
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
                 break;
             case R.id.txv_post:
-                finish(this);
-                break;
-            case R.id.imv_image:
-                selectImage();
+                postAdvice();
                 break;
             case R.id.imv_videothumnail:
+                videovalue = "";
                 selectVideo();
                 break;
         }
     }
 
-    void selectImage(){
-        SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
-        selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
-            @Override
-            public void OnCamera() {
-                if(completedValue.size()==4)return;
-                Options options = Options.init()
-                        .setRequestCode(100)                                           //Request code for activity results
-                        .setCount(4-completedValue.size())                                                   //Number of images to restict selection count
-                        .setFrontfacing(false)                                         //Front Facing camera on start
-                        .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                        .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                        .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
-                        .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                        .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                        .setPath("/pix/images");                                       //Custom Path For media Storage
+    void postAdvice(){
+        if(edt_title.getText().toString().length()==0){
+            showAlertDialog(getResources().getString(R.string.input_title));
+            return;
+        }else  if(edt_description.getText().toString().length()==0){
+            showAlertDialog(getResources().getString(R.string.input_description));
+            return;
+        }
+        if(media_type==1 && completedValue.size()==0){
+            showAlertDialog(getResources().getString(R.string.input_photos));
+            return;
+        }
+        if(media_type ==2 && videovalue.equals("")){
+            showAlertDialog(getResources().getString(R.string.input_videos));
+            return;
+        }
 
-                Pix.start(NewAdviceActivity.this, options);
+        showProgress();
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("token", Commons.token);
+            params.put("type", "1");
+            params.put("media_type", String.valueOf(media_type));
+            if(business_user)
+                params.put("profile_type", "1");
+            else
+                params.put("profile_type", "0");
+            params.put("title", edt_title.getText().toString());
+            params.put("description", edt_description.getText().toString());
+            params.put("brand", "");
+            params.put("price", "0.00");
+            params.put("category_title", spiner_category_type.getSelectedItem().toString());
+            params.put("item_title", "");
+            params.put("payment_options", "0");
+            params.put("location_id", "0");
+            params.put("delivery_option", "0");
+            params.put("delivery_cost", "0");
+            //File part
+            ArrayList<File> post = new ArrayList<>();
+            if(media_type ==1) {
+                for (int i = 0; i < completedValue.size(); i++) {
+                    File file = new File(completedValue.get(i));
+                    post.add(file);
+                }
+            }else {
+                File file = new File(videovalue);
+                post.add(file);
             }
+            String API_LINK =API.CREATE_POST_API,imageTitle = "post_imgs";
 
-            @Override
-            public void OnAlbum() {
-                if(completedValue.size()>0)
-                    completedValue.remove(0);
-                reloadImages();
+            Map<String, String> mHeaderPart= new HashMap<>();
+            mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
+            mHeaderPart.put("Accept", "application/json");
 
-            }
-        },getResources().getString(R.string.what_wouldlike),getResources().getString(R.string.add_media),getResources().getString(R.string.remove_media));
-        selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+            CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    closeProgress();
+                    try {
+                        if(jsonObject.getBoolean("result")) {
+                            setResult(RESULT_OK);
+                            finish(NewAdviceActivity.this);
+                        }else {
+                            showAlertDialog(jsonObject.getString("msg"));
+                        }
+
+                    }catch (Exception e){
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @SuppressLint("WrongConstant")
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    showToast("File upload failed");
+                    closeProgress();
+                }
+
+            }, post, params, mHeaderPart,imageTitle);
+            mCustomRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(mCustomRequest, API_LINK);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            closeProgress();
+            showAlertDialog("Photo Upload is failed . Please try again.");
+        }
+
+    }
 
 
+    void selectImage(int posstion){
+        if(posstion==maxImagecount){
+            SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+            selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+                @Override
+                public void OnCamera() {
+                    if (Commons.g_user.getAccount_type() == 1) {
+                        business_user = true;
+                        maxImagecount = 9;
+                        initLayout();
+                    }else {
+                        goTo(NewAdviceActivity.this, UpdateBusinessActivity.class,false);
+                    }
+                }
 
+                @Override
+                public void OnAlbum() {
+
+                }
+            },getResources().getString(R.string.upload3image),getResources().getString(R.string.yes),getResources().getString(R.string.no));
+            selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+        }else {
+            SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+            selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+                @Override
+                public void OnCamera() {
+                    if(completedValue.size()==maxImagecount)return;
+                    Options options = Options.init()
+                            .setRequestCode(100)                                           //Request code for activity results
+                            .setCount(maxImagecount-completedValue.size())                                                   //Number of images to restict selection count
+                            .setFrontfacing(false)                                         //Front Facing camera on start
+                            .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
+                            .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
+                            .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
+                            .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
+                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                            .setPath("/pix/images");                                       //Custom Path For media Storage
+
+                    Pix.start(NewAdviceActivity.this, options);
+                }
+
+                @Override
+                public void OnAlbum() {
+                    if(completedValue.size()>posstion)
+                        completedValue.remove(posstion);
+                    reloadImages();
+
+                }
+            },getResources().getString(R.string.what_wouldlike),getResources().getString(R.string.add_media),getResources().getString(R.string.remove_media));
+            selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+        }
     }
     void selectVideo(){
 
@@ -191,7 +363,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == 100) {
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-            if(completedValue.size()>3)return;
+            if(completedValue.size()>maxImagecount)return;
 
             completedValue.addAll(returnValue);
             reloadImages();
@@ -203,17 +375,19 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     }
 
     void reloadImages(){
-        for(int i =0;i<imageViews.size();i++)imageViews.get(i).setImageResource(0);
+        imageViews.get(0).setImageResource(0);
+        for(int i =1;i<imageViews.size();i++)imageViews.get(i).setImageResource(R.drawable.icon_image1);
         if(completedValue.size()>0)imv_imageicon.setVisibility(View.GONE);
+        else imv_imageicon.setVisibility(View.VISIBLE);
         for(int i =0;i<completedValue.size();i++){
-            Glide.with(this).load(completedValue.get(i)).placeholder(R.drawable.image_thumnail).dontAnimate().into(imageViews.get(i));
+            Glide.with(this).load(completedValue.get(i)).placeholder(R.drawable.icon_image1).dontAnimate().into(imageViews.get(i));
 
         }
     }
     void reloadVideo(){
-        uploadThumbImage = Helper.getThumbnailPathForLocalFile(this, videovalue);
+        //uploadThumbImage = Helper.getThumbnailPathForLocalFile(this, videovalue);
 
-        Glide.with(this).load(uploadThumbImage).placeholder(R.drawable.image_thumnail).dontAnimate().into(imv_videothumnail);
+        Glide.with(this).load(videovalue).placeholder(R.drawable.image_thumnail).dontAnimate().into(imv_videothumnail);
 
         imv_videoicon.setImageDrawable(getResources().getDrawable(R.drawable.icon_player));
 

@@ -25,11 +25,15 @@ import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
+import com.atb.app.activities.register.CreateFeedActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -294,6 +298,9 @@ public class ProfileNaviagationActivity extends CommonActivity implements View.O
         confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
             @Override
             public void onConfirm() {
+                Preference.getInstance().put(ProfileNaviagationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
+                Preference.getInstance().put(ProfileNaviagationActivity.this, PrefConst.PREFKEY_USERPWD, "");
+
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

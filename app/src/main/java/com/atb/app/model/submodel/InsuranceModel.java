@@ -1,6 +1,12 @@
 package com.atb.app.model.submodel;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 public class InsuranceModel {
+
+    // type = 0,1 ; insrance , qualitfication
     int id,user_id,type;
     String company, reference, expiry, file;
     long created_at,modified_at;
@@ -75,5 +81,22 @@ public class InsuranceModel {
 
     public void setModified_at(long modified_at) {
         this.modified_at = modified_at;
+    }
+
+    public void initModel(JSONObject jsonObject){
+        try {
+            setId(jsonObject.getInt("id"));
+            setUser_id(jsonObject.getInt("user_id"));
+            setType(jsonObject.getInt("type"));
+            setCompany(jsonObject.getString("company"));
+            setReference(jsonObject.getString("reference"));
+            setExpiry(jsonObject.getString("expiry"));
+            setFile(jsonObject.getString("file"));
+            setCreated_at(jsonObject.getLong("created_at"));
+            setModified_at(jsonObject.getLong("modified_at"));
+        }catch (Exception e ){
+            Log.d("aaaaaa",e.toString());
+
+        }
     }
 }

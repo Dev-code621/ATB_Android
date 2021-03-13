@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atb.app.R;
+import com.atb.app.activities.VideoPlayerActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.submodel.PostImageModel;
 import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
@@ -51,7 +53,10 @@ public class SliderImageAdapter extends
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((CommonActivity)context).showPicture(v,sliderItem.getPath());
+                if(!Commons.mediaVideoType(sliderItem.getPath()))
+                    ((CommonActivity)context).showPicture(v,sliderItem.getPath());
+                else
+                    VideoPlayerActivity.start(context,sliderItem.getPath(),sliderItem.getPath());
             }
         });
     }

@@ -38,7 +38,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.navigationItems.booking.CreateBooking2Activity"></activity>
+        <activity android:name=".activities.VideoPlayerActivity"></activity>
+        <activity android:name=".activities.navigationItems.booking.CreateBooking2Activity" />
         <activity android:name=".activities.navigationItems.booking.BookinViewActivity" />
         <activity android:name=".activities.navigationItems.booking.CreateABookingActivity" />
         <!--
@@ -53,77 +54,99 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activities.navigationItems.SavePostActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.ContactAdminActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.TransactionHistoryActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.SetPostRangeActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.CreateAmendBioActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.ItemSoldActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.BookingActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.UpdateBusinessActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.NotificationActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.navigationItems.SavePostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.ContactAdminActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.TransactionHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.SetPostRangeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.CreateAmendBioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.ItemSoldActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.BookingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.UpdateBusinessActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.NotificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".activities.ProfileNaviagationActivity"
             android:label="@string/title_activity_profile_naviagation"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.navigationItems.ProfileActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.ExistSalesPostActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.NewPollVotingActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.NewServiceOfferActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.NewSalePostActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.NewAdviceActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newpost.SelectPostCategoryActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.newsfeedpost.NewsDetailActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.register.CreateFeedActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.register.ProfileSetActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.register.Signup2Activity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.register.Signup1Activity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.ExistSalesPostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.NewPollVotingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.NewServiceOfferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.NewSalePostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.NewAdviceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newpost.SelectPostCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newsfeedpost.NewsDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.register.CreateFeedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.register.ProfileSetActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.register.Signup2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.register.Signup1Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
         <activity
             android:name=".activities.SplashActivity"
             android:configChanges="orientation|screenSize"
@@ -138,8 +161,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
 
         <uses-library
             android:name="org.apache.http.legacy"

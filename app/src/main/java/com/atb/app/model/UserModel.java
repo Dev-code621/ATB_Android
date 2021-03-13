@@ -428,7 +428,7 @@ public class UserModel {
                 businessModel.setPost_count(business_info.getInt("post_count"));
                 businessModel.setFollowers_count(business_info.getInt("followers_count"));
                 businessModel.setFollow_count(business_info.getInt("follow_count"));
-
+                setBusinessModel(businessModel);
             }
 
         }catch (Exception e){

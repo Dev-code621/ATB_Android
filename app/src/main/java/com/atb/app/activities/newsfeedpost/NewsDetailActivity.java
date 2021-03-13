@@ -38,7 +38,9 @@ import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.adapter.CommentAdapter;
+import com.atb.app.adapter.EmailAdapter;
 import com.atb.app.adapter.PollEmageAdapter;
+import com.atb.app.adapter.SelectOneItemAdapter;
 import com.atb.app.adapter.SliderImageAdapter;
 import com.atb.app.adapter.VotingListAdapter;
 import com.atb.app.api.API;
@@ -94,10 +96,35 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     VotingListAdapter votingListAdapter;
     TextView txv_book_service;
     ImageView imv_bubble;
+
+    LinearLayout lyt_sale_post,lyt_location;
+    TextView txv_brand,txv_price,txv_postage_cost,txv_location,txv_buy_sale;
+    ArrayList<RecyclerView> recycler_view_attribue = new ArrayList<>();
+    ArrayList<LinearLayout> lyt_attribute = new ArrayList<>();
+    ArrayList<TextView> txv_attribute = new ArrayList<>();
+    ImageView imv_cart,imv_videoplay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_detail);
+        lyt_sale_post = findViewById(R.id.lyt_sale_post);
+        lyt_location = findViewById(R.id.lyt_location);
+        txv_brand = findViewById(R.id.txv_brand);
+        txv_price = findViewById(R.id.txv_price);
+        txv_postage_cost = findViewById(R.id.txv_postage_cost);
+        txv_location = findViewById(R.id.txv_location);
+        txv_buy_sale = findViewById(R.id.txv_buy_sale);
+        recycler_view_attribue.add( findViewById(R.id.recycler_view_color));
+        recycler_view_attribue.add(findViewById(R.id.recycler_view_size));
+        recycler_view_attribue.add(findViewById(R.id.recycler_view_material));
+        lyt_attribute.add(findViewById(R.id.lyt_attribute1));
+        lyt_attribute.add(findViewById(R.id.lyt_attribute2));
+        lyt_attribute.add(findViewById(R.id.lyt_attribute3));
+        txv_attribute.add(findViewById(R.id.txv_attribute1));
+        txv_attribute.add(findViewById(R.id.txv_attribute2));
+        txv_attribute.add(findViewById(R.id.txv_attribute3));
+        imv_cart = findViewById(R.id.imv_cart);
+        imv_videoplay = findViewById(R.id.imv_videoplay);
         imv_back = findViewById(R.id.imv_back);
         imv_profile = findViewById(R.id.imv_profile);
         imv_navigation = findViewById(R.id.imv_navigation);
@@ -254,18 +281,29 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     void initialLayout(){
         setSliderAdapter.renewItems(newsFeedEntity.getPostImageModels());
-        Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
-        txv_name.setText(newsFeedEntity.getUserModel().getFirstname() +" " + newsFeedEntity.getUserModel().getLastname());
+        if(newsFeedEntity.getPoster_profile_type()==0) {
+            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            txv_name.setText(newsFeedEntity.getUserModel().getFirstname() + " " + newsFeedEntity.getUserModel().getLastname());
+        }else {
+            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            txv_name.setText(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_name());
+        }
         txv_id.setText("@"+newsFeedEntity.getUserModel().getUserName());
         txv_like.setText(String.valueOf(newsFeedEntity.getLikes()));
         txv_comment_number.setText(String.valueOf(newsFeedEntity.getComments()));
         lyt_advice_image.setVisibility(View.GONE);
         lyt_text.setVisibility(View.GONE);
         lyt_offered.setVisibility(View.GONE);
+        lyt_sale_post.setVisibility(View.GONE);
         imv_txv_type.setImageResource(Constants.postType[newsFeedEntity.getPost_type()]);
         txv_advicename1.setText(newsFeedEntity.getTitle());
         txv_advicename1_description.setText(newsFeedEntity.getDescription());
         txv_category.setText(newsFeedEntity.getCategory_title() +" >");
+        if(newsFeedEntity.getPostImageModels().size()>0){
+            if(Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(0).getPath()))
+                imv_videoplay.setVisibility(View.VISIBLE);
+        }
+
         switch (newsFeedEntity.getPost_type()) {
             case 1:
                 if(newsFeedEntity.getPostImageModels().size() ==0){
@@ -280,6 +318,22 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             case 2:
                 lyt_advice_image.setVisibility(View.VISIBLE);
                 txv_category.setVisibility(View.VISIBLE);
+                lyt_sale_post.setVisibility(View.VISIBLE);
+                txv_brand.setText(newsFeedEntity.getPost_brand());
+                txv_price.setText("£" + newsFeedEntity.getPrice());
+                txv_postage_cost.setText("£" + newsFeedEntity.getDelivery_cost());
+                txv_location.setText(newsFeedEntity.getPost_location());
+                for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
+                    txv_attribute.get(i).setText(newsFeedEntity.getAttribute_titles().get(i));
+                    lyt_attribute.get(i).setVisibility(View.VISIBLE);
+                    recycler_view_attribue.get(i).setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                    recycler_view_attribue.get(i).setAdapter(new SelectOneItemAdapter(this, newsFeedEntity.getAttribute_map().get(newsFeedEntity.getAttribute_titles().get(i)), new SelectOneItemAdapter.OnSelectListener() {
+                        @Override
+                        public void onSelect(String path) {
+                            Log.d("aaaa","path");
+                        }
+                    }));
+                }
                 break;
             case 3:
                 lyt_advice_image.setVisibility(View.VISIBLE);

@@ -1,6 +1,7 @@
 package com.atb.app.base;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +24,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.view.zoom.ImageZoomButton;
 import com.atb.app.view.zoom.ZoomAnimation;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
@@ -54,6 +57,11 @@ public abstract class CommonActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Commons.g_commentActivity = this;
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
     public static String getCurrentTime(){
         Timestamp timestamp = new Timestamp(new Date().getTime());
@@ -128,16 +136,15 @@ public abstract class CommonActivity extends BaseActivity {
         selectProfileDialog.OnSelectListener(new SelectProfileDialog.OnSelectListener() {
             @Override
             public void OnSelectProfile(boolean flag) {
-                if(flag){
-
-                }else{
-
-                }
+                selectProfile(flag);
             }
         });
         selectProfileDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
+    public boolean selectProfile(boolean flag){
+        return flag;
+    }
 
     private ZoomAnimation zoomAnimation;
     private boolean isZoom=false;

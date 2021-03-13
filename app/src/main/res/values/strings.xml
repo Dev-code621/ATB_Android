@@ -51,7 +51,9 @@
     <string name="what_want_post">What do you want to post?</string>
     <string name="advice">Advice</string>
     <string name="advice1">Recommendations or Help</string>
+
     <string name="sales">Sale Posts</string>
+    <string name="select_item">Select Item</string>
     <string name="service_offer">Service Offered</string>
     <string name="poll_votting">Poll/Voting</string>
 
@@ -176,6 +178,10 @@
     <string name="type_a_tag">Type a Tag</string>
     <string name="save_business_detail">Save Business Details </string>
     <string name="input_username">Type your username</string>
+    <string name="input_title">Please input the title</string>
+    <string name="input_description">Please input the description</string>
+    <string name="input_photos">Please add images for your post.</string>
+    <string name="input_videos">Please add a video for your post</string>
     <string name="business_bio">Set Business Bio</string>
     <string name="save_business_bio">Save Business Bio</string>
     <string name="bio_description">Type your biography above this will be public in your profile page</string>
@@ -230,4 +236,8 @@
     <string name="insured">Insured</string>
     <string name="qualified">Qualified</string>
     <string name="book_service">Book this service</string>
+    <string name="postage_cost">Postage Cost</string>
+    <string name="upload3image">You can"'"t add more than 3 images using a normal account!\nDo you want to switch to your business account?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

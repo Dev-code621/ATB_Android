@@ -15,17 +15,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/lyt_text"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/complete_action_using"
                 android:id="@+id/tv_title"
                 android:textSize="13sp"
                 android:textStyle="bold"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"/>
         </LinearLayout>
@@ -39,15 +43,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_close"
+            android:layout_below="@+id/lyt_text"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:paddingBottom="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/lite_gray" />
+                android:background="@color/head_color" />
             <TextView
                 android:layout_width="150dp"
                 android:layout_height="40dp"

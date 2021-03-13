@@ -14,6 +14,7 @@ public class API {
     public static final String LOGIN_API = API_BASE_URL + "auth/login";
     public static final String REGISTER_API = API_BASE_URL + "auth/register";
     public static final String UPDATE_FEED_API = API_BASE_URL + "auth/update_feed";
+
     public static final String SEND_PWDRESETEMAIL_API = API_BASE_URL + "auth/forgot_pass_email_verification";
     public static final String RESETCODE_VERIFY_API = API_BASE_URL + "auth/check_verification_code";
     public static final String PWDRESET_API = API_BASE_URL + "auth/update_pass";
@@ -24,6 +25,7 @@ public class API {
     public static final String UPDATE_BIO_API = API_BASE_URL + "profile/updatebio";
     public static final String SET_POST_RANGE_API = API_BASE_URL + "profile/update_search_region";
     public static final String GET_FOLLOWER_API = API_BASE_URL + "profile/getfollower";
+    public static final String GETSERVICEFILES = API_BASE_URL + "profile/get_service_files";
 
     public static final String GENERATE_EPHEMERAL_KEY = API_BASE_URL + "profile/generate_ephemeral_key";
     public static final String ADD_CARD_API = API_BASE_URL + "profile/add_payment";

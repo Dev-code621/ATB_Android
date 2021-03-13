@@ -85,7 +85,9 @@ public class VotingListAdapter  extends BaseAdapter {
         }
         final VotingModel votingModel = _roomDatas.get(position);
         holder.txv_name.setText(votingModel.getPoll_value());
-        int percentage = 100*votingModel.getVotes().size()/totalUser;
+        int percentage = 0;
+        if(totalUser!=0)
+            percentage = 100*votingModel.getVotes().size()/totalUser;
         holder.txv_percentage.setText(String.valueOf(percentage) + "%");
         holder.txv_percentage.setTextColor(_context.getResources().getColor(R.color.txt_color));
         holder.txv_name.setTextColor(_context.getResources().getColor(R.color.txt_color));

@@ -44,46 +44,6 @@
             android:orientation="vertical"
             android:paddingBottom="10dp">
             <RelativeLayout
-                android:id="@+id/lyt_business"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp">
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_user_info_image1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:cardCornerRadius="25dp"
-                    app:cardElevation="0dp"
-                    app:cardUseCompatPadding="false">
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/imv_business_profile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:actualImageScaleType="centerCrop"
-                        app:placeholderImage="@drawable/profile_pic"/>
-                </androidx.cardview.widget.CardView>
-                <TextView
-                    android:id="@+id/txv_businessname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Manicure"
-                    android:textColor="@color/txt_color"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/card_user_info_image1"
-                    style="@style/textTheme"/>
-                <ImageView
-                    android:id="@+id/imv_check1"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/check_mak1"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    android:layout_alignParentRight="true"/>
-            </RelativeLayout>
-            <RelativeLayout
                 android:id="@+id/lyt_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,6 +76,46 @@
                     style="@style/textTheme"/>
                 <ImageView
                     android:id="@+id/imv_check2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/check_mak1"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lyt_business"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_user_info_image1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false">
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/imv_business_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:actualImageScaleType="centerCrop"
+                        app:placeholderImage="@drawable/profile_pic"/>
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/txv_businessname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Manicure"
+                    android:textColor="@color/txt_color"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/card_user_info_image1"
+                    style="@style/textTheme"/>
+                <ImageView
+                    android:id="@+id/imv_check1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/check_mak1"

@@ -142,4 +142,7 @@ dependencies {
     implementation 'com.diffey.view.progressview:progressview:0.3.1'
     //eomji encode
     implementation 'org.apache.commons:commons-lang3:3.4'
+    //video
+    implementation 'cn.jzvd:jiaozivideoplayer:7.4.2'
+
 }

@@ -1,7 +1,10 @@
 package com.atb.app.activities.newpost;
 
+import androidx.annotation.Nullable;
 import androidx.transition.Scene;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
+import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.newsfeedpost.ExistSalesPostActivity;
 import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
 import com.atb.app.activities.newsfeedpost.NewPollVotingActivity;
 import com.atb.app.activities.newsfeedpost.NewSalePostActivity;
 import com.atb.app.activities.newsfeedpost.NewServiceOfferActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.google.android.gms.common.internal.service.Common;
 
 public class SelectPostCategoryActivity extends CommonActivity implements View.OnClickListener {
     ViewGroup sceneRoot;
@@ -32,12 +39,6 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
         aScene = Scene.getSceneForLayout(sceneRoot, R.layout.post_selectitem_layout, this);
         anotherScene = Scene.getSceneForLayout(sceneRoot, R.layout.activity_select_post_type, this);
         activityAnimation(aScene,R.id.lyt_container);
-        loadLayout();
-
-    }
-
-    void loadLayout(){
-
         imv_close = sceneRoot.findViewById(R.id.imv_close);
         lyt_advice = sceneRoot.findViewById(R.id.lyt_advice);
         lyt_sale_post = sceneRoot.findViewById(R.id.lyt_sale_post);
@@ -49,6 +50,16 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
         lyt_sale_post.setOnClickListener(this);
         lyt_serviceoffer.setOnClickListener(this);
         lyt_pool.setOnClickListener(this);
+        loadLayout();
+
+    }
+
+    void loadLayout(){
+    if(Commons.g_user.getAccount_type()==0 || Commons.g_user.getBusinessModel().getApproved()==0){
+        lyt_serviceoffer.setVisibility(View.GONE);
+    }
+
+
     }
     void loadnewLayout(){
         TextView txv_cancel = sceneRoot.findViewById(R.id.txv_cancel);
@@ -76,7 +87,7 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                 finish(this);
                 break;
             case R.id.lyt_advice:
-                goTo(this, NewAdviceActivity.class,false);
+                startActivityForResult(new Intent(this, NewAdviceActivity.class),1);
                 break;
             case R.id.lyt_sale_post:
                 activityAnimation(anotherScene,R.id.lyt_container);
@@ -89,7 +100,7 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                 loadnewLayout();
                 break;
             case R.id.lyt_pool:
-                goTo(this, NewPollVotingActivity.class,false);
+                startActivityForResult(new Intent(this, NewPollVotingActivity.class),1);
                 break;
             case R.id.txv_cancel:
                 activityAnimation(aScene,R.id.lyt_container);
@@ -117,5 +128,14 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
             type = 0;
             loadLayout();
         }else finish(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            setResult(RESULT_OK);
+            finish(this);
+        }
     }
 }
