@@ -244,6 +244,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             newsFeedEntity = new NewsFeedEntity();

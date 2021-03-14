@@ -459,7 +459,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.g_user.getLocation());
+            txv_location.setText(Commons.location);
         }
 
     }

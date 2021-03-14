@@ -126,6 +126,9 @@ dependencies {
 
     //toggle
     implementation 'com.zcw:togglebutton-library:1.0.0'
+    //switch buton
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+
     //sticker Headerview
     implementation 'org.zakariya.stickyheaders:stickyheaders:0.7.10'
     //material data time picker
@@ -144,5 +147,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.4'
     //video
     implementation 'cn.jzvd:jiaozivideoplayer:7.4.2'
+
+    //time Picker
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+
 
 }

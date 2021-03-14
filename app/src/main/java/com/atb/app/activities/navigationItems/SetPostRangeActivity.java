@@ -176,8 +176,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 break;
             case R.id.txv_update:
                 setResult(Commons.location_code);
-                Commons.g_user.setLocation(edt_serach.getText().toString());
-
+                Commons.location = edt_serach.getText().toString();
                 finish(this);
                 break;
             case R.id.lyt_send:

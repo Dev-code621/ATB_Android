@@ -39,6 +39,11 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
         aScene = Scene.getSceneForLayout(sceneRoot, R.layout.post_selectitem_layout, this);
         anotherScene = Scene.getSceneForLayout(sceneRoot, R.layout.activity_select_post_type, this);
         activityAnimation(aScene,R.id.lyt_container);
+        loadLayout();
+
+    }
+
+    void loadLayout(){
         imv_close = sceneRoot.findViewById(R.id.imv_close);
         lyt_advice = sceneRoot.findViewById(R.id.lyt_advice);
         lyt_sale_post = sceneRoot.findViewById(R.id.lyt_sale_post);
@@ -50,13 +55,8 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
         lyt_sale_post.setOnClickListener(this);
         lyt_serviceoffer.setOnClickListener(this);
         lyt_pool.setOnClickListener(this);
-        loadLayout();
-
-    }
-
-    void loadLayout(){
-    if(Commons.g_user.getAccount_type()==0 || Commons.g_user.getBusinessModel().getApproved()==0){
-        lyt_serviceoffer.setVisibility(View.GONE);
+        if(Commons.g_user.getAccount_type()==0 || Commons.g_user.getBusinessModel().getApproved()==0){
+            lyt_serviceoffer.setVisibility(View.GONE);
     }
 
 
@@ -71,7 +71,7 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
         txv_cancel.setOnClickListener(this);
         lyt_repost.setOnClickListener(this);
 
-        if(type ==1){
+        if(type ==2){
             txv_new.setText(getResources().getString(R.string.newproduct));
             txv_repost.setText(getResources().getString(R.string.exist_product));
         }else {
@@ -91,12 +91,12 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                 break;
             case R.id.lyt_sale_post:
                 activityAnimation(anotherScene,R.id.lyt_container);
-                type = 1;
+                type = 2;
                 loadnewLayout();
                 break;
             case R.id.lyt_serviceoffer:
                 activityAnimation(anotherScene,R.id.lyt_container);
-                type = 2;
+                type = 3;
                 loadnewLayout();
                 break;
             case R.id.lyt_pool:
@@ -108,15 +108,20 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                 loadLayout();
                 break;
             case R.id.lyt_newpost:
-                if(type ==1 )
-                      goTo(this, NewSalePostActivity.class,false);
-                else
-                    goTo(this, NewServiceOfferActivity.class,false);
+                if(type ==2 )
+                    startActivityForResult(new Intent(this, NewSalePostActivity.class),1);
+
+                else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("isPosting", 1);
+                    startActivityForResult(new Intent(this, NewServiceOfferActivity.class).putExtra("data",bundle), 1);
+                }
+
                 break;
             case R.id.lyt_repost:
                 Bundle bundle = new Bundle();
                 bundle.putInt("type",type);
-                goTo(this, ExistSalesPostActivity.class,false,bundle);
+                startActivityForResult(new Intent(this, ExistSalesPostActivity.class).putExtra("data",bundle), 1);
                 break;
         }
     }

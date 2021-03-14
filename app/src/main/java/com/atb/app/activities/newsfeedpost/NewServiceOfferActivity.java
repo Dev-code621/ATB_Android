@@ -1,5 +1,6 @@
 package com.atb.app.activities.newsfeedpost;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.submodel.InsuranceModel;
+import com.atb.app.util.CustomMultipartRequest;
 import com.bumptech.glide.Glide;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
@@ -42,6 +44,7 @@ import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +71,10 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     String videovalue ="";
     int maxImagecount = 9;
      int insurance_id = -1,qualitfication_id = -1;
+     boolean cash = false, paypal = false;
+     int is_deposit_required = 0,candellation = 0;
+     float deposit_amount =0.00f;
+     int isPosting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +134,15 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         lyt_insurance_minus.setOnClickListener(this);
         lyt_qualitfied_plus.setOnClickListener(this);
         lyt_insurance_plus.setOnClickListener(this);
+        txv_minus.setOnClickListener(this);
+        txv_plus.setOnClickListener(this);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                isPosting= bundle.getInt("isPosting");
+            }
+        }
+
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
@@ -147,8 +163,26 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         toggle_deposit.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
-                if(on)lyt_deposit.setVisibility(View.VISIBLE);
-                else lyt_deposit.setVisibility(View.GONE);
+                if(on){
+                    lyt_deposit.setVisibility(View.VISIBLE);
+                    is_deposit_required = 1;
+                }
+                else {
+                    lyt_deposit.setVisibility(View.GONE);
+                    is_deposit_required =0;
+                }
+            }
+        });
+        toggle_cash.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                cash = on;
+            }
+        });
+        toggle_paypal.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                paypal = on;
             }
         });
         toggle_quality.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
@@ -219,6 +253,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             txv_insurance_name.setText(qualifications.get(qualitfication_id).getCompany() + " " + qualifications.get(qualitfication_id).getReference() );
             txv_insurance_time.setText("Expires" + qualifications.get(qualitfication_id).getExpiry());
         }
+        txt_cancelday.setText(String.valueOf(candellation));
     }
 
 
@@ -308,7 +343,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 finish(this);
                 break;
             case R.id.txv_post:
-                finish(this);
+                postService();
                 break;
             case R.id.imv_videothumnail:
                 videovalue = "";
@@ -334,6 +369,138 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 qualitfication_id = -1;
                 initLayout();
                 break;
+            case R.id.txv_minus:
+                if(candellation ==0) break;
+                candellation--;
+                initLayout();
+                break;
+            case R.id.txv_plus:
+                if(candellation==3)break;
+                candellation++;
+                initLayout();
+                break;
+        }
+    }
+
+    void postService(){
+        if(media_type==1 && completedValue.size() ==0){
+            showAlertDialog("Please add image for your service");
+            return;
+        }else if(media_type==2 && videovalue.length() ==0){
+            showAlertDialog("Please add video for your service");
+            return;
+        }
+        else if(edt_title.getText().toString().length()==0){
+            showAlertDialog("Please add the service title ");
+            return;
+        }else if(edt_description.getText().toString().length()==0){
+            showAlertDialog("Please input the description");
+            return;
+        }else if(edt_price.getText().toString().length() ==0){
+            showAlertDialog("Please input price.");
+            return;
+        }else if(txv_location.getText().toString().length()==0){
+            showAlertDialog("Please input the location");
+            return;
+        }else if(!cash && !paypal){
+            showAlertDialog("Please input payment option.");
+            return;
+        }
+        showProgress();
+        try {
+            deposit_amount = 0.00f;
+            if(edt_deposit.getText().toString().length()>0)
+            deposit_amount = Float.parseFloat(edt_deposit.getText().toString());
+            Map<String, String> params = new HashMap<>();
+            params.put("token", Commons.token);
+            params.put("poster_profile_type", "1");
+            params.put("media_type", String.valueOf(media_type));
+            params.put("title", edt_title.getText().toString());
+            params.put("description", edt_description.getText().toString());
+            params.put("price", edt_price.getText().toString());
+            params.put("is_deposit_required", String.valueOf(is_deposit_required));
+            params.put("deposit_amount", String.valueOf(deposit_amount));
+            params.put("cancellations", String.valueOf(candellation));
+            params.put("category_title", spiner_category_type.getSelectedItem().toString());
+            params.put("location_id", txv_location.getText().toString());
+            params.put("lat", String.valueOf(Commons.lat));
+            params.put("lng", String.valueOf(Commons.lng));
+            if(insurance_id ==-1)
+                params.put("insurance_id", "");
+            else
+                params.put("insurance_id", String.valueOf(insuranceModels.get(insurance_id).getId()));
+            if(qualitfication_id ==-1)
+                params.put("qualification_id", "");
+            else
+                params.put("qualification_id", String.valueOf(qualifications.get(insurance_id).getId()));
+            // 0 - none selected, 1 - Cash on Colleciton, 2 - PayPal, 3 - both Cash and PayPal
+            if(cash && paypal)
+                params.put("payment_options", "3");
+            else if(cash)
+                params.put("payment_options", "1");
+            else
+                params.put("payment_options", "2");
+            params.put("post_tags", "");
+            params.put("brand", "");
+            params.put("delivery_option", "0");
+            params.put("delivery_cost", "0");
+            params.put("item_title", "");
+            params.put("post_condition", "");
+            params.put("make_post", String.valueOf(isPosting));
+            //File part
+            ArrayList<File> post = new ArrayList<>();
+            if(media_type ==1) {
+                for (int i = 0; i < completedValue.size(); i++) {
+                    File file = new File(completedValue.get(i));
+                    post.add(file);
+                }
+            }else {
+                File file = new File(videovalue);
+                post.add(file);
+            }
+            String API_LINK =API.ADD_SERVICE,imageTitle = "post_imgs";
+
+            Map<String, String> mHeaderPart= new HashMap<>();
+            mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
+            mHeaderPart.put("Accept", "application/json");
+
+            CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    closeProgress();
+                    try {
+                        Log.d("aaaaa",jsonObject.toString());
+                        if(jsonObject.getBoolean("result")) {
+                            setResult(RESULT_OK);
+                            finish(NewServiceOfferActivity.this);
+                        }else {
+                            showAlertDialog(jsonObject.getString("msg"));
+                        }
+
+                    }catch (Exception e){
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @SuppressLint("WrongConstant")
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    showToast("File upload failed");
+                    closeProgress();
+                }
+
+            }, post, params, mHeaderPart,imageTitle);
+            mCustomRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(mCustomRequest, API_LINK);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            closeProgress();
+            showAlertDialog("Photo Upload is failed . Please try again.");
         }
     }
 
@@ -398,7 +565,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             videovalue = returnValue.get(0);
             reloadVideo();
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.g_user.getLocation());
+            txv_location.setText(Commons.location);
         }
     }
 

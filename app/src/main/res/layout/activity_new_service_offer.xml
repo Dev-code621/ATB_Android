@@ -290,7 +290,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="0.00"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:singleLine="true"
                         android:gravity="right|center"/>
                 </LinearLayout>
@@ -352,7 +352,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="0.00"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:singleLine="true"
                         android:gravity="right|center"/>
                 </LinearLayout>
@@ -391,7 +391,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="50dp"
-                        android:text="1"
+                        android:text="0"
                         android:gravity="center"
                         android:inputType="number"
                         android:singleLine="true" />
@@ -629,7 +629,7 @@
                             android:id="@+id/lyt_insurance_minus"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:gravity="center">
+                             android:gravity="center">
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"

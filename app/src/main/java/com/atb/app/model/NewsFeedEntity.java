@@ -21,7 +21,7 @@ public class NewsFeedEntity {
     boolean type;
     boolean select = false;
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
-    String title,description,brand,post_tags,post_condition,post_size,post_location,status_reason;
+    String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason;
     String price,deposit,delivery_cost,is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
     int payment_options,delivery_option,is_active,is_sold;
     double lat,lng;
@@ -39,6 +39,15 @@ public class NewsFeedEntity {
     UserModel userModel = new UserModel();
     ArrayList<VariationModel> variationModels = new ArrayList<>();
     ArrayList<String>attribute_titles = new ArrayList<>();
+    int stock_level;
+
+    public int getStock_level() {
+        return stock_level;
+    }
+
+    public void setStock_level(int stock_level) {
+        this.stock_level = stock_level;
+    }
 
     public ArrayList<String> getAttribute_titles() {
         return attribute_titles;
@@ -519,14 +528,18 @@ public class NewsFeedEntity {
         try {
             id = jsonObject.getInt("id");
             user_id = jsonObject.getInt("user_id");
-            post_type = jsonObject.getInt("post_type");
+            if(jsonObject.has("post_type"))
+                post_type = jsonObject.getInt("post_type");
             poster_profile_type = jsonObject.getInt("poster_profile_type");
             media_type = jsonObject.getInt("media_type");
             title = jsonObject.getString("title");
             description = jsonObject.getString("description");
             brand = jsonObject.getString("brand");
             price = jsonObject.getString("price");
-            deposit = jsonObject.getString("deposit");
+            if(jsonObject.has("deposit"))
+                deposit = jsonObject.getString("deposit");
+            if(jsonObject.has("deposit_amount"))
+                deposit = jsonObject.getString("deposit_amount");
             is_deposit_required = jsonObject.getString("is_deposit_required");
             category_title = jsonObject.getString("category_title");
             item_title = jsonObject.getString("item_title");
@@ -536,28 +549,46 @@ public class NewsFeedEntity {
             delivery_option = jsonObject.getInt("delivery_option");
             post_brand = jsonObject.getString("post_brand");
             post_item = jsonObject.getString("post_item");
-            post_tags = jsonObject.getString("post_tags");
+            if(jsonObject.has("post_tags"))
+                post_tags = jsonObject.getString("post_tags");
             post_condition = jsonObject.getString("post_condition");
             post_size = jsonObject.getString("post_size");
             post_location = jsonObject.getString("post_location");
             delivery_cost = jsonObject.getString("delivery_cost");
             is_active = jsonObject.getInt("is_active");
-            status_reason = jsonObject.getString("status_reason");
+            if(jsonObject.has("status_reason"))
+                status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
             if(!jsonObject.getString("lat").equals("null"))
                 lat = jsonObject.getDouble("lat");
             if(!jsonObject.getString("lng").equals("null"))
                 lng = jsonObject.getDouble("lng");
-            is_multi = jsonObject.getInt("is_multi");
-            multi_pos = jsonObject.getInt("multi_pos");
-            multi_group = jsonObject.getString("multi_group");
-            service_id = jsonObject.getString("service_id");
-            product_id = jsonObject.getString("product_id");
-            insurance_id = jsonObject.getString("insurance_id");
-            qualification_id = jsonObject.getString("qualification_id");
-            cancellations = jsonObject.getString("cancellations");
-            scheduled = jsonObject.getInt("scheduled");
-            updated_at = jsonObject.getLong("updated_at");
+            if(jsonObject.has("is_multi"))
+                is_multi = jsonObject.getInt("is_multi");
+            if(jsonObject.has("multi_pos")){
+                if(!jsonObject.getString("multi_pos").equals("null"))
+                    multi_pos = jsonObject.getInt("multi_pos");
+            }
+
+            if(jsonObject.has("multi_group"))
+                multi_group = jsonObject.getString("multi_group");
+            if(jsonObject.has("service_id"))
+                service_id = jsonObject.getString("service_id");
+            if(jsonObject.has("product_id"))
+                product_id = jsonObject.getString("product_id");
+            if(jsonObject.has("insurance_id"))
+                insurance_id = jsonObject.getString("insurance_id");
+            if(jsonObject.has("qualification_id"))
+                qualification_id = jsonObject.getString("qualification_id");
+            if(jsonObject.has("cancellations"))
+                cancellations = jsonObject.getString("cancellations");
+            if(jsonObject.has("scheduled"))
+                scheduled = jsonObject.getInt("scheduled");
+            if(jsonObject.has("updated_at"))
+                updated_at = jsonObject.getLong("updated_at");
+            if(jsonObject.has("stock_level"))
+                setStock_level(jsonObject.getInt("stock_level"));
+
             created_at = jsonObject.getLong("created_at");
 
             JSONArray arrayList = jsonObject.getJSONArray("post_imgs");
@@ -566,16 +597,22 @@ public class NewsFeedEntity {
                 JSONObject postImages = arrayList.getJSONObject(i);
                 PostImageModel postImageModel = new PostImageModel();
                 postImageModel.setId(postImages.getInt("id"));
-                postImageModel.setPost_id(postImages.getInt("post_id"));
+                if(jsonObject.has("post_id"))
+                    postImageModel.setPost_id(postImages.getInt("post_id"));
                 postImageModel.setPath(postImages.getString("path"));
                 postImageModel.setCreated_at(postImages.getLong("created_at"));
                 postImageModels.add(postImageModel);
             }
-            likes = jsonObject.getInt("likes");
-            comments = jsonObject.getInt("comments");
-            read_created = jsonObject.getString("read_created");
-            profile_image = jsonObject.getString("profile_img");
-            profile_name = jsonObject.getString("profile_name");
+            if(jsonObject.has("likes"))
+              likes = jsonObject.getInt("likes");
+            if(jsonObject.has("comments"))
+                comments = jsonObject.getInt("comments");
+            if(jsonObject.has("read_created"))
+                read_created = jsonObject.getString("read_created");
+            if(jsonObject.has("profile_img"))
+                profile_image = jsonObject.getString("profile_img");
+            if(jsonObject.has("profile_name"))
+                profile_name = jsonObject.getString("profile_name");
             if(jsonObject.has("poll_options")){
                 JSONArray poll_options =jsonObject.getJSONArray("poll_options");
                 this.poll_options.clear();
@@ -605,7 +642,8 @@ public class NewsFeedEntity {
         try {
             id = jsonObject.getInt("id");
             user_id = jsonObject.getInt("user_id");
-            post_type = jsonObject.getInt("post_type");
+            if(jsonObject.has("post_type"))
+                post_type = jsonObject.getInt("post_type");
             poster_profile_type = jsonObject.getInt("poster_profile_type");
             media_type = jsonObject.getInt("media_type");
             title = jsonObject.getString("title");
@@ -645,6 +683,8 @@ public class NewsFeedEntity {
             scheduled = jsonObject.getInt("scheduled");
             updated_at = jsonObject.getLong("updated_at");
             created_at = jsonObject.getLong("created_at");
+
+
 
             JSONArray arrayList = jsonObject.getJSONArray("post_imgs");
             postImageModels.clear();
