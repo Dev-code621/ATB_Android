@@ -90,12 +90,16 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         holder.txv_deposit.setTextColor(context.getResources().getColor(R.color.txt_color));
         holder.lyt_approve.setBackgroundColor(context.getResources().getColor(R.color.white));
         holder.imv_txv_type.setVisibility(View.GONE);
+        if(Commons.selectUsertype==-1)
+            holder.lyt_profile.setVisibility(View.VISIBLE);
+        else
+            holder.lyt_profile.setVisibility(View.GONE);
+
         if(newsFeedEntity.getPoster_profile_type()==1){
-            holder.lyt_container.setBackgroundColor(context.getResources().getColor(R.color.head_color));
             holder.imv_atb_approved.setVisibility(View.VISIBLE);
             holder.txv_name.setTextColor(context.getResources().getColor(R.color.white));
             holder.txv_time.setTextColor(context.getResources().getColor(R.color.white));
-
+            holder.lyt_profile.setBackgroundColor(context.getResources().getColor(R.color.head_color));
             if(newsFeedEntity.getPostImageModels().size()==0){
                 holder.lyt_approve.setBackgroundColor(context.getResources().getColor(R.color.head_color));
                 holder.txv_description.setTextColor(context.getResources().getColor(R.color.white));
@@ -106,10 +110,10 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 holder.imv_txv_type.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             }
         }else {
-            holder.lyt_container.setBackgroundColor(context.getResources().getColor(R.color.white));
             holder.imv_atb_approved.setVisibility(View.GONE);
-            holder.txv_name.setTextColor(context.getResources().getColor(R.color.head_color));
-            holder.txv_time.setTextColor(context.getResources().getColor(R.color.head_color));
+            holder.txv_name.setTextColor(context.getResources().getColor(R.color.txt_color));
+            holder.txv_time.setTextColor(context.getResources().getColor(R.color.txt_color));
+            holder.lyt_profile.setBackgroundColor(context.getResources().getColor(R.color.white));
             if(newsFeedEntity.getPostImageModels().size()==0) {
                 holder.imv_txv_type.setVisibility(View.VISIBLE);
                 holder.imv_txv_type.clearColorFilter();
@@ -223,10 +227,10 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txv_name,txv_time,txv_description,txv_price,txv_deposit,txv_heart,txv_comment;
-        ImageView imv_profile,imv_imageview,imv_atb_approved,imv_group,imv_type,imv_txv_type,imv_videoplay;
-        LinearLayout lyt_container,lyt_approve;
+        ImageView imv_profile,imv_imageview,imv_group,imv_type,imv_txv_type,imv_videoplay;
+        LinearLayout lyt_container,lyt_approve,lyt_profile;
         FrameLayout lyt_image;
-        CardView card_imv_group,card_imv_type;
+        CardView card_imv_group,card_imv_type,imv_atb_approved;
         ListView lyt_votelist;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -250,11 +254,12 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             imv_txv_type = itemView.findViewById(R.id.imv_txv_type);
             lyt_votelist = itemView.findViewById(R.id.lyt_votelist);
             imv_videoplay = itemView.findViewById(R.id.imv_videoplay);
+            lyt_profile = itemView.findViewById(R.id.lyt_profile);
             if(getItemCount()>1){
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
                 DisplayMetrics metrics = new DisplayMetrics();
                 ((CommonActivity)context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                layoutParams.width = metrics.widthPixels - 300;
+                layoutParams.width = metrics.widthPixels - 200;
                 lyt_container.setLayoutParams(layoutParams);
 
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) lyt_container.getLayoutParams();
@@ -262,6 +267,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 lyt_container.requestLayout();
 
                 card_imv_group.setVisibility(View.VISIBLE);
+                txv_deposit.setMaxLines(1);
 
             }else {
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
@@ -271,6 +277,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 p.setMargins(0, 0, 0, 0);
                 lyt_container.requestLayout();
                 card_imv_group.setVisibility(View.GONE);
+                txv_deposit.setMaxLines(2);
             }
 
         }

@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.NotificationActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.NotiEntity;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -66,9 +68,11 @@ public class NotificationAdapter extends BaseAdapter {
             holder = (CustomHolder) convertView.getTag();
         }
         final NotiEntity noti_item = _roomDatas.get(position);
-//        holder.txv_title.setText(noti_item.getTitle());
-//        holder.txv_content.setText(noti_item.getContent());
-//        holder.txv_time.setText(noti_item.getTime());
+        holder.txv_title.setText(noti_item.getName());
+        holder.txv_content.setText(noti_item.getText());
+        holder.txv_time.setText(secToTime(noti_item.getCreated_at()));
+        Glide.with(_context).load(noti_item.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+
         return convertView;
     }
 
@@ -76,6 +80,27 @@ public class NotificationAdapter extends BaseAdapter {
     public class CustomHolder {
         TextView txv_title, txv_content, txv_time;
         ImageView imv_profile;
+    }
+    private String secToTime(long old_time) {
+        int sec = (int) (System.currentTimeMillis()/1000l - old_time);
+        int seconds = sec % 60;
+        int minutes = sec / 60;
+        if (seconds <= 0) {
+            return "Just now";
+        } else if (minutes == 0) {
+            return String.format(_context.getString(R.string.second_ago), seconds);
+        } else {
+            if (minutes >= 60) {
+                int hours = minutes / 60;
+                minutes %= 60;
+                if (hours >= 24) {
+                    int days = hours / 24;
+                    return String.format(_context.getString(R.string.days_ago), days);
+                }
+                return String.format(_context.getString(R.string.hours_ago), hours);
+            }
+            return String.format(_context.getString(R.string.min_ago), minutes);
+        }
     }
 
 

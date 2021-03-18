@@ -9,10 +9,11 @@
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:gravity="center">
+        android:gravity="bottom"
+        android:paddingBottom="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,9 +28,9 @@
                 android:layout_marginRight="10dp"/>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_user_info_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    app:cardCornerRadius="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:cardCornerRadius="20dp"
                     android:layout_gravity="center"
                     app:cardElevation="0dp"
                     app:cardUseCompatPadding="false">
@@ -67,8 +68,8 @@
             </LinearLayout>
             <ImageView
                 android:id="@+id/imv_navigation"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:src="@drawable/ic_report"
                 android:tint="@color/txt_color"
                 android:layout_marginRight="20dp"/>
@@ -99,8 +100,8 @@
                     app:sliderIndicatorGravity="center_horizontal|bottom"
                     app:sliderIndicatorMargin="15dp"
                     app:sliderIndicatorOrientation="horizontal"
-                    app:sliderIndicatorPadding="3dp"
-                    app:sliderIndicatorRadius="2dp"
+                    app:sliderIndicatorPadding="2dp"
+                    app:sliderIndicatorRadius="1dp"
                     app:sliderIndicatorSelectedColor="#5A5A5A"
                     app:sliderIndicatorUnselectedColor="#FFF"
                     app:sliderScrollTimeInSec="1"
@@ -143,7 +144,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/txt_color"
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:layout_marginTop="10dp"
                             style="@style/boldtextTheme" />
                         <TextView
@@ -174,7 +175,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp">
+                    android:layout_marginRight="20dp"
+                    android:gravity="center_vertical">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -199,8 +201,8 @@
                                 style="@style/boldtextTheme"
                                 android:text="0"
                                 android:layout_marginLeft="10dp"
-                                android:textSize="19sp"
-                                android:textColor="@color/txt_color"/>
+                                android:textSize="17sp"
+                                android:textColor="@color/txt_color" />
                             <TextView
                                 android:id="@+id/txv_like1"
                                 android:layout_width="wrap_content"
@@ -208,8 +210,8 @@
                                 style="@style/textTheme"
                                 android:text="Like"
                                 android:layout_marginLeft="5dp"
-                                android:textSize="19sp"
-                                android:textColor="@color/txt_color"/>
+                                android:textSize="16sp"
+                                android:textColor="@color/txt_color" />
                         </LinearLayout>
                         <LinearLayout
                             android:id="@+id/lyt_comment"
@@ -221,7 +223,7 @@
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/icon_message1"
+                                android:src="@drawable/icon_comment1"
                                 android:tint="@color/txt_color"/>
                             <TextView
                                 android:id="@+id/txv_comment_number"
@@ -230,16 +232,16 @@
                                 style="@style/boldtextTheme"
                                 android:text="0"
                                 android:layout_marginLeft="10dp"
-                                android:textSize="19sp"
-                                android:textColor="@color/txt_color"/>
+                                android:textSize="17sp"
+                                android:textColor="@color/txt_color" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 style="@style/textTheme"
                                 android:text="Comments"
                                 android:layout_marginLeft="5dp"
-                                android:textSize="19sp"
-                                android:textColor="@color/txt_color"/>
+                                android:textSize="16sp"
+                                android:textColor="@color/txt_color" />
                         </LinearLayout>
                         <View
                             android:layout_width="0dp"
@@ -247,8 +249,8 @@
                             android:layout_weight="1"/>
                         <ImageView
                             android:id="@+id/imv_bookmark"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/bookmar_unfill"
                             android:tint="@color/txt_color"/>
                     </LinearLayout>
@@ -277,7 +279,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="19sp"
+                        android:textSize="17sp"
                         android:textColor="@color/txt_color"/>
                     <TextView
                         android:id="@+id/txv_category"
@@ -285,7 +287,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="@color/head_color"
                         android:visibility="gone"/>
                     <TextView
@@ -294,7 +296,7 @@
                         android:layout_height="wrap_content"
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
             </FrameLayout>
@@ -321,7 +323,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/price_start"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <View
                         android:layout_width="0dp"
@@ -333,7 +335,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
                 <LinearLayout
@@ -351,11 +353,11 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/need_deposit"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginLeft="10dp"
                         android:src="@drawable/ic_report"/>
                     <View
@@ -368,7 +370,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
                 <LinearLayout
@@ -386,11 +388,11 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/cancel_within"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_marginLeft="10dp"
                         android:src="@drawable/ic_report"/>
                     <View
@@ -403,7 +405,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
 
@@ -422,7 +424,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/area_covered"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <View
                         android:layout_width="0dp"
@@ -434,7 +436,7 @@
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/head_color"/>
                 </LinearLayout>
 
@@ -453,7 +455,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/insured"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <View
                         android:layout_width="0dp"
@@ -465,13 +467,14 @@
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
                         android:text="Yes"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_quality"/>
+                        android:src="@drawable/ic_quality"
+                        android:visibility="gone"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/lyt_qualitfied"
@@ -488,7 +491,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="@string/qualified"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <View
                         android:layout_width="0dp"
@@ -500,13 +503,14 @@
                         style="@style/boldtextTheme"
                         android:layout_marginLeft="5dp"
                         android:text="Yes"
-                        android:textSize="17sp"
+                        android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/ic_quality"/>
+                        android:src="@drawable/ic_quality"
+                        android:visibility="gone"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -517,22 +521,23 @@
                         android:id="@+id/txv_book_service"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="70dp"
+                        android:layout_height="60dp"
                         android:text="@string/book_service"
                         android:gravity="center"
                         android:textColor="@color/white"
                         style="@style/btn_buttonStyle"
                         android:enabled="false"
+                        android:textSize="18sp"
                         android:background="@drawable/button_rectangle_round"/>
                     <ImageView
                         android:id="@+id/imv_bubble"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:src="@drawable/ic_bubble"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/edit_rectangle_round"
-                        android:padding="10dp"/>
+                        android:padding="15dp"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -542,8 +547,7 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone">
+                android:layout_marginBottom="10dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -563,7 +567,7 @@
                             style="@style/textTheme"
                             android:layout_marginLeft="5dp"
                             android:text="@string/brand"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                         <View
                             android:layout_width="0dp"
@@ -575,7 +579,7 @@
                             android:layout_height="wrap_content"
                             style="@style/boldtextTheme"
                             android:layout_marginLeft="5dp"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                     </LinearLayout>
                     <LinearLayout
@@ -593,7 +597,7 @@
                             style="@style/textTheme"
                             android:layout_marginLeft="5dp"
                             android:text="@string/price"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                         <View
                             android:layout_width="0dp"
@@ -605,7 +609,7 @@
                             android:layout_height="wrap_content"
                             style="@style/boldtextTheme"
                             android:layout_marginLeft="5dp"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -628,7 +632,7 @@
                             style="@style/textTheme"
                             android:layout_marginLeft="5dp"
                             android:text="@string/postage_cost"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                         <View
                             android:layout_width="0dp"
@@ -640,7 +644,7 @@
                             android:layout_height="wrap_content"
                             style="@style/boldtextTheme"
                             android:layout_marginLeft="5dp"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                     </LinearLayout>
                     <LinearLayout
@@ -659,7 +663,7 @@
                             style="@style/textTheme"
                             android:layout_marginLeft="5dp"
                             android:text="@string/location"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/txt_color"/>
                         <View
                             android:layout_width="0dp"
@@ -672,7 +676,7 @@
                             style="@style/boldtextTheme"
                             android:layout_marginLeft="5dp"
                             android:singleLine="true"
-                            android:textSize="17sp"
+                            android:textSize="14sp"
                             android:textColor="@color/head_color"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -689,7 +693,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="Color"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_marginTop="10dp"
                         android:textColor="@color/txt_color"/>
                     <androidx.recyclerview.widget.RecyclerView
@@ -711,7 +715,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="Size"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_marginTop="10dp"
                         android:textColor="@color/txt_color"/>
                     <androidx.recyclerview.widget.RecyclerView
@@ -733,7 +737,7 @@
                         style="@style/textTheme"
                         android:layout_marginLeft="5dp"
                         android:text="Size"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_marginTop="10dp"
                         android:textColor="@color/txt_color"/>
                     <androidx.recyclerview.widget.RecyclerView
@@ -751,22 +755,23 @@
                         android:id="@+id/txv_buy_sale"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="70dp"
+                        android:layout_height="60dp"
                         android:text="Buy Now £20.00"
                         android:gravity="center"
                         android:textColor="@color/white"
                         style="@style/btn_buttonStyle"
                         android:enabled="false"
+                        android:textSize="18sp"
                         android:background="@drawable/button_rectangle_round"/>
                     <ImageView
                         android:id="@+id/imv_cart"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:src="@drawable/icon_cart"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/edit_rectangle_round"
-                        android:padding="10dp"/>
+                        android:padding="15dp"/>
                 </LinearLayout>
             </LinearLayout>
             <ListView
@@ -797,7 +802,8 @@
                 android:id="@+id/imv_close"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/close"/>
+                android:src="@drawable/close"
+                android:tint="@color/head_color"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -813,7 +819,7 @@
                 style="@style/boldtextTheme"
                 android:text="MingFang"
                 android:layout_marginLeft="5dp"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textColor="@color/txt_color"/>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView

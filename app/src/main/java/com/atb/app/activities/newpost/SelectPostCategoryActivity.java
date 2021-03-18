@@ -108,8 +108,11 @@ public class SelectPostCategoryActivity extends CommonActivity implements View.O
                 loadLayout();
                 break;
             case R.id.lyt_newpost:
-                if(type ==2 )
-                    startActivityForResult(new Intent(this, NewSalePostActivity.class),1);
+                if(type ==2 ){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("isPosting", 1);
+                    startActivityForResult(new Intent(this, NewSalePostActivity.class).putExtra("data",bundle),1);
+                }
 
                 else {
                     Bundle bundle = new Bundle();

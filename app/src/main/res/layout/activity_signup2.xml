@@ -35,8 +35,8 @@
         android:orientation="horizontal"
         >
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/icon_lock"/>
         <TextView
             android:layout_width="match_parent"
@@ -105,7 +105,7 @@
         android:layout_height="50dp"
         android:text="@string/complete_user"
         android:gravity="center"
-        android:textColor="@color/white_transparent"
+        android:textColor="@color/line_white"
         android:layout_marginTop="10dp"
         android:enabled="false"
         style="@style/btn_buttonStyle"

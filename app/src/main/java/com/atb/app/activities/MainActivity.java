@@ -4,49 +4,32 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
-import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
-import com.atb.app.activities.register.ProfileSetActivity;
-import com.atb.app.activities.register.Signup1Activity;
+import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
-import com.atb.app.dialog.PickImageDialog;
 import com.atb.app.dialog.SelectCategoryDialog;
-import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
-import com.atb.app.util.MediaPicker;
 import com.atb.app.view.NonSwipeableViewPager;
-
-
-import java.io.File;
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_search ,imv_profile,imv_feed,imv_post,imv_chat;
@@ -103,10 +86,13 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imv_search:
-                setColor(3);
+               // setColor(3);
                 break;
             case R.id.imv_profile:
-                goTo(this, ProfileNaviagationActivity.class,false);
+                if(Commons.g_user.getAccount_type()==1)
+                    startActivityForResult(new Intent(this, ProfileBusinessNaviagationActivity.class),1);
+                else
+                    goTo(this, ProfileUserNavigationActivity.class,false);
                 break;
             case R.id.imv_post:
                 setColor(1);
@@ -147,6 +133,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         lyt_title1.setVisibility(View.GONE);
         if(id==0){
             main_flag = true;
+            Commons.selectUsertype = -1;
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.lyt_fragement,mainListFragment).commit();
         }
@@ -179,12 +166,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         imv_post.clearColorFilter();
         imv_chat.clearColorFilter();
         if(id==2){
-            imv_chat.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }else if(id==1){
-            imv_post.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
         }else {
-            imv_feed.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 

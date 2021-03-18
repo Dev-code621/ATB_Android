@@ -68,7 +68,7 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
                     txv_next.setEnabled(false);
                     imv_selector1.setEnabled(true);
                     imv_selector2.setEnabled(true);
-                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
 
                 }
             }
@@ -106,7 +106,7 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
                 edt_confirm_password.setText("");
                 break;
             case R.id.txv_next:
-                Commons.g_user.setPassword(edt_password.getText().toString());
+                //Commons.g_user.setPassword(edt_password.getText().toString());
                 //finishAffinity();
                 //goTo(Signup2Activity.this, ProfileSetActivity.class,true);
                 gotoSignUp();

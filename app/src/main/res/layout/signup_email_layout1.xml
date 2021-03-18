@@ -105,7 +105,7 @@
         android:text="@string/create_password"
         android:gravity="center"
         android:clickable="false"
-        android:textColor="@color/white_transparent"
+        android:textColor="@color/line_white"
         android:layout_marginTop="10dp"
         style="@style/btn_buttonStyle"
         android:background="@drawable/button_rectangle_round"

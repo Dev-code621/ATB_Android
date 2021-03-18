@@ -115,7 +115,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                     imv_selector1.setEnabled(true);
                     imv_selector2.setEnabled(true);
                     txv_next.setEnabled(false);
-                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
                 }
             }
 
@@ -141,7 +141,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                     imv_selector1.setEnabled(true);
                     imv_selector2.setEnabled(true);
                     txv_next.setEnabled(false);
-                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
 
                 }
             }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.model.NewsFeedEntity;
 
@@ -68,7 +69,8 @@ public class MainFeedAdapter extends BaseAdapter {
             public void onSelect(NewsFeedEntity entity) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("postId",entity.getId());
-                ((MainActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
+                bundle.putBoolean("CommentVisible",true);
+                ((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
             }
         }));
 

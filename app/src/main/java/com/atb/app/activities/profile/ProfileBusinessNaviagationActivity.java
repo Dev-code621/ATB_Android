@@ -1,4 +1,4 @@
-package com.atb.app.activities;
+package com.atb.app.activities.profile;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
+import com.atb.app.activities.FollowerAndFollowingActivity;
+import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.ContactAdminActivity;
 import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
@@ -31,6 +33,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
+import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.bumptech.glide.Glide;
@@ -38,7 +41,6 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
@@ -102,7 +104,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         LinearLayout lyt_save_post = findViewById(R.id.lyt_save_post);
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
-
+        lyt_on.setVisibility(View.GONE);
         lyt_upgrade_business.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
         lyt_busines_upgrade.setOnClickListener(this);
@@ -132,7 +134,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_post.setOnClickListener(this);
         imv_chat.setOnClickListener(this);
         card_addstore.setOnClickListener(this);
-        //setupImage(0);
+        Commons.selectUsertype = 1;
 
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
@@ -183,6 +185,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         txv_following.setText(String.valueOf(Commons.g_user.getFollow_count()));
         txv_post.setText(String.valueOf(Commons.g_user.getPost_count()));
         txv_description.setText(Commons.g_user.getBusinessModel().getBusiness_bio());
+        showProgress();
     }
 
     @Override
@@ -305,11 +308,21 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
 
             case R.id.lyt_follower:
-
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isFollower", true);
+                bundle.putInt("userType",1);
+                Commons.selected_user = new UserModel();
+                Commons.selected_user = Commons.g_user;
+                goTo(this, FollowerAndFollowingActivity.class,false,bundle);
                 break;
 
             case R.id.lyt_following:
-
+                Bundle bundle1 = new Bundle();
+                bundle1.putBoolean("isFollower", false);
+                bundle1.putInt("userType",1);
+                Commons.selected_user = new UserModel();
+                Commons.selected_user = Commons.g_user;
+                goTo(this, FollowerAndFollowingActivity.class,false,bundle1);
                 break;
             case R.id.lyt_post:
 

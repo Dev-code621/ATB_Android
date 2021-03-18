@@ -20,7 +20,7 @@
     <color name="transparent">#00000000</color>
 
     <color name="app_theme_color">#A6BFDE</color>
-    <color name="txt_color">#504A4A</color>
+    <color name="txt_color">#737373</color>
     <color name="login_btn_color">#A8C3E7</color>
     <color name="btn_color">#B6CEEC</color>
     <color name="btn_login_color">#6F86A5</color>
@@ -30,6 +30,7 @@
 
     <color name="head_color">#A6BFDE</color>
     <color name="transparent_header">#A8A6BFDE</color>
+    <color name="transparent_post">#A8505459</color>
     <color name="header_color1">#48A6BFDE</color>
     <color name="boder_color">#E1E3E6</color>
     <color name="main_color">#F7F7F7</color>
@@ -37,4 +38,6 @@
     <color name="txvcolor_trasnparent">#8B434541</color>
     <color name="discard_color">#E91E63</color>
     <color name="green">#7CCE4E</color>
+    <color name="line_color">#BEBEBE</color>
+    <color name="line_white">#A0FFFFFF</color>
 </resources>

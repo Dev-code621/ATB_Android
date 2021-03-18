@@ -1,46 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/edit_rectangle_round"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/lyt_item"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
-    <LinearLayout
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
+        android:layout_height="200dp">
         <ImageView
-            android:id="@+id/imv_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
-        <TextView
-            android:id="@+id/txv_text"
+            android:id="@+id/imv_imageview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/selectall"
-            android:gravity="center"
-            android:textColor="@color/txt_color"
-            style="@style/btn_buttonStyle"
-            android:singleLine="true"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/imv_videoplay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp" />
+            android:src="@drawable/icon_player"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_imv_group"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                app:cardCornerRadius="10dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                app:cardBackgroundColor="@color/txvcolor_trasnparent"
+                android:layout_marginLeft="10dp">
+                <ImageView
+                    android:id="@+id/imv_group"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:src="@drawable/icon_copy"
+                    android:layout_gravity="center" />
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_imv_type"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                app:cardCornerRadius="10dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                app:cardBackgroundColor="@color/txvcolor_trasnparent"
+                android:layout_marginLeft="10dp">
+                <ImageView
+                    android:id="@+id/imv_type"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/icon_type1"
+                    android:layout_gravity="center" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_post"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_time"
+                android:layout_gravity="center"
+                android:tint="@color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scheduled Post"
+                style="@style/boldtextTheme"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+            <TextView
+                android:id="@+id/txv_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/textTheme"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="19sp"/>
+        </LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/lyt_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:id="@+id/txv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="text"
+            style="@style/textTheme"
+            android:textColor="@color/txt_color"
+            android:textSize="19sp"/>
+        <LinearLayout
+            android:id="@+id/lyt_editpost"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_rectangle_round1"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icon_bio"
+                android:layout_gravity="center"
+                app:tint="@color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Edit"
+                android:gravity="center"
+                android:textColor="@color/white"
+                style="@style/btn_buttonStyle" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_make_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txv_make_post"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Make a Post"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_marginTop="10dp"
+                style="@style/btn_buttonStyle"
+                android:enabled="false"
+                android:background="@drawable/button_rectangle_round"/>
+        </LinearLayout>
+
     </LinearLayout>
-    <ImageView
-        android:id="@+id/imv_selector"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/icon_checked1"
-        android:layout_gravity="right"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="5dp"/>
-</FrameLayout>
+</LinearLayout>

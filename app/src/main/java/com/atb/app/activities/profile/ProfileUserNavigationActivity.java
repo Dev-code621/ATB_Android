@@ -1,7 +1,5 @@
-package com.atb.app.activities;
+package com.atb.app.activities.profile;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -24,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
+import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.ContactAdminActivity;
 import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
@@ -61,6 +60,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
     DrawerLayout drawer;
     private AppBarConfiguration mAppBarConfiguration;
     CardView card_business;
+    CardView card_addstore;
     LinearLayout lyt_busines_description,lyt_busines_upgrade;
     @SuppressLint("ResourceType")
     @Override
@@ -95,6 +95,8 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         viewPagerTab = findViewById(R.id.viewpagertab);
         viewPager = findViewById(R.id.viewpager);
         card_business = findViewById(R.id.card_business);
+        card_addstore = findViewById(R.id.card_addstore);
+        card_addstore.setVisibility(View.GONE);
         LinearLayout lyt_show_notis = findViewById(R.id.lyt_show_notis);
         LinearLayout lyt_booking = findViewById(R.id.lyt_booking);
         LinearLayout  lyt_item_sold = findViewById(R.id.lyt_item_sold);
@@ -134,12 +136,11 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         imv_feed.setOnClickListener(this);
         imv_post.setOnClickListener(this);
         imv_chat.setOnClickListener(this);
-
-        //setupImage(0);
-
+        Commons.selectUsertype = 0;
         FragmentPagerItems pages = new FragmentPagerItems(this);
-        pages.add(FragmentPagerItem.of("Store", StoreFragment.class));
         pages.add(FragmentPagerItem.of("Posts", PostsFragment.class));
+        pages.add(FragmentPagerItem.of("Main", MainListFragment.class));
+
         viewPagerTab.setCustomTabView(this);
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);

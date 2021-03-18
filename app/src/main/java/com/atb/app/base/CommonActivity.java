@@ -3,6 +3,7 @@ package com.atb.app.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,11 +25,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
+import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.view.zoom.ImageZoomButton;
 import com.atb.app.view.zoom.ZoomAnimation;
@@ -90,29 +96,32 @@ public abstract class CommonActivity extends BaseActivity {
         return null;
     }
 
-    public String getStartDate(String date)  {
-        SimpleDateFormat df = new SimpleDateFormat("yy-MM-dd'T'HH:mm:ss");
+    public String getUTCDate(String date)  {
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
         Date d = null;
         try {
             d = df.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String time = new SimpleDateFormat("MM/dd").format(d);
+
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String time = format.format(d);
         return time;
     }
 
     public String getLocaltime(String date){
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        df.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date d = null;
         try {
             d = df.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String localtime= new SimpleDateFormat("dd/MM/yy HH:mm").format(d);
+        String localtime= new SimpleDateFormat("hh:mm a").format(d);
         return localtime;
     }
     public boolean emailInvalied(String email){
@@ -153,5 +162,30 @@ public abstract class CommonActivity extends BaseActivity {
         zoomAnimation.zoom(view, url, 400, R.drawable.image_thumnail, this);
         isZoom = true;
     }
+
+    public boolean isValidMakePost(){
+        if(Commons.g_user.getBusinessModel().getApproved()==1)return  true;
+        else{
+            String title = "You didn't subscribe for your business account yet!\\nWould you like to subscribe now?";
+            if(Commons.g_user.getBusinessModel().getPaid()==1){
+                if(Commons.g_user.getBusinessModel().getApproved()==0)
+                    title = "Your business account is currently pending for approval.\\nATB admin will review your account and update soon!";
+                else
+                    title = "Your business profile has been rejected!";
+                showAlertDialog(title);
+            }else {
+                ConfirmDialog confirmDialog = new ConfirmDialog();
+                confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+
+                    }
+                },title);
+                confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -8,8 +8,8 @@
     android:id="@+id/lyt_container">
     <ImageView
         android:id="@+id/imv_selector"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/edit_category_selector"
         android:layout_gravity="right|center"
         android:layout_marginLeft="10dp"/>

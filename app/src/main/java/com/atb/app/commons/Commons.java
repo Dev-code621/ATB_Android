@@ -21,11 +21,12 @@ public class Commons {
     public static double lng =0f;
     public static String location ="";
     public static UserModel g_user ;
+    public static UserModel selected_user = new UserModel() ;
     public static String token = "";
     public static int location_code = 1100;
     public static String[] Months;
     public static String main_category ="MY ATB";
-
+    public static  int selectUsertype; //-1:main page: 1: business: 0 : user
 
 
     public static String fileNameWithoutExtFromPath(String path) {
@@ -83,4 +84,14 @@ public class Commons {
         if(str.contains(".mp4")) return  true;
         return false;
     }
+
+    public static String getDatefromMilionSecond(long milionsecond){
+        String date = "";
+        Date d = new Date(milionsecond*1000l);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy hh:mm a");
+        date = formatter.format(d);
+        return date;
+    }
+
+
 }

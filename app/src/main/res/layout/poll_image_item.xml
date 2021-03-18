@@ -3,9 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="5dp"
     android:layout_marginRight="10dp"
-    android:background="#DDDCDC"
+    android:background="@drawable/edit_rectangle_round1"
     android:gravity="center">
     <FrameLayout
         android:layout_width="wrap_content"
@@ -41,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/add_picture"
                 style="@style/boldtextTheme"
+                android:textSize="16sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/txt_color"/>
         </LinearLayout>

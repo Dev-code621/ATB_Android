@@ -115,5 +115,8 @@ public class API {
     public static final String GET_CART_PRODUCTS = API_BASE_URL + "post/get_cart_products";
 
     public static final String GET_BUSINESS_ITEMS  =   API_BASE_URL + "profile/get_business_items";
-
+    public static final String UPDTE_REGULAR_WEEK = API_BASE_URL + "business/update_week";
+    public static final String ADD_HOLIDAY = API_BASE_URL + "business/add_holiday";
+    public static final String DELETE_HOLIDAY = API_BASE_URL + "business/delete_holiday";
+    public static final String DELETE_SERVICE_FILE = API_BASE_URL + "profile/delete_service_file";
 }

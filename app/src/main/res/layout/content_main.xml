@@ -46,13 +46,21 @@
                         app:actualImageScaleType="centerCrop"
                         app:placeholderImage="@drawable/profile_pic"/>
                 </androidx.cardview.widget.CardView>
-                <ImageView
-                    android:id="@+id/imv_business"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="bottom|right"
-                    android:background="@drawable/button_rectangle_round"
-                    android:src="@drawable/icon_down_up" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_business"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_gravity="right|bottom"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false"
+                    app:cardBackgroundColor="@color/head_color">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icon_down_up" />
+                </androidx.cardview.widget.CardView>
             </FrameLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -251,6 +259,7 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/lyt_busines_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -296,33 +305,56 @@
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
+    <FrameLayout
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <com.ogaclejapan.smarttablayout.SmartTabLayout
-            android:id="@+id/viewpagertab"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:stl_clickable="true"
-            app:stl_customTabTextLayoutId="@layout/custom_tab_icon_and_text"
-            app:stl_customTabTextViewId="@id/custom_tab_text"
-            app:stl_distributeEvenly="true"
-            app:stl_indicatorColor="@color/head_color"
-            app:stl_indicatorInterpolation="linear"
-            app:stl_indicatorThickness="3dp"
-            app:stl_underlineThickness="1dp"
-            app:stl_dividerColor = "@color/head_color"
-            app:stl_defaultTabTextColor = "@color/head_color"
-            app:stl_underlineColor ="@color/main_color"/>
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_weight="1">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/viewpagertab"
-            />
-    </LinearLayout>
+            android:orientation="vertical">
+            <com.ogaclejapan.smarttablayout.SmartTabLayout
+                android:id="@+id/viewpagertab"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:stl_clickable="true"
+                app:stl_customTabTextLayoutId="@layout/custom_tab_icon_and_text"
+                app:stl_customTabTextViewId="@id/custom_tab_text"
+                app:stl_distributeEvenly="true"
+                app:stl_indicatorColor="@color/head_color"
+                app:stl_indicatorInterpolation="linear"
+                app:stl_indicatorThickness="3dp"
+                app:stl_underlineThickness="1dp"
+                app:stl_dividerColor = "@color/head_color"
+                app:stl_defaultTabTextColor = "@color/head_color"
+                app:stl_underlineColor ="@color/main_color"/>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/viewpagertab"
+                />
+
+        </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_addstore"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:cardCornerRadius="35dp"
+            android:layout_gravity="right|bottom"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="false"
+            app:cardBackgroundColor="@color/head_color"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/leftdetail"
+                android:tint="@color/white"/>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"

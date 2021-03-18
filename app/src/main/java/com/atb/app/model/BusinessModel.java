@@ -8,6 +8,8 @@ import com.atb.app.model.submodel.SocialModel;
 import java.util.ArrayList;
 
 public class BusinessModel {
+    //approved 0 - pending, 1 - approved, other - rejected
+    // 0 - not paid, 1 - paid
     int id,user_id;
     String business_logo,business_name,business_website,business_bio,business_profile_name,approval_reason;
     int paid ,approved,post_count,followers_count,follow_count;

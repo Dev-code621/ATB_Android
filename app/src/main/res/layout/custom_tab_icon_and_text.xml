@@ -14,8 +14,7 @@
     android:layout_centerHorizontal="true"
     android:scaleType="centerCrop"
     android:src="@drawable/icon_sales"
-      app:tint="@color/head_color"
-      android:visibility="gone"/>
+      app:tint="@color/head_color" />
 
   <TextView
     android:id="@+id/custom_tab_text"
@@ -24,6 +23,7 @@
     android:layout_centerHorizontal="true"
     android:maxLines="1"
       style="@style/boldtextTheme"
+      android:layout_marginLeft="5dp"
     android:textColor="@color/head_color"
     android:textSize="20sp"
     />

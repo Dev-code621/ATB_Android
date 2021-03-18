@@ -128,7 +128,6 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
         Calendar now = Calendar.getInstance();
         now.set(year,month,day,hourOfDay,minute,second);
         scheduledOn = now.getTimeInMillis()/1000L;
-        Log.d("aaaaaa",String.valueOf(scheduledOn));
     }
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -324,7 +323,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                     params.put("is_multi", "0");
                 else {
                     params.put("is_multi", "1");
-                    params.put("multi_pos", String.valueOf(posstion));
+                    params.put("multi_pos", String.valueOf(postCount));
                     params.put("multi_group", group_id);
                 }
                 if(scheduledOn>0)

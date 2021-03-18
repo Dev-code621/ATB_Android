@@ -155,7 +155,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         if(completeFieldState()) {
             txv_next.setTextColor(_context.getResources().getColor(R.color.white));
         }else
-            txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+            txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
     }
 
     @Override
@@ -195,6 +195,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 break;
             case R.id.txv_next:
                 register();
+                goTo(this, CreateFeedActivity.class,false);
                 break;
             case R.id.txv_location:
                 startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
@@ -452,7 +453,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 if(completeFieldState()) {
                     txv_next.setTextColor(_context.getResources().getColor(R.color.white));
                 }else
-                    txv_next.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+                    txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

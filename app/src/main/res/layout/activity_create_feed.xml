@@ -34,12 +34,13 @@
             style="@style/btn_buttonStyle"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
+            android:textSize="14sp"
             android:background="@drawable/under_line2"/>
 
         <ImageView
             android:id="@+id/imv_selector"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="right|center"
             android:layout_marginLeft="10dp"
             android:src="@drawable/edit_category_selector" />

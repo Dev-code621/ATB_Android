@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:background="@drawable/background_rectangle_round1"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center_vertical">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_quality"
+                android:tint="@color/head_color"/>
+            <TextView
+                android:id="@+id/txv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add A Certification"
+                style="@style/boldtextTheme"
+                android:textColor="@color/txt_color"
+                android:layout_marginLeft="10dp"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right|center_vertical"
+            android:tint="@color/txt_color"
+            android:src="@drawable/icon_close" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:padding="20dp">
+        <EditText android:id="@+id/edt_company"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            style="@style/edit_inputtext" />
+        <EditText android:id="@+id/edt_number"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:layout_marginTop="10dp"
+            style="@style/edit_inputtext" />
+        <TextView android:id="@+id/txv_time"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            style="@style/edit_inputtext" />
+        <LinearLayout
+            android:id="@+id/lyt_add_file"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/button_rectangle_round">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/attach"
+                android:layout_marginLeft="20dp"
+                android:tint="@color/white" />
+            <TextView
+                android:id="@+id/txv_imagename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:theme="@style/boldtextTheme"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:text="Add a file"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/lyt_add_insurance"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_rectangle_round">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_plus2"
+                android:tint="@color/white" />
+            <TextView
+                android:id="@+id/txv_addtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:theme="@style/boldtextTheme"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:text="Add"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

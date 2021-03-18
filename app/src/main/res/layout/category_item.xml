@@ -12,25 +12,25 @@
     android:layout_marginRight="5dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
+        android:layout_height="70dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical">
         <ImageView
             android:id="@+id/imv_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+            android:src="@drawable/icon_beauti_unselectpng" />
         <TextView
             android:id="@+id/txv_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/selectall"
-            android:gravity="center"
             android:textColor="@color/txt_color"
             style="@style/btn_buttonStyle"
             android:singleLine="true"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:textSize="13sp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp" />
     </LinearLayout>
@@ -38,9 +38,9 @@
         android:id="@+id/imv_selector"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/icon_checked1"
+        android:src="@drawable/icon_checked"
+        android:tint="#798EAC"
         android:layout_gravity="right"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="2dp"/>
 </FrameLayout>

@@ -12,7 +12,7 @@
     <string name="signup2">How Would You Like To Sign Up?</string>
     <string name="signup1">Create A New Account</string>
 
-    <string name="use_email">Use Your Email</string>
+    <string name="use_email">Use your Email</string>
     <string name="have_accout">I Already Have An Account</string>
     <string name="singin_instead">Sign In Instead></string>
     <string name="signup3">Use Your Email For Sign Up</string>
@@ -79,7 +79,7 @@
     <string name="newproduct">A New Product</string>
     <string name="new_service">A New Service</string>
     <string name="exist_service">One of My Services</string>
-    <string name="create_oneproduct">Create a New Product Post</string>
+    <string name="create_oneproduct">Create a\nNew Product Post</string>
     <string name="create_multiproduct">Create Multiple Products Post</string>
     <string name="singlepost">Single Product</string>
     <string name="multipost">Multiple Products</string>
@@ -240,4 +240,9 @@
     <string name="upload3image">You can"'"t add more than 3 images using a normal account!\nDo you want to switch to your business account?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="second_ago">%d seconds ago</string>
+    <string name="days_ago">%d days ago</string>
+    <string name="hours_ago">%d hours ago</string>
+    <string name="min_ago">%d minutes ago</string>
+
 </resources>

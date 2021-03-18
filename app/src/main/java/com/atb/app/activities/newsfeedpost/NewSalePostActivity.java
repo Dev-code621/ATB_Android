@@ -51,6 +51,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         lyt_back.setOnClickListener(this);
         txv_singlepost.setOnClickListener(this);
         txv_multpost.setOnClickListener(this);
+        txv_multpost.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
         lyt_profile.setOnClickListener(this);
 
         activityAnimation(aScene,R.id.lyt_container);

@@ -86,6 +86,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     NestedScrollView scrollView;
     int parentPosstion =0;
     int postId;
+    boolean commentVisible;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     CommentModel parentModel = new CommentModel();
 
@@ -182,6 +183,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 postId= bundle.getInt("postId");
+                commentVisible= bundle.getBoolean("CommentVisible");
                 loadLayout();
             }
         }

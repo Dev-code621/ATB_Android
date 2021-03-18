@@ -58,12 +58,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/media_type"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <org.angmarch.views.NiceSpinner
@@ -73,6 +73,7 @@
                     android:layout_marginLeft="10dp"
                     app:entries="@array/media_type1"
                     style="@style/textTheme"
+                    android:textSize="15sp"
                     app:popupTextAlignment="start"
                     android:background="@drawable/edit_rectangle_round1"/>
             </LinearLayout>
@@ -103,7 +104,7 @@
                 <LinearLayout
                     android:id="@+id/lyt_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="230dp"
                     android:orientation="horizontal">
                     <FrameLayout
                         android:layout_width="0dp"
@@ -123,37 +124,94 @@
                             android:src="@drawable/icon_image"
                             android:layout_gravity="center"/>
                     </FrameLayout>
-                    <LinearLayout
+                    <androidx.core.widget.NestedScrollView
                         android:layout_width="80dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/imv_image1"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/edit_rectangle_round1"/>
-                        <ImageView
-                            android:id="@+id/imv_image2"
-                            android:scaleType="centerCrop"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:background="@drawable/edit_rectangle_round1"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"/>
-                        <ImageView
-                            android:id="@+id/imv_image3"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:scaleType="centerCrop"
-                            android:layout_weight="1"
-                            android:layout_gravity="center"
-                            android:background="@drawable/edit_rectangle_round1"/>
-                    </LinearLayout>
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="80dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:id="@+id/imv_image1"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/icon_image1"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                            <ImageView
+                                android:id="@+id/imv_image2"
+                                android:scaleType="centerCrop"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:background="@drawable/edit_rectangle_round1"
+                                android:layout_marginTop="10dp" />
+                            <ImageView
+                                android:id="@+id/imv_image3"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/icon_image1"
+                                android:background="@drawable/edit_rectangle_round1" />
+                            <ImageView
+                                android:id="@+id/imv_image4"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                            <ImageView
+                                android:id="@+id/imv_image5"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                            <ImageView
+                                android:id="@+id/imv_image6"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                            <ImageView
+                                android:id="@+id/imv_image7"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                            <ImageView
+                                android:id="@+id/imv_image8"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:scaleType="centerCrop"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_image1"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/edit_rectangle_round1"/>
+                        </LinearLayout>
+                    </androidx.core.widget.NestedScrollView>
                 </LinearLayout>
             </FrameLayout>
             <EditText
@@ -164,6 +222,8 @@
                 android:layout_marginTop="10dp"
                 android:hint="@string/writtle_title"
                 android:inputType="text"
+                android:textSize="15sp"
+                android:theme="@style/textTheme"
                 android:singleLine="true" />
             <EditText android:id="@+id/edt_description"
                 android:layout_width="match_parent"
@@ -173,6 +233,8 @@
                 android:hint="@string/description"
                 android:layout_marginTop="10dp"
                 android:paddingTop="15dp"
+                android:textSize="15sp"
+                android:theme="@style/textTheme"
                 style="@style/edit_inputtext"
                 android:gravity="start"/>
             <LinearLayout
@@ -181,12 +243,12 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_type"
+                    android:text="@string/brand"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <EditText
@@ -194,6 +256,8 @@
                     style="@style/edit_inputtext"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:textSize="15sp"
+                    android:theme="@style/textTheme"
                     android:layout_marginLeft="10dp"
                     android:hint="@string/brand_detail"
                     android:inputType="text"
@@ -203,25 +267,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/price"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
-                <EditText
-                    android:id="@+id/edt_price"
-                    style="@style/edit_inputtext"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
-                    android:hint="0.00"
-                    android:inputType="number"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/edit_rectangle_round"
+                    android:layout_marginLeft="10dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icon_paymentblue"
+                        android:layout_gravity="center"/>
+                    <EditText
+                        android:id="@+id/edt_price"
+                        style="@style/edit_inputtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="0.00"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:gravity="right|center"/>
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -229,12 +306,12 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/post_in"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <org.angmarch.views.NiceSpinner
@@ -244,6 +321,7 @@
                     android:layout_marginLeft="10dp"
                     app:entries="@array/category_type"
                     style="@style/textTheme"
+                    android:textSize="15sp"
                     app:popupTextAlignment="start"
                     android:background="@drawable/edit_rectangle_round1"/>
             </LinearLayout>
@@ -254,12 +332,12 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/condition"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <org.angmarch.views.NiceSpinner
@@ -269,6 +347,7 @@
                     android:layout_marginLeft="10dp"
                     app:entries="@array/condition_type"
                     style="@style/textTheme"
+                    android:textSize="15sp"
                     app:popupTextAlignment="start"
                     android:background="@drawable/edit_rectangle_round1"/>
             </LinearLayout>
@@ -279,12 +358,12 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/tag"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <EditText
@@ -294,6 +373,7 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="10dp"
                     android:hint="@string/tag_description"
+                    android:textSize="15sp"
                     android:inputType="text"
                     android:singleLine="true" />
             </LinearLayout>
@@ -303,12 +383,12 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/item"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <EditText
@@ -317,6 +397,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
                     android:hint="@string/item_description"
                     android:inputType="text"
                     android:singleLine="true" />
@@ -332,7 +413,7 @@
                 android:text="@string/variations"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical" />
@@ -342,7 +423,7 @@
                 android:text="@string/variations_description"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -357,13 +438,13 @@
                     android:text="@string/variation"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <ImageView
                     android:id="@+id/imv_variation_description"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/icon_question"/>
             </RelativeLayout>
@@ -410,7 +491,7 @@
                 android:text="@string/stock"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical" />
@@ -422,8 +503,8 @@
                 android:layout_marginTop="10dp">
                 <ImageView
                     android:id="@+id/imv_stocker_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/edit_category_selector"
                     android:layout_gravity="right|center" />
                 <TextView
@@ -434,7 +515,7 @@
                     android:textColor="@color/txt_color"
                     style="@style/boldtextTheme"
                     android:paddingLeft="0dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:paddingRight="0dp" />
             </LinearLayout>
             <TextView
@@ -443,7 +524,7 @@
                 android:text="@string/stock_description"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -463,7 +544,7 @@
                 android:text="@string/payment_option"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical" />
@@ -473,7 +554,7 @@
                 android:text="@string/payment_description"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -488,7 +569,7 @@
                     android:text="@string/cash"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <com.zcw.togglebutton.ToggleButton
@@ -512,7 +593,7 @@
                     android:text="@string/paypal"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <com.zcw.togglebutton.ToggleButton
@@ -529,14 +610,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:text="@string/location"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <FrameLayout
@@ -549,12 +631,13 @@
                         android:layout_height="50dp"
                         android:singleLine="true"
                         android:inputType="textPassword"
+                        android:textSize="15sp"
                         android:hint="@string/location"
                         style="@style/edit_inputtext" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_mappin"
+                        android:src="@drawable/icon_location"
                         android:layout_gravity="right|center"
                         android:layout_marginRight="10dp" />
                 </FrameLayout>
@@ -565,7 +648,7 @@
                 android:text="@string/delivery_option"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:gravity="center_vertical"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical" />
@@ -575,7 +658,7 @@
                 android:text="@string/delivery_option_description"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -590,7 +673,7 @@
                     android:text="@string/free_postage"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <com.zcw.togglebutton.ToggleButton
@@ -614,7 +697,7 @@
                     android:text="@string/buyer_collect"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <com.zcw.togglebutton.ToggleButton
@@ -638,7 +721,7 @@
                     android:text="@string/will_deliver"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
                 <com.zcw.togglebutton.ToggleButton

@@ -360,7 +360,8 @@
             android:layout_height="80dp"
             android:orientation="horizontal"
             android:background="@drawable/button_rectangle_round"
-            android:paddingLeft="30dp">
+            android:paddingLeft="30dp"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"

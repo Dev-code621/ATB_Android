@@ -71,9 +71,9 @@
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_business"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:cardCornerRadius="10dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                app:cardCornerRadius="8dp"
                 android:layout_gravity="right|bottom"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="false"
@@ -95,7 +95,7 @@
         <TextView
             android:id="@+id/txv_product_description"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:text="@string/all_product"
             android:gravity="center"
             android:textColor="@color/white"
@@ -118,8 +118,8 @@
             android:layout_marginTop="20dp">
             <ImageView
                 android:id="@+id/imv_selector"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/edit_category_selector"
                 android:layout_gravity="right|center"
                 android:layout_marginLeft="10dp" />
@@ -130,6 +130,7 @@
                 android:gravity="center"
                 android:textColor="@color/txt_color"
                 style="@style/btn_buttonStyle"
+                android:textSize="16sp"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:background="@drawable/under_line2"/>
@@ -159,6 +160,7 @@
                 android:src="@drawable/icon_birthday"
                 android:background="@drawable/edit_rectangle_round"
                 android:layout_marginLeft="10dp"
+                android:padding="12dp"
                 android:visibility="gone"/>
         </LinearLayout>
 

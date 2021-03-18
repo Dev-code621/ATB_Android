@@ -87,9 +87,12 @@ public class MainListFragment extends Fragment {
 
 
     public void getList(){
-        String apilink = API.GET_ALL_FEED_API;
-        if(!Commons.main_category.equals("MY ATB")) {
-            apilink = API.GET_SELECTED_FEED_API;
+        String apilink = API.GET_USERS_POSTS;
+        if(Commons.selectUsertype==-1) {
+            apilink = API.GET_ALL_FEED_API;
+            if (!Commons.main_category.equals("MY ATB")) {
+                apilink = API.GET_SELECTED_FEED_API;
+            }
         }
 
         showProgress();
@@ -115,8 +118,13 @@ public class MainListFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                if(!Commons.main_category.equals("MY ATB"))
-                    params.put("category_title", Commons.main_category);
+                if(Commons.selectUsertype==-1) {
+                    if (!Commons.main_category.equals("MY ATB"))
+                        params.put("category_title", Commons.main_category);
+                }else{
+                    params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                    params.put("business", "0");
+                }
                 return params;
             }
         };
@@ -131,7 +139,11 @@ public class MainListFragment extends Fragment {
     void parseResponse(String json){
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("extra");
+            JSONArray jsonArray;
+            if(Commons.selectUsertype==-1)
+                jsonArray = jsonObject.getJSONArray("extra");
+            else
+                jsonArray = jsonObject.getJSONArray("msg");
             newsFeedEntities.clear();
             for(int i =0;i<jsonArray.length();i++){
                 NewsFeedEntity newsFeedEntity = new NewsFeedEntity();

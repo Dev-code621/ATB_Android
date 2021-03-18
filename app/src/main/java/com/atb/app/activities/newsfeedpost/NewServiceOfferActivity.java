@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -75,10 +76,15 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
      int is_deposit_required = 0,candellation = 0;
      float deposit_amount =0.00f;
      int isPosting;
+     RelativeLayout lyt_product,lyt_post;
+     ImageView imv_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_service_offer);
+        lyt_product = findViewById(R.id.lyt_product);
+        lyt_post = findViewById(R.id.lyt_post);
+        imv_back = findViewById(R.id.imv_back);
         txv_quality = findViewById(R.id.txv_quality);
         txv_quality_name = findViewById(R.id.txv_quality_name);
         txv_quality_time = findViewById(R.id.txv_quality_time);
@@ -136,6 +142,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         lyt_insurance_plus.setOnClickListener(this);
         txv_minus.setOnClickListener(this);
         txv_plus.setOnClickListener(this);
+        imv_back.setOnClickListener(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -234,6 +241,13 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         initLayout();
     }
     void initLayout(){
+        if(isPosting == 1){
+            lyt_post.setVisibility(View.VISIBLE);
+            lyt_product.setVisibility(View.GONE);
+        }else {
+            lyt_post.setVisibility(View.GONE);
+            lyt_product.setVisibility(View.VISIBLE);
+        }
         Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
         if(qualitfication_id ==-1 ){
             txv_quality.setVisibility(View.VISIBLE);
@@ -340,6 +354,9 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lyt_back:
+                finish(this);
+                break;
+            case R.id.imv_back:
                 finish(this);
                 break;
             case R.id.txv_post:
@@ -469,7 +486,6 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 public void onResponse(JSONObject jsonObject) {
                     closeProgress();
                     try {
-                        Log.d("aaaaa",jsonObject.toString());
                         if(jsonObject.getBoolean("result")) {
                             setResult(RESULT_OK);
                             finish(NewServiceOfferActivity.this);

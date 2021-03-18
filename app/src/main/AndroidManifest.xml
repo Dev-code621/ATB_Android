@@ -38,10 +38,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.VideoPlayerActivity"></activity>
-        <activity android:name=".activities.navigationItems.booking.CreateBooking2Activity" />
-        <activity android:name=".activities.navigationItems.booking.BookinViewActivity" />
-        <activity android:name=".activities.navigationItems.booking.CreateABookingActivity" />
+        <activity android:name=".activities.navigationItems.SetOperatingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity android:name=".activities.profile.OtherUserProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.FollowerAndFollowingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.newpost.SelectProductCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.profile.ProfileUserNavigationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity android:name=".activities.VideoPlayerActivity" />
+        <activity
+            android:name=".activities.navigationItems.booking.CreateBooking2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.booking.BookinViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.booking.CreateABookingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -91,7 +118,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
-            android:name=".activities.ProfileNaviagationActivity"
+            android:name=".activities.profile.ProfileBusinessNaviagationActivity"
             android:label="@string/title_activity_profile_naviagation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
