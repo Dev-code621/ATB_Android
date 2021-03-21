@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -38,6 +39,7 @@ import com.atb.app.preference.Preference;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.view.zoom.ImageZoomButton;
 import com.atb.app.view.zoom.ZoomAnimation;
+import com.google.android.gms.common.internal.service.Common;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 
 import org.json.JSONArray;
@@ -185,6 +187,12 @@ public abstract class CommonActivity extends BaseActivity {
             }
         }
         return false;
+    }
+    protected void getPhoneSize(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        Commons.phone_height = displayMetrics.heightPixels;
+        Commons.phone_width = displayMetrics.widthPixels;
     }
 
 

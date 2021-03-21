@@ -10,12 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
-import com.atb.app.activities.FollowerAndFollowingActivity;
-import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
+import com.atb.app.activities.profile.FollowerAndFollowingActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.FollowerModel;
-import com.atb.app.model.TransactionEntity;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -85,7 +85,8 @@ public class FollowerAdapter extends BaseAdapter {
         holder.txv_id.setText(followerModel.getUserModel().getUserName());
         holder.txv_id.setTextColor(_context.getResources().getColor(R.color.txt_color));
         if(!isFollower && followerModel.getUserModel().getAccount_type()==1){
-            Glide.with(_context).load(followerModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+            Glide.with(_context).load(followerModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
             holder.txv_username.setText(followerModel.getUserModel().getBusinessModel().getBusiness_profile_name());
             holder.txv_id.setText(followerModel.getUserModel().getBusinessModel().getBusiness_website());
             holder.txv_id.setTextColor(_context.getResources().getColor(R.color.head_color));

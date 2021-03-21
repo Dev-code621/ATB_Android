@@ -20,8 +20,8 @@
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_vertical">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/icon_birthday" />
             <TextView
                 android:layout_width="match_parent"
@@ -56,12 +56,13 @@
                 style="@style/boldtextTheme"
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/head_color"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/btn_arrow1"
-                android:layout_marginLeft="10dp"/>
+                android:src="@drawable/ico_show"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"/>
         </LinearLayout>
     </FrameLayout>
     <RelativeLayout
@@ -99,7 +100,7 @@
                 style="@style/boldtextTheme"
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/txt_color"
-                android:textSize="22sp"/>
+                android:textSize="18sp"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/lyt_selector"
@@ -112,17 +113,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/show_confirm"
                 style="@style/boldtextTheme"
-                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/head_color"
                 android:layout_gravity="right"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                android:gravity="right"/>
             <ImageView
                 android:id="@+id/imv_selector"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/edit_category_selector"
-                android:layout_gravity="right|center"
-                android:layout_marginLeft="10dp" />
+                android:layout_gravity="right|center" />
         </LinearLayout>
     </RelativeLayout>
     <ListView
@@ -130,7 +131,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:scrollbars="none">
-
-    </ListView>
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:listSelector="@color/transparent"
+        android:scrollbars="none"/>
 </LinearLayout>

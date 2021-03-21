@@ -45,8 +45,8 @@
             android:padding = "5dp"
             android:layout_marginRight="10dp">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/icon_birthday"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                 style="@style/textTheme"
                 android:textColor="@color/head_color"
                 android:layout_marginLeft="5dp"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
@@ -71,9 +71,9 @@
             android:orientation="horizontal">
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_user_info_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:cardCornerRadius="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:cardCornerRadius="25dp"
                 android:layout_gravity="center"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="false">
@@ -94,10 +94,10 @@
                     android:id="@+id/txv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Aaaaa"
+                    android:text="MF"
                     style="@style/textTheme"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <TextView
                     android:id="@+id/txv_useremail"
                     android:layout_width="wrap_content"
@@ -122,8 +122,8 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_bubble"
                     android:layout_gravity="center"
                     android:tint="@color/white"/>
@@ -133,6 +133,7 @@
                     android:layout_height="match_parent"
                     android:text="@string/message"
                     android:gravity="center"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"/>
             </LinearLayout>
@@ -150,7 +151,7 @@
             android:text="Test"
             style="@style/textTheme"
             android:textColor="@color/txt_color"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -167,7 +168,7 @@
                 android:text="TuesDay 22 August"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"/>
             <View
                 android:layout_width="1dp"
@@ -186,7 +187,7 @@
                 android:text="8:00 am"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
         <TextView
@@ -197,7 +198,7 @@
             style="@style/textTheme"
             android:textColor="@color/txt_color"
             android:layout_marginTop="5dp"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -210,7 +211,7 @@
             android:text="@string/invoice"
             style="@style/boldtextTheme"
             android:textColor="@color/txvcolor_trasnparent"
-            android:textSize="22sp" />
+            android:textSize="20sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -223,7 +224,7 @@
                 android:text="@string/total_per_booking"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -238,7 +239,7 @@
                 android:text="$235.00"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
         <LinearLayout
@@ -253,7 +254,7 @@
                 android:text="@string/deposit"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -268,7 +269,7 @@
                 android:text="$0.00"
                 style="@style/boldtextTheme"
                 android:textColor="@color/head_color"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
         <LinearLayout
@@ -283,7 +284,7 @@
                 android:text="@string/payment_pending"
                 style="@style/boldtextTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -304,11 +305,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_cash"
+                android:layout_centerVertical="true"
                 android:tint="@color/txt_color"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -360,7 +363,7 @@
                 android:text="@string/request_change"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"/>
             <View
                 android:layout_width="0dp"
@@ -380,8 +383,8 @@
             android:orientation="horizontal"
             android:layout_marginTop="15dp">
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:src="@drawable/star3"
                 android:tint="@color/txt_color"/>
@@ -391,7 +394,7 @@
                 android:text="@string/request_rating"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"/>
             <View
                 android:layout_width="0dp"
@@ -422,7 +425,7 @@
                 android:text="@string/cancel_booking"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:layout_marginLeft="10dp"/>
             <View
                 android:layout_width="0dp"

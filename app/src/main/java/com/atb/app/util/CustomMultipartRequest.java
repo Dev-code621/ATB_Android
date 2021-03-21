@@ -4,6 +4,7 @@ package com.atb.app.util;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.android.volley.AuthFailureError;

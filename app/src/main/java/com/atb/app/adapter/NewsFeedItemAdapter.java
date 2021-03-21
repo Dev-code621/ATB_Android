@@ -1,7 +1,6 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,8 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
-import com.atb.app.activities.MainActivity;
-import com.atb.app.activities.register.CreateFeedActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -36,7 +33,9 @@ import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.VotingModel;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONObject;
 
@@ -73,7 +72,17 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         NewsFeedEntity newsFeedEntity = newsFeedEntities.get(position);
-        Glide.with(context).load(newsFeedEntity.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+        if(newsFeedEntity.getPoster_profile_type()==0) {
+            Glide.with(context).load(newsFeedEntity.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate()
+                    .apply(RequestOptions.bitmapTransform(
+                            new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder)))
+                    .into(holder.imv_profile);
+        }else {
+            Glide.with(context).load(newsFeedEntity.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate()
+                    .apply(RequestOptions.bitmapTransform(
+                            new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#FFFFFF", Commons.glide_boder)))
+                    .into(holder.imv_profile);
+        }
         holder.txv_name.setText(newsFeedEntity.getProfile_name());
         holder.txv_time.setText(newsFeedEntity.getRead_created());
         holder.txv_comment.setText(String.valueOf(newsFeedEntity.getComments()));

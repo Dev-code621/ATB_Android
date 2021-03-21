@@ -12,7 +12,9 @@ import com.atb.app.R;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.NotiEntity;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -71,7 +73,8 @@ public class NotificationAdapter extends BaseAdapter {
         holder.txv_title.setText(noti_item.getName());
         holder.txv_content.setText(noti_item.getText());
         holder.txv_time.setText(secToTime(noti_item.getCreated_at()));
-        Glide.with(_context).load(noti_item.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+        Glide.with(_context).load(noti_item.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
 
         return convertView;
     }

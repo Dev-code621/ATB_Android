@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
@@ -28,7 +31,9 @@ import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.util.GpsInfo;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,24 +42,36 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.theartofdev.edmodo.cropper.CropImage;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
+import com.zxy.tiny.Tiny;
+import com.zxy.tiny.callback.FileCallback;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 public class SetPostRangeActivity extends CommonActivity implements View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     ImageView imv_back;
-    EditText edt_serach;
+    TextView edt_serach;
     LinearLayout lyt_send;
     IndicatorSeekBar seekbarProgress;
     TextView txv_progress,txv_update;
     SupportMapFragment mapFragment;
     private GoogleMap googleMap;
     private LatLng myCordianite;
-
+    float progress = 0.0f;
+    long lat,lang;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +82,18 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         seekbarProgress = findViewById(R.id.seekbarProgress);
         txv_update = findViewById(R.id.txv_update);
         txv_progress = findViewById(R.id.txv_progress);
-
+        edt_serach.setOnClickListener(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         imv_back.setOnClickListener(this);
         txv_update.setOnClickListener(this);
         lyt_send.setOnClickListener(this);
-        Keyboard();
+        if(!Commons.g_user.getPost_search_region().equals("null"));{
+            seekbarProgress.setProgress(Float.parseFloat(Commons.g_user.getPost_search_region()));
+            txv_progress.setText(Commons.g_user.getPost_search_region() + "KM");
+            progress = Float.parseFloat(Commons.g_user.getPost_search_region());
+
+        }
         seekbarProgress.setOnSeekChangeListener(new OnSeekChangeListener() {
             @Override
             public void onSeeking(SeekParams seekParams) {
@@ -102,24 +124,10 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         googleMap = mMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(Commons.traffic);
-        mMap.animateCamera( CameraUpdateFactory.zoomTo( Commons.zoom ));
         googleMap.setOnMarkerClickListener(this);
         setUpMap();
-
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                hideKeyboard();
-            }
-        });
-
-
     }
 
-    public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(edt_serach.getWindowToken(), 0);
-    }
 
     private void setUpMap() {
 
@@ -136,7 +144,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
 
             // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(4f));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(progress/30)));
 
             drawMyLocation();
 
@@ -150,7 +158,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
 
             // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(4f));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(progress/30)));
             drawMyLocation();
         }
         // mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
@@ -174,6 +182,15 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             case R.id.imv_back:
                 finish(this);
                 break;
+            case R.id.edt_serach:
+                List<Place.Field> fields = Arrays.asList(Place.Field.values());
+
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .setTypeFilter(TypeFilter.ADDRESS)
+                        .build(this);
+                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
+                break;
             case R.id.txv_update:
                 setResult(Commons.location_code);
                 Commons.location = edt_serach.getText().toString();
@@ -185,22 +202,26 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         }
     }
 
-    void Keyboard(){
-        LinearLayout lytContainer = (LinearLayout) findViewById(R.id.lyt_container);
-        lytContainer.setOnTouchListener(new View.OnTouchListener() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(edt_serach.getWindowToken(), 0);
-                return false;
+        if (requestCode == Constants.AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Autocomplete.getStatusFromIntent(data).toString();
+                edt_serach.setText(place.getAddress());
+                myCordianite = place.getLatLng();
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
-        });
-
+            return;
+        }
 
     }
-
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;

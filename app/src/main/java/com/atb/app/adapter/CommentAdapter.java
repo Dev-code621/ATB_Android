@@ -1,7 +1,11 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +19,12 @@ import com.atb.app.R;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.TransactionEntity;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -101,18 +108,23 @@ public class CommentAdapter extends BaseAdapter {
         if(commentModel.getLevel()==1)
             holder.view_reply.setVisibility(View.VISIBLE);
         if(comment.length()>0) {
-            comment = comment.replace("\n", "<br/>");
-            comment = comment.replace(" ", "&nbsp;");
-            String username = "<font color='black'>" + "<b>" + commentModel.getUserName() + "</b>" + "</font>" + "  " + comment;
-            //text
-            holder.txv_comment.setText(Html.fromHtml(username), TextView.BufferType.SPANNABLE);
+//            comment = comment.replace("\n", "<br/>");
+//            comment = comment.replace(" ", "&nbsp;");
+//            String username = "<font color='black'>" + "<b>" + commentModel.getUserName() + "</b>" + "</font>" + "  " + comment;
+//            holder.txv_comment.setText(Html.fromHtml(username));
+            String text = commentModel.getUserName()+" " + commentModel.getComment();
+            SpannableString ss = new SpannableString(text);
+            StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+            ss.setSpan(boldSpan, 0, commentModel.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.txv_comment.setText(ss);
             holder.txv_comment.setVisibility(View.VISIBLE);
         }
         for(int i =0;i<commentModel.getImage_url().size();i++){
             Glide.with(_context).load(commentModel.getImage_url().get(i)).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imageViews.get(i));
             holder.imageViews.get(i).setVisibility(View.VISIBLE);
         }
-        Glide.with(_context).load(commentModel.getUserImage()).placeholder(R.drawable.profile_pic).dontAnimate().into(holder.imv_profile);
+        Glide.with(_context).load(commentModel.getUserImage()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
         holder.txv_time.setText(commentModel.getRead_created());
         holder.lyt_reply.setOnClickListener(new View.OnClickListener() {
             @Override

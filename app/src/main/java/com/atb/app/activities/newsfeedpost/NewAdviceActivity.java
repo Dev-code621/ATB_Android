@@ -34,7 +34,9 @@ import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.dialog.SelectProfileDialog;
 import com.atb.app.model.CommentModel;
 import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 
@@ -143,9 +145,11 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             if(!business_user && i>3)imageViews.get(i).setVisibility(View.GONE);
         }
         if(business_user)
-            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         else
-            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
 
     }
@@ -208,7 +212,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             else
                 params.put("profile_type", "0");
             params.put("title", edt_title.getText().toString());
-            params.put("description", edt_description.getText().toString());
+            params.put("description",edt_description.getText().toString());
             params.put("brand", "");
             params.put("price", "0.00");
             params.put("category_title", spiner_category_type.getSelectedItem().toString());
@@ -218,22 +222,24 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             params.put("delivery_option", "0");
             params.put("delivery_cost", "0");
             //File part
+
             ArrayList<File> post = new ArrayList<>();
             if(media_type ==1) {
                 for (int i = 0; i < completedValue.size(); i++) {
                     File file = new File(completedValue.get(i));
                     post.add(file);
                 }
-            }else {
+            }else if(media_type == 2) {
                 File file = new File(videovalue);
                 post.add(file);
             }
-            String API_LINK =API.CREATE_POST_API,imageTitle = "post_imgs";
+            String API_LINK = API.CREATE_POST_API;
+            String imageTitle = "post_imgs";
 
             Map<String, String> mHeaderPart= new HashMap<>();
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
             mHeaderPart.put("Accept", "application/json");
-
+            Log.d("aaa",params.toString());
             CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
@@ -271,9 +277,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             closeProgress();
             showAlertDialog("Photo Upload is failed . Please try again.");
         }
-
     }
-
 
     void selectImage(int posstion){
         if(posstion==maxImagecount){

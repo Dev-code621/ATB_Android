@@ -36,13 +36,21 @@
                     app:actualImageScaleType="centerCrop"
                     app:placeholderImage="@drawable/profile_pic"/>
             </androidx.cardview.widget.CardView>
-            <ImageView
-                android:id="@+id/imv_business"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="bottom|right"
-                android:background="@drawable/button_rectangle_round"
-                android:src="@drawable/icon_down_up" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_business"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                app:cardCornerRadius="8dp"
+                android:layout_gravity="right|bottom"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                app:cardBackgroundColor="@color/head_color">
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_down_up" />
+            </androidx.cardview.widget.CardView>
         </FrameLayout>
         <TextView
             android:layout_width="0dp"

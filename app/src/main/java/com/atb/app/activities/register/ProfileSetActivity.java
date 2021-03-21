@@ -211,7 +211,8 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         showProgress();
         try {
             File file = null;
-            file = new File(photoPath);
+            if(photoPath.length()>0)
+                file = new File(photoPath);
             Map<String, String> params = new HashMap<>();
             params.put("email", Commons.g_user.getEmail());
             params.put("pass", Commons.g_user.getPassword());

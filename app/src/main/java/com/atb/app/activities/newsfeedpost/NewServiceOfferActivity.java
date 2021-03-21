@@ -35,7 +35,9 @@ import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.zcw.togglebutton.ToggleButton;
@@ -248,7 +250,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             lyt_post.setVisibility(View.GONE);
             lyt_product.setVisibility(View.VISIBLE);
         }
-        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         if(qualitfication_id ==-1 ){
             txv_quality.setVisibility(View.VISIBLE);
             lyt_qualitfied.setVisibility(View.GONE);

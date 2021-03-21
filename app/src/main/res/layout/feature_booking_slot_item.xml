@@ -10,6 +10,12 @@
     <FrameLayout
         android:layout_width="20dp"
         android:layout_height="20dp">
+        <View
+            android:id="@+id/view_count"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@color/signup_popup_color"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/card_user_info_image"
             android:layout_width="20dp"
@@ -25,15 +31,9 @@
                 android:layout_height="wrap_content"
                 android:text="9"
                 android:textColor="@color/white"
-                android:background="@color/head_color"
                 android:layout_gravity="center" />
 
         </androidx.cardview.widget.CardView>
-        <View
-            android:id="@+id/view_count"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@color/signup_popup_color"/>
     </FrameLayout>
     <TextView
         android:id="@+id/txt_day"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.FollowerAndFollowingActivity"
+    tools:context=".activities.profile.FollowerAndFollowingActivity"
     android:orientation="vertical"
     android:background="@color/signup_popup_color">
     <LinearLayout
@@ -32,9 +32,9 @@
                 android:layout_marginLeft="10dp">
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_user_info_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    app:cardCornerRadius="30dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="25dp"
                     android:layout_gravity="center"
                     app:cardElevation="0dp"
                     app:cardUseCompatPadding="false">
@@ -60,7 +60,7 @@
                     style="@style/boldtextTheme"
                     android:singleLine="true"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:gravity="center_vertical" />
                 <TextView
                     android:id="@+id/txv_id"
@@ -70,7 +70,7 @@
                     style="@style/textTheme"
                     android:singleLine="true"
                     android:textColor="@color/head_color"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:gravity="center_vertical" />
             </LinearLayout>
         </LinearLayout>
@@ -86,7 +86,7 @@
                 android:id="@+id/lyt_follower"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button1"
                 android:paddingLeft="5dp"
@@ -99,7 +99,7 @@
                     style="@style/boldtextTheme"
                     android:text="11"
                     android:textColor="@color/txt_color"
-                    android:textSize="18sp"/>
+                    android:textSize="16sp"/>
                 <TextView
                     android:id="@+id/txv_follower_description"
                     android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                 android:id="@+id/lyt_following"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button_theme"
                 android:layout_marginLeft="5dp"
@@ -128,7 +128,7 @@
                     style="@style/boldtextTheme"
                     android:text="20"
                     android:textColor="@color/txt_color"
-                    android:textSize="18sp"/>
+                    android:textSize="16sp"/>
                 <TextView
                     android:id="@+id/txv_following_description"
                     android:layout_width="wrap_content"

@@ -43,14 +43,26 @@ public class BookingDateAdapter extends RecyclerView.Adapter<BookingDateAdapter.
     }
 
 
+    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.txt_day.setText(String.valueOf(position+1));
         holder.txv_date.setText(Commons.getWeekday(String.valueOf(position+1)+"-" + String.valueOf(month)+"-"+String.valueOf(year)));
         holder.txv_slot_count.setText(String.valueOf(list.get(position)));
         holder.lyt_container.setBackgroundColor(context.getResources().getColor(R.color.signup_popup_color));
-        if(position==select)
+        holder.txt_day.setTextColor(context.getResources().getColor(R.color.head_color));
+        holder.txv_date.setTextColor(context.getResources().getColor(R.color.txt_color));
+        holder.txv_slot_count.setTextColor(context.getResources().getColor(R.color.white));
+        holder.card_user_info_image.setCardBackgroundColor(context.getResources().getColor(R.color.head_color));
+        holder.view_count.setVisibility(View.VISIBLE);
+        if(position==select) {
+            holder.view_count.setVisibility(View.GONE);
             holder.lyt_container.setBackground(context.getResources().getDrawable(R.drawable.button_rectangle_round));
+            holder.txt_day.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_date.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_slot_count.setTextColor(context.getResources().getColor(R.color.head_color));
+            holder.card_user_info_image.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+        }
 
         holder.lyt_container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,13 +75,9 @@ public class BookingDateAdapter extends RecyclerView.Adapter<BookingDateAdapter.
             }
         });
         if(list.get(position)==0){
-            holder.view_count.setVisibility(View.VISIBLE);
-            holder.txv_date.setTextColor(context.getResources().getColor(R.color.signup_textcolor));
-            holder.txt_day.setTextColor(context.getResources().getColor(R.color.header_color1));
+            holder.card_user_info_image.setVisibility(View.GONE);
         }else {
-            holder.view_count.setVisibility(View.GONE);
-            holder.txt_day.setTextColor(context.getResources().getColor(R.color.txt_color));
-            holder.txt_day.setTextColor(context.getResources().getColor(R.color.head_color));
+            holder.card_user_info_image.setVisibility(View.VISIBLE);
         }
     }
     @Override

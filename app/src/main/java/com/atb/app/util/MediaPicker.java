@@ -70,6 +70,39 @@ public class MediaPicker {
         }
         return list;
     }
+    public ArrayList<String> getAllShownPDFPath(Activity activity) {
+        ArrayList<String> list = new ArrayList<>();
+        int int_position = 0;
+        Uri uri;
+        Cursor cursor;
+        int column_index_data, column_index_folder_name, column_id, thum;
+
+        String absolutePathOfImage = null;
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection ={MediaStore.Files.FileColumns.DATA,MediaStore.Images.Media.SIZE,MediaStore.Files.FileColumns.MIME_TYPE,};
+
+        final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+        String pdfExt = "_data LIKE '%.pdf'";
+        cursor = context.getContentResolver().query(uri, projection, pdfExt, null, orderBy + " ASC");
+
+        assert cursor != null;
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        /*column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        column_id = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+        thum = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA);*/
+
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(column_index_data);
+            /*Log.e("Folder", cursor.getString(column_index_folder_name));
+            Log.e("column_id", cursor.getString(column_id));
+            Log.e("thum", cursor.getString(thum));*/
+
+            list.add(absolutePathOfImage);
+
+        }
+        return list;
+    }
 
     public ArrayList<MediaModel> getMediaFromDevice() {
         ArrayList<MediaModel> allMedias = new ArrayList<>();

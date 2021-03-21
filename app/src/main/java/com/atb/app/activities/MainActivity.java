@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -29,19 +30,25 @@ import com.atb.app.dialog.SelectCategoryDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.NonSwipeableViewPager;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
-    ImageView imv_search ,imv_profile,imv_feed,imv_post,imv_chat;
+    ImageView imv_search ,imv_profile,imv_feed,imv_post,imv_chat,imv_profile_pic;
     FragmentTransaction ft;
     private NonSwipeableViewPager viewPager;
     boolean main_flag = false;
     SelectCategoryDialog selectCategoryDialog;
     TextView txv_category;
     EditText edt_serach;
-    LinearLayout lyt_title,lyt_title1;
+    LinearLayout lyt_title,lyt_title1,lyt_profile;
     ImageView imv_selector;
     MainListFragment mainListFragment;
+    int selectIcon= 0 ;
+    RelativeLayout lyt_chat_title;
+    TextView txv_username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +63,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         lyt_title1 = findViewById(R.id.lyt_title1);
         edt_serach = findViewById(R.id.edt_serach);
         imv_selector = findViewById(R.id.imv_selector);
+        txv_username = findViewById(R.id.txv_username);
+        imv_profile_pic = findViewById(R.id.imv_profile_pic);
+        lyt_profile = findViewById(R.id.lyt_profile);
+        lyt_chat_title = findViewById(R.id.lyt_chat_title);
 
+        lyt_profile.setOnClickListener(this);
         imv_search.setOnClickListener(this);
         imv_profile.setOnClickListener(this);
         imv_feed.setOnClickListener(this);
@@ -65,7 +77,6 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         imv_selector.setOnClickListener(this);
         mainListFragment = new MainListFragment();
         Keyboard();
-        setColor(0);
     }
 
     void Keyboard(){
@@ -101,16 +112,37 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             case R.id.imv_feed:
                 if(main_flag)selectCategory();
                 setColor(0);
+                selectIcon = 0;
                 break;
             case R.id.imv_chat:
                 setColor(2);
+                selectIcon = 2;
                 break;
             case R.id.imv_selector:
                 setColor(3);
                 //imv_selector.setEnabled(!imv_selector.isEnabled());
                 break;
+            case R.id.lyt_profile:
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
+                break;
         }
     }
+    @Override
+    public boolean selectProfile(boolean flag){
+        if(flag){
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile_pic);
+            txv_username.setText(Commons.g_user.getBusinessModel().getBusiness_name());
+        }else {
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile_pic);
+            txv_username.setText(Commons.g_user.getUserName());
+        }
+        return flag;
+    }
+
+
     void selectCategory(){
 
         selectCategoryDialog = new SelectCategoryDialog(this);
@@ -136,12 +168,26 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             Commons.selectUsertype = -1;
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.lyt_fragement,mainListFragment).commit();
+            lyt_chat_title.setVisibility(View.GONE);
+            txv_category.setText(Commons.main_category);
         }
         else if(id==2){
             main_flag = false;
             ChatFragment chatFragment = new ChatFragment();
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.lyt_fragement,chatFragment).commit();
+            lyt_chat_title.setVisibility(View.VISIBLE);
+            if(Commons.g_user.getAccount_type() == 1){
+                Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                        new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile_pic);
+                txv_username.setText(Commons.g_user.getBusinessModel().getBusiness_name());
+            }else {
+                Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                        new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile_pic);
+                txv_username.setText(Commons.g_user.getUserName());
+            }
+            txv_category.setText("Chat");
+
         }
         else if(id ==3){
             main_flag = false;
@@ -205,7 +251,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        setColor(0);
+        setColor(selectIcon);
 
     }
 }

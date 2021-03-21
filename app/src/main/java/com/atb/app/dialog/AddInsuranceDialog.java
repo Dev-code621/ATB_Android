@@ -23,6 +23,8 @@ import androidx.fragment.app.DialogFragment;
 import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.ExistSalesPostActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.model.submodel.InsuranceModel;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -33,9 +35,18 @@ import java.util.Calendar;
 public class AddInsuranceDialog extends DialogFragment {
     private OnConfirmListener listener;
     int type;
-    long date;
+    String date;
+    InsuranceModel insuranceModel  = null;
+    TextView txv_imagename,txv_title,txv_time,txv_addtitle;
+    EditText edt_company,edt_number;
+
     public AddInsuranceDialog(int type) {
         this.type = type;
+    }
+
+    public AddInsuranceDialog(int type, InsuranceModel insuranceModel) {
+        this.type =type;
+        this.insuranceModel = insuranceModel;
     }
 
     @Nullable
@@ -52,29 +63,52 @@ public class AddInsuranceDialog extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        TextView txv_title = (TextView) view.findViewById(R.id.txv_title);
-        TextView txv_time = (TextView) view.findViewById(R.id.txv_time);
+        txv_title = (TextView) view.findViewById(R.id.txv_title);
+        txv_time = (TextView) view.findViewById(R.id.txv_time);
         ImageView imv_back = (ImageView) view.findViewById(R.id.imv_back);
-        EditText edt_company = (EditText) view.findViewById(R.id.edt_company);
-        EditText edt_number = (EditText) view.findViewById(R.id.edt_number);
+        edt_company = (EditText) view.findViewById(R.id.edt_company);
+        edt_number = (EditText) view.findViewById(R.id.edt_number);
         LinearLayout lyt_add_file = (LinearLayout) view.findViewById(R.id.lyt_add_file);
         LinearLayout lyt_add_insurance = (LinearLayout)view.findViewById(R.id.lyt_add_insurance);
-        TextView txv_imagename = (TextView) view.findViewById(R.id.txv_imagename);
-        TextView txv_addtitle = (TextView) view.findViewById(R.id.txv_addtitle);
+        txv_imagename = (TextView) view.findViewById(R.id.txv_imagename);
+        txv_addtitle = (TextView) view.findViewById(R.id.txv_addtitle);
+        if(insuranceModel == null) {
+            if (type == 0) {
+                txv_title.setText("Add An Insurance");
+                txv_addtitle.setText("Add An Insurance");
+                edt_company.setHint("Insurance Company");
+                edt_number.setHint("Insurance Number");
+                txv_time.setHint("Insurance Expiry");
+            } else if (type == 1) {
+                txv_title.setText("Add An Certification");
+                txv_addtitle.setText("Add An Certification");
+                edt_company.setHint("Qualified Service Name");
+                edt_number.setHint("Certification Number");
+                txv_time.setHint("Qualified Since");
+            }
+        }else {
+            if (type == 0) {
+                txv_title.setText("Update An Insurance");
+                txv_addtitle.setText("Update An Insurance");
+                edt_company.setHint("Insurance Company");
+                edt_number.setHint("Insurance Number");
+                txv_time.setHint("Insurance Expiry");
+            } else if (type == 1) {
+                txv_title.setText("Update An Certification");
+                txv_addtitle.setText("Update An Certification");
+                edt_company.setHint("Qualified Service Name");
+                edt_number.setHint("Certification Number");
+                txv_time.setHint("Qualified Since");
+            }
+            if(insuranceModel.getFile().length()>0)
+                setFileName();
 
-        if(type ==0){
-            txv_title.setText("Add An Insurance");
-            txv_addtitle.setText("Add An Insurance");
-            edt_company.setHint("Insurance Company");
-            edt_number.setHint("Insurance Number");
-            txv_time.setHint("Insurance Expiry");
-        }else if(type == 1){
-            txv_title.setText("Add An Certification");
-            txv_addtitle.setText("Add An Certification");
-            edt_company.setHint("Qualified Service Name");
-            edt_number.setHint("Certification Number");
-            txv_time.setHint("Qualified Since");
+            edt_company.setText(insuranceModel.getCompany());
+            edt_number.setText(insuranceModel.getReference());
+            txv_time.setText(Commons.getDisplayDate1(insuranceModel.getExpiry()));
+            date = Commons.getDisplayDate3(insuranceModel.getExpiry());
         }
+
         imv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +124,10 @@ public class AddInsuranceDialog extends DialogFragment {
         lyt_add_insurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(edt_company.getText().toString().length()==0 || edt_number.getText().toString().length()==0 || txv_time.getText().toString().length()==0){
+                    ((CommonActivity)getContext()).showAlertDialog("Please enter the fields");
+                    return;
+                }
                 listener.onConfirm(edt_company.getText().toString(),edt_number.getText().toString(),date);
                 dismiss();
             }
@@ -107,6 +145,9 @@ public class AddInsuranceDialog extends DialogFragment {
                                 now.set(year,monthOfYear,dayOfMonth);
                                 SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
                                 txv_time.setText(formatter.format(now.getTimeInMillis()));
+                                SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy/MM/dd");
+                                date = formatter2.format(now.getTimeInMillis());
+
                             }
                         },
                         now.get(Calendar.YEAR), // Initial year selection
@@ -120,6 +161,12 @@ public class AddInsuranceDialog extends DialogFragment {
     }
 
 
+    public void setFileName(){
+        if(type ==0)
+            txv_imagename.setText("Insurance");
+        else
+            txv_imagename.setText("Qualified Since");
+    }
 
 
     @Override
@@ -134,7 +181,7 @@ public class AddInsuranceDialog extends DialogFragment {
     }
 
     public interface OnConfirmListener {
-        void onConfirm(String comapny,String number,long date);
+        void onConfirm(String comapny,String number,String date);
         void onFileSelect();
     }
 }

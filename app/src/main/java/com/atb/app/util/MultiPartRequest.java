@@ -43,7 +43,6 @@ public class MultiPartRequest extends Request<String> {
         mFilePart = file;
         mStringPart = stringPart;
         parameters = param;
-
         buildMultipartEntity();
     }
 
@@ -57,9 +56,9 @@ public class MultiPartRequest extends Request<String> {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
-
-            entity.writeTo(new CountingOutputStream(bos, mFilePart.length(),
-                    null));
+//              entity.writeTo(new CountingOutputStream(bos, mFilePart.length(),
+//                    null));
+            entity.writeTo(bos);
 
         } catch (IOException e) {
             VolleyLog.e("IOException writing to ByteArrayOutputStream");
@@ -92,8 +91,8 @@ public class MultiPartRequest extends Request<String> {
     }
 
     private void buildMultipartEntity() {
-
-        entity.addPart(mStringPart, new FileBody(mFilePart));
+        if(mFilePart!=null)
+            entity.addPart(mStringPart, new FileBody(mFilePart));
         try {
             for (String key : parameters.keySet())
                 entity.addPart(

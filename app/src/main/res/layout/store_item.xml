@@ -7,9 +7,10 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:id="@+id/lyt_item"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
     <FrameLayout
+        android:id="@+id/lyt_image"
         android:layout_width="match_parent"
         android:layout_height="200dp">
         <ImageView
@@ -116,17 +117,17 @@
             android:text="text"
             style="@style/textTheme"
             android:textColor="@color/txt_color"
-            android:textSize="19sp"/>
+            android:textSize="16sp"/>
         <LinearLayout
             android:id="@+id/lyt_editpost"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/edit_rectangle_round1"
             android:gravity="center">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/icon_bio"
                 android:layout_gravity="center"
                 app:tint="@color/white" />
@@ -135,8 +136,9 @@
                 android:layout_height="match_parent"
                 android:text="Edit"
                 android:gravity="center"
+                android:textSize="16sp"
                 android:textColor="@color/white"
-                style="@style/btn_buttonStyle" />
+                style="@style/boldtextTheme" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/lyt_make_post"
@@ -145,12 +147,13 @@
             <TextView
                 android:id="@+id/txv_make_post"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="30dp"
                 android:text="Make a Post"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:layout_marginTop="10dp"
-                style="@style/btn_buttonStyle"
+                style="@style/boldtextTheme"
+                android:textSize="16sp"
                 android:enabled="false"
                 android:background="@drawable/button_rectangle_round"/>
         </LinearLayout>

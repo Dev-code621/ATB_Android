@@ -33,9 +33,9 @@
                 android:layout_marginLeft="10dp">
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_user_info_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    app:cardCornerRadius="30dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="25dp"
                     android:layout_gravity="center"
                     app:cardElevation="0dp"
                     app:cardUseCompatPadding="false">
@@ -48,9 +48,9 @@
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_business"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    app:cardCornerRadius="10dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    app:cardCornerRadius="8dp"
                     android:layout_gravity="right|bottom"
                     app:cardElevation="0dp"
                     app:cardUseCompatPadding="false"
@@ -76,7 +76,7 @@
                     style="@style/boldtextTheme"
                     android:singleLine="true"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:gravity="center_vertical" />
                 <TextView
                     android:id="@+id/txv_id"
@@ -86,14 +86,14 @@
                     style="@style/textTheme"
                     android:singleLine="true"
                     android:textColor="@color/head_color"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:gravity="center_vertical" />
             </LinearLayout>
             <ImageView
                 android:id="@+id/imv_rating"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/icon_rating"
+                android:src="@drawable/star3"
                 android:layout_marginRight="10dp"/>
             <ImageView
                 android:id="@+id/imv_profile_chat"
@@ -110,14 +110,14 @@
                 android:layout_marginRight="20dp">
                 <ImageView
                     android:id="@+id/imv_navigation"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:src="@drawable/ic_navigation"/>
 
                 <ImageView
                     android:id="@+id/imv_dot"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_dot"
                     android:layout_gravity="right"/>
             </FrameLayout>
@@ -130,7 +130,7 @@
             <LinearLayout
                 android:id="@+id/lyt_follower"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button1"
                 android:layout_marginLeft="10dp"
@@ -144,7 +144,7 @@
                     style="@style/boldtextTheme"
                     android:text="11"
                     android:textColor="@color/txt_color"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
             <LinearLayout
                 android:id="@+id/lyt_following"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button1"
                 android:layout_marginLeft="5dp"
@@ -171,7 +171,7 @@
                     style="@style/boldtextTheme"
                     android:text="20"
                     android:textColor="@color/txt_color"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
             <LinearLayout
                 android:id="@+id/lyt_post"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button1"
                 android:layout_marginLeft="5dp"
@@ -198,7 +198,7 @@
                     style="@style/boldtextTheme"
                     android:text="3"
                     android:textColor="@color/txt_color"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
             <LinearLayout
                 android:id="@+id/lyt_following_on"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button_theme"
                 android:layout_marginLeft="5dp"
@@ -236,7 +236,7 @@
             <LinearLayout
                 android:id="@+id/lyt_on"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button_theme"
                 android:layout_marginLeft="5dp"
@@ -244,8 +244,8 @@
                 android:paddingRight="5dp"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/icon_noti"
                     android:tint="@color/white"/>
                 <TextView
@@ -254,7 +254,7 @@
                     style="@style/textTheme"
                     android:text="ON"
                     android:layout_marginLeft="5dp"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
@@ -287,19 +287,22 @@
                     android:id="@+id/imv_facebook"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_facebook"
-                    android:layout_marginRight="10dp"/>
+                    android:src="@drawable/invite_facebook"
+                    android:layout_marginRight="10dp"
+                    android:tint="@color/line_color"/>
                 <ImageView
                     android:id="@+id/imv_instagram"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_instagram"
-                    android:layout_marginRight="10dp"/>
+                    android:src="@drawable/invite_instagram"
+                    android:layout_marginRight="10dp"
+                    android:tint="@color/line_color"/>
                 <ImageView
                     android:id="@+id/imv_twitter"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_twitter" />
+                    android:src="@drawable/invite_twitter"
+                    android:tint="@color/line_color"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -327,7 +330,7 @@
                 app:stl_underlineThickness="1dp"
                 app:stl_dividerColor = "@color/head_color"
                 app:stl_defaultTabTextColor = "@color/head_color"
-                app:stl_underlineColor ="@color/main_color"/>
+                app:stl_underlineColor ="@color/main_color" />
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
@@ -348,8 +351,8 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp">
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center"
                 android:src="@drawable/leftdetail"
                 android:tint="@color/white"/>
@@ -363,24 +366,23 @@
         <ImageView
             android:id="@+id/imv_feed"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/icon_feed"
             android:layout_gravity="center"/>
         <ImageView
             android:id="@+id/imv_post"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/icon_addpost"
             android:layout_gravity="center"/>
         <ImageView
             android:id="@+id/imv_chat"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/icon_message"
             android:layout_gravity="center"/>
     </LinearLayout>
-
 </LinearLayout>

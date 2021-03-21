@@ -14,10 +14,10 @@
         style="@style/boldtextTheme"
         android:layout_marginLeft="10dp"
         android:textColor="@color/signup_textcolor"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
         <LinearLayout
             android:id="@+id/lyt_addbooking"
@@ -25,7 +25,9 @@
             android:layout_height="match_parent"
             android:background="@drawable/edit_rectangle_round"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -44,7 +46,7 @@
                     style="@style/textTheme"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/signup_textcolor"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
                 <TextView
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
@@ -52,7 +54,7 @@
                     style="@style/boldtextTheme"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/txt_color"
-                    android:textSize="20sp"/>
+                    android:textSize="16sp"/>
             </LinearLayout>
             <View
                 android:layout_width="0dp"
@@ -67,8 +69,8 @@
                 android:layout_marginBottom="10dp"/>
             <ImageView
                 android:id="@+id/imv_selector"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/edit_category_selector"
                 android:layout_gravity="right|center"
                 android:layout_marginRight="10dp" />
@@ -79,7 +81,9 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:background="@drawable/button_rectangle_round"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_user_info_image"
                 android:layout_width="50dp"
@@ -110,7 +114,7 @@
                     style="@style/boldtextTheme"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/white"
-                    android:textSize="20sp"/>
+                    android:textSize="18sp"/>
                 <TextView
                     android:id="@+id/txv_id"
                     android:layout_width="150dp"
@@ -119,7 +123,7 @@
                     style="@style/textTheme"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/white"
-                    android:textSize="18sp"/>
+                    android:textSize="16sp"/>
             </LinearLayout>
             <View
                 android:layout_width="0dp"

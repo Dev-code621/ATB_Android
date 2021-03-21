@@ -97,6 +97,7 @@ public class BookingActivity extends BaseActivity implements View.OnClickListene
         int month=c.get(Calendar.MONTH);
         txt_month.setText(months[month]+ ", " + String.valueOf(year));
         EndDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+
         recyclerView_date.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         loadBooking(year,month);

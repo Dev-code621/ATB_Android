@@ -119,4 +119,9 @@ public class API {
     public static final String ADD_HOLIDAY = API_BASE_URL + "business/add_holiday";
     public static final String DELETE_HOLIDAY = API_BASE_URL + "business/delete_holiday";
     public static final String DELETE_SERVICE_FILE = API_BASE_URL + "profile/delete_service_file";
+    public static final String ADD_SERVICE_FILE = API_BASE_URL + "profile/add_service_file";
+    public static final String UPDATE_SERVICE_FILE = API_BASE_URL + "profile/update_service_file";
+    public static final String ADD_SOCIAL = API_BASE_URL + "profile/add_social";
+    public static final String REMOVE_SOCIAL = API_BASE_URL + "profile/remove_social";
+    public static final String  GET_ITEMS_SOLD =   API_BASE_URL + "transaction/get_items_sold";
 }

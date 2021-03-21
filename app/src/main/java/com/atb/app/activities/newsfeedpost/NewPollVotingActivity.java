@@ -34,7 +34,9 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 
@@ -170,9 +172,11 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
             if(!business_user && i>3)imageViews.get(i).setVisibility(View.GONE);
         }
         if(business_user)
-            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         else
-            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().into(imv_profile);
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
 
     }
@@ -244,7 +248,7 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
             Map<String, String> params = new HashMap<>();
             params.put("token", Commons.token);
             params.put("type", "4");
-            if(completedValue.size()>=0)
+            if(completedValue.size()>0)
                 params.put("media_type", "1");
             else
                 params.put("media_type", "0");
@@ -276,12 +280,13 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
                 File file = new File(completedValue.get(i));
                 post.add(file);
             }
-            String API_LINK = API.CREATE_POST_API,imageTitle = "post_imgs";
+            String API_LINK = API.CREATE_POST_API;
+            String imageTitle = "post_imgs";
 
             Map<String, String> mHeaderPart= new HashMap<>();
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
             mHeaderPart.put("Accept", "application/json");
-
+            Log.d("aaa",params.toString());
             CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {

@@ -81,7 +81,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
-                        android:text="@string/business_description1"/>
+                        android:text="@string/business_description1"
+                        android:textSize="16sp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -132,8 +133,8 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/icon_transaction"
                     android:layout_gravity="right|center"
                     android:tint="@color/white"/>
@@ -145,7 +146,7 @@
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"
                     android:paddingLeft="0dp"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:layout_marginLeft="5dp"
                     android:paddingRight="0dp" />
             </LinearLayout>
@@ -155,7 +156,7 @@
                 android:text="@string/set_operation_hour_description"
                 style="@style/textTheme"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -177,7 +178,7 @@
                         android:text="@string/set_operation_hour"
                         android:textColor="@color/white"
                         style="@style/boldtextTheme"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:singleLine="true" />
                     <TextView
                         android:id="@+id/txv_setoperate"
@@ -186,7 +187,7 @@
                         android:text="@string/not_set_yet"
                         android:textColor="@color/white"
                         style="@style/textTheme"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:singleLine="true" />
                 </LinearLayout>
                 <ImageView
@@ -206,8 +207,8 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center_vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_quality"
                     android:layout_gravity="right|center"
                     android:tint="@color/white"/>
@@ -215,11 +216,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/add_insurance_quality"
-                    android:gravity="center"
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"
                     android:paddingLeft="0dp"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:layout_marginLeft="5dp"
                     android:paddingRight="0dp" />
             </LinearLayout>
@@ -229,7 +229,7 @@
                 android:text="@string/add_insurance_quality_description"
                 style="@style/textTheme"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -305,7 +305,7 @@
                 android:textColor="@color/white"
                 style="@style/boldtextTheme"
                 android:paddingLeft="0dp"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:layout_marginTop="15dp"/>
             <View
                 android:layout_width="match_parent"
@@ -320,13 +320,13 @@
                 android:layout_marginTop="15dp">
                 <ImageView
                     android:id="@+id/imv_fb_selector"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/edit_round_check_selector"
                     app:tint="@color/white"/>
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/icon_facebook"
                     android:layout_marginLeft="10dp"/>
                 <TextView
@@ -335,7 +335,7 @@
                     android:text="Facebook"
                     style="@style/textTheme"
                     android:layout_marginLeft="5dp"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
             <LinearLayout
@@ -346,13 +346,13 @@
                 android:layout_marginTop="15dp">
                 <ImageView
                     android:id="@+id/imv_instagram_selector"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/edit_round_check_selector"
                     app:tint="@color/white"/>
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/icon_instagram"
                     android:layout_marginLeft="10dp"/>
                 <TextView
@@ -361,7 +361,7 @@
                     android:text="@string/instagram"
                     style="@style/textTheme"
                     android:layout_marginLeft="5dp"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
             <LinearLayout
@@ -399,7 +399,7 @@
                         android:layout_height="wrap_content"
                         android:text="Link"
                         style="@style/textTheme"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_gravity="center_vertical"/>
                 </LinearLayout>
             </LinearLayout>
@@ -411,13 +411,13 @@
                 android:layout_marginTop="15dp">
                 <ImageView
                     android:id="@+id/imv_twitter_selector"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/edit_round_check_selector"
                     app:tint="@color/white"/>
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/icon_twitter"
                     android:layout_marginLeft="10dp"/>
                 <TextView
@@ -426,7 +426,7 @@
                     android:text="@string/twitter"
                     style="@style/textTheme"
                     android:layout_marginLeft="5dp"
-                    android:textSize="17sp"
+                    android:textSize="15sp"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
             <LinearLayout
@@ -464,7 +464,7 @@
                         android:layout_height="wrap_content"
                         android:text="Link"
                         style="@style/textTheme"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:layout_gravity="center_vertical"/>
                 </LinearLayout>
             </LinearLayout>
@@ -494,7 +494,7 @@
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"
                     android:paddingLeft="0dp"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:layout_marginLeft="5dp"
                     android:paddingRight="0dp" />
             </LinearLayout>
@@ -504,7 +504,7 @@
                 android:text="@string/add_tag_business_description"
                 style="@style/textTheme"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical" />
@@ -534,6 +534,7 @@
                     android:layout_height="match_parent"
                     android:text="@string/save_business_detail"
                     android:gravity="center"
+                    android:textSize="17sp"
                     android:textColor="@color/white" />
                 <ImageView
                     android:layout_width="20dp"

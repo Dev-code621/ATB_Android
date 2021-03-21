@@ -19,15 +19,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="What do you want to add?"
+                android:text="What do you want\nto add?"
                 android:textColor="@color/white"
-                android:textSize="26sp"
+                android:textSize="25sp"
                 style="@style/boldtextTheme"/>
             <ImageView
                 android:id="@+id/imv_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_close"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true" />
         </RelativeLayout>
 
@@ -40,7 +41,7 @@
             android:background="@drawable/edit_rectangle_round"
             android:layout_marginTop="10dp">
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="35dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
@@ -64,8 +65,8 @@
             android:background="@drawable/edit_rectangle_round"
             android:layout_marginTop="10dp">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:tint="@color/head_color"

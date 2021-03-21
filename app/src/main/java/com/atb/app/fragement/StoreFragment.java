@@ -68,10 +68,14 @@ public class StoreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(context,2));
-
+        loadStoreItems();
 
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        context =(ProfileBusinessNaviagationActivity) getActivity();
+    }
     void addAdapter(){
         storeItemAdapter = new StoreItemAdapter(context, 1, 0, new StoreItemAdapter.SelectListener() {
             @Override
@@ -100,7 +104,7 @@ public class StoreFragment extends Fragment {
     void makePost(NewsFeedEntity newsFeedEntity){
         if(!context.isValidMakePost())return;
         String apiLink = API.CREATE_POST_API;
-        context.showProgress();
+       showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
                 apiLink,
@@ -188,7 +192,7 @@ public class StoreFragment extends Fragment {
     }
 
     void loadStoreItems(){
-
+        showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
                 API.GET_BUSINESS_ITEMS,
@@ -234,10 +238,5 @@ public class StoreFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        context =(ProfileBusinessNaviagationActivity) getActivity();
-        loadStoreItems();
-    }
+
 }

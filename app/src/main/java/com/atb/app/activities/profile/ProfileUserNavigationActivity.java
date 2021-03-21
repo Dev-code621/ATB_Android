@@ -42,7 +42,9 @@ import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -166,7 +168,8 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
             imv_rating.setVisibility(View.GONE);
             lyt_busines_upgrade.setVisibility(View.GONE);
         }
-        Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+        Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         txv_name.setText(Commons.g_user.getFirstname() + " " + Commons.g_user.getLastname());
         txv_id.setText("@"+Commons.g_user.getUserName());
         txv_follower.setText(String.valueOf(Commons.g_user.getFollowers_count()));
@@ -250,7 +253,9 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 break;
             case R.id.lyt_set_range:
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, SetPostRangeActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("bussiness",false);
+                goTo(this, SetPostRangeActivity.class,false,bundle);
                 break;
             case R.id.lyt_user_setting:
                 drawer.closeDrawer(GravityCompat.END);
@@ -343,12 +348,12 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         imv_post.clearColorFilter();
         imv_chat.clearColorFilter();
         if(id==2){
-            imv_chat.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }else if(id==1){
-            imv_post.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
         }else {
-            imv_feed.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 

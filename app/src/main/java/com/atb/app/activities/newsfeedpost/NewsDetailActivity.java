@@ -53,7 +53,9 @@ import com.atb.app.model.CommentModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -97,7 +99,6 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     VotingListAdapter votingListAdapter;
     TextView txv_book_service;
     ImageView imv_bubble;
-
     LinearLayout lyt_sale_post,lyt_location;
     TextView txv_brand,txv_price,txv_postage_cost,txv_location,txv_buy_sale;
     ArrayList<RecyclerView> recycler_view_attribue = new ArrayList<>();
@@ -285,10 +286,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     void initialLayout(){
         setSliderAdapter.renewItems(newsFeedEntity.getPostImageModels());
         if(newsFeedEntity.getPoster_profile_type()==0) {
-            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
             txv_name.setText(newsFeedEntity.getUserModel().getFirstname() + " " + newsFeedEntity.getUserModel().getLastname());
         }else {
-            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
             txv_name.setText(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_name());
         }
         txv_id.setText("@"+newsFeedEntity.getUserModel().getUserName());

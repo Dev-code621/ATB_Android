@@ -365,71 +365,7 @@ public class UserModel {
                 if(!userObject.getString("business_info").equals("null")){
                     JSONObject business_info = userObject.getJSONObject("business_info");
                     BusinessModel businessModel = new BusinessModel();
-                    businessModel.setId(business_info.getInt("id"));
-                    businessModel.setUser_id(business_info.getInt("user_id"));
-                    businessModel.setBusiness_logo(business_info.getString("business_logo"));
-                    businessModel.setBusiness_name(business_info.getString("business_name"));
-                    businessModel.setBusiness_website(business_info.getString("business_website"));
-                    businessModel.setBusiness_bio(business_info.getString("business_bio"));
-                    businessModel.setBusiness_profile_name(business_info.getString("business_profile_name"));
-                    businessModel.setPaid(business_info.getInt("paid"));
-                    businessModel.setApproved(business_info.getInt("approved"));
-                    businessModel.setApproval_reason(business_info.getString("approval_reason"));
-                    businessModel.setUpdated_at(business_info.getLong("updated_at"));
-                    businessModel.setCreated_at(business_info.getLong("created_at"));
-                    JSONArray opening_times = business_info.getJSONArray("opening_times");
-                    for(int i =0;i<opening_times.length();i++){
-                        JSONObject opening_time = opening_times.getJSONObject(i);
-                        OpeningTimeModel openingTimeModel = new OpeningTimeModel();
-                        openingTimeModel.setId(opening_time.getInt("id"));
-                        openingTimeModel.setUser_id(opening_time.getInt("user_id"));
-                        openingTimeModel.setDay(opening_time.getInt("day"));
-                        openingTimeModel.setIs_available(opening_time.getInt("is_available"));
-                        openingTimeModel.setStart(opening_time.getString("start"));
-                        openingTimeModel.setEnd(opening_time.getString("end"));
-                        openingTimeModel.setUpdated_at(opening_time.getLong("updated_at"));
-                        openingTimeModel.setCreated_at(opening_time.getLong("created_at"));
-                        businessModel.getOpeningTimeModels().add(openingTimeModel);
-                    }
-                    JSONArray holidays = business_info.getJSONArray("holidays");
-                    for(int i =0;i<holidays.length();i++){
-                        JSONObject holiday = holidays.getJSONObject(i);
-                        HolidayModel holidayModel = new HolidayModel();
-                        holidayModel.setId(holiday.getInt("id"));
-                        holidayModel.setUser_id(holiday.getInt("user_id"));
-                        holidayModel.setName(holiday.getString("name"));
-                        holidayModel.setDay_off(holiday.getLong("day_off"));
-                        holidayModel.setUpdated_at(holiday.getLong("updated_at"));
-                        holidayModel.setCreated_at(holiday.getLong("created_at"));
-                        businessModel.getHolidayModels().add(holidayModel);
-                    }
-                    JSONArray disabled_slots = business_info.getJSONArray("disabled_slots");
-                    for(int i =0;i<disabled_slots.length();i++){
-                        JSONObject disable_slot = disabled_slots.getJSONObject(i);
-                        DisableSlotModel disableSlotModel = new DisableSlotModel();
-                        disableSlotModel.setId(disable_slot.getInt("id"));
-                        disableSlotModel.setUser_id(disable_slot.getInt("user_id"));
-                        disableSlotModel.setDay_timestamp(disable_slot.getLong("day_timestamp"));
-                        disableSlotModel.setStart(disable_slot.getString("start"));
-                        disableSlotModel.setEnd(disable_slot.getString("end"));
-                        disableSlotModel.setCreated_at(disable_slot.getLong("created_at"));
-                        disableSlotModel.setUpdated_at(disable_slot.getLong("updated_at"));
-                        businessModel.getDisableSlotModels().add(disableSlotModel);
-                    }
-                    JSONArray socials = business_info.getJSONArray("socials");
-                    for(int i =0;i<socials.length();i++){
-                        JSONObject social = socials.getJSONObject(i);
-                        SocialModel socialModel = new SocialModel();
-                        socialModel.setId(social.getInt("id"));
-                        socialModel.setUser_id(social.getInt("user_id"));
-                        socialModel.setSocial_name(social.getString("social_name"));
-                        socialModel.setType(social.getInt("type"));
-                        socialModel.setCreated_at(social.getLong("created_at"));
-                        businessModel.getSocialModels().add(socialModel);
-                    }
-                    businessModel.setPost_count(business_info.getInt("post_count"));
-                    businessModel.setFollowers_count(business_info.getInt("followers_count"));
-                    businessModel.setFollow_count(business_info.getInt("follow_count"));
+                    businessModel.initModel(business_info);
                     setBusinessModel(businessModel);
                 }
 

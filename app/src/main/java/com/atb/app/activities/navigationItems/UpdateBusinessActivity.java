@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,9 +40,13 @@ import com.atb.app.dialog.PickImageDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.BusinessModel;
 import com.atb.app.model.submodel.InsuranceModel;
+import com.atb.app.model.submodel.SocialModel;
 import com.atb.app.util.ImageUtils;
 import com.atb.app.util.MediaPicker;
+import com.atb.app.util.MultiPartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -78,7 +83,10 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     ArrayList<InsuranceModel> insuranceModels = new ArrayList<>();
     ArrayList<InsuranceModel>qualifications = new ArrayList<>();
     private ImageUtils imageUtils;
-    String photoPath = "";
+    String photoPath = "",insuranceFile_path = "";
+    boolean insurance_camera = false;
+    AddInsuranceDialog addInsuranceDialog;
+    boolean twitter_connect = false,instagram_connect = false, facebook_connect =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +133,46 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         certiAdapter = new InsuranceAdapter(this,1);
         list_certification.setAdapter(certiAdapter);
         imageUtils = new ImageUtils(this);
+        list_certification.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                insurance_camera = true;
+                insuranceFile_path = "";
+                addInsuranceDialog = new AddInsuranceDialog(1,qualifications.get(position));
+                addInsuranceDialog.setOnConfirmListener(new AddInsuranceDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm(String company, String number, String date) {
+                        addInsurance(company,number, date,1,position);
+                    }
+                    @Override
+                    public void onFileSelect() {
+                        selectInsuranceFile();
+                    }
+                });
+                addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
+
+            }
+        });
+
+        list_insurance.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                insurance_camera = true;
+                insuranceFile_path = "";
+                addInsuranceDialog = new AddInsuranceDialog(0,insuranceModels.get(position));
+                addInsuranceDialog.setOnConfirmListener(new AddInsuranceDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm(String company, String number, String date) {
+                        addInsurance(company,number, date,0,position);
+                    }
+                    @Override
+                    public void onFileSelect() {
+                        selectInsuranceFile();
+                    }
+                });
+                addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
+            }
+        });
         initLayout();
 
     }
@@ -132,17 +180,51 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     void initLayout(){
         if(Commons.g_user.getAccount_type()==1){
             businessModel = Commons.g_user.getBusinessModel();
-            Glide.with(this).load(businessModel.getBusiness_logo()).placeholder(R.drawable.star2).dontAnimate().into(imv_profile);
+            Glide.with(this).load(businessModel.getBusiness_logo()).placeholder(R.drawable.star2).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, 500, Commons.glide_magin, "#FFFFFF", Commons.glide_boder))).into(imv_profile);
             edt_business_name.setText(businessModel.getBusiness_name());
             edt_yourwebsite.setText(businessModel.getBusiness_website());
             edt_tell_us.setText(businessModel.getBusiness_bio());
             if(businessModel.getOpeningTimeModels().size()>0 || businessModel.getHolidayModels().size()>0)
                 txv_setoperate.setVisibility(View.GONE);
             loadingQalification_Insurance();
+           initSocialPart();
+        }
+    }
+    void initSocialPart(){
+        lyt_twitter_content.setVisibility(View.GONE);
+        lyt_instagram_content.setVisibility(View.GONE);
+        edt_instagram_name.setEnabled(true);
+        edt_twitter_name.setEnabled(true);
+        lyt_twitter_link.setVisibility(View.VISIBLE);
+        lyt_instagram_link.setVisibility(View.VISIBLE);
+        edt_twitter_name.setText("");
+        edt_instagram_name.setText("");
+        for(int i =0;i<businessModel.getSocialModels().size();i++){
+            SocialModel socialModel = businessModel.getSocialModels().get(i);
+            if(socialModel.getType() == 0){
+                imv_fb_selector.setEnabled(false);
+                facebook_connect = true;
+            }else if(socialModel.getType() ==1){
+                imv_instagram_selector.setEnabled(false);
+                edt_instagram_name.setText(socialModel.getSocial_name());
+                lyt_instagram_content.setVisibility(View.VISIBLE);
+                lyt_instagram_link.setVisibility(View.GONE);
+                edt_instagram_name.setEnabled(false);
+                instagram_connect = true;
+
+            }else {
+                imv_twitter_selector.setEnabled(false);
+                edt_twitter_name.setText(socialModel.getSocial_name());
+                lyt_twitter_content.setVisibility(View.VISIBLE);
+                lyt_twitter_link.setVisibility(View.GONE);
+                edt_twitter_name.setEnabled(false);
+                twitter_connect = true;
+            }
         }
     }
 
-    public void deleteHoliday(int posstion, int type){
+    public void deleteInsurance(int posstion, int type){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -248,6 +330,309 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
+    void addInsurance(String comapny, String number, String date,int type, int posstion){
+        showProgress();
+        try {
+            String api_link = API.ADD_SERVICE_FILE;
+            File file = null;
+            if(insuranceFile_path.length()>0)
+                file = new File(insuranceFile_path);
+            Map<String, String> params = new HashMap<>();
+            params.put("token", Commons.token);
+            params.put("type", String.valueOf(type));
+            params.put("company", comapny);
+            params.put("reference",number);
+            params.put("expiry", date);
+            if(posstion >=0){
+                api_link = API.UPDATE_SERVICE_FILE;
+                if(type == 0){
+                     params.put("id", String.valueOf(insuranceModels.get(posstion).getId()));
+
+                }else
+                    params.put("id", String.valueOf(qualifications.get(posstion).getId()));
+            }
+            MultiPartRequest reqMultiPart = new MultiPartRequest(api_link, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    closeProgress();
+                }
+            }, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String json) {
+                    closeProgress();
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        if(jsonObject.getBoolean("result")){
+                            if(posstion <0) {
+                                InsuranceModel insuranceModel = new InsuranceModel();
+                                insuranceModel.setCompany(comapny);
+                                insuranceModel.setReference(number);
+
+                                insuranceModel.setExpiry(Commons.getDisplayDate2(date));
+                                insuranceModel.setId(jsonObject.getInt("extra"));
+                                insuranceModel.setFile(insuranceFile_path);
+                                insuranceModel.setType(type);
+                                insuranceModel.setUser_id(Commons.g_user.getId());
+                                if (type == 0)
+                                    insuranceModels.add(insuranceModel);
+                                else
+                                    qualifications.add(insuranceModel);
+                                insuranceAdapter.setRoomData(insuranceModels);
+                                Helper.getListViewSize(list_insurance);
+                                certiAdapter.setRoomData(qualifications);
+                                Helper.getListViewSize(list_certification);
+                            }else {
+                                if(type == 0){
+                                    insuranceModels.get(posstion).setReference(number);
+                                    insuranceModels.get(posstion).setExpiry(Commons.getDisplayDate2(date));
+                                    insuranceModels.get(posstion).setCompany(comapny);
+                                    if(insuranceFile_path.length()>0)
+                                        insuranceModels.get(posstion).setFile(insuranceFile_path);
+                                    insuranceAdapter.setRoomData(insuranceModels);
+                                    Helper.getListViewSize(list_insurance);
+                                }else {
+                                    qualifications.get(posstion).setReference(number);
+                                    qualifications.get(posstion).setExpiry(Commons.getDisplayDate2(date));
+                                    qualifications.get(posstion).setCompany(comapny);
+                                    if(insuranceFile_path.length()>0)
+                                        qualifications.get(posstion).setFile(insuranceFile_path);
+                                    certiAdapter.setRoomData(qualifications);
+                                    Helper.getListViewSize(list_certification);
+                                }
+                            }
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+            }, file, "service_files", params);
+            reqMultiPart.setRetryPolicy(new DefaultRetryPolicy(
+                    6000, 0,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(reqMultiPart, api_link);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            closeProgress();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    void showInsuranceDialog(int type){
+        insurance_camera = true;
+        insuranceFile_path = "";
+        addInsuranceDialog = new AddInsuranceDialog(type);
+        addInsuranceDialog.setOnConfirmListener(new AddInsuranceDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(String company, String number, String date) {
+                addInsurance(company,number, date,type,-1);
+            }
+            @Override
+            public void onFileSelect() {
+                selectInsuranceFile();
+            }
+        });
+        addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
+    }
+
+    void addSocial(int type){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.ADD_SOCIAL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("aaa",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                SocialModel socialModel = new SocialModel();
+                                socialModel.setType(type);
+                                socialModel.setId(jsonObject.getInt("extra"));
+                                socialModel.setUser_id(Commons.g_user.getId());
+                                if(type ==0) {
+                                    imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
+                                }
+                                else if(type ==1) {
+                                    imv_instagram_selector.setEnabled(!imv_instagram_selector.isEnabled());
+                                    socialModel.setSocial_name(edt_instagram_name.getText().toString());
+                                }else {
+                                    imv_twitter_selector.setEnabled(!imv_twitter_selector.isEnabled());
+                                    socialModel.setSocial_name(edt_twitter_name.getText().toString());
+                                }
+                                businessModel.getSocialModels().add(socialModel);
+                                initSocialPart();
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        Log.d("aaaa",error.toString());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("type", String.valueOf(type));
+                if(type ==2) {
+                    params.put("social_name", edt_twitter_name.getText().toString());
+                }else if(type ==1 )
+                    params.put("social_name", edt_instagram_name.getText().toString());
+                else{
+
+                }
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void deleteSocial(int type){
+        showProgress();
+
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.REMOVE_SOCIAL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                for(int i =0;i<businessModel.getSocialModels().size();i++){
+                                    if(businessModel.getSocialModels().get(i).getType() == type){
+                                        businessModel.getSocialModels().remove(i);
+                                        break;
+                                    }
+                                }
+                                if(type ==0) {
+                                    imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
+                                }
+                                else if(type ==1) {
+                                    imv_instagram_selector.setEnabled(!imv_instagram_selector.isEnabled());
+                                }else {
+                                    imv_twitter_selector.setEnabled(!imv_twitter_selector.isEnabled());
+                                }
+                                initSocialPart();
+                            }
+                        }catch (Exception e){
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        Log.d("aaaa",error.toString());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("type",String.valueOf(type));
+                Log.d("aaaa",params.toString());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void  gotoSaveBusiness(){
+        if(photoPath.length() ==0 && businessModel.getBusiness_logo().equals("null")){
+            showAlertDialog("Please add your business logo.");
+            return;
+        }
+        if(edt_business_name.getText().toString().length()==0){
+            showAlertDialog("Please input business name.");
+            return;
+        }
+        if(edt_yourwebsite.getText().toString().length()==0){
+            showAlertDialog("Please input business website url.");
+            return;
+        }
+        if(edt_tell_us.getText().toString().length() ==0){
+            showAlertDialog("Please add your business infomation.");
+            return;
+        }
+        String api_link = API.CREATE_BUSINESS_API;
+        if(Commons.g_user.getAccount_type()==1)
+            api_link = API.UPDATE_BUSINESS_API;
+
+        showProgress();
+        try {
+            File file = null;
+            if(photoPath.length()>0)
+                file = new File(photoPath);
+            Map<String, String> params = new HashMap<>();
+            params.put("token", Commons.token);
+            params.put("business_name",edt_business_name.getText().toString());
+            params.put("business_website",edt_yourwebsite.getText().toString());
+            params.put("business_profile_name",edt_business_name.getText().toString());
+            params.put("business_bio",edt_tell_us.getText().toString());
+            if(Commons.g_user.getAccount_type() == 1)
+                params.put("id",String.valueOf(businessModel.getId()));
+            MultiPartRequest reqMultiPart = new MultiPartRequest(api_link, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    closeProgress();
+                }
+            }, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String json) {
+                    closeProgress();
+                    try {
+                        JSONObject jsonObject = new JSONObject(json);
+                        if(jsonObject.getBoolean("result")){
+
+                            businessModel.initModel(jsonObject.getJSONObject("extra"));
+                            Commons.g_user.setBusinessModel(businessModel);
+
+                            if(Commons.g_user.getAccount_type() == 1)
+                                finish(UpdateBusinessActivity.this);
+                            else {
+
+                            }
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+            }, file, "avatar", params);
+            reqMultiPart.setRetryPolicy(new DefaultRetryPolicy(
+                    6000, 0,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(reqMultiPart, api_link);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            closeProgress();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -255,59 +640,53 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 finish(this);
                 break;
             case R.id.imv_profile:
+                insurance_camera = false;
                 selectProfilePicture();
                 break;
             case R.id.lyt_setoperation_hour:
+
                 goTo(this,SetOperatingActivity.class,false);
                 break;
             case R.id.lyt_add_ceritfication:
-                AddInsuranceDialog addInsuranceDialog = new AddInsuranceDialog(1);
-                addInsuranceDialog.setOnConfirmListener(new AddInsuranceDialog.OnConfirmListener() {
-                    @Override
-                    public void onConfirm(String comapny, String number, long date) {
-
-                    }
-                    @Override
-                    public void onFileSelect() {
-                        selectInsuranceFile();
-                    }
-                });
-                addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
+                showInsuranceDialog(1);
                 break;
             case R.id.lyt_addinsurance:
-                addInsuranceDialog = new AddInsuranceDialog(0);
-                addInsuranceDialog.setOnConfirmListener(new AddInsuranceDialog.OnConfirmListener() {
-                    @Override
-                    public void onConfirm(String comapny, String number, long date) {
-
-                    }
-                    @Override
-                    public void onFileSelect() {
-                        selectInsuranceFile();
-                    }
-                });
-                addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
+                showInsuranceDialog(0);
                 break;
             case R.id.lyt_facebook:
                 imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
+                //addSocial(0);
                 break;
             case R.id.lyt_twitter:
-                if(imv_twitter_selector.isEnabled())
-                    lyt_twitter_content.setVisibility(View.VISIBLE);
+                if(!imv_twitter_selector.isEnabled()){
+                    deleteSocial(2);
+                }else {
+                    if(twitter_connect)
+                     lyt_twitter_content.setVisibility(View.GONE);
+                    else
+                        lyt_twitter_content.setVisibility(View.VISIBLE);
+                    twitter_connect = !twitter_connect;
+                }
                 break;
             case R.id.lyt_instgram:
-                if(imv_instagram_selector.isEnabled())
-                    lyt_instagram_content.setVisibility(View.VISIBLE);
-
+                if(!imv_instagram_selector.isEnabled()){
+                    deleteSocial(1);
+                }else {
+                    if(instagram_connect)
+                        lyt_instagram_content.setVisibility(View.GONE);
+                    else
+                        lyt_instagram_content.setVisibility(View.VISIBLE);
+                    instagram_connect = !instagram_connect;
+                }
                 break;
             case R.id.lyt_instagram_link:
-                imv_instagram_selector.setEnabled(!imv_instagram_selector.isEnabled());
+                addSocial(1);
                 break;
             case R.id.lyt_twitter_link:
-                imv_twitter_selector.setEnabled(!imv_twitter_selector.isEnabled());
+                addSocial(2);
                 break;
             case R.id.lyt_save:
-                finish(this);
+                gotoSaveBusiness();
                 break;
         }
     }
@@ -390,7 +769,22 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         selectMediaDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
             @Override
             public void OnCamera() {
-
+                MediaPicker mediaPicker = new MediaPicker(UpdateBusinessActivity.this);
+                PickImageDialog pickImageDialog = new PickImageDialog();
+                pickImageDialog.setImagePickListener(mediaPicker.getAllShownPDFPath(UpdateBusinessActivity.this), new PickImageDialog.OnImagePickListener() {
+                    @Override
+                    public void OnImagePick(String path) {
+//                        Uri uri = Uri.fromFile(new File(path));
+//
+//                        Intent intent = CropImage.activity(uri)
+//                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
+//                                .getIntent(UpdateBusinessActivity.this);
+//
+//                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+                    }
+                });
+                pickImageDialog.show(getSupportFragmentManager(), "pick image");
+                mediaPicker.chooseImage();
             }
 
             @Override
@@ -449,8 +843,16 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 }
                 imv_profile.setPadding(0, 0, 0, 0);
                 imv_profile.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Glide.with(this).load(resultUri).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
-                photoPath = resultUri.getPath();
+                if(!insurance_camera) {
+                    Glide.with(this).load(resultUri).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                            new RoundedCornersTransformation(this, 500, Commons.glide_magin, "#FFFFFF", Commons.glide_boder))).into(imv_profile);
+                    photoPath = resultUri.getPath();
+                }else {
+                    insuranceFile_path = resultUri.getPath();
+                    String filename=insuranceFile_path.substring(insuranceFile_path.lastIndexOf("/")+1);
+                    addInsuranceDialog.setFileName();
+
+                }
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

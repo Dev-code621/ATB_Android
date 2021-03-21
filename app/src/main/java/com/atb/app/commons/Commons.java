@@ -1,5 +1,7 @@
 package com.atb.app.commons;
 
+import android.util.DisplayMetrics;
+
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
@@ -27,7 +29,11 @@ public class Commons {
     public static String[] Months;
     public static String main_category ="MY ATB";
     public static  int selectUsertype; //-1:main page: 1: business: 0 : user
-
+    public static int phone_height;
+    public static int phone_width;
+    public static int glide_radius = 500;
+    public static int glide_magin = 2;
+    public static int glide_boder = 10;
 
     public static String fileNameWithoutExtFromPath(String path) {
 
@@ -93,5 +99,41 @@ public class Commons {
         return date;
     }
 
+    public static String  getDisplayDate1(String date){
+        String dayName = "";
+        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date myDate = inFormat.parse(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+            dayName=simpleDateFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  dayName;
+    }
 
+    public static String  getDisplayDate2(String date){
+        String dayName = "";
+        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            Date myDate = inFormat.parse(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dayName=simpleDateFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  dayName;
+    }
+    public static String  getDisplayDate3(String date){
+        String dayName = "";
+        SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date myDate = inFormat.parse(date);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            dayName=simpleDateFormat.format(myDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  dayName;
+    }
 }

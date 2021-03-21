@@ -22,8 +22,8 @@
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_vertical">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_quality"
                 android:tint="@color/head_color"/>
             <TextView
@@ -39,8 +39,8 @@
 
         <ImageView
             android:id="@+id/imv_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginRight="20dp"
             android:layout_gravity="right|center_vertical"
             android:tint="@color/txt_color"
@@ -78,7 +78,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:background="@drawable/button_rectangle_round">
             <ImageView
@@ -104,7 +103,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_rectangle_round">
+            android:background="@drawable/login_button_rectangle_round">
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"

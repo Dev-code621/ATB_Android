@@ -106,8 +106,15 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
         CardView card_imv_group,card_imv_type;
         LinearLayout lyt_detail,lyt_editpost,lyt_item,lyt_make_post,lyt_schedule;
         TextView txv_description,txv_make_post,txv_schedule;
+        FrameLayout lyt_image;
         public ViewHolder(View itemView) {
             super(itemView);
+            lyt_image = itemView.findViewById(R.id.lyt_image);
+            ViewGroup.LayoutParams params = lyt_image.getLayoutParams();
+            params.height = Commons.phone_width/2-20;
+            params.width = Commons.phone_width/2-20;
+            lyt_image.setLayoutParams(params);
+
             imv_imageview=itemView.findViewById(R.id.imv_imageview);
             imv_videoplay=itemView.findViewById(R.id.imv_videoplay);
             card_imv_group=itemView.findViewById(R.id.card_imv_group);
@@ -121,6 +128,10 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
             imv_type = itemView.findViewById(R.id.imv_type);
             lyt_schedule = itemView.findViewById(R.id.lyt_schedule);
             txv_schedule = itemView.findViewById(R.id.txv_schedule);
+
+
+
+
         }
     }
 
@@ -129,6 +140,8 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
         void OnEditSelect(int posstion);
         void OnPostSelect(int posstion);
     }
+
+
 
 }
 

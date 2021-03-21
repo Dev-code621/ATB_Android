@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.atb.app.R;
 import com.atb.app.adapter.ImageAdapter;
 import com.atb.app.commons.Commons;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -47,9 +49,11 @@ public class SelectProfileDialog extends DialogFragment {
         TextView txv_name = (TextView)view.findViewById(R.id.txv_name);
         ImageView imv_check2=(ImageView)view.findViewById(R.id.imv_check2);
         ImageView imv_check1=(ImageView)view.findViewById(R.id.imv_check1);
-        Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+        Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(getContext(), Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         txv_name.setText(Commons.g_user.getUserName());
-        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_business_profile);
+        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(getContext(), Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_business_profile);
         txv_businessname.setText(Commons.g_user.getBusinessModel().getBusiness_name());
         lyt_business.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -11,9 +11,12 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetOperatingActivity;
 import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.submodel.HolidayModel;
 import com.atb.app.model.submodel.InsuranceModel;
+import com.google.android.gms.common.internal.service.Common;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,24 +76,18 @@ public class InsuranceAdapter extends BaseAdapter {
         String str = "Qualified Since ";
         if(noti_item.getType()==0)
             str = "Insurance Until ";
-        holder.txv_time.setText(str + getDisplayDate(noti_item.getCreated_at()));
+        holder.txv_time.setText(str + Commons.getDisplayDate1(noti_item.getExpiry()));
         holder.txv_title.setText(noti_item.getCompany());
         holder.imv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _context.deleteHoliday(position,type);
+                _context.deleteInsurance(position,type);
             }
         });
         return convertView;
     }
 
-    String  getDisplayDate(long milionsecond){
-        String date = "";
-        Date d = new Date(milionsecond*1000l);
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM YYYY");
-        date = formatter.format(d);
-        return date;
-    }
+
 
     public class CustomHolder {
         TextView txv_time, txv_title;

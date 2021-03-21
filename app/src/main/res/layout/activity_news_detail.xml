@@ -152,7 +152,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/txt_color"
-                            android:gravity="right"
                             android:textSize="16sp"
                             style="@style/textTheme"/>
                     </LinearLayout>
@@ -780,7 +779,6 @@
                 android:layout_height="wrap_content"
                 android:divider="@null"
                 android:scrollbars="none"
-                android:stackFromBottom="true"
                 android:listSelector="@android:color/transparent" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

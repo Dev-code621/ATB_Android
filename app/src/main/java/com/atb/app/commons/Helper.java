@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import com.atb.app.R;
 import com.atb.app.util.BitmapUtils;
 
 import java.io.File;
@@ -49,10 +50,14 @@ public class Helper {
         //setting listview item in adapter
         ViewGroup.LayoutParams params=myListView.getLayoutParams();
         params.height=totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1));
+        if(myListView.getId() == R.id.list_comment){
+            params.height=totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1)) + 200;
+        }
         myListView.setLayoutParams(params);
         // print height of adapter on log
         Log.i("height of listItem:", String.valueOf(totalHeight));
     }
+
 
 
     public static Bundle getIntent(Context context) {

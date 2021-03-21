@@ -1,9 +1,6 @@
-package com.atb.app.activities;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.atb.app.activities.profile;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -18,8 +15,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
-import com.atb.app.activities.newpost.SelectPostCategoryActivity;
-import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.adapter.FollowerAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -28,7 +23,6 @@ import com.atb.app.commons.Commons;
 import com.atb.app.model.FollowerModel;
 import com.atb.app.model.UserModel;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.internal.service.Common;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

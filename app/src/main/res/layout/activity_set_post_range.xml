@@ -51,15 +51,17 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp">
             <FrameLayout
+                android:id="@+id/lyt_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
-                <EditText android:id="@+id/edt_serach"
+                <TextView android:id="@+id/edt_serach"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:singleLine="true"
                     android:inputType="text"
+                    android:gravity="center_vertical"
                     android:hint="@string/search_description"
                     style="@style/edit_inputtext" />
                 <ImageView
@@ -131,7 +133,7 @@
                     android:id="@+id/txv_progress"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:text="441KM"
+                    android:text="1KM"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
                     android:textSize="25sp"

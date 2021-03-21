@@ -105,11 +105,11 @@
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:background="@color/head_color"
+                    android:layout_height="0.2dp"
+                    android:background="@color/line_color"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"/>
                 <LinearLayout
                     android:id="@+id/lyt_show_notis"
                     android:layout_width="match_parent"

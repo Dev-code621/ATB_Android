@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
-import com.atb.app.activities.FollowerAndFollowingActivity;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.ContactAdminActivity;
@@ -36,7 +35,9 @@ import com.atb.app.fragement.StoreFragment;
 import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -173,19 +174,18 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 .setDrawerLayout(drawer)
                 .build();
 
-        initLayout();
     }
 
 
     void initLayout(){
-        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+        Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         txv_name.setText(Commons.g_user.getBusinessModel().getBusiness_name());
         txv_id.setText(Commons.g_user.getBusinessModel().getBusiness_website());
         txv_follower.setText(String.valueOf(Commons.g_user.getFollowers_count()));
         txv_following.setText(String.valueOf(Commons.g_user.getFollow_count()));
         txv_post.setText(String.valueOf(Commons.g_user.getPost_count()));
         txv_description.setText(Commons.g_user.getBusinessModel().getBusiness_bio());
-        showProgress();
     }
 
     @Override
@@ -253,7 +253,9 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
             case R.id.lyt_create_bio:
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, CreateAmendBioActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("bussiness",true);
+                goTo(this, CreateAmendBioActivity.class,false,bundle);
                 break;
             case R.id.lyt_set_range:
                 drawer.closeDrawer(GravityCompat.END);
@@ -308,7 +310,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
 
             case R.id.lyt_follower:
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putBoolean("isFollower", true);
                 bundle.putInt("userType",1);
                 Commons.selected_user = new UserModel();
@@ -363,12 +365,12 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_post.clearColorFilter();
         imv_chat.clearColorFilter();
         if(id==2){
-            imv_chat.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }else if(id==1){
-            imv_post.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
         }else {
-            imv_feed.setColorFilter(R.color.head_color, PorterDuff.Mode.SRC_IN);
+            imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -376,6 +378,6 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
     protected void onResume() {
         super.onResume();
         setColor(0);
-
+        initLayout();
     }
 }
