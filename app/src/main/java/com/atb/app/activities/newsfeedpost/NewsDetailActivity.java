@@ -19,10 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,11 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
-import com.atb.app.activities.LoginActivity;
-import com.atb.app.activities.MainActivity;
-import com.atb.app.activities.register.Signup1Activity;
+import com.atb.app.activities.profile.ReportPostActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
+import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.adapter.CommentAdapter;
-import com.atb.app.adapter.EmailAdapter;
 import com.atb.app.adapter.PollEmageAdapter;
 import com.atb.app.adapter.SelectOneItemAdapter;
 import com.atb.app.adapter.SliderImageAdapter;
@@ -49,8 +47,11 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.FeedDetailDialog;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -58,11 +59,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.google.gson.Gson;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -72,7 +75,7 @@ import java.util.Map;
 
 public class NewsDetailActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_back,imv_profile,imv_navigation,imv_camera,imv_send,imv_close,imv_like,imv_bookmark;
-    LinearLayout lyt_reply;
+    LinearLayout lyt_reply,lyt_like;
     FrameLayout lyt_image;
     TextView txv_name,txv_id,txv_replyname,txv_like,txv_comment_number,txv_like1;
     SliderView imageSlider;
@@ -93,18 +96,19 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     CommentModel parentModel = new CommentModel();
 
     TextView txv_advicename1,txv_advicename1_description,txv_title,txv_title_description,txv_category,txv_startprice,txv_depist_price,txv_cancelday,txv_areacovered;
-    LinearLayout lyt_advice_image,lyt_text,lyt_offered,lyt_deposit,lyt_cancel,lyt_area,lyt_insured,lyt_qualitfied;
+    LinearLayout lyt_advice_image,lyt_text,lyt_offered,lyt_deposit,lyt_cancel,lyt_area,lyt_insured,lyt_qualitfied,lyt_sale_button;
     ImageView imv_txv_type;
     ListView lyt_votelist;
     VotingListAdapter votingListAdapter;
     TextView txv_book_service;
     ImageView imv_bubble;
-    LinearLayout lyt_sale_post,lyt_location;
+    LinearLayout lyt_sale_post,lyt_location,lyt_book_service;
     TextView txv_brand,txv_price,txv_postage_cost,txv_location,txv_buy_sale;
     ArrayList<RecyclerView> recycler_view_attribue = new ArrayList<>();
     ArrayList<LinearLayout> lyt_attribute = new ArrayList<>();
     ArrayList<TextView> txv_attribute = new ArrayList<>();
     ImageView imv_cart,imv_videoplay;
+    int flowerid = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,7 +173,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         lyt_qualitfied = findViewById(R.id.lyt_qualitfied);
         imv_bubble = findViewById(R.id.imv_bubble);
         txv_book_service = findViewById(R.id.txv_book_service);
+        lyt_sale_button = findViewById(R.id.lyt_sale_button);
+        lyt_book_service = findViewById(R.id.lyt_book_service);
+        lyt_like = findViewById(R.id.lyt_like);
 
+        lyt_like.setOnClickListener(this);
+        imv_bookmark.setOnClickListener(this);
         setSliderAdapter = new SliderImageAdapter(this);
         imageSlider.setSliderAdapter(setSliderAdapter);
         imageSlider.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by using SliderLayout.IndicatorAnimations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
@@ -246,13 +255,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
-                        closeProgress();
-
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             newsFeedEntity = new NewsFeedEntity();
                             newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
-                            initialLayout();
+                            getSavedList();
 
                         }catch (Exception e){
                             Log.d("Exception ",e.toString());
@@ -283,6 +290,54 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     }
 
+    void getSavedList(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_USER_BOOKMARKS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")) {
+                                JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                for(int i =0;i<jsonArray.length();i++) {
+                                    if(jsonArray.getJSONObject(i).getInt("id") == postId){
+                                        newsFeedEntity.setFeedSave(true);
+                                        break;
+                                    }
+                                }
+                                initialLayout();
+                            }
+
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     void initialLayout(){
         setSliderAdapter.renewItems(newsFeedEntity.getPostImageModels());
         if(newsFeedEntity.getPoster_profile_type()==0) {
@@ -402,6 +457,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             imv_bookmark.setImageDrawable(getResources().getDrawable(R.drawable.bookmar_unfill));
             imv_bookmark.setColorFilter(getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
         }
+        if(newsFeedEntity.getUser_id()==Commons.g_user.getId()){
+            imv_bookmark.setVisibility(View.GONE);
+            lyt_sale_button.setVisibility(View.GONE);
+            lyt_book_service.setVisibility(View.GONE);
+        }
+
         commentAdapter.setRoomData(newsFeedEntity.getCommentModels());
         Helper.getListViewSize(list_comment);
 
@@ -420,9 +481,21 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 initComment();
                 break;
             case R.id.imv_profile:
-                Log.d("aaaa","ok");
+                if(newsFeedEntity.getUser_id() != Commons.g_user.getId())
+                    getuserProfile(newsFeedEntity.getUser_id(),newsFeedEntity.getPoster_profile_type());
+
+                else {
+                    if(newsFeedEntity.getPoster_profile_type() ==1)
+                        startActivityForResult(new Intent(this, ProfileBusinessNaviagationActivity.class),1);
+                    else
+                        goTo(this, ProfileUserNavigationActivity.class,false);
+                }
                 break;
             case R.id.imv_navigation:
+                if(newsFeedEntity.getUser_id() != Commons.g_user.getId() && flowerid==-1)
+                    getFollow();
+                else
+                    gotoSettingPopup();
                 break;
             case R.id.imv_camera:
                 selectImage();
@@ -431,7 +504,313 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 if(completedValue.size()>0|| edt_comment.getText().toString().length()>0)
                     sendComment();
                 break;
+            case R.id.lyt_like:
+                if(newsFeedEntity.getUser_id() == Commons.g_user.getId()){
+                    showAlertDialog("You can not like your own post");
+                    return;
+                }
+                addLike();
+                break;
+            case R.id.imv_bookmark:
+               savePost();
+                break;
         }
+    }
+
+    @Override
+    public void UserProfile(UserModel userModel,int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
+    }
+
+    void deletePost(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.DELETE_POST,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                setResult(RESULT_OK);
+                                finish(NewsDetailActivity.this);
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("post_id", String.valueOf(postId));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    void addFollow(){
+        String apilink = API.ADD_FOLLOW;
+        if(flowerid == 1)
+            apilink = API.DELETE_FOLLOWER;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                apilink,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                               if(flowerid ==0)flowerid = 1;
+                               else flowerid = 0;
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("follower_user_id", String.valueOf(newsFeedEntity.getUser_id()));
+                if(flowerid!=1){
+                    params.put("follow_business_id", "0");
+                    params.put("follower_business_id", "0");
+                }
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void gotoSettingPopup(){
+        FeedDetailDialog feedDetailDialog = new FeedDetailDialog();
+        boolean type = true;
+        if(newsFeedEntity.getUser_id() == Commons.g_user.getId())
+            type = false;
+        boolean finalType = type;
+        feedDetailDialog.setOnConfirmListener(new FeedDetailDialog.OnConfirmListener() {
+            @Override
+            public void onReportPost() {
+                if(finalType){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("postId",postId);
+                    goTo(NewsDetailActivity.this, ReportPostActivity.class,false);
+                }else {
+                    ConfirmDialog confirmDialog = new ConfirmDialog();
+                    confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                                deletePost();
+                        }
+                    },"Would you like to remove this post?");
+                    confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                }
+            }
+
+            @Override
+            public void onBlockUser() {
+
+            }
+
+            @Override
+            public void onFollowUser() {
+                if(finalType){
+                    addFollow();
+                }else {
+                    //edit post
+                }
+            }
+
+            @Override
+            public void onShare() {
+
+            }
+        },type,flowerid);
+        feedDetailDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+    }
+    void getFollow(){
+        showProgress();
+
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_FOLLOW,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("aaaa",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                int posterBusinessID = 0;
+                                if(newsFeedEntity.getPoster_profile_type()==1)
+                                    posterBusinessID = newsFeedEntity.getUserModel().getBusinessModel().getId();
+                                JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                for(int i =0;i<jsonArray.length();i++){
+                                    int followingUserID = jsonArray.getJSONObject(i).getInt("follower_user_id");
+                                    int followingBusinessID = jsonArray.getJSONObject(i).getInt("follower_business_id");
+                                    if(followingUserID== newsFeedEntity.getUser_id() && followingBusinessID ==posterBusinessID){
+                                        flowerid = 1;
+                                        gotoSettingPopup();
+                                        return;
+                                    }
+                                }
+                                flowerid = 0;
+                                gotoSettingPopup();
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("follow_business_id", "0");
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    void savePost(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.ADD_USER_BOOKMARK,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                newsFeedEntity.setFeedSave(!newsFeedEntity.isFeedSave());
+                                initialLayout();
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("post_id", String.valueOf(postId));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void addLike(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.POST_LIKE_API,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                if(newsFeedEntity.isFeedLike())
+                                    newsFeedEntity.setLikes(newsFeedEntity.getLikes()-1);
+                                else
+                                    newsFeedEntity.setLikes(newsFeedEntity.getLikes()+1);
+                                newsFeedEntity.setFeedLike(!newsFeedEntity.isFeedLike());
+                                initialLayout();
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("post_id", String.valueOf(postId));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void  addVoting(int post_id, String poll_value,int posstion){

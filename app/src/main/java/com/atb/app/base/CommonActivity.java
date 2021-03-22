@@ -34,6 +34,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.CustomMultipartRequest;
@@ -195,5 +196,52 @@ public abstract class CommonActivity extends BaseActivity {
         Commons.phone_width = displayMetrics.widthPixels;
     }
 
+    public void getuserProfile(int id,int userType){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_PROFILE_API,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            UserModel userModel = new UserModel();
+                            userModel.initModel(jsonObject.getJSONObject("msg").getJSONObject("profile"));
+                            UserProfile(userModel,userType);
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("user_id", String.valueOf(id));
+
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    public void UserProfile(UserModel userModel,int usertype){
+
+    }
 
 }

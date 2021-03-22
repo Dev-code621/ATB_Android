@@ -38,10 +38,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.navigationItems.SetOperatingActivity"
+        <activity android:name=".activities.profile.ReviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen"/>
+        <activity
+            android:name=".activities.profile.ReportPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
-        <activity android:name=".activities.profile.OtherUserProfileActivity"
+        <activity
+            android:name=".activities.navigationItems.SetOperatingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.profile.OtherUserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity

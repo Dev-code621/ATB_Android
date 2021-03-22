@@ -155,4 +155,6 @@ dependencies {
     //place api
     implementation 'com.google.android.libraries.places:places:2.4.0'
 
+    //rating bar
+    implementation 'com.iarcuschin:simpleratingbar:0.1.5'
 }

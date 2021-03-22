@@ -179,6 +179,13 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             }
         });
 
+        holder.lyt_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onSelectProfile( newsFeedEntities.get(position));
+            }
+        });
+
     }
 
     void  addVoting(int post_id, String poll_value,int posstion, NewsFeedEntity newsFeedEntity){
@@ -294,6 +301,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
 
     public interface OnSelectListener{
         void onSelect(NewsFeedEntity newsFeedEntity);
+        void onSelectProfile(NewsFeedEntity newsFeedEntity);
     }
 
 }

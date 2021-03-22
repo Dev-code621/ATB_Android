@@ -23,6 +23,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.model.FollowerModel;
 import com.atb.app.model.UserModel;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,6 +41,7 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
     ListView list_follower;
     ArrayList<FollowerModel>followerModels = new ArrayList<>();
     FollowerAdapter followerAdapter;
+    UserModel selected_user = new UserModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,15 +60,19 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
         imv_back.setOnClickListener(this);
         lyt_follower.setOnClickListener(this);
         lyt_following.setOnClickListener(this);
-        followerAdapter = new FollowerAdapter(this);
-        list_follower.setAdapter(followerAdapter);
+
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 isFollower= bundle.getBoolean("isFollower");
                 userType = bundle.getInt("userType");
+                String user= bundle.getString("userModel");
+                Gson gson = new Gson();
+                selected_user = gson.fromJson(user, UserModel.class);
             }
         }
+        followerAdapter = new FollowerAdapter(this,selected_user);
+        list_follower.setAdapter(followerAdapter);
 
         list_follower.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,8 +80,16 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                 if(followerModels.get(position).getUserModel().getId()==Commons.g_user.getId()){
                     finish(FollowerAndFollowingActivity.this);
                 }else {
-                    Commons.selected_user = followerModels.get(position).getUserModel();
-                    goTo(FollowerAndFollowingActivity.this, OtherUserProfileActivity.class,true);
+                    int type = 0;
+                    Bundle bundle = new Bundle();
+                    Gson gson = new Gson();
+                    String usermodel = gson.toJson(followerModels.get(position).getUserModel());
+                    bundle.putString("userModel",usermodel);
+                    if(!isFollower && followerModels.get(position).getUserModel().getAccount_type()==1)
+                        type = 1;
+
+                    bundle.putInt("userType",type);
+                    goTo(FollowerAndFollowingActivity.this, OtherUserProfileActivity.class,true,bundle);
                 }
             }
         });
@@ -85,16 +99,16 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
 
     void initLayout() {
         if (userType == 1){
-            Glide.with(this).load(Commons.selected_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
-            txv_name.setText(Commons.selected_user.getBusinessModel().getBusiness_name());
-            txv_id.setText(Commons.selected_user.getBusinessModel().getBusiness_website());
+            Glide.with(this).load(selected_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            txv_name.setText(selected_user.getBusinessModel().getBusiness_name());
+            txv_id.setText(selected_user.getBusinessModel().getBusiness_website());
         }else{
-            Glide.with(this).load(Commons.selected_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
-            txv_name.setText(Commons.selected_user.getFirstname() + " " + Commons.selected_user.getLastname());
-            txv_id.setText("@"+Commons.selected_user.getUserName());
+            Glide.with(this).load(selected_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().into(imv_profile);
+            txv_name.setText(selected_user.getFirstname() + " " + selected_user.getLastname());
+            txv_id.setText("@"+selected_user.getUserName());
         }
-        txv_follower.setText(String.valueOf(Commons.selected_user.getFollowers_count()));
-        txv_following.setText(String.valueOf(Commons.selected_user.getFollow_count()));
+        txv_follower.setText(String.valueOf(selected_user.getFollowers_count()));
+        txv_following.setText(String.valueOf(selected_user.getFollow_count()));
         if(isFollower){
             lyt_follower.setBackground(getResources().getDrawable(R.drawable.round_button_theme));
             txv_follower.setTextColor(getResources().getColor(R.color.white));
@@ -214,10 +228,10 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 if(isFollower){
-                    params.put("follower_user_id", String.valueOf(Commons.selected_user.getId()));
+                    params.put("follower_user_id", String.valueOf(selected_user.getId()));
                     params.put("follower_business_id", "0");
                 }else {
-                    params.put("follow_user_id", String.valueOf(Commons.selected_user.getId()));
+                    params.put("follow_user_id", String.valueOf(selected_user.getId()));
                     params.put("follow_business_id", "0");
                 }
                 return params;

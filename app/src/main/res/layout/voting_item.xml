@@ -31,7 +31,7 @@
                 android:layout_height="50dp"
                 progressview:backgroundColor="#eee"
                 progressview:max="100"
-                progressview:progress="80"
+                progressview:progress="20"
                 progressview:progressColor="#A6BFDE"
                 progressview:textColor="#eee"
                 progressview:textGravity="right" />

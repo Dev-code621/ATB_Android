@@ -512,6 +512,7 @@
                         android:visibility="gone"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/lyt_book_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -746,6 +747,7 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/lyt_sale_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

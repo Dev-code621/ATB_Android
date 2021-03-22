@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserModel {
+public  class UserModel {
     int id, complete,bt_customer_id;
     String email, password, imvUrl, firstname, lastname, location, sex, birhtday, invitecode,bt_paypal_account;
     String userName, fb_user_id, facebook_token, description, post_search_region;

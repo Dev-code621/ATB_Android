@@ -122,7 +122,7 @@ public class MainListFragment extends Fragment {
                     if (!Commons.main_category.equals("MY ATB"))
                         params.put("category_title", Commons.main_category);
                 }else{
-                    params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                    params.put("user_id", String.valueOf(Commons.selected_user.getId()));
                     params.put("business", "0");
                 }
                 return params;

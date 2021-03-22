@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.profile.ReportPostActivity"
+    android:orientation="vertical"
+    android:id="@+id/lyt_container"
+    android:background="@color/head_color">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/head_color">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Report Post"
+                style="@style/boldtextTheme"
+                android:layout_marginLeft="10dp"
+                android:textSize="25sp"/>
+        </LinearLayout>
+        <ImageView
+        android:id="@+id/imv_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_close"
+        android:layout_marginRight="20dp"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <EditText
+            android:id="@+id/edt_question"
+            style="@style/edit_inputtext"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:hint="Report Reason"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In case you have more details please\ndescribe below"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" />
+        <EditText android:id="@+id/edt_description"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:inputType="text"
+            android:maxLines="5"
+            android:hint="@string/description"
+            android:layout_marginTop="15dp"
+            android:paddingTop="15dp"
+            style="@style/edit_inputtext"
+            android:gravity="start"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/txv_post"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Report"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            style="@style/btn_buttonStyle"
+            android:background="@drawable/login_button_rectangle_round"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
+</LinearLayout>

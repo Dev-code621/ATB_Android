@@ -1,6 +1,7 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
+import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
+import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.UserModel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -70,14 +78,24 @@ public class MainFeedAdapter extends BaseAdapter {
                 Bundle bundle = new Bundle();
                 bundle.putInt("postId",entity.getId());
                 bundle.putBoolean("CommentVisible",true);
-                ((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
+                ((CommonActivity)context).startActivityForResult(new Intent(context, NewsDetailActivity.class).putExtra("data",bundle),1);
+                //((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
+            }
+
+            @Override
+            public void onSelectProfile(NewsFeedEntity newsFeedEntity) {
+                if(newsFeedEntity.getUser_id() != Commons.g_user.getId()){
+                    ((CommonActivity)context).getuserProfile(newsFeedEntity.getUser_id(),newsFeedEntity.getPoster_profile_type());
+
+                }
+                else {
+                    if(newsFeedEntity.getPoster_profile_type() ==1)
+                        ((CommonActivity)context).startActivityForResult(new Intent(context, ProfileBusinessNaviagationActivity.class),1);
+                    else
+                        ((CommonActivity)context).startActivityForResult(new Intent(context, ProfileUserNavigationActivity.class),1);
+                }
             }
         }));
-
-
-
-
-
         return convertView;
     }
 

@@ -128,7 +128,7 @@ public class PostsFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                params.put("user_id",String.valueOf(Commons.g_user.getId()));
+                params.put("user_id",String.valueOf(Commons.selected_user.getId()));
                 params.put("business", String.valueOf(Commons.selectUsertype));
                 return params;
             }

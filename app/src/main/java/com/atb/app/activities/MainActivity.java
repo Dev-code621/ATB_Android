@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.atb.app.R;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
@@ -30,10 +32,12 @@ import com.atb.app.dialog.SelectCategoryDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.NonSwipeableViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_search ,imv_profile,imv_feed,imv_post,imv_chat,imv_profile_pic;
@@ -248,10 +252,21 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        Commons.selected_user = Commons.g_user;
         setColor(selectIcon);
 
+    }
+    @Override
+    public void UserProfile(UserModel userModel,int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
     }
 }

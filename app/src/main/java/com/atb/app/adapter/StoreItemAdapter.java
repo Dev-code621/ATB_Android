@@ -77,6 +77,13 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
 
         }
 
+        if(Commons.selected_user.getId() == Commons.g_user.getId()){
+            holder.txv_make_post.setText("Make a Post");
+        }else {
+            String text = "Buy £" + newsFeedEntity.getPrice();
+            holder.lyt_editpost.setVisibility(View.GONE);
+            holder.txv_make_post.setText(text);
+        }
         holder.lyt_editpost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

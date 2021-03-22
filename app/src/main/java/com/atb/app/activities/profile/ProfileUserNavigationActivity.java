@@ -45,6 +45,7 @@ import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.internal.service.Common;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -139,6 +140,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         imv_post.setOnClickListener(this);
         imv_chat.setOnClickListener(this);
         Commons.selectUsertype = 0;
+        Commons.selected_user = Commons.g_user;
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Posts", PostsFragment.class));
         pages.add(FragmentPagerItem.of("Main", MainListFragment.class));

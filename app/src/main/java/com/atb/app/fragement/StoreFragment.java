@@ -31,6 +31,7 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.google.android.gms.common.internal.service.Common;
 
@@ -48,7 +49,7 @@ import static com.atb.app.base.BaseActivity.showToast;
 
 public class StoreFragment extends Fragment {
     View view;
-    ProfileBusinessNaviagationActivity context;
+    Context context;
     ArrayList<NewsFeedEntity>newsFeedEntities = new ArrayList<>();
     RecyclerView recyclerView;
     StoreItemAdapter storeItemAdapter ;
@@ -74,7 +75,7 @@ public class StoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        context =(ProfileBusinessNaviagationActivity) getActivity();
+        context = getActivity();
     }
     void addAdapter(){
         storeItemAdapter = new StoreItemAdapter(context, 1, 0, new StoreItemAdapter.SelectListener() {
@@ -94,7 +95,11 @@ public class StoreFragment extends Fragment {
 
             @Override
             public void OnPostSelect(int posstion) {
-                makePost(newsFeedEntities.get(posstion));
+                if(Commons.selected_user.getId() == Commons.g_user.getId())
+                    makePost(newsFeedEntities.get(posstion));
+                else {
+
+                }
             }
         });
         recyclerView.setAdapter(storeItemAdapter);
@@ -102,7 +107,7 @@ public class StoreFragment extends Fragment {
     }
 
     void makePost(NewsFeedEntity newsFeedEntity){
-        if(!context.isValidMakePost())return;
+        if(!((CommonActivity)(context)).isValidMakePost())return;
         String apiLink = API.CREATE_POST_API;
        showProgress();
         StringRequest myRequest = new StringRequest(
@@ -116,8 +121,8 @@ public class StoreFragment extends Fragment {
                             if(jsonObject.getBoolean("result")){
 
                                 closeProgress();
-                                context.setResult(RESULT_OK);
-                                context.finish(context);
+                                ((CommonActivity)context).setResult(RESULT_OK);
+                                ((CommonActivity)context).finish(context);
 
                             }else {
                                 closeProgress();
@@ -228,7 +233,7 @@ public class StoreFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                params.put("user_id",String.valueOf(Commons.g_user.getId()));
+                params.put("user_id",String.valueOf(Commons.selected_user.getId()));
                 return params;
             }
         };

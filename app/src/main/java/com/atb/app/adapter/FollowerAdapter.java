@@ -13,6 +13,7 @@ import com.atb.app.R;
 import com.atb.app.activities.profile.FollowerAndFollowingActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.FollowerModel;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,11 +25,13 @@ public class FollowerAdapter extends BaseAdapter {
     private FollowerAndFollowingActivity _context;
 
     public ArrayList<FollowerModel> _roomDatas = new ArrayList<>();
+    UserModel userModel = new UserModel();
     boolean isFollower ;
-    public FollowerAdapter(FollowerAndFollowingActivity context) {
+    public FollowerAdapter(FollowerAndFollowingActivity context, UserModel userModel) {
 
         super();
         this._context = context;
+        this.userModel = userModel;
     }
 
 
@@ -109,7 +112,7 @@ public class FollowerAdapter extends BaseAdapter {
         holder.lyt_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Commons.selected_user.getId() == Commons.g_user.getId())
+                if(userModel.getId() == Commons.g_user.getId())
                     _context.unFollower(followerModel,position);
                 else {
 

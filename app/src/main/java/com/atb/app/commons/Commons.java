@@ -23,7 +23,7 @@ public class Commons {
     public static double lng =0f;
     public static String location ="";
     public static UserModel g_user ;
-    public static UserModel selected_user = new UserModel() ;
+    public static UserModel selected_user;
     public static String token = "";
     public static int location_code = 1100;
     public static String[] Months;

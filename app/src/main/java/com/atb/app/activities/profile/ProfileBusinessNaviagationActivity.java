@@ -38,6 +38,7 @@ import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -50,7 +51,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider {
+import java.io.Serializable;
+
+public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 
     ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat;
     FrameLayout lyt_profile,lyt_navigation;
@@ -136,7 +139,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_chat.setOnClickListener(this);
         card_addstore.setOnClickListener(this);
         Commons.selectUsertype = 1;
-
+        Commons.selected_user = Commons.g_user;
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Store", StoreFragment.class));
@@ -286,7 +289,11 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
 
                 break;
             case R.id.imv_rating:
-
+                Gson gson = new Gson();
+                String usermodel = gson.toJson(Commons.g_user);
+                bundle = new Bundle();
+                bundle.putString("userModel",usermodel);
+                goTo(this,ReviewActivity.class,false,bundle);
                 break;
 
             case R.id.imv_profile_chat:
@@ -313,8 +320,9 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 bundle = new Bundle();
                 bundle.putBoolean("isFollower", true);
                 bundle.putInt("userType",1);
-                Commons.selected_user = new UserModel();
-                Commons.selected_user = Commons.g_user;
+                gson = new Gson();
+                usermodel = gson.toJson(Commons.g_user);
+                bundle.putString("userModel",usermodel);
                 goTo(this, FollowerAndFollowingActivity.class,false,bundle);
                 break;
 
@@ -322,8 +330,9 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 Bundle bundle1 = new Bundle();
                 bundle1.putBoolean("isFollower", false);
                 bundle1.putInt("userType",1);
-                Commons.selected_user = new UserModel();
-                Commons.selected_user = Commons.g_user;
+                gson = new Gson();
+                usermodel = gson.toJson(Commons.g_user);
+                bundle1.putString("userModel",usermodel);
                 goTo(this, FollowerAndFollowingActivity.class,false,bundle1);
                 break;
             case R.id.lyt_post:
