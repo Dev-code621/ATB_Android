@@ -6,6 +6,8 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
+import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
+import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +26,7 @@ public class Commons {
     public static String location ="";
     public static UserModel g_user ;
     public static UserModel selected_user;
+    public static VideoPlayerManager<MetaData> mVideoPlayerManager;
     public static String token = "";
     public static int location_code = 1100;
     public static String[] Months;
@@ -34,6 +37,8 @@ public class Commons {
     public static int glide_radius = 500;
     public static int glide_magin = 2;
     public static int glide_boder = 10;
+    public static int video_flag = -1;
+
 
     public static String fileNameWithoutExtFromPath(String path) {
 

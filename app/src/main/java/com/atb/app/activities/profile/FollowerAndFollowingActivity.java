@@ -1,6 +1,7 @@
 package com.atb.app.activities.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -40,8 +41,10 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
     LinearLayout lyt_follower,lyt_following;
     ListView list_follower;
     ArrayList<FollowerModel>followerModels = new ArrayList<>();
+    ArrayList<FollowerModel>guser_followerModels = new ArrayList<>();
     FollowerAdapter followerAdapter;
     UserModel selected_user = new UserModel();
+    int Fllowcount =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,10 +127,10 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
             txv_following.setTextColor(getResources().getColor(R.color.white));
             txv_following_description.setTextColor(getResources().getColor(R.color.white));
         }
-        loadingFollowerDate();
+        loadingFollowerDate(0);
     }
 
-    public void unFollower(FollowerModel followerModel,int posstion){
+    public void unFollower(int followerid,int posstion,int type){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -139,8 +142,14 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-                                followerModels.remove(posstion);
-                                followerAdapter.setRoomData(followerModels,isFollower);
+                                Log.d("remove",json+ "   " + String.valueOf(type));
+                                if(type ==0) {
+                                    followerModels.remove(posstion);
+                                }else {
+                                    guser_followerModels.remove(posstion);
+                                    Commons.g_user.setFollowerModels(guser_followerModels);
+                                }
+                                followerAdapter.setRoomData(followerModels, isFollower);
                             }
                         }catch (Exception e){
 
@@ -159,13 +168,17 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                if(isFollower){
-                    params.put("follow_user_id", String.valueOf(followerModel.getUserModel().getId()));
-                    params.put("follower_user_id", String.valueOf(Commons.g_user.getId()));
+                if(type ==0 ) {
+                    if (isFollower) {
+                        params.put("follow_user_id", String.valueOf(followerid));
+                        params.put("follower_user_id", String.valueOf(Commons.g_user.getId()));
 
-                }
-                else{
-                    params.put("follower_user_id", String.valueOf(followerModel.getUserModel().getId()));
+                    } else {
+                        params.put("follower_user_id", String.valueOf(followerid));
+                        params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                    }
+                }else {
+                    params.put("follower_user_id", String.valueOf(followerid));
                     params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
                 }
                 return params;
@@ -177,11 +190,62 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
+    public void addFollow(int followerid){
+        String apilink = API.ADD_FOLLOW;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                apilink,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        Log.d("add",json);
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                FollowerModel followerModel = new FollowerModel();
+                                followerModel.setFollow_user_id(Commons.g_user.getId());
+                                followerModel.setFollower_user_id(followerid);
+                                guser_followerModels.add(followerModel);
+                                Commons.g_user.setFollowerModels(guser_followerModels);
+                                followerAdapter.setRoomData(followerModels, isFollower);
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
 
-    void loadingFollowerDate(){
-        String api_link = API.GET_FOLLOWER;
-        if(!isFollower)
-            api_link = API.GET_FOLLOW;
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("follower_user_id", String.valueOf(followerid));
+                params.put("follow_business_id", "0");
+                params.put("follower_business_id", "0");
+
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void loadingFollowerDate(int type){
+        String api_link = API.GET_FOLLOW;
+        if(isFollower && type ==1)
+            api_link = API.GET_FOLLOWER;
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -189,24 +253,35 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
-                        closeProgress();
                         try{
-                            followerModels.clear();
-                            followerAdapter.setRoomData(followerModels,isFollower);
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
                                 JSONArray jsonArray = jsonObject.getJSONArray("msg");
-                                if(jsonArray.length() ==0) {
-                                    if(isFollower)showAlertDialog("You don't have any followers yet");
-                                    else showAlertDialog("You are not following anyone yet");
-                                    return;
+                                if(type ==1) {
+                                    followerModels.clear();
+                                    followerAdapter.setRoomData(followerModels, isFollower);
+                                    if (jsonArray.length() == 0) {
+                                        if (isFollower)
+                                            showAlertDialog("You don't have any followers yet");
+                                        else showAlertDialog("You are not following anyone yet");
+                                        return;
+                                    }
+                                    Fllowcount = jsonArray.length();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        FollowerModel followerModel = new FollowerModel();
+                                        followerModel.initModel(jsonArray.getJSONObject(i));
+                                        getProfile(followerModel);
+                                    }
+                                }else {
+                                    guser_followerModels.clear();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        FollowerModel followerModel = new FollowerModel();
+                                        followerModel.initModel(jsonArray.getJSONObject(i));
+                                        guser_followerModels.add(followerModel);
+                                    }
+                                    Commons.g_user.setFollowerModels(guser_followerModels);
+                                    loadingFollowerDate(1);
                                 }
-                                for(int i =0;i<jsonArray.length();i++){
-                                    FollowerModel followerModel = new FollowerModel();
-                                    followerModel.initModel(jsonArray.getJSONObject(i));
-                                    getProfile(followerModel);
-                                }
-
 
                             }else
                                 showAlertDialog(jsonObject.getString("msg"));
@@ -227,11 +302,16 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                if(isFollower){
-                    params.put("follower_user_id", String.valueOf(selected_user.getId()));
-                    params.put("follower_business_id", "0");
+                if(type == 1) {
+                    if (isFollower) {
+                        params.put("follower_user_id", String.valueOf(selected_user.getId()));
+                        params.put("follower_business_id", "0");
+                    } else {
+                        params.put("follow_user_id", String.valueOf(selected_user.getId()));
+                        params.put("follow_business_id", "0");
+                    }
                 }else {
-                    params.put("follow_user_id", String.valueOf(selected_user.getId()));
+                    params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
                     params.put("follow_business_id", "0");
                 }
                 return params;
@@ -259,7 +339,9 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                             userModel.initModel(jsonObject.getJSONObject("msg").getJSONObject("profile"));
                             followerModel.setUserModel(userModel);
                             followerModels.add(followerModel);
-                            followerAdapter.setRoomData(followerModels,isFollower);
+                            Fllowcount --;
+                            if(Fllowcount==0)
+                                followerAdapter.setRoomData(followerModels,isFollower);
                         }catch (Exception e){
 
                         }

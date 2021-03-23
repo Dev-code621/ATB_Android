@@ -1,3 +1,7 @@
+include ':list-visibility-utils'
+include ':video-player-manager'
 include ':app'
-rootProject.name = "ATB"
 include ':app', ':cropper'
+project(':video-player-manager').projectDir = new File(rootDir, 'videoplayer/video-player-manager/')
+project(':list-visibility-utils').projectDir = new File(rootDir, 'videoplayer/list-visibility-utils/')
+rootProject.name = "ATB"

@@ -31,6 +31,15 @@ public  class UserModel {
     BusinessModel businessModel = new BusinessModel();
     SettingInfoModel settingInfoModel = new SettingInfoModel();
     ArrayList<FeedInfoModel>feedInfoModels = new ArrayList<>();
+    ArrayList<FollowerModel>followerModels = new ArrayList<>();
+
+    public ArrayList<FollowerModel> getFollowerModels() {
+        return followerModels;
+    }
+
+    public void setFollowerModels(ArrayList<FollowerModel> followerModels) {
+        this.followerModels = followerModels;
+    }
 
     public int getBt_customer_id() {
         return bt_customer_id;

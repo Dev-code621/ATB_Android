@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ListView;
 
@@ -154,6 +155,37 @@ public class MainListFragment extends Fragment {
             mainFeedAdapter = new MainFeedAdapter(context,MainListFragment.this);
             list_main.setAdapter(mainFeedAdapter);
             mainFeedAdapter.setData(newsFeedEntities);
+
+            list_main.setOnScrollListener(new AbsListView.OnScrollListener() {
+                private int currentScrollState;
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
+
+                }
+                private void isScrollCompleted() {
+
+                    if (this.currentScrollState == SCROLL_STATE_IDLE) {
+
+                        int index = list_main.getFirstVisiblePosition();
+                        Log.d("bbbbbbbbbbbbbbb", String.valueOf(index));
+                        mainFeedAdapter.changeItem(index);
+
+                    }
+
+                }
+            });
+
+
+
+
         }catch (Exception e){
 
         }

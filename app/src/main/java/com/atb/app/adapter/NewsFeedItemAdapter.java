@@ -2,6 +2,7 @@ package com.atb.app.adapter;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,12 +37,19 @@ import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.internal.service.Common;
+import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
+import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
+
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 import static com.atb.app.base.BaseActivity.closeProgress;
 import static com.atb.app.base.BaseActivity.showProgress;
@@ -135,12 +143,48 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         else
             holder.txv_price.setVisibility(View.GONE);
         if(newsFeedEntity.getPostImageModels().size()>0){
+
             holder.lyt_image.setVisibility(View.VISIBLE);
             Glide.with(context).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imv_imageview);
-            if(Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(0).getPath()))
-                holder.imv_videoplay.setVisibility(View.VISIBLE);
-            else
+            if(Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(0).getPath())) {
+                holder.video_view.setVisibility(View.VISIBLE);
+                holder.video_view.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener(){
+                    @Override
+                    public void onVideoPreparedMainThread() {
+                        // We hide the cover when video is prepared. Playback is about to start
+                        holder.imv_imageview.setVisibility(View.INVISIBLE);
+                        holder.imv_videoplay.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onVideoStoppedMainThread() {
+
+                        // We show the cover when video is stopped
+                        holder.imv_imageview.setVisibility(View.VISIBLE);
+                        holder.imv_videoplay.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onVideoCompletionMainThread() {
+                        // We show the cover when video is completed
+                        holder.imv_imageview.setVisibility(View.VISIBLE);
+                        holder.imv_videoplay.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                if(Commons.video_flag == position) {
+                    //Commons.mVideoPlayerManager.stopAnyPlayback();
+
+                    Commons.mVideoPlayerManager.playNewVideo(null, holder.video_view, newsFeedEntity.getPostImageModels().get(0).getPath());
+
+
+                }
+
+            }
+            else {
                 holder.imv_videoplay.setVisibility(View.GONE);
+                holder.video_view.setVisibility(View.GONE);
+            }
 
         }else {
             holder.lyt_image.setVisibility(View.GONE);
@@ -187,6 +231,10 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         });
 
     }
+
+
+
+
 
     void  addVoting(int post_id, String poll_value,int posstion, NewsFeedEntity newsFeedEntity){
         showProgress();
@@ -248,6 +296,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         FrameLayout lyt_image;
         CardView card_imv_group,card_imv_type,imv_atb_approved;
         ListView lyt_votelist;
+        VideoPlayerView video_view;
         public ViewHolder(View itemView) {
             super(itemView);
             lyt_container=itemView.findViewById(R.id.lyt_container);
@@ -271,6 +320,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             lyt_votelist = itemView.findViewById(R.id.lyt_votelist);
             imv_videoplay = itemView.findViewById(R.id.imv_videoplay);
             lyt_profile = itemView.findViewById(R.id.lyt_profile);
+            video_view = itemView.findViewById(R.id.video_view);
             if(getItemCount()>1){
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
                 DisplayMetrics metrics = new DisplayMetrics();

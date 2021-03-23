@@ -38,6 +38,10 @@ import com.atb.app.view.NonSwipeableViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
+import com.volokh.danylo.video_player_manager.meta.MetaData;
+
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_search ,imv_profile,imv_feed,imv_post,imv_chat,imv_profile_pic;
@@ -80,6 +84,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         imv_chat.setOnClickListener(this);
         imv_selector.setOnClickListener(this);
         mainListFragment = new MainListFragment();
+        Commons.mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+            @Override
+            public void onPlayerItemChanged(MetaData metaData) {
+
+            }
+        });
         Keyboard();
     }
 
@@ -268,5 +278,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         bundle.putString("userModel",usermodel);
         bundle.putInt("userType",usertype);
         goTo(this, OtherUserProfileActivity.class,false,bundle);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("aaaa","aaaa");
+        Commons.mVideoPlayerManager.stopAnyPlayback();
     }
 }

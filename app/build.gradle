@@ -78,6 +78,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation project(path: ':cropper')
+    implementation project(path: ':video-player-manager')
+    implementation project(path: ':list-visibility-utils')
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -157,4 +160,9 @@ dependencies {
 
     //rating bar
     implementation 'com.iarcuschin:simpleratingbar:0.1.5'
+
+    //videoview
+//    implementation 'com.github.danylovolokh:list-visibility-utils:0.2.0'
+//    implementation 'com.github.danylovolokh:video-player-manager:0.2.0'
+
 }

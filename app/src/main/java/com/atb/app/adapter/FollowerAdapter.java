@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FollowerAdapter extends BaseAdapter {
 
@@ -39,10 +40,7 @@ public class FollowerAdapter extends BaseAdapter {
         _roomDatas.clear();
         _roomDatas.addAll(data);
         this.isFollower = isFollower;
-        notifyDataSetChanged();
-    }
-    public void addFollower(FollowerModel followerModel) {
-        _roomDatas.add(followerModel);
+
         notifyDataSetChanged();
     }
 
@@ -94,18 +92,33 @@ public class FollowerAdapter extends BaseAdapter {
             holder.txv_id.setText(followerModel.getUserModel().getBusinessModel().getBusiness_website());
             holder.txv_id.setTextColor(_context.getResources().getColor(R.color.head_color));
         }
-        if(isFollower){
-            holder.txv_unfollow.setText("DELETE");
-            holder.txv_unfollow.setTextColor(_context.getResources().getColor(R.color.discard_color));
-            holder.lyt_delete.setBackground(_context.getResources().getDrawable(R.drawable.deletebutton_border_round));
+
+        if(userModel.getId() == Commons.g_user.getId()) {
+            if (isFollower) {
+                holder.txv_unfollow.setText("DELETE");
+                holder.txv_unfollow.setTextColor(_context.getResources().getColor(R.color.discard_color));
+                holder.lyt_delete.setBackground(_context.getResources().getDrawable(R.drawable.deletebutton_border_round));
+            } else {
+                holder.txv_unfollow.setText("UNFOLLOW");
+                holder.txv_unfollow.setTextColor(_context.getResources().getColor(R.color.head_color));
+                holder.lyt_delete.setBackground(_context.getResources().getDrawable(R.drawable.followbutton_border_round));
+            }
         }else {
-            holder.txv_unfollow.setText("UNFOLLOW");
+            holder.lyt_delete.setVisibility(View.VISIBLE);
+            holder.txv_unfollow.setText("FOLLOW");
             holder.txv_unfollow.setTextColor(_context.getResources().getColor(R.color.head_color));
             holder.lyt_delete.setBackground(_context.getResources().getDrawable(R.drawable.followbutton_border_round));
-        }
-        if(followerModel.getFollower_user_id() == Commons.g_user.getId()){
-
-        }else {
+            if(followerModel.getFollow_user_id() == Commons.g_user.getId() || followerModel.getFollower_user_id()==Commons.g_user.getId())
+                holder.lyt_delete.setVisibility(View.GONE);
+            for(int i =0;i<Commons.g_user.getFollowerModels().size();i++){
+                if( (isFollower && Commons.g_user.getFollowerModels().get(i).getFollower_user_id() == followerModel.getFollow_user_id()) || (!isFollower &&
+                        Commons.g_user.getFollowerModels().get(i).getFollower_user_id() == followerModel.getFollower_user_id())){
+                    holder.txv_unfollow.setText("FOLLOWING");
+                    holder.txv_unfollow.setTextColor(_context.getResources().getColor(R.color.white));
+                    holder.lyt_delete.setBackground(_context.getResources().getDrawable(R.drawable.button_rectangle_round));
+                    break;
+                }
+            }
 
         }
 
@@ -113,9 +126,28 @@ public class FollowerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if(userModel.getId() == Commons.g_user.getId())
-                    _context.unFollower(followerModel,position);
+                    _context.unFollower(followerModel.getUserModel().getId(),position,0);
                 else {
+                    int flag = -1;
+                    for(int i =0;i<Commons.g_user.getFollowerModels().size();i++){
+                        if( (isFollower && Commons.g_user.getFollowerModels().get(i).getFollower_user_id() == followerModel.getFollow_user_id()) || (!isFollower &&
+                                Commons.g_user.getFollowerModels().get(i).getFollower_user_id() == followerModel.getFollower_user_id())){
+                            flag =i;
+                            break;
+                        }
+                    }
 
+                    if(flag>=0)
+                        if(isFollower)
+                            _context.unFollower(followerModel.getFollow_user_id(),flag,1);
+                        else
+                            _context.unFollower(followerModel.getFollower_user_id(),flag,1);
+                    else {
+                        if(isFollower)
+                            _context.addFollow(followerModel.getFollow_user_id());
+                        else
+                            _context.addFollow(followerModel.getFollower_user_id());
+                    }
                 }
             }
         });

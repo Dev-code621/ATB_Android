@@ -59,7 +59,7 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/lyt_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:layout_gravity="center_vertical"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="UNFOLLOW"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 style="@style/textTheme"
                 android:textColor="@color/discard_color" />
         </LinearLayout>
