@@ -23,16 +23,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
-import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
-import com.atb.app.commons.Helper;
 import com.atb.app.dialog.SelectMediaDialog;
-import com.atb.app.dialog.SelectProfileDialog;
-import com.atb.app.model.CommentModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
@@ -43,14 +39,11 @@ import com.fxn.pix.Pix;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NewAdviceActivity extends CommonActivity implements View.OnClickListener {

@@ -62,6 +62,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_text">Looking For Somethings?</string>
     <string name="finish_app">Do you want to close app?</string>
+
     <string name="back">Back</string>
     <string name="newpost">New Post</string>
     <string name="media_type">Media Type</string>
@@ -244,5 +245,6 @@
     <string name="days_ago">%d days ago</string>
     <string name="hours_ago">%d hours ago</string>
     <string name="min_ago">%d minutes ago</string>
-
+    <string name="post_description">Your Business has been set up\nsuccesfully, now add some products and\nservices</string>
+    <string name="subscription_alert">You have not subscribed for your business account yet!\nWould you like to subscribe now?</string>
 </resources>

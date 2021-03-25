@@ -168,7 +168,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         if(edt_username.getText().toString().length()==0)return false;
         if(edt_firstname.getText().toString().length()==0)return false;
         if(edt_lastname.getText().toString().length()==0)return false;
-        if(txv_location.getText().toString().length()==0)return false;
+       // if(txv_location.getText().toString().length()==0)return false;
         if(edt_birthday.getText().toString().length()==0)return false;
         return true;
     }
@@ -195,7 +195,6 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 break;
             case R.id.txv_next:
                 register();
-                goTo(this, CreateFeedActivity.class,false);
                 break;
             case R.id.txv_location:
                 startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
@@ -270,6 +269,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 userModel.setFb_user_id(userObject.getString("fb_user_id"));
                 userModel.setFacebook_token(userObject.getString("facebook_token"));
                 userModel.setEmail(userObject.getString("user_email"));
+                userModel.setPassword(Commons.g_user.getPassword());
                 userModel.setImvUrl(userObject.getString("pic_url"));
                 userModel.setFirstname(userObject.getString("first_name"));
                 userModel.setLastname(userObject.getString("last_name"));

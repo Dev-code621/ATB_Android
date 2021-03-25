@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.navigationItems.business.UpgradeBusinessSplashActivity"
+    android:orientation="vertical"
+    android:background="#B1D1FF">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_business_icon"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/business_description"
+                style="@style/boldtextTheme"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textSize="23sp"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:src="@drawable/icon_close" />
+    </FrameLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center"
+        android:background="@drawable/edit_rectangle_round"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You will also get"
+            style="@style/boldtextTheme"
+            android:gravity="center"
+            android:textColor="@color/txt_color"
+            android:textSize="18sp"
+            android:layout_marginTop="5dp"/>
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/imageSlider"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderAutoCycleEnabled="true"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="2dp"
+            app:sliderIndicatorRadius="1dp"
+            app:sliderIndicatorSelectedColor="@color/txt_color"
+            app:sliderIndicatorUnselectedColor="@color/boder_color"
+            android:layout_gravity="center"
+            app:sliderScrollTimeInSec="1"
+            app:sliderStartAutoCycle="true"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Less than £0.25/day"
+        style="@style/boldtextTheme"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/txv_next"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:text="Upgrade Now!"
+        style="@style/boldtextTheme"
+        android:gravity="center"
+        android:textColor="@color/head_color"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_rectangle_round"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="For the first 500 and then £7.99/month\nthereafter"
+        style="@style/boldtextTheme"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>
+</LinearLayout>

@@ -31,21 +31,22 @@ import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.ProfileActivity;
 import com.atb.app.activities.navigationItems.SavePostActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.navigationItems.TellYourFriendActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
-import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.PostsFragment;
-import com.atb.app.fragement.StoreFragment;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.common.internal.service.Common;
+import com.google.gson.Gson;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -70,6 +71,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_user_navigation);
+        Commons.profileUserNavigationActivity = this;
         imv_back = findViewById(R.id.imv_back);
         imv_profile = findViewById(R.id.imv_profile);
         imv_business = findViewById(R.id.imv_business);
@@ -110,8 +112,10 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         LinearLayout  lyt_contact_admin = findViewById(R.id.lyt_contact_admin);
         LinearLayout lyt_save_post = findViewById(R.id.lyt_save_post);
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
+        LinearLayout lyt_tell_frieds = findViewById(R.id.lyt_tell_frieds);
         lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
         lyt_busines_description = findViewById(R.id.lyt_busines_description);
+        lyt_tell_frieds.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
         lyt_busines_upgrade.setOnClickListener(this);
         lyt_logout.setOnClickListener(this);
@@ -280,11 +284,14 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 break;
             case R.id.lyt_busines_upgrade:
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, UpdateBusinessActivity.class,false);
-
+                bundle = new Bundle();
+                bundle.putInt("subScriptionType",0);
+                goTo(this, UpgradeBusinessSplashActivity.class,false,bundle);
                 break;
             case R.id.imv_rating:
-
+                bundle = new Bundle();
+                bundle.putBoolean("subScriptionType",false);
+                goTo(this, UpgradeBusinessSplashActivity.class,false,bundle);
                 break;
 
             case R.id.imv_profile_chat:
@@ -294,25 +301,29 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
             case R.id.lyt_navigation:
                 drawer.openDrawer(Gravity.RIGHT);
                 break;
-
-            case R.id.imv_facebook:
-
-                break;
-
-            case R.id.imv_instagram:
-
-                break;
-
-            case R.id.imv_twitter:
-
+            case R.id.lyt_tell_frieds:
+                drawer.closeDrawer(GravityCompat.END);
+                goTo(this, TellYourFriendActivity.class,false);
                 break;
 
             case R.id.lyt_follower:
-
+                bundle = new Bundle();
+                bundle.putBoolean("isFollower", true);
+                bundle.putInt("userType",0);
+                Gson gson = new Gson();
+                String usermodel = gson.toJson(Commons.g_user);
+                bundle.putString("userModel",usermodel);
+                goTo(this, FollowerAndFollowingActivity.class,false,bundle);
                 break;
 
             case R.id.lyt_following:
-
+                Bundle bundle1 = new Bundle();
+                bundle1.putBoolean("isFollower", false);
+                bundle1.putInt("userType",0);
+                gson = new Gson();
+                usermodel = gson.toJson(Commons.g_user);
+                bundle1.putString("userModel",usermodel);
+                goTo(this, FollowerAndFollowingActivity.class,false,bundle1);
                 break;
             case R.id.lyt_post:
 

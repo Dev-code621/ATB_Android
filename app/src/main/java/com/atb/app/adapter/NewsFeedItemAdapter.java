@@ -175,7 +175,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 if(Commons.video_flag == position) {
                     //Commons.mVideoPlayerManager.stopAnyPlayback();
 
-                    Commons.mVideoPlayerManager.playNewVideo(null, holder.video_view, newsFeedEntity.getPostImageModels().get(0).getPath());
+                //    Commons.mVideoPlayerManager.playNewVideo(null, holder.video_view, newsFeedEntity.getPostImageModels().get(0).getPath());
 
 
                 }

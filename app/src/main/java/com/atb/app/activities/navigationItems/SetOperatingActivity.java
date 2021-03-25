@@ -2,6 +2,7 @@ package com.atb.app.activities.navigationItems;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.atb.app.model.BusinessModel;
 import com.atb.app.model.submodel.HolidayModel;
 import com.atb.app.model.submodel.OpeningTimeModel;
 import com.google.android.gms.common.internal.service.Common;
+import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONArray;
@@ -350,6 +352,13 @@ public class SetOperatingActivity extends CommonActivity implements View.OnClick
                                         openingTimeModel.setEnd(getUTCDate(txv_endtime.get(i).getText().toString()));
                                         businessModel.getOpeningTimeModels().add(openingTimeModel);
                                     }
+                                    Intent resultInt = new Intent();
+                                    Bundle bundle = new Bundle();
+                                    Gson gson = new Gson();
+                                    String business = gson.toJson(businessModel);
+                                    bundle.putString("businessModel",business);
+                                    resultInt.putExtra("data", bundle);
+                                    setResult(-1000,resultInt);
                                     finish(SetOperatingActivity.this);
                                 }
                             }catch (Exception e){

@@ -2,6 +2,7 @@ package com.atb.app.commons;
 
 import android.util.DisplayMetrics;
 
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
@@ -19,6 +20,7 @@ import java.util.List;
 public class Commons {
     public static boolean g_isAppRunning=false;
     public static CommonActivity g_commentActivity = null;
+    public static ProfileUserNavigationActivity profileUserNavigationActivity = null;
     public static boolean traffic = true;
     public static float zoom = 0f;
     public static double lat =0f;

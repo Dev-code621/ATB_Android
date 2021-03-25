@@ -21,9 +21,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public  class UserModel {
+
     int id, complete,bt_customer_id;
     String email, password, imvUrl, firstname, lastname, location, sex, birhtday, invitecode,bt_paypal_account;
-    String userName, fb_user_id, facebook_token, description, post_search_region;
+    String userName, fb_user_id, facebook_token, description, post_search_region= "null";
     String status_reason, stripe_customer_token, stripe_connect_account, push_tokenm, invited_by;
     double latitude, longitude;
     int range, account_type, status, online, post_count, followers_count, follow_count;

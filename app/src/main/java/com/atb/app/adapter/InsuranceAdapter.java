@@ -9,17 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.SetOperatingActivity;
-import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.commons.Commons;
-import com.atb.app.model.submodel.HolidayModel;
 import com.atb.app.model.submodel.InsuranceModel;
-import com.google.android.gms.common.internal.service.Common;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class InsuranceAdapter extends BaseAdapter {
 

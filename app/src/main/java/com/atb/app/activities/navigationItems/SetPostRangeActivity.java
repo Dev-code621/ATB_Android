@@ -88,7 +88,8 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         imv_back.setOnClickListener(this);
         txv_update.setOnClickListener(this);
         lyt_send.setOnClickListener(this);
-        if(!Commons.g_user.getPost_search_region().equals("null"));{
+
+        if(!Commons.g_user.getPost_search_region().equals("null")){
             seekbarProgress.setProgress(Float.parseFloat(Commons.g_user.getPost_search_region()));
             txv_progress.setText(Commons.g_user.getPost_search_region() + "KM");
             progress = Float.parseFloat(Commons.g_user.getPost_search_region());

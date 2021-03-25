@@ -24,7 +24,7 @@ import com.atb.app.activities.navigationItems.ProfileActivity;
 import com.atb.app.activities.navigationItems.SavePostActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
-import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.base.CommonActivity;
@@ -32,7 +32,6 @@ import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
-import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -50,8 +49,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import java.io.Serializable;
 
 public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 

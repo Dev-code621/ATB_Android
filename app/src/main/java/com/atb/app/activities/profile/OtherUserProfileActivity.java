@@ -1,17 +1,10 @@
 package com.atb.app.activities.profile;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.BookingActivity;
-import com.atb.app.activities.navigationItems.ContactAdminActivity;
-import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
-import com.atb.app.activities.navigationItems.ItemSoldActivity;
-import com.atb.app.activities.navigationItems.NotificationActivity;
-import com.atb.app.activities.navigationItems.ProfileActivity;
-import com.atb.app.activities.navigationItems.SavePostActivity;
-import com.atb.app.activities.navigationItems.SetPostRangeActivity;
-import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
-import com.atb.app.activities.navigationItems.UpdateBusinessActivity;
-import com.atb.app.activities.newpost.SelectPostCategoryActivity;
-import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.fragement.MainListFragment;

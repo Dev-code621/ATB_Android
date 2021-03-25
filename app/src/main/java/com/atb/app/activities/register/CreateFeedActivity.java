@@ -94,6 +94,8 @@ public class CreateFeedActivity extends CommonActivity {
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+                        Log.d("bbbbb",finalFeedString);
+                        Log.d("aaaaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){

@@ -113,7 +113,7 @@ public class MainFeedAdapter extends BaseAdapter {
 
         Commons.video_flag = 0;
         Log.d("ccccc", String.valueOf(position));
-        newsFeedItemAdapter.notifyDataSetChanged();
+        //newsFeedItemAdapter.notifyDataSetChanged();
 
         holder.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -124,7 +124,7 @@ public class MainFeedAdapter extends BaseAdapter {
                             .findFirstVisibleItemPosition();
                     Commons.video_flag = index;
                     Log.d("ccccc", String.valueOf(index) + "    " + String.valueOf(position));
-                    newsFeedItemAdapter.notifyItemChanged(position,arrayList);
+                 //   newsFeedItemAdapter.notifyItemChanged(position,arrayList);
 
                 }
             }

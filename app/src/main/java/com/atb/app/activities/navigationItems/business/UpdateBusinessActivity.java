@@ -1,6 +1,4 @@
-package com.atb.app.activities.navigationItems;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.atb.app.activities.navigationItems.business;
 
 import android.Manifest;
 import android.content.Intent;
@@ -25,10 +23,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
-import com.atb.app.activities.LoginActivity;
-import com.atb.app.activities.MainActivity;
-import com.atb.app.activities.register.ProfileSetActivity;
-import com.atb.app.activities.register.Signup1Activity;
+import com.atb.app.activities.navigationItems.SetOperatingActivity;
+import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.adapter.InsuranceAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -36,9 +32,11 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.AddInsuranceDialog;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.PickImageDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.BusinessModel;
+import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.model.submodel.SocialModel;
 import com.atb.app.util.ImageUtils;
@@ -48,6 +46,7 @@ import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -58,7 +57,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zxy.tiny.Tiny;
-import com.zxy.tiny.callback.FileCallback;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -189,6 +187,21 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 txv_setoperate.setVisibility(View.GONE);
             loadingQalification_Insurance();
            initSocialPart();
+
+           if(Commons.g_user.getBusinessModel().getPaid()==0){
+               ConfirmDialog confirmDialog = new ConfirmDialog();
+               confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                   @Override
+                   public void onConfirm() {
+                       Commons.g_user.setBusinessModel(businessModel);
+                       Commons.g_user.setAccount_type(1);
+                       Bundle bundle = new Bundle();
+                       bundle.putInt("subScriptionType",2);
+                       goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
+                   }
+               },getString(R.string.subscription_alert));
+               confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+           }
         }
     }
     void initSocialPart(){
@@ -560,7 +573,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     }
 
     void  gotoSaveBusiness(){
-        if(photoPath.length() ==0 && businessModel.getBusiness_logo().equals("null")){
+        String aa = businessModel.getBusiness_logo();
+        if(photoPath.length() ==0 && businessModel.getBusiness_logo() ==null){
             showAlertDialog("Please add your business logo.");
             return;
         }
@@ -613,7 +627,11 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                             if(Commons.g_user.getAccount_type() == 1)
                                 finish(UpdateBusinessActivity.this);
                             else {
-
+                                Commons.g_user.setBusinessModel(businessModel);
+                                Commons.g_user.setAccount_type(1);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("subScriptionType",1);
+                                goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
                             }
                         }
                     }catch (Exception e){
@@ -645,7 +663,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 break;
             case R.id.lyt_setoperation_hour:
 
-                goTo(this,SetOperatingActivity.class,false);
+                startActivityForResult(new Intent(this, SetOperatingActivity.class),1);
                 break;
             case R.id.lyt_add_ceritfication:
                 showInsuranceDialog(1);
@@ -857,6 +875,17 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }else if (resultCode == -1000){
+            Bundle bundle = data.getBundleExtra("data");
+            if (bundle != null) {
+                String business= bundle.getString("businessModel");
+                Gson gson = new Gson();
+                BusinessModel businessModel1 = gson.fromJson(business, BusinessModel.class);
+                businessModel.setHolidayModels(businessModel1.getHolidayModels());
+                businessModel.setOpeningTimeModels(businessModel1.getOpeningTimeModels());
+                if(businessModel.getOpeningTimeModels().size()>0 || businessModel.getHolidayModels().size()>0)
+                    txv_setoperate.setVisibility(View.GONE);
             }
         }
     }

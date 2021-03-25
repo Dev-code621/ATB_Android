@@ -389,4 +389,10 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                 break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 }
