@@ -38,7 +38,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.navigationItems.TellYourFriendActivity"
+        <activity android:name=".activities.navigationItems.BoostActivity"></activity>
+        <activity
+            android:name=".activities.navigationItems.TellYourFriendActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
