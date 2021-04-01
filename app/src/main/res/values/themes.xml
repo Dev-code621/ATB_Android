@@ -71,6 +71,9 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/segoe_ui_semibold</item>
     </style>
+    <style name="spinerTheme">
+        <item name="android:background">@color/signup_popup_color</item>
+    </style>
 
     <style name="btn_buttonStyle">
         <item name="android:textColor">@color/white</item>
@@ -79,6 +82,7 @@
         <item name="android:textSize">19sp</item>
         <item name="android:fontFamily">@font/segoe_ui_semibold</item>
     </style>
+
 
     <style name="fullScreenDialog" parent="Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>

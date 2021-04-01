@@ -126,6 +126,7 @@ dependencies {
     //spinner
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 
+
     //imagePicker
     implementation  'com.fxn769:pix:1.5.6'
 
@@ -164,5 +165,7 @@ dependencies {
     //videoview
 //    implementation 'com.github.danylovolokh:list-visibility-utils:0.2.0'
 //    implementation 'com.github.danylovolokh:video-player-manager:0.2.0'
+
+
 
 }

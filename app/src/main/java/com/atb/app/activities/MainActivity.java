@@ -2,19 +2,15 @@ package com.atb.app.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -24,26 +20,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.BoostActivity;
+import com.atb.app.activities.profile.boost.BoostActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.adapter.BoostItemAdapter;
-import com.atb.app.adapter.EmailAdapter;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectCategoryDialog;
-import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
-import com.atb.app.view.NonSwipeableViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
@@ -151,7 +144,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 selectIcon = 0;
                 break;
             case R.id.frame_chat:
-
+                setColor(3);
                 break;
             case R.id.frame_noti:
                 goTo(this, NotificationActivity.class,false);
@@ -210,9 +203,11 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_home));
         imv_post.setImageDrawable(getResources().getDrawable(R.drawable.icon_addpost));
         imv_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search));
+        imv_chat.setImageDrawable(getResources().getDrawable(R.drawable.icon_message));
         imv_feed.clearColorFilter();
         imv_post.clearColorFilter();
         imv_search.clearColorFilter();
+        imv_chat.clearColorFilter();
         if(id==2){
             imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }else if(id==1){
@@ -220,6 +215,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
 
         }else if(id == 0) {
             imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+        }else if(id ==3){
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 

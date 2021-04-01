@@ -58,30 +58,29 @@
                         android:layout_height="50dp"
                         android:src="@drawable/icon_logo1" />
                 </LinearLayout>
-                <FrameLayout
-                    android:id="@+id/frame_chat"
+                <LinearLayout
+                    android:id="@+id/lyt_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp">
-                    <ImageView
-                        android:id="@+id/imv_chat"
+                    android:gravity="center">
+                    <androidx.cardview.widget.CardView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_bubble" />
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card_unread_chat"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        app:cardCornerRadius="6dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="right"
+                        app:cardCornerRadius="15dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_gravity="center"
                         app:cardElevation="0dp"
-                        app:cardUseCompatPadding="false"
-                        android:visibility="gone"
-                        app:cardBackgroundColor="#E3677F"/>
-                </FrameLayout>
+                        app:cardUseCompatPadding="false">
+                        <ImageView
+                            android:id="@+id/imv_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_profile"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
             </RelativeLayout>
             <TextView
                 android:id="@+id/txv_category"
@@ -135,28 +134,31 @@
             android:layout_weight="1"
             android:src="@drawable/icon_addpost"
             android:layout_gravity="center"/>
-        <LinearLayout
-            android:id="@+id/lyt_profile"
+
+        <FrameLayout
+            android:id="@+id/frame_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center">
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/imv_chat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icon_message"
+                android:layout_gravity="center"/>
             <androidx.cardview.widget.CardView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:cardCornerRadius="15dp"
-                android:layout_gravity="center"
+                android:id="@+id/card_unread_chat"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                app:cardCornerRadius="6dp"
+                android:layout_weight="1"
+                android:layout_gravity="right"
                 app:cardElevation="0dp"
-                app:cardUseCompatPadding="false">
-                <ImageView
-                    android:id="@+id/imv_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_profile"
-                    android:layout_gravity="center"/>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
+                app:cardUseCompatPadding="false"
+                android:visibility="gone"
+                app:cardBackgroundColor="#E3677F"/>
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>
