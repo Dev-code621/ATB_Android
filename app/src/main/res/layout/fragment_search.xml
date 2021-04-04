@@ -3,68 +3,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragement.SearchFragment"
     android:background="@color/head_color"
-    android:id="@+id/lyt_container">
+    android:id="@+id/lyt_container"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/icon_search"
-            android:tint="@color/white" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search_text"
-            android:textColor="@color/white"
-            android:layout_marginTop="40dp"
-            android:textSize="25sp"
-            style="@style/boldtextTheme"/>
-        <FrameLayout
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
-            <EditText android:id="@+id/edt_serach"
-                android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:singleLine="true"
-                android:inputType="text"
-                android:hint="@string/search"
-                style="@style/edit_inputtext" />
-            <LinearLayout
-                android:id="@+id/lyt_search"
+                android:src="@drawable/icon_search"
+                android:tint="@color/white" />
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="right|center">
-                <ImageView
-                    android:id="@+id/imv_selector"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:padding="15dp"
-                    android:src="@drawable/search_selector"
-                    android:layout_gravity="right|center"
-                    android:layout_marginRight="10dp" />
-            </LinearLayout>
-        </FrameLayout>
-        <RelativeLayout
+                android:text="@string/search_text"
+                android:textColor="@color/white"
+                android:layout_marginTop="40dp"
+                android:textSize="25sp"
+                style="@style/boldtextTheme"/>
+
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp">
-            <androidx.recyclerview.widget.RecyclerView
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/signup_popup_color">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/recyclerView_categories"/>
-        </RelativeLayout>
+                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="40dp">
+                <TextView
+                    android:id="@+id/txv_atb_business"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:text="ATB Business"
+                    android:gravity="center"
+                    android:textColor="@color/head_color"
+                    style="@style/btn_buttonStyle"
+                    android:textSize="15sp"
+                    android:background="@drawable/edit_rectangle_round" />
+                <TextView
+                    android:id="@+id/txv_atb_post"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:text="ATB Post"
+                    android:gravity="center"
+                    android:textColor="@color/txt_color"
+                    style="@style/btn_buttonStyle"
+                    android:textSize="15sp"
+                    android:background="@drawable/edit_rectangle_round1" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/boldtextTheme"
+                android:textColor="@color/txt_color"
+                android:text="Where would you like to search?"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textSize="17sp"/>
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/spiner_category_type"
+                android:layout_width="180dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:singleLine="true"
+                android:layout_height="wrap_content"
+                app:entries="@array/category_type"
+                android:textSize="18sp"
+                app:popupTextAlignment="center"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                app:textTint="@color/head_color"
+                app:arrowTint="@color/head_color"
+                android:gravity="center"
+                android:backgroundTint="@color/signup_popup_color"/>
+        </LinearLayout>
+
     </LinearLayout>
+    <EditText android:id="@+id/edt_serach"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:hint="@string/search"
+        style="@style/edit_inputtext"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="170dp"/>
 </FrameLayout>

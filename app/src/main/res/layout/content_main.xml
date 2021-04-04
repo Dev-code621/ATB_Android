@@ -10,6 +10,7 @@
     android:background="@color/main_color">
 
     <LinearLayout
+        android:id="@+id/lyt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -309,6 +310,7 @@
 
     </LinearLayout>
     <FrameLayout
+        android:id="@+id/lyt_content"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="1">
@@ -358,6 +360,12 @@
                 android:tint="@color/white"/>
         </androidx.cardview.widget.CardView>
     </FrameLayout>
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/lyt_fragement"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -366,9 +374,16 @@
         <ImageView
             android:id="@+id/imv_feed"
             android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/icon_home"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:id="@+id/imv_search"
+            android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:src="@drawable/icon_feed"
+            android:src="@drawable/icon_search"
             android:layout_gravity="center"/>
         <ImageView
             android:id="@+id/imv_post"
@@ -377,12 +392,30 @@
             android:layout_weight="1"
             android:src="@drawable/icon_addpost"
             android:layout_gravity="center"/>
-        <ImageView
-            android:id="@+id/imv_chat"
+
+        <FrameLayout
+            android:id="@+id/frame_chat"
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/icon_message"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/imv_chat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icon_message"
+                android:layout_gravity="center"/>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_unread_chat"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                app:cardCornerRadius="6dp"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                android:visibility="gone"
+                app:cardBackgroundColor="#E3677F"/>
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

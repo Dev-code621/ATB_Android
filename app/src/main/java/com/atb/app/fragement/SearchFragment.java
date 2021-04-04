@@ -6,11 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,28 +16,24 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
-import com.atb.app.adapter.SelectCategoryAdapter;
-import com.atb.app.adapter.SelectCategorySearchAdapter;
-import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.activities.profile.SearchActivity;
+import com.atb.app.base.CommonActivity;
 
-import java.util.ArrayList;
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 
 public class SearchFragment extends Fragment {
-    MainActivity mainActivity;
+    Context context;
     View view;
     EditText edt_serach;
-    RecyclerView recyclerView_categories;
-    ImageView imv_selector;
-    LinearLayout lyt_search;
-    ArrayList<Boolean>booleans = new ArrayList<>();
-    SelectCategorySearchAdapter selectCategoryAdapter;
+    TextView txv_atb_business,txv_atb_post;
+    NiceSpinner spiner_category_type;
+    int type =0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,60 +47,56 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         edt_serach = (EditText)view.findViewById(R.id.edt_serach);
-        recyclerView_categories = (RecyclerView) view.findViewById(R.id.recyclerView_categories);
-        recyclerView_categories.setLayoutManager(new GridLayoutManager(mainActivity,2));
-        for(int i =0;i<11;i++) booleans.add(false);
-        selectCategoryAdapter = new SelectCategorySearchAdapter(mainActivity,this,booleans);
-        selectCategoryAdapter.setHasStableIds(true);
-        recyclerView_categories.setAdapter(selectCategoryAdapter);
+        spiner_category_type = (NiceSpinner)view.findViewById(R.id.spiner_category_type);
+        txv_atb_business = (TextView)view.findViewById(R.id.txv_atb_business);
+        txv_atb_post = (TextView)view.findViewById(R.id.txv_atb_post);
 
-
-
-
-        imv_selector = (ImageView) view.findViewById(R.id.imv_selector);
-        lyt_search = (LinearLayout)view.findViewById(R.id.lyt_search);
-
-        lyt_search.setOnClickListener(new View.OnClickListener() {
+        txv_atb_business.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!imv_selector.isEnabled()){
-                    recyclerView_categories.setVisibility(View.GONE);
-                }
-                else {
-                    recyclerView_categories.setVisibility(View.VISIBLE);
-                }
-                imv_selector.setEnabled(!imv_selector.isEnabled());
+                txv_atb_business.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round));
+                txv_atb_business.setTextColor(context.getResources().getColor(R.color.head_color));
+                txv_atb_post.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round1));
+                txv_atb_post.setTextColor(context.getResources().getColor(R.color.txt_color));
+                type = 0;
+            }
+        });
+        txv_atb_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txv_atb_post.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round));
+                txv_atb_post.setTextColor(context.getResources().getColor(R.color.head_color));
+                txv_atb_business.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round1));
+                txv_atb_business.setTextColor(context.getResources().getColor(R.color.txt_color));
+                type = 1;
             }
         });
 
         edt_serach.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                   mainActivity.setColor(4);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("search", edt_serach.getText().toString());
+                    bundle.putInt("type",type);
+                    bundle.putString("category",spiner_category_type.getSelectedItem().toString());
+
+                    ((CommonActivity)context).goTo(context, SearchActivity.class, false, bundle);
                     return true;
+
                 }
                 return false;
             }
         });
-
-
         Keyboard();
     }
 
-    public void selectCategory(int posstion){
-        booleans.clear();
-        for(int i =0;i<11;i++) booleans.add(false);
-        booleans.set(posstion,true);
-        selectCategoryAdapter.setData(booleans);
-
-    }
 
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mainActivity =(MainActivity)getActivity();
+        context =getActivity();
     }
 
 
@@ -119,7 +107,7 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // TODO Auto-generated method stub
-                InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(edt_serach.getWindowToken(), 0);
                 return false;
             }

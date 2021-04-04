@@ -3,6 +3,7 @@ package com.atb.app.activities.profile;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -39,8 +40,10 @@ import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.PostsFragment;
+import com.atb.app.fragement.SearchFragment;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -54,10 +57,10 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 
 public class ProfileUserNavigationActivity extends CommonActivity implements View.OnClickListener, SmartTabLayout.TabProvider  {
-    ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat;
-    FrameLayout lyt_profile,lyt_navigation;
+    ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat,imv_search;
+    FrameLayout lyt_profile,lyt_navigation,lyt_content;
     TextView txv_name,txv_id,txv_follower,txv_following,txv_post,txv_description;
-    LinearLayout lyt_follower,lyt_following,lyt_post,lyt_following_on,lyt_on;
+    LinearLayout lyt_follower,lyt_following,lyt_post,lyt_following_on,lyt_on,lyt_title;
     SmartTabLayout viewPagerTab;
     ViewPager viewPager;
     FragmentStatePagerItemAdapter pagerAdapter;
@@ -66,7 +69,11 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
     CardView card_business;
     CardView card_addstore;
     LinearLayout lyt_busines_description,lyt_busines_upgrade;
-    @SuppressLint("ResourceType")
+    ChatFragment chatFragment;
+    FrameLayout lyt_fragement,frame_chat;
+    int selectIcon =0;
+    boolean main_flag;
+    FragmentTransaction ft;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +122,13 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         LinearLayout lyt_tell_frieds = findViewById(R.id.lyt_tell_frieds);
         lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
         lyt_busines_description = findViewById(R.id.lyt_busines_description);
+        lyt_title = findViewById(R.id.lyt_title);
+        lyt_content = findViewById(R.id.lyt_content);
+        lyt_fragement = findViewById(R.id.lyt_fragement);
+        frame_chat = findViewById(R.id.frame_chat);
+        imv_search = findViewById(R.id.imv_search);
+        imv_search.setOnClickListener(this);
+        frame_chat.setOnClickListener(this);
         lyt_tell_frieds.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
         lyt_busines_upgrade.setOnClickListener(this);
@@ -142,7 +156,6 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         lyt_on.setOnClickListener(this);
         imv_feed.setOnClickListener(this);
         imv_post.setOnClickListener(this);
-        imv_chat.setOnClickListener(this);
         Commons.selectUsertype = 0;
         Commons.selected_user = Commons.g_user;
         FragmentPagerItems pages = new FragmentPagerItems(this);
@@ -162,7 +175,6 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-        initLayout();
     }
     void initLayout(){
         lyt_on.setVisibility(View.GONE);
@@ -209,8 +221,14 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
 
     @Override
     public boolean selectProfile(boolean flag){
-        if(flag)
-            goTo(this, ProfileBusinessNaviagationActivity.class,true);
+        if(chatFragment==null) {
+            if (flag)
+                goTo(this, ProfileBusinessNaviagationActivity.class, true);
+            else {
+                chatFragment.setProfile(flag);
+            }
+        }
+
         return flag;
     }
 
@@ -224,14 +242,20 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 finish(this);
                 break;
             case R.id.imv_post:
+                setColor(2);
+                startActivityForResult(new Intent(this, SelectPostCategoryActivity.class),1);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.imv_search:
                 setColor(1);
-                goTo(this, SelectPostCategoryActivity.class,false);
                 break;
             case R.id.imv_feed:
-                setColor(0);
+                if(main_flag)finish(this);
+                else
+                    setColor(0);
                 break;
-            case R.id.imv_chat:
-                setColor(2);
+            case R.id.frame_chat:
+                setColor(3);
                 break;
             case R.id.lyt_profile:
                 if(Commons.g_user.getAccount_type()==1)
@@ -353,27 +377,63 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
-    void setColor(int id){
-        imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_feed));
+    @SuppressLint("ResourceAsColor")
+    public void setColor(int id){
+        chatFragment = null;
+        lyt_title.setVisibility(View.VISIBLE);
+        lyt_content.setVisibility(View.VISIBLE);
+        lyt_fragement.setVisibility(View.GONE);
+        if(id==0){
+            selectIcon = id;
+            main_flag = true;
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+        }
+        else if(id==1){
+            selectIcon = id;
+            lyt_title.setVisibility(View.GONE);
+            lyt_content.setVisibility(View.GONE);
+            lyt_fragement.setVisibility(View.VISIBLE);
+            main_flag = false;
+            SearchFragment mFragment = new SearchFragment();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.lyt_fragement,mFragment).commit();
+        }
+        else if(id ==3){
+            selectIcon = id;
+            main_flag = false;
+            lyt_title.setVisibility(View.GONE);
+            lyt_content.setVisibility(View.GONE);
+            lyt_fragement.setVisibility(View.VISIBLE);
+            chatFragment = new ChatFragment();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.lyt_fragement,chatFragment).commit();
+        }
+
+        imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_home));
         imv_post.setImageDrawable(getResources().getDrawable(R.drawable.icon_addpost));
+        imv_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search));
         imv_chat.setImageDrawable(getResources().getDrawable(R.drawable.icon_message));
         imv_feed.clearColorFilter();
         imv_post.clearColorFilter();
+        imv_search.clearColorFilter();
         imv_chat.clearColorFilter();
         if(id==2){
-            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
-        }else if(id==1){
             imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+        }else if(id==1){
+            imv_search.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
-        }else {
+        }else if(id == 0) {
             imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+        }else if(id ==3){
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setColor(0);
-
+        setColor(selectIcon);
+        initLayout();
     }
 }

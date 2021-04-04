@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activities.profile.boost.ProfilePinActivity"
     android:orientation="vertical"
-    android:background="#ACBAD1">
+    android:background="#ACBAD1"
+    android:id="@+id/lyt_container">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"

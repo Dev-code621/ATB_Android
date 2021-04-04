@@ -166,6 +166,9 @@ dependencies {
 //    implementation 'com.github.danylovolokh:list-visibility-utils:0.2.0'
 //    implementation 'com.github.danylovolokh:video-player-manager:0.2.0'
 
+    //tooltip
+    implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.3'
+
 
 
 }

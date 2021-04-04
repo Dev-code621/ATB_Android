@@ -1,5 +1,6 @@
 package com.atb.app.activities.profile;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -30,7 +31,10 @@ import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.fragement.ChatFragment;
+import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.PostsFragment;
+import com.atb.app.fragement.SearchFragment;
 import com.atb.app.fragement.StoreFragment;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
@@ -45,6 +49,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -52,15 +57,20 @@ import androidx.viewpager.widget.ViewPager;
 
 public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 
-    ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat;
-    FrameLayout lyt_profile,lyt_navigation;
+    ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat,imv_search;
+    FrameLayout lyt_profile,lyt_navigation,lyt_content;
     TextView txv_name,txv_id,txv_follower,txv_following,txv_post,txv_description;
-    LinearLayout lyt_follower,lyt_following,lyt_post,lyt_following_on,lyt_on;
+    LinearLayout lyt_follower,lyt_following,lyt_post,lyt_following_on,lyt_on,lyt_title;
     SmartTabLayout viewPagerTab;
     ViewPager viewPager;
     DrawerLayout drawer;
     private AppBarConfiguration mAppBarConfiguration;
     CardView card_addstore;
+    boolean main_flag;
+    FragmentTransaction ft;
+    ChatFragment chatFragment;
+    FrameLayout lyt_fragement,frame_chat;
+    int selectIcon =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +87,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_feed = findViewById(R.id.imv_feed);
         imv_post = findViewById(R.id.imv_post);
         imv_chat = findViewById(R.id.imv_chat);
+        imv_search = findViewById(R.id.imv_search);
         lyt_profile = findViewById(R.id.lyt_profile);
         lyt_navigation = findViewById(R.id.lyt_navigation);
         txv_name = findViewById(R.id.txv_name);
@@ -93,6 +104,10 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         viewPagerTab = findViewById(R.id.viewpagertab);
         viewPager = findViewById(R.id.viewpager);
         card_addstore = findViewById(R.id.card_addstore);
+        lyt_title = findViewById(R.id.lyt_title);
+        lyt_content = findViewById(R.id.lyt_content);
+        lyt_fragement = findViewById(R.id.lyt_fragement);
+        frame_chat = findViewById(R.id.frame_chat);
         LinearLayout lyt_show_notis = findViewById(R.id.lyt_show_notis);
         LinearLayout lyt_upgrade_business = findViewById(R.id.lyt_upgrade_business);
         LinearLayout lyt_booking = findViewById(R.id.lyt_booking);
@@ -133,7 +148,8 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         lyt_on.setOnClickListener(this);
         imv_feed.setOnClickListener(this);
         imv_post.setOnClickListener(this);
-        imv_chat.setOnClickListener(this);
+        imv_search.setOnClickListener(this);
+        frame_chat.setOnClickListener(this);
         card_addstore.setOnClickListener(this);
         Commons.selectUsertype = 1;
         Commons.selected_user = Commons.g_user;
@@ -174,6 +190,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 .setDrawerLayout(drawer)
                 .build();
 
+
     }
 
 
@@ -211,8 +228,12 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
 
     @Override
     public boolean selectProfile(boolean flag){
-        if(!flag)
-            goTo(this, ProfileUserNavigationActivity.class,true);
+        if(chatFragment==null) {
+            if (!flag)
+                goTo(this, ProfileUserNavigationActivity.class, true);
+        }else {
+            chatFragment.setProfile(flag);
+        }
         return flag;
     }
 
@@ -223,14 +244,20 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 finish(this);
                 break;
             case R.id.imv_post:
+                setColor(2);
+                startActivityForResult(new Intent(this, SelectPostCategoryActivity.class),1);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.imv_search:
                 setColor(1);
-                goTo(this, SelectPostCategoryActivity.class,false);
                 break;
             case R.id.imv_feed:
-                setColor(0);
+                if(main_flag)finish(this);
+                else
+                    setColor(0);
                 break;
-            case R.id.imv_chat:
-                setColor(2);
+            case R.id.frame_chat:
+                setColor(3);
                 break;
             case R.id.lyt_profile:
                 SelectprofileDialog(this);
@@ -363,27 +390,68 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
 
-    void setColor(int id){
-        imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_feed));
+@SuppressLint("ResourceAsColor")
+    public void setColor(int id){
+        chatFragment = null;
+        lyt_title.setVisibility(View.VISIBLE);
+        lyt_content.setVisibility(View.VISIBLE);
+        lyt_fragement.setVisibility(View.GONE);
+        if(Commons.g_user.getAccount_type() ==1 ){
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+        }else {
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+        }
+        if(id==0){
+            selectIcon = id;
+            main_flag = true;
+        }
+        else if(id==1){
+            selectIcon = id;
+            lyt_title.setVisibility(View.GONE);
+            lyt_content.setVisibility(View.GONE);
+            lyt_fragement.setVisibility(View.VISIBLE);
+            main_flag = false;
+            SearchFragment mFragment = new SearchFragment();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.lyt_fragement,mFragment).commit();
+        }
+        else if(id ==3){
+            selectIcon = id;
+            main_flag = false;
+            lyt_title.setVisibility(View.GONE);
+            lyt_content.setVisibility(View.GONE);
+            lyt_fragement.setVisibility(View.VISIBLE);
+            chatFragment = new ChatFragment();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.lyt_fragement,chatFragment).commit();
+        }
+
+        imv_feed.setImageDrawable(getResources().getDrawable(R.drawable.icon_home));
         imv_post.setImageDrawable(getResources().getDrawable(R.drawable.icon_addpost));
+        imv_search.setImageDrawable(getResources().getDrawable(R.drawable.icon_search));
         imv_chat.setImageDrawable(getResources().getDrawable(R.drawable.icon_message));
         imv_feed.clearColorFilter();
         imv_post.clearColorFilter();
+        imv_search.clearColorFilter();
         imv_chat.clearColorFilter();
         if(id==2){
-            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
-        }else if(id==1){
             imv_post.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+        }else if(id==1){
+            imv_search.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
-        }else {
+        }else if(id == 0) {
             imv_feed.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+        }else if(id ==3){
+            imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setColor(0);
+        setColor(selectIcon);
         initLayout();
     }
 }

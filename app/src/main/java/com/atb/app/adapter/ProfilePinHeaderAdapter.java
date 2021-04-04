@@ -1,27 +1,36 @@
 package com.atb.app.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
 import com.atb.app.R;
+import com.atb.app.base.CommonActivity;
 
 import org.angmarch.views.NiceSpinner;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+
 public class ProfilePinHeaderAdapter extends SectioningAdapter {
 
     static final String TAG = ProfilePinHeaderAdapter.class.getSimpleName();
     static final boolean USE_DEBUG_APPEARANCE = false;
-
+    int type;
+    Context context;
     private class Section {
         int index;
         int copyCount;
@@ -53,9 +62,11 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
         ImageView imv_profile;
         TextView txv_bidnumber,txv_price,txv_number,txv_bid;
         EditText txv_bidprice;
+        CardView card_bidnumber;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            card_bidnumber = itemView.findViewById(R.id.card_bidnumber);
             txv_bidnumber =  itemView.findViewById(R.id.txv_bidnumber);
             imv_profile =  itemView.findViewById(R.id.imv_profile);
             txv_number =  itemView.findViewById(R.id.txv_number);
@@ -70,10 +81,22 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     public class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder {
         TextView textView;
         NiceSpinner spiner;
+        LinearLayout lyt_profile_pin,lyt_currentbid,lyt_yourbid,lyt_pin_point;
         public HeaderViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.textView);
             spiner = (NiceSpinner)itemView.findViewById(R.id.spiner);
+            lyt_profile_pin = (LinearLayout)itemView.findViewById(R.id.lyt_profile_pin);
+            lyt_currentbid = (LinearLayout)itemView.findViewById(R.id.lyt_currentbid);
+            lyt_yourbid = (LinearLayout)itemView.findViewById(R.id.lyt_yourbid);
+            lyt_pin_point = (LinearLayout)itemView.findViewById(R.id.lyt_pin_point);
+            if(type ==1){
+                lyt_profile_pin.setVisibility(View.GONE);
+                lyt_pin_point.setVisibility(View.VISIBLE);
+            }else {
+                lyt_profile_pin.setVisibility(View.VISIBLE);
+                lyt_pin_point.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -99,12 +122,13 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     boolean showAdapterPositions;
     boolean hasFooters;
 
-    public ProfilePinHeaderAdapter(int numSections, int numItemsPerSection, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions) {
+    public ProfilePinHeaderAdapter(int numSections, int numItemsPerSection, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions, int type, Context context) {
+        this.context = context;
         this.showModificationControls = showModificationControls;
         this.showCollapsingSectionControls = showCollapsingSectionControls;
         this.showAdapterPositions = showAdapterPositions;
         this.hasFooters = hasFooters;
-
+        this.type = type;
         for (int i = 0; i < numSections; i++) {
             appendSection(i, numItemsPerSection);
         }
@@ -114,12 +138,14 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
         Section section = new Section();
         section.index = index;
         section.copyCount = 0;
+
         String str = "Bid By Country";
-        if(index==1)
+        if (index == 1)
             str = "Bid By Region";
-        else if(index ==2)
+        else if (index == 2)
             str = "Bid By City";
         section.header = str;
+
 //
 //        if (this.hasFooters) {
 //            section.footer = "End of section " + index;
@@ -212,6 +238,12 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
         Section s = sections.get(sectionIndex);
         ItemViewHolder ivh = (ItemViewHolder) viewHolder;
+        ivh.card_bidnumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)(context)).showToolTip("Current Bids",v,true);
+            }
+        });
 //        ivh.textView.setText(s.items.get(itemIndex));
 //        ivh.adapterPositionTextView.setText(Integer.toString(getAdapterPositionForSectionItem(sectionIndex, itemIndex)));
     }
@@ -221,7 +253,19 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
         Section s = sections.get(sectionIndex);
         HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
+        hvh.lyt_currentbid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)(context)).showToolTip(context.getResources().getString(R.string.current_bid),v,false);
+            }
+        });
+        hvh.lyt_yourbid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)(context)).showToolTip(context.getResources().getString(R.string.your_bid),v,false);
 
+            }
+        });
         if (USE_DEBUG_APPEARANCE) {
             hvh.textView.setText(pad(sectionIndex * 2) + s.header);
             viewHolder.itemView.setBackgroundColor(0x55FF9999);

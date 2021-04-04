@@ -253,5 +253,20 @@
         \n\nOnce the bidding process has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bid will have their Logo pinned to the top of the feed which will be linked to their profile.
         \n\nAdditionally, each business will have a post of their Store Profile posted every X number of posts on the relevant feed and will have a notification sent to all users informing them of their promotion ** Once the auction process for the week has completed,
         \n\nit will be reset back to £ 5.00 giving all businesses equal opportunity to promote their business</string>
+    <string name="how_des_work1">
+        ATB users can use the search feature to find businesses or posts relevant to the keyword or phrase they are looking for.\n\n
+        The user has the option to search through two databases - Either the Post database or the Business Directory database.\n\n
+        Once the user has submitted their request they will be presented with all posts or businesses relevant to that keyword/phrase search.\n\n
+        A post search will show all posts relevant to that keywords/phrase search(The algorithm can be viewed elsewhere).\n\n
+        A business directory search will bring up all businesses that have used that tag word or phrase during the set-up of their business profile or via the PinPoint feature within the Business Boost Page.\n\n
+        Once the search is complete the immediate view will show ten business profiles. The first 5 will be allocated to paid slots, with the top three being pinned. The next 5 will be location based(ie closest to ther users defined location). Excluding the top three which are pinned, the user will be able to view the remaining businesses by scrolling down the page.\n\n
+        As with the Profile Pin, Pin Point is also via an auction process. Each week all keywords and phrases become available for businesses to promote themselves via the PinPoint auction process.\n\n
+        Bids begin on Monday at <font color='#A6BFDE'><b>00:00</b></font> with each word or phrase starting at <font color='#A6BFDE'><b>£5.00</b></font> with the auction process lasting for one week, during this time all businesses can bid for any word or phrase they deem relevant to their business.\n\n
+        Once bidding processs has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bids will be seen at the top of the search page in the order detailed above.\n\nOnce the auction process for the week has completed, it will be reset back to £5.00 giving all business equal opportunity to promote their business.\n\nAll buninesses will be given access to the top 10 keywords or phrases and associated search stats for each group so they can see the value in each word or phrase and the amount of traffic each one generates.
+    </string>
 
+    <string name="current_bid"><b>CURRENT BID\n\n</b>
+        The current bid is the highest bid so far for the current period. The profile picture to the left of the current bid is the current highest bidder for that particular tag word/phrase. The Blue circle to the right of the current bid is the number of bids that have been made for that particular tag word or phrase.</string>
+    <string name="your_bid"><b>YOUR BID\n\n</b>
+        Your bid is the amount you wish to place for that tag word or phrase. There are 5 places that can bid on for each particular tag word or phrase and are shown in order of how they will be seen when an ATB member looks for that specific tag word or phrase 1 being at the top and 5 being at the bottom. The top three spots hold special prominence as they are pinned to the op with remaining two, along with any other search results becoming scroll-able.\n\nBids must be higher then the current bid for that spot and must be in incresements of £0.50.\n\nYou cannot bid on more than spot, although that does not stop you from having multiple businesses set-up.\n\nOnce a bid has been placed it cannot be reversed!</string>
 </resources>

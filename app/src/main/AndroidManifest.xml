@@ -38,16 +38,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.profile.boost.PinPointActivity"
+        <activity android:name=".activities.profile.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
-        <activity android:name=".activities.profile.boost.ProfilePinActivity"
+        <activity
+            android:name=".activities.profile.boost.PinPointActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
-        <activity android:name=".activities.profile.boost.PinPointAnimationActivity"
+        <activity
+            android:name=".activities.profile.boost.ProfilePinActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
-        <activity android:name=".activities.profile.boost.ProfilePinAnimationActivity"
+        <activity
+            android:name=".activities.profile.boost.PinPointAnimationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.profile.boost.ProfilePinAnimationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity

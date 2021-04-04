@@ -106,7 +106,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
             }
         });
 
-        soldHeaderAdapter = new ProfilePinHeaderAdapter(3, 2, true, false, false, SHOW_ADAPTER_POSITIONS);
+        soldHeaderAdapter = new ProfilePinHeaderAdapter(3, 2, true, false, false, SHOW_ADAPTER_POSITIONS,0,this);
         recyclerView.setAdapter(soldHeaderAdapter);
 
     }
@@ -122,4 +122,6 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
                 break;
         }
     }
+
+
 }

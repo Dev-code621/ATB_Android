@@ -1,9 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.profile.boost.PinPointAnimationActivity">
+    tools:context=".activities.profile.boost.PinPointAnimationActivity"
+    android:background="@drawable/background_boost1"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <LinearLayout
+            android:id="@+id/lyt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_back2"
+                android:paddingLeft="15dp"
+                android:tint="@color/white"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pin Profile"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/scene_root">
+        <LinearLayout
+            android:id="@+id/lyt_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/edit_rectangle_round"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_search"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/boldtextTheme"
+                android:text="Looking for somethings?"
+                android:textColor="@color/txt_color"
+                android:layout_gravity="center"
+                android:textSize="25sp"
+                android:layout_marginTop="10dp"/>
+            <FrameLayout
+                android:id="@+id/lyt_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:theme="@style/boldtextTheme"
+                    android:text="Search for..."
+                    android:textColor="@color/txt_color"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="20sp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/background_rectangle_round1"/>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:cardCornerRadius="40dp"
+                    android:layout_gravity="right"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false"
+                    app:cardBackgroundColor="#48D3D7DC">
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/btn_arrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:actualImageScaleType="centerCrop"
+                        app:placeholderImage="@drawable/btn_arrow"/>
+                </androidx.cardview.widget.CardView>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+                <ImageView
+                    android:id="@+id/lyt_servie"
+
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_boost_service"/>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_user_info_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:cardCornerRadius="30dp"
+                    android:layout_gravity="center"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp">
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/imv_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:actualImageScaleType="centerCrop"
+                        app:placeholderImage="@drawable/profile_pic"/>
+                </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/lyt_sale"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_boost_sale"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

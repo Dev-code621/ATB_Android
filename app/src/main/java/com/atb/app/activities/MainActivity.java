@@ -32,6 +32,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectCategoryDialog;
+import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
 import com.atb.app.model.BoostModel;
@@ -63,6 +64,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     RecyclerView recycler_view_boost;
     ArrayList<BoostModel>boostModels = new ArrayList<>();
     BoostItemAdapter boostAdapter ;
+    ChatFragment chatFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +173,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     }
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){
+        lyt_title.setVisibility(View.VISIBLE);
         if(Commons.g_user.getAccount_type() ==1 ){
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
@@ -186,13 +189,20 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             txv_category.setText(Commons.main_category);
         }
         else if(id==1){
+            lyt_title.setVisibility(View.GONE);
             main_flag = false;
+            selectIcon = 1;
             SearchFragment mFragment = new SearchFragment();
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.lyt_fragement,mFragment).commit();
         }
         else if(id ==3){
-
+            selectIcon = 3;
+            main_flag = false;
+            lyt_title.setVisibility(View.GONE);
+            chatFragment = new ChatFragment();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.lyt_fragement,chatFragment).commit();
         }
         else if( id ==4){
             MainListFragment mFragment = new MainListFragment();
@@ -270,5 +280,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         super.onPause();
         Log.d("aaaa","aaaa");
         Commons.mVideoPlayerManager.stopAnyPlayback();
+    }
+
+    @Override
+    public boolean selectProfile(boolean flag){
+        if(chatFragment!=null)
+            chatFragment.setProfile(flag);
+        return  flag;
     }
 }

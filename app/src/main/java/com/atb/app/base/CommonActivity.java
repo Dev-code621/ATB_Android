@@ -4,6 +4,7 @@ package com.atb.app.base;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +12,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
 import androidx.transition.ChangeBounds;
@@ -56,6 +60,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
 
 
 public abstract class CommonActivity extends BaseActivity {
@@ -241,6 +247,27 @@ public abstract class CommonActivity extends BaseActivity {
     }
 
     public void UserProfile(UserModel userModel,int usertype){
+
+    }
+
+    public void showToolTip(String str,View view, boolean imageType){
+
+        final SimpleTooltip tooltip = new SimpleTooltip.Builder(this)
+                .anchorView(view)
+                .text(str)
+                .gravity(Gravity.TOP)
+                .dismissOnOutsideTouch(true)
+                .dismissOnInsideTouch(true)
+                .modal(true)
+                .animated(true)
+                .animationDuration(2000)
+                .animationPadding(SimpleTooltipUtils.pxFromDp(1))
+                .contentView(R.layout.tooltip_custom, R.id.tv_text)
+                .build();
+        final ImageView imv_image = tooltip.findViewById(R.id.imv_image);
+        if(!imageType)
+            imv_image.setVisibility(View.GONE);
+        tooltip.show();
 
     }
 

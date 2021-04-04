@@ -62,6 +62,7 @@
             android:layout_marginLeft="10dp"/>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_bidnumber"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:cardCornerRadius="10dp"
