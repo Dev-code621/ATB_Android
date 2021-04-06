@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.newsfeedpost.NewSalePostActivity"
     android:orientation="vertical"
+    android:id="@+id/lyt_container"
     android:background="@color/signup_popup_color">
     <LinearLayout
         android:id="@+id/lyt_header"

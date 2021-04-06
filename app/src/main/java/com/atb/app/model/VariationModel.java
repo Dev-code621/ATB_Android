@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class VariationModel {
-    int id,product_id,stock_level;
-    String title,price;
+    int id,product_id,stock_level = 1;
+    String title,price = "0.00";
     long updated_at,created_at;
     ArrayList<AttributeModel> attributeModels = new ArrayList<>();
 
@@ -76,7 +76,8 @@ public class VariationModel {
     }
 
     public void setAttributeModels(ArrayList<AttributeModel> attributeModels) {
-        this.attributeModels = attributeModels;
+        this.attributeModels.clear();
+        this.attributeModels.addAll(attributeModels);
     }
 
     public void initModel(JSONObject jsonObject){

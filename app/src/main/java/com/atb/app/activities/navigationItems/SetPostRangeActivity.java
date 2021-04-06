@@ -184,13 +184,13 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.edt_serach:
-                List<Place.Field> fields = Arrays.asList(Place.Field.values());
-
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .setTypeFilter(TypeFilter.ADDRESS)
-                        .build(this);
-                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
+//                List<Place.Field> fields = Arrays.asList(Place.Field.values());
+//
+//                Intent intent = new Autocomplete.IntentBuilder(
+//                        AutocompleteActivityMode.OVERLAY, fields)
+//                        .setTypeFilter(TypeFilter.ADDRESS)
+//                        .build(this);
+//                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
                 break;
             case R.id.txv_update:
                 setResult(Commons.location_code);

@@ -660,28 +660,40 @@ public class NewsFeedEntity {
             delivery_option = jsonObject.getInt("delivery_option");
             post_brand = jsonObject.getString("post_brand");
             post_item = jsonObject.getString("post_item");
-            post_tags = jsonObject.getString("post_tags");
+            if(jsonObject.has("post_tags"))
+                post_tags = jsonObject.getString("post_tags");
             post_condition = jsonObject.getString("post_condition");
             post_size = jsonObject.getString("post_size");
             post_location = jsonObject.getString("post_location");
             setDelivery_cost(jsonObject.getString("delivery_cost"));
             is_active = jsonObject.getInt("is_active");
-            status_reason = jsonObject.getString("status_reason");
+            if(jsonObject.has("status_reason"))
+                status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
             if(!jsonObject.getString("lat").equals("null"))
                 lat = jsonObject.getDouble("lat");
             if(!jsonObject.getString("lng").equals("null"))
                 lng = jsonObject.getDouble("lng");
             is_multi = jsonObject.getInt("is_multi");
-            multi_pos = jsonObject.getInt("multi_pos");
+            if(jsonObject.has("multi_pos")){
+                if(!jsonObject.getString("multi_pos").equals("null"))
+                    multi_pos = jsonObject.getInt("multi_pos");
+            }
             multi_group = jsonObject.getString("multi_group");
-            service_id = jsonObject.getString("service_id");
-            product_id = jsonObject.getString("product_id");
-            insurance_id = jsonObject.getString("insurance_id");
-            qualification_id = jsonObject.getString("qualification_id");
-            cancellations = jsonObject.getString("cancellations");
-            scheduled = jsonObject.getInt("scheduled");
-            updated_at = jsonObject.getLong("updated_at");
+            if(jsonObject.has("service_id"))
+              service_id = jsonObject.getString("service_id");
+            if(jsonObject.has("product_id"))
+                 product_id = jsonObject.getString("product_id");
+            if(jsonObject.has("insurance_id"))
+                insurance_id = jsonObject.getString("insurance_id");
+            if(jsonObject.has("qualification_id"))
+                qualification_id = jsonObject.getString("qualification_id");
+            if(jsonObject.has("cancellations"))
+                cancellations = jsonObject.getString("cancellations");
+            if(jsonObject.has("scheduled"))
+                 scheduled = jsonObject.getInt("scheduled");
+            if(jsonObject.has("updated_at"))
+                updated_at = jsonObject.getLong("updated_at");
             created_at = jsonObject.getLong("created_at");
 
 
@@ -692,13 +704,14 @@ public class NewsFeedEntity {
                 JSONObject postImages = arrayList.getJSONObject(i);
                 PostImageModel postImageModel = new PostImageModel();
                 postImageModel.setId(postImages.getInt("id"));
-                postImageModel.setPost_id(postImages.getInt("post_id"));
+                if(jsonObject.has("post_id"))
+                   postImageModel.setPost_id(postImages.getInt("post_id"));
                 postImageModel.setPath(postImages.getString("path"));
                 postImageModel.setCreated_at(postImages.getLong("created_at"));
                 postImageModels.add(postImageModel);
             }
-
-            read_created = jsonObject.getString("read_created");
+            if(jsonObject.has("read_created"))
+                read_created = jsonObject.getString("read_created");
             if(jsonObject.has("poll_options")){
                 JSONArray poll_options =jsonObject.getJSONArray("poll_options");
                 this.poll_options.clear();

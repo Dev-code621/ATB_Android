@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Commons {
     public static boolean g_isAppRunning=false;
@@ -40,7 +41,7 @@ public class Commons {
     public static int glide_magin = 2;
     public static int glide_boder = 10;
     public static int video_flag = -1;
-
+    public static int subscription_code = -11111;
 
     public static String fileNameWithoutExtFromPath(String path) {
 
@@ -143,4 +144,6 @@ public class Commons {
         }
         return  dayName;
     }
+
+
 }

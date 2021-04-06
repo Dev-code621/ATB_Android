@@ -12,6 +12,7 @@ import com.atb.app.R;
 import com.atb.app.adapter.SliderBusinessSplashAdapter;
 import com.atb.app.adapter.SliderImageAdapter;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.model.submodel.SlideModel;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -75,7 +76,9 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType == 0)
                     goTo(UpgradeBusinessSplashActivity.this, UpdateBusinessActivity.class,true);
                 else {
-                    showAlertDialog("Payment");
+                    setResult(Commons.subscription_code);
+                    finish(UpgradeBusinessSplashActivity.this);
+
 
                 }
             }

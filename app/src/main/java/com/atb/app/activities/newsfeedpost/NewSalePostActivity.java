@@ -1,26 +1,71 @@
 package com.atb.app.activities.newsfeedpost;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.transition.Scene;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.register.Signup2Activity;
+import com.atb.app.adapter.StockAdapter;
+import com.atb.app.adapter.VariationAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.commons.Helper;
+import com.atb.app.dialog.AddVariationDialog;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.VariationModel;
+import com.atb.app.model.submodel.AttributeModel;
+import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.fxn.pix.Options;
+import com.fxn.pix.Pix;
+import com.zcw.togglebutton.ToggleButton;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NewSalePostActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_header;
@@ -31,6 +76,27 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     Scene aScene,anotherScene;
     int multitype = 0;
     ArrayList<ImageView> imageViews = new ArrayList<>();
+    boolean business_user = false;
+    CardView card_business;
+    int maxImagecount = 3;
+    String videovalue ="";
+    ArrayList<String>completedValue = new ArrayList<>();
+    ArrayList<String>returnValue = new ArrayList<>();
+    ImageView imv_imageicon,  imv_videoicon ,imv_videothumnail,imv_stocker_check;
+    LinearLayout lyt_stock,lyt_business_stock,lyt_addvariation,lyt_selectall,lyt_unselect_stock,lyt_deliver;
+    EditText edt_stock,edt_item,edt_tag,edt_price,edt_brand,edt_description,edt_title,edt_deliver_cost;
+    TextView txv_location,txv_post;
+    NiceSpinner spiner_condition,spiner_category_type,spiner_media_type;
+    ListView list_variation,list_stock;
+    ToggleButton toggle_cash,toggle_paypal,toggle_free_postage,toggle_buyer_collects,toggle_will_deliver;
+    HashMap<String, ArrayList<String>>hashMap = new HashMap<>();
+    HashMap<String, VariationModel>stockMap = new HashMap<>();
+    ArrayList<String>stock_name = new ArrayList<>();
+    VariationAdapter variationAdapter;
+    StockAdapter stockAdapter;
+    int isPosting;
+    int media_type = 1;
+    boolean cash = false, paypal = false,postage=false,collect=false,deliver =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +107,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         txv_multpost = findViewById(R.id.txv_multpost);
         imv_profile = findViewById(R.id.imv_profile);
         lyt_profile = findViewById(R.id.lyt_profile);
+        card_business = findViewById(R.id.card_business);
         lyt_header = findViewById(R.id.lyt_header);
         sceneRoot = (ViewGroup)findViewById(R.id.scene_root);
         aScene = Scene.getSceneForLayout(sceneRoot, R.layout.layout_salespost, this);
@@ -53,32 +120,149 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         txv_multpost.setOnClickListener(this);
         txv_multpost.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
         lyt_profile.setOnClickListener(this);
-
         activityAnimation(aScene,R.id.lyt_container);
+        variationAdapter = new VariationAdapter(this);
+        stockAdapter = new StockAdapter(this);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                isPosting= bundle.getInt("isPosting");
+            }
+        }
+
         loadLayout();
+        Keyboard();
+    }
+    void initLayout(){
+        for(int i =0;i<imageViews.size();i++){
+            imageViews.get(i).setVisibility(View.VISIBLE);
+            if(!business_user && i>3)imageViews.get(i).setVisibility(View.GONE);
+        }
+        if(business_user) {
+            Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+            lyt_business_stock.setVisibility(View.VISIBLE);
+        }
+        else {
+            Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+            lyt_stock.setVisibility(View.VISIBLE);
+            lyt_business_stock.setVisibility(View.GONE);
+        }
+        if(hashMap.size()>0){
+            lyt_stock.setVisibility(View.GONE);
+        }else
+            lyt_stock.setVisibility(View.VISIBLE);
+        if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
+
+        list_variation.setAdapter(variationAdapter);
+        list_variation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AddVariationDialog addVariationDialog = new AddVariationDialog(hashMap,position);
+                addVariationDialog.setOnConfirmListener(new AddVariationDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm(String name ,ArrayList<String> arrayList) {
+                        ArrayList<String> list = new ArrayList<>();
+                        for(int i =0;i<arrayList.size();i++){
+                            if(arrayList.get(i).length()!=0)list.add(arrayList.get(i));
+                        }
+                        int index = 0;
+                        for ( String key : hashMap.keySet() ) {
+                            if( index == position && !key.equals(name)){
+                                hashMap.remove(key);
+                                break;
+                            }
+                            index++;
+                        }
+                        hashMap.put(name,list);
+                        stock_name.clear();
+                        getStockname(hashMap,0,"");
+                        initLayout();
+                    }
+                });
+                addVariationDialog.show(NewSalePostActivity.this.getSupportFragmentManager(), "DeleteMessage");
+            }
+        });
+        variationAdapter.setRoomData(hashMap);
+        Helper.getListViewSize(list_variation);
+        stockMap.clear();
+        for(int i =0;i<stock_name.size();i++){
+            VariationModel variationModel = new VariationModel();
+            int index = 0;
+            ArrayList<AttributeModel>attributeModels = new ArrayList<>();
+            for ( String key : hashMap.keySet() ) {
+                AttributeModel attributeModel = new AttributeModel();
+                attributeModel.setAttribute_title(key);
+                attributeModel.setVariant_attirbute_value(stock_name.get(i).split(",")[index]);
+                attributeModels.add(attributeModel);
+                index++;
+            }
+            variationModel.setAttributeModels(attributeModels);
+            stockMap.put(stock_name.get(i),variationModel);
+        }
+        list_stock.setAdapter(stockAdapter);
+        stockAdapter.setRoomData(stockMap);
+        Helper.getListViewSize(list_stock);
     }
     void loadLayout(){
+        imageViews.clear();
+        completedValue.clear();
+        returnValue.clear();
+        hashMap.clear();
+        stockMap.clear();
         RelativeLayout lyt_addtitle = sceneRoot.findViewById(R.id.lyt_addtitle);
         TextView txv_add = sceneRoot.findViewById(R.id.txv_add);
         ImageView icon_back = sceneRoot.findViewById(R.id.icon_back);
         TextView txv_discard = sceneRoot.findViewById(R.id.txv_discard);
-        NiceSpinner spiner_media_type = sceneRoot.findViewById(R.id.spiner_media_type);
-        ImageView imv_videothumnail = sceneRoot.findViewById(R.id.imv_videothumnail);
-        ImageView imv_videoicon = sceneRoot.findViewById(R.id.imv_videoicon);
+        imv_videothumnail = sceneRoot.findViewById(R.id.imv_videothumnail);
+        imv_videoicon = sceneRoot.findViewById(R.id.imv_videoicon);
         FrameLayout lyt_video = sceneRoot.findViewById(R.id.lyt_video);
-        ImageView imv_imageicon = sceneRoot.findViewById(R.id.imv_imageicon);
+        imv_imageicon = sceneRoot.findViewById(R.id.imv_imageicon);
         imageViews.add(sceneRoot.findViewById(R.id.imv_image));
         imageViews.add(sceneRoot.findViewById(R.id.imv_image1));
         imageViews.add(sceneRoot.findViewById(R.id.imv_image2));
         imageViews.add(sceneRoot.findViewById(R.id.imv_image3));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image4));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image5));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image6));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image7));
+        imageViews.add(sceneRoot.findViewById(R.id.imv_image8));
         LinearLayout lyt_image = sceneRoot.findViewById(R.id.lyt_image);
-
-
+        lyt_business_stock = sceneRoot.findViewById(R.id.lyt_business_stock);
+        lyt_stock = sceneRoot.findViewById(R.id.lyt_stock);
+        edt_stock = sceneRoot.findViewById(R.id.edt_stock);
+        imv_stocker_check = sceneRoot.findViewById(R.id.imv_stocker_check);
+        lyt_addvariation = sceneRoot.findViewById(R.id.lyt_addvariation);
+        lyt_selectall = sceneRoot.findViewById(R.id.lyt_selectall);
+        lyt_unselect_stock = sceneRoot.findViewById(R.id.lyt_unselect_stock);
+        edt_item = sceneRoot.findViewById(R.id.edt_item);
+        edt_tag = sceneRoot.findViewById(R.id.edt_tag);
+        edt_price = sceneRoot.findViewById(R.id.edt_price);
+        edt_brand = sceneRoot.findViewById(R.id.edt_brand);
+        edt_description = sceneRoot.findViewById(R.id.edt_description);
+        edt_title = sceneRoot.findViewById(R.id.edt_title);
+        txv_location = sceneRoot.findViewById(R.id.txv_location);
+        txv_post = sceneRoot.findViewById(R.id.txv_post);
+        spiner_condition = sceneRoot.findViewById(R.id.spiner_condition);
+        spiner_category_type = sceneRoot.findViewById(R.id.spiner_category_type);
+        spiner_media_type = sceneRoot.findViewById(R.id.spiner_media_type);
+        list_variation = sceneRoot.findViewById(R.id.list_variation);
+        list_stock = sceneRoot.findViewById(R.id.list_stock);
+        toggle_cash = sceneRoot.findViewById(R.id.toggle_cash);
+        toggle_paypal = sceneRoot.findViewById(R.id.toggle_paypal);
+        toggle_free_postage = sceneRoot.findViewById(R.id.toggle_free_postage);
+        toggle_buyer_collects = sceneRoot.findViewById(R.id.toggle_buyer_collects);
+        toggle_will_deliver = sceneRoot.findViewById(R.id.toggle_will_deliver);
+        toggle_free_postage = sceneRoot.findViewById(R.id.toggle_free_postage);
+        edt_deliver_cost = sceneRoot.findViewById(R.id.edt_deliver_cost);
+        lyt_deliver = sceneRoot.findViewById(R.id.lyt_deliver);
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
                 // This example uses String, but your type can be any
                 String item = String.valueOf(parent.getItemAtPosition(position));
+                media_type = position+1;
                  if(position==0){
                     lyt_image.setVisibility(View.VISIBLE);
                     lyt_video.setVisibility(View.GONE);
@@ -90,11 +274,64 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             }
         });
 
+        toggle_cash.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                cash = on;
+            }
+        });
+        toggle_paypal.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                paypal = on;
+            }
+        });
+        toggle_free_postage.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                postage = on;
+            }
+        });
+        toggle_buyer_collects.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                collect = on;
+            }
+        });
+        toggle_will_deliver.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                deliver = on;
+                if(deliver){
+                    lyt_deliver.setVisibility(View.VISIBLE);
+                }else {
+                    lyt_deliver.setVisibility(View.GONE);
+                    edt_deliver_cost.setText("");
+                }
+            }
+        });
+
         if(multitype>0) lyt_addtitle.setVisibility(View.VISIBLE);
 
         txv_add.setOnClickListener(this);
         icon_back.setOnClickListener(this);
         txv_discard.setOnClickListener(this);
+
+        lyt_addvariation.setOnClickListener(this);
+        for(int i =0;i<imageViews.size();i++){
+            int finalI = i;
+            imageViews.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectImage(finalI);
+                }
+            });
+        }
+        imv_videothumnail.setOnClickListener(this);
+        txv_post.setOnClickListener(this);
+        txv_location.setOnClickListener(this);
+        lyt_selectall.setOnClickListener(this);
+        initLayout();
     }
     void loadlayout1(){
         lyt_header.setVisibility(View.VISIBLE);
@@ -157,7 +394,423 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 activityAnimation(anotherScene,R.id.lyt_container);
                 loadlayout1();
                 break;
+            case R.id.imv_videothumnail:
+                videovalue = "";
+                selectVideo();
+                break;
+            case R.id.lyt_addvariation:
+                AddVariationDialog addVariationDialog = new AddVariationDialog(hashMap,-1);
+                addVariationDialog.setOnConfirmListener(new AddVariationDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm(String name ,ArrayList<String> arrayList) {
+                        ArrayList<String> list = new ArrayList<>();
+                        for(int i =0;i<arrayList.size();i++)
+                            if(arrayList.get(i).length()!=0)list.add(arrayList.get(i));
+                        hashMap.put(name,list);
+                        stock_name.clear();
+                        getStockname(hashMap,0,"");
+                        initLayout();
+                    }
+                });
+                addVariationDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
+            case R.id.txv_post:
+                postSale();
+                break;
+            case R.id.txv_location:
+                startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.lyt_selectall:
+                imv_stocker_check.setEnabled(!imv_stocker_check.isEnabled());
+                stockAdapter.setSelect(imv_stocker_check.isEnabled());
+                break;
         }
+    }
+
+    void postSale(){
+        if(media_type==1 && completedValue.size() ==0){
+            showAlertDialog("Please add image for your service");
+            return;
+        }else if(media_type==2 && videovalue.length() ==0){
+            showAlertDialog("Please add video for your service");
+            return;
+        }
+        else if(edt_title.getText().toString().length()==0){
+            showAlertDialog("Please add the service title ");
+            return;
+        }else if(edt_description.getText().toString().length()==0){
+            showAlertDialog("Please input the description");
+            return;
+        }else if(edt_brand.getText().toString().length()==0){
+            showAlertDialog("Please input the brand.");
+            return;
+        }else if(edt_price.getText().toString().length() ==0){
+            showAlertDialog("Please input price.");
+            return;
+        }else if(edt_tag.getText().toString().length()==0){
+            showAlertDialog("Please input tags.");
+            return;
+        }else if(edt_item.getText().toString().length()==0){
+            showAlertDialog("Please input the item.");
+            return;
+        }else if(!cash && !paypal){
+            showAlertDialog("Please input payment option.");
+            return;
+        }else if(txv_location.getText().toString().length()==0){
+            showAlertDialog("Please input the location");
+            return;
+        }else if(!postage && !collect && !!deliver){
+            showAlertDialog("Please select a delivery option.");
+        }else  if(deliver){
+            if(edt_deliver_cost.getText().toString().length()==0){
+                showAlertDialog("Please input the cost for delivery.");
+            }
+        }
+        if(multitype==0){
+            uploadSalePost();
+        }else {
+            activityAnimation(anotherScene,R.id.lyt_container);
+            loadlayout1();
+        }
+
+    }
+
+    void uploadSalePost(){
+        showProgress();
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("token", Commons.token);
+            if(business_user)
+                params.put("poster_profile_type", "1");
+            else
+                params.put("poster_profile_type", "0");
+            params.put("media_type", String.valueOf(media_type));
+            params.put("title", edt_title.getText().toString());
+            params.put("description", edt_description.getText().toString());
+            params.put("price", edt_price.getText().toString());
+            params.put("is_deposit_required", "0");
+            params.put("category_title", spiner_category_type.getSelectedItem().toString());
+            params.put("location_id", txv_location.getText().toString());
+            // 0 - none selected, 1 - Cash on Colleciton, 2 - PayPal, 3 - both Cash and PayPal
+            if(cash && paypal)
+                params.put("payment_options", "3");
+            else if(cash)
+                params.put("payment_options", "1");
+            else
+                params.put("payment_options", "2");
+            params.put("post_tags", edt_tag.getText().toString());
+            params.put("brand", edt_brand.getText().toString());
+            int delivery_type =0;
+            if(postage)delivery_type+=1;
+            if(collect)delivery_type+=3;
+            if(deliver)delivery_type+=5;
+            params.put("delivery_option", String.valueOf(delivery_type));
+            String deliver_cost = "";
+            if(deliver)
+                deliver_cost = edt_deliver_cost.getText().toString();
+            params.put("delivery_cost", deliver_cost);
+            params.put("item_title", edt_item.getText().toString());
+            params.put("post_condition", spiner_condition.getSelectedItem().toString());
+            params.put("make_post", String.valueOf(isPosting));
+            if(edt_stock.getText().toString().length()==0)
+                params.put("stock_level","0");
+            else
+                params.put("stock_level",edt_stock.getText().toString());
+            JSONArray attributes = new JSONArray();
+            params.put("is_multi", String.valueOf(multitype));
+
+            for ( String key : hashMap.keySet() ) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("attribute_name",key);
+                String str = hashMap.get(key).get(0);
+                for(int i =1;i<hashMap.get(key).size();i++)
+                {
+                    str+="," + (hashMap.get(key).get(i));
+                }
+                jsonObject.put("values",str);
+                attributes.put(jsonObject);
+            }
+            params.put("attributes",attributes.toString());
+            //File part
+            ArrayList<File> post = new ArrayList<>();
+            if(media_type ==1) {
+                for (int i = 0; i < completedValue.size(); i++) {
+                    File file = new File(completedValue.get(i));
+                    post.add(file);
+                }
+            }else {
+                File file = new File(videovalue);
+                post.add(file);
+            }
+            String API_LINK = API.ADD_PRODUCT,imageTitle = "post_imgs";
+            //Log.d("aaaa",params.toString());
+            Map<String, String> mHeaderPart= new HashMap<>();
+            mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
+            mHeaderPart.put("Accept", "application/json");
+
+            CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    try {
+                        if(jsonObject.getBoolean("result")) {
+//                            Log.d("bbbbb",jsonObject.toString());
+                            if(hashMap.size()>0){
+                                NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+                                newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
+                                updateProductVariants(newsFeedEntity);
+                            }else {
+                                closeProgress();
+                                setResult(RESULT_OK);
+                                finish(NewSalePostActivity.this);
+                            }
+                        }else {
+                            showAlertDialog(jsonObject.getString("msg"));
+                        }
+
+                    }catch (Exception e){
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @SuppressLint("WrongConstant")
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    showToast("File upload failed");
+                    Log.d("aaaaa",volleyError.toString());
+                    closeProgress();
+                }
+
+            }, post, params, mHeaderPart,imageTitle);
+            mCustomRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().addToRequestQueue(mCustomRequest, API_LINK);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            closeProgress();
+            showAlertDialog("Photo Upload is failed . Please try again.");
+        }
+    }
+
+    void updateProductVariants(NewsFeedEntity newsFeedEntity){
+        for(int i =0;i<newsFeedEntity.getVariationModels().size();i++){
+                if(stockAdapter.booleans.get(i)){
+                    uploadProductVaiants(newsFeedEntity.getVariationModels().get(i),i);
+                }
+        }
+
+    }
+    void uploadProductVaiants(VariationModel variationModel,int posstion){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.UPDATE_PRODUCT_VARIANT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        if(posstion == hashMap.size()-1){
+                            closeProgress();
+                            setResult(RESULT_OK);
+                            finish(NewSalePostActivity.this);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("id", String.valueOf(variationModel.getId()));
+                params.put("stock_level", stockAdapter.stock_levels.get(posstion));
+                params.put("price", stockAdapter.prices.get(posstion));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    void getStockname(HashMap<String,ArrayList<String>>map,int level,String string){
+        if(level == map.keySet().size()){
+            stock_name.add(string);
+            return;
+        }else {
+            int index = 0;
+            for ( String key : map.keySet() ) {
+                if (index == level) {
+                    ArrayList<String> options = map.get(key);
+                    for(int i =0;i<options.size();i++){
+                        String space = ",";
+                        if(level +1 == map.keySet().size())
+                            space = "";
+                        getStockname(map,level+1,string+ options.get(i) + space);
+                    }
+                }
+                index++;
+            }
+        }
+    }
+
+
+    void selectImage(int posstion){
+        if(posstion==maxImagecount){
+            SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+            selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+                @Override
+                public void OnCamera() {
+                    if (Commons.g_user.getAccount_type() == 1) {
+                        business_user = true;
+                        maxImagecount = 9;
+                        initLayout();
+                    }else {
+                        goTo(NewSalePostActivity.this, UpdateBusinessActivity.class,false);
+                    }
+                }
+
+                @Override
+                public void OnAlbum() {
+
+                }
+            },getResources().getString(R.string.upload3image),getResources().getString(R.string.yes),getResources().getString(R.string.no));
+            selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+        }else {
+            SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+            selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+                @Override
+                public void OnCamera() {
+                    if(completedValue.size()==maxImagecount)return;
+                    Options options = Options.init()
+                            .setRequestCode(100)                                           //Request code for activity results
+                            .setCount(maxImagecount-completedValue.size())                                                   //Number of images to restict selection count
+                            .setFrontfacing(false)                                         //Front Facing camera on start
+                            .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
+                            .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
+                            .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
+                            .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
+                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                            .setPath("/pix/images");                                       //Custom Path For media Storage
+
+                    Pix.start(NewSalePostActivity.this, options);
+                }
+
+                @Override
+                public void OnAlbum() {
+                    if(completedValue.size()>posstion)
+                        completedValue.remove(posstion);
+                    reloadImages();
+
+                }
+            },getResources().getString(R.string.what_wouldlike),getResources().getString(R.string.add_media),getResources().getString(R.string.remove_media));
+            selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+        }
+    }
+    void selectVideo(){
+
+        Options options = Options.init()
+                .setRequestCode(200)                                           //Request code for activity results
+                .setCount(1)                                                   //Number of images to restict selection count
+                .setFrontfacing(false)                                         //Front Facing camera on start
+                .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
+                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
+                .setMode(Options.Mode.Video)                                     //Option to select only pictures or videos or both
+                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
+                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
+                .setPath("/pix/images");                                       //Custom Path For media Storage
+
+        Pix.start(this, options);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == 100) {
+            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            if(completedValue.size()>maxImagecount)return;
+
+            completedValue.addAll(returnValue);
+            reloadImages();
+        }else  if(resultCode == Activity.RESULT_OK && requestCode == 200) {
+            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+            videovalue = returnValue.get(0);
+            reloadVideo();
+        }else if(resultCode == Commons.subscription_code){
+            business_user = true;
+            maxImagecount = 9;
+            initLayout();
+        }else if(resultCode == Commons.location_code){
+            txv_location.setText(Commons.location);
+        }
+    }
+
+    void reloadImages(){
+        imageViews.get(0).setImageResource(0);
+        for(int i =1;i<imageViews.size();i++)imageViews.get(i).setImageResource(R.drawable.icon_image1);
+        if(completedValue.size()>0)imv_imageicon.setVisibility(View.GONE);
+        else imv_imageicon.setVisibility(View.VISIBLE);
+        for(int i =0;i<completedValue.size();i++){
+            Glide.with(this).load(completedValue.get(i)).placeholder(R.drawable.icon_image1).dontAnimate().into(imageViews.get(i));
+
+        }
+    }
+    void reloadVideo(){
+        //uploadThumbImage = Helper.getThumbnailPathForLocalFile(this, videovalue);
+
+        Glide.with(this).load(videovalue).placeholder(R.drawable.image_thumnail).dontAnimate().into(imv_videothumnail);
+
+        imv_videoicon.setImageDrawable(getResources().getDrawable(R.drawable.icon_player));
+
+    }
+    @Override
+    public boolean selectProfile(boolean flag){
+        if(Commons.g_user.getBusinessModel().getPaid()==0){
+            ConfirmDialog confirmDialog = new ConfirmDialog();
+            confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                @Override
+                public void onConfirm() {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("subScriptionType",2);
+                    startActivityForResult(new Intent(NewSalePostActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    overridePendingTransition(0, 0);
+                }
+            },getString(R.string.subscription_alert));
+            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+        }else {
+            business_user = flag;
+            if (flag) maxImagecount = 9;
+            else {
+                maxImagecount = 3;
+                hashMap.clear();
+                stockMap.clear();
+            }
+            initLayout();
+        }
+
+        return flag;
+    }
+
+    void Keyboard(){
+        LinearLayout lytContainer = (LinearLayout) findViewById(R.id.lyt_container);
+        lytContainer.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(txv_title.getWindowToken(), 0);
+                return false;
+            }
+        });
     }
 
     @Override

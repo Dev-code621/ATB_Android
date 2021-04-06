@@ -402,137 +402,199 @@
                     android:inputType="text"
                     android:singleLine="true" />
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/txt_color"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/variations"
-                style="@style/boldtextTheme"
-                android:textColor="@color/head_color"
-                android:textSize="18sp"
-                android:gravity="center_vertical"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/variations_description"
-                style="@style/textTheme"
-                android:textColor="@color/txt_color"
-                android:textSize="15sp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical" />
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/lyt_stock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="160dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/variation"
+                    android:text="@string/stock"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
                     android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
-                <ImageView
-                    android:id="@+id/imv_variation_description"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_question"/>
-            </RelativeLayout>
-            <ListView
-                android:id="@+id/list_variation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                <EditText
+                    android:id="@+id/edt_stock"
+                    style="@style/edit_inputtext"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15sp"
+                    android:hint="Quantity"
+                    android:inputType="number"
+                    android:singleLine="true" />
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lyt_addvariation"
+                android:id="@+id/lyt_business_stock"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/button_rectangle_round"
-                android:layout_marginTop="10dp"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:tint="@color/white"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/leftdetail" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/txt_color"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/newproduct"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/white"
-                    style="@style/btn_buttonStyle"
-                    android:singleLine="true"
-                    android:layout_gravity="center" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/txt_color"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stock"
-                style="@style/boldtextTheme"
-                android:textColor="@color/head_color"
-                android:textSize="18sp"
-                android:gravity="center_vertical"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical" />
-            <LinearLayout
-                android:id="@+id/lyt_selectall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-                <ImageView
-                    android:id="@+id/imv_stocker_check"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/edit_category_selector"
-                    android:layout_gravity="right|center" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/manage_stock"
-                    android:gravity="center"
-                    android:textColor="@color/txt_color"
+                    android:text="@string/variations"
                     style="@style/boldtextTheme"
-                    android:paddingLeft="0dp"
-                    android:textSize="16sp"
-                    android:paddingRight="0dp" />
+                    android:textColor="@color/head_color"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/variations_description"
+                    style="@style/textTheme"
+                    android:textColor="@color/txt_color"
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                    <TextView
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/variation"
+                        style="@style/boldtextTheme"
+                        android:textColor="@color/txt_color"
+                        android:textSize="16sp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" />
+                    <ImageView
+                        android:id="@+id/imv_variation_description"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_question"/>
+                </RelativeLayout>
+                <ListView
+                    android:id="@+id/list_variation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:listSelector="@color/transparent"
+                    android:scrollbars="none"/>
+
+                <LinearLayout
+                    android:id="@+id/lyt_addvariation"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_rectangle_round"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:tint="@color/white"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/leftdetail" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/newproduct"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/white"
+                        style="@style/btn_buttonStyle"
+                        android:singleLine="true"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/txt_color"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stock"
+                    style="@style/boldtextTheme"
+                    android:textColor="@color/head_color"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical" />
+                <LinearLayout
+                    android:id="@+id/lyt_selectall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                    <ImageView
+                        android:id="@+id/imv_stocker_check"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/edit_category_selector"
+                        android:layout_gravity="right|center" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/manage_stock"
+                        android:gravity="center"
+                        android:textColor="@color/txt_color"
+                        style="@style/boldtextTheme"
+                        android:paddingLeft="0dp"
+                        android:textSize="16sp"
+                        android:paddingRight="0dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/lyt_unselect_stock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/icon_minus"
+                        android:tint="@color/discard_color"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your product have variations"
+                        android:gravity="center"
+                        android:textColor="@color/discard_color"
+                        style="@style/textTheme"
+                        android:paddingLeft="0dp"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="10dp"
+                        android:paddingRight="0dp" />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stock_description"
+                    style="@style/textTheme"
+                    android:textColor="@color/txt_color"
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+                <ListView
+                    android:id="@+id/list_stock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@color/transparent"
+                    android:scrollbars="none"/>/>
             </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stock_description"
-                style="@style/textTheme"
-                android:textColor="@color/txt_color"
-                android:textSize="15sp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical" />
-            <ListView
-                android:id="@+id/list_stock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
@@ -626,12 +688,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginLeft="10dp">
-                    <EditText android:id="@+id/edt_location"
+                    <TextView android:id="@+id/txv_location"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:singleLine="true"
-                        android:inputType="textPassword"
                         android:textSize="15sp"
+                        android:gravity="center_vertical"
                         android:hint="@string/location"
                         style="@style/edit_inputtext" />
                     <ImageView
@@ -734,7 +796,45 @@
                     android:layout_alignParentRight="true">
                 </com.zcw.togglebutton.ToggleButton>
             </RelativeLayout>
-
+            <LinearLayout
+                android:id="@+id/lyt_deliver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="Cost"
+                    style="@style/boldtextTheme"
+                    android:textColor="@color/txt_color"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/edit_rectangle_round"
+                    android:layout_marginLeft="10dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icon_paymentblue"
+                        android:layout_gravity="center"/>
+                    <EditText
+                        android:id="@+id/edt_deliver_cost"
+                        style="@style/edit_inputtext"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:hint="0.00"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:gravity="right|center"/>
+                </LinearLayout>
+            </LinearLayout>
             <TextView
                 android:id="@+id/txv_post"
                 android:layout_width="match_parent"

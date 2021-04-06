@@ -27,11 +27,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.adapter.PollEmageAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -183,8 +185,22 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
 
     @Override
     public boolean selectProfile(boolean flag){
-        business_user = flag;
-        initLayout();
+        if(Commons.g_user.getBusinessModel().getPaid()==0){
+            ConfirmDialog confirmDialog = new ConfirmDialog();
+            confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                @Override
+                public void onConfirm() {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("subScriptionType",2);
+                    startActivityForResult(new Intent(NewPollVotingActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    overridePendingTransition(0, 0);
+                }
+            },getString(R.string.subscription_alert));
+            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+        }else {
+            business_user = flag;
+            initLayout();
+        }
         return flag;
     }
 
@@ -369,6 +385,9 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             completedValue.addAll(returnValue);
             reloadImages();
+        }else if(resultCode == Commons.subscription_code){
+            business_user = true;
+            initLayout();
         }
     }
 
