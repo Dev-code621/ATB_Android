@@ -40,6 +40,86 @@ public class NewsFeedEntity {
     ArrayList<VariationModel> variationModels = new ArrayList<>();
     ArrayList<String>attribute_titles = new ArrayList<>();
     int stock_level;
+    HashMap<String, ArrayList<String>>hashMap = new HashMap<>();
+    HashMap<String, VariationModel>stockMap = new HashMap<>();
+    ArrayList<String>stock_levels = new ArrayList<>();
+    public ArrayList<Boolean>booleans = new ArrayList<>();
+    public ArrayList<String>prices = new ArrayList<>();
+    ArrayList<String>completedValue = new ArrayList<>();
+    String videovalue ="";
+
+    public ArrayList<String> getCompletedValue() {
+        return completedValue;
+    }
+
+    public void setCompletedValue(ArrayList<String> completedValue) {
+        this.completedValue.clear();
+        this.completedValue.addAll(completedValue);
+    }
+
+    public String getVideovalue() {
+        return videovalue;
+    }
+
+    public void setVideovalue(String videovalue) {
+        this.videovalue = videovalue;
+    }
+
+    public HashMap<String, ArrayList<String>> getHashMap() {
+        return hashMap;
+    }
+
+    public void setHashMap(HashMap<String, ArrayList<String>> hashMap) {
+        this.hashMap.clear();
+        this.hashMap.putAll(hashMap);
+    }
+
+    public HashMap<String, VariationModel> getStockMap() {
+        return stockMap;
+    }
+
+    public void setStockMap(HashMap<String, VariationModel> stockMap) {
+        this.stockMap.clear();
+        this.stockMap.putAll(stockMap);
+    }
+
+    public ArrayList<String> getStock_levels() {
+        return stock_levels;
+    }
+
+    public void setStock_levels(ArrayList<String> stock_levels) {
+        this.stock_levels.clear();
+        this.stock_levels.addAll(stock_levels);
+    }
+
+    public ArrayList<Boolean> getBooleans() {
+        return booleans;
+    }
+
+    public void setBooleans(ArrayList<Boolean> booleans) {
+        this.booleans.clear();
+        this.booleans.addAll(booleans);
+    }
+
+    public ArrayList<String> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(ArrayList<String> prices) {
+        this.prices.clear();
+        this.prices.addAll(prices);
+    }
+
+    public String getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(String attributes) {
+        this.attributes = attributes;
+    }
+
+    //group post require
+    String attributes;
 
     public int getStock_level() {
         return stock_level;

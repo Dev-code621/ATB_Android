@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -33,7 +32,8 @@ import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
-import com.atb.app.activities.register.Signup2Activity;
+import com.atb.app.adapter.MultiPostFeedAdapter;
+import com.atb.app.adapter.PostFeedAdapter;
 import com.atb.app.adapter.StockAdapter;
 import com.atb.app.adapter.VariationAdapter;
 import com.atb.app.api.API;
@@ -44,7 +44,6 @@ import com.atb.app.commons.Helper;
 import com.atb.app.dialog.AddVariationDialog;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectMediaDialog;
-import com.atb.app.dialog.SelectProfileDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.VariationModel;
 import com.atb.app.model.submodel.AttributeModel;
@@ -62,7 +61,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,6 +95,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     int isPosting;
     int media_type = 1;
     boolean cash = false, paypal = false,postage=false,collect=false,deliver =false;
+    ArrayList<NewsFeedEntity> newsFeedEntities  = new ArrayList<>();
+    MultiPostFeedAdapter postFeedAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,13 +123,13 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         activityAnimation(aScene,R.id.lyt_container);
         variationAdapter = new VariationAdapter(this);
         stockAdapter = new StockAdapter(this);
+        postFeedAdapter = new MultiPostFeedAdapter(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 isPosting= bundle.getInt("isPosting");
             }
         }
-
         loadLayout();
         Keyboard();
     }
@@ -211,6 +211,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         returnValue.clear();
         hashMap.clear();
         stockMap.clear();
+        stock_name.clear();
+        media_type = 1;
         RelativeLayout lyt_addtitle = sceneRoot.findViewById(R.id.lyt_addtitle);
         TextView txv_add = sceneRoot.findViewById(R.id.txv_add);
         ImageView icon_back = sceneRoot.findViewById(R.id.icon_back);
@@ -338,9 +340,12 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         ListView list_multipost = sceneRoot.findViewById(R.id.list_multipost);
         LinearLayout lyt_addproduct = sceneRoot.findViewById(R.id.lyt_addproduct);
         LinearLayout lyt_publish = sceneRoot.findViewById(R.id.lyt_publish);
+        list_multipost.setAdapter(postFeedAdapter);
+        postFeedAdapter.setData(newsFeedEntities);
 
         lyt_addproduct.setOnClickListener(this);
         lyt_publish.setOnClickListener(this);
+
     }
 
     @Override
@@ -367,6 +372,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 txv_title.setText(getResources().getString(R.string.create_multiproduct));
                 activityAnimation(anotherScene,R.id.lyt_container);
                 multitype = 1;
+                newsFeedEntities.clear();
                 loadlayout1();
                 break;
             case R.id.lyt_profile:
@@ -379,8 +385,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 loadLayout();
                 break;
             case R.id.lyt_publish:
-                activityAnimation(anotherScene,R.id.lyt_container);
-                loadlayout1();
+                getGroupid();
                 break;
             case R.id.txv_add:
                 activityAnimation(anotherScene,R.id.lyt_container);
@@ -428,6 +433,48 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         }
     }
 
+    void getGroupid(){
+        showProgress();
+        String apiLink = API.GET_MULTI_GROUP_ID;
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                apiLink,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            int group_id = jsonObject.getInt("msg");
+                            for (int i = 0; i < newsFeedEntities.size(); i++) {
+                                    uploadSalePost(newsFeedEntities.get(i),newsFeedEntities.size()-(i+1),group_id);
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
     void postSale(){
         if(media_type==1 && completedValue.size() ==0){
             showAlertDialog("Please add image for your service");
@@ -467,66 +514,100 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 showAlertDialog("Please input the cost for delivery.");
             }
         }
+
+        NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+        int post_TYPE = 0;
+        if(business_user)
+            post_TYPE = 1;
+        newsFeedEntity.setPoster_profile_type(post_TYPE);
+        newsFeedEntity.setMedia_type(media_type);
+        newsFeedEntity.setTitle(edt_title.getText().toString());
+        newsFeedEntity.setDescription(edt_description.getText().toString());
+        newsFeedEntity.setPrice(edt_price.getText().toString());
+        newsFeedEntity.setIs_deposit_required("0");
+        newsFeedEntity.setCategory_title(spiner_category_type.getSelectedItem().toString());
+        newsFeedEntity.setLocation_id(txv_location.getText().toString());
+        if(cash && paypal)
+            newsFeedEntity.setPayment_options(3);
+        else if(cash)
+            newsFeedEntity.setPayment_options(1);
+        else
+            newsFeedEntity.setPayment_options(2);
+        newsFeedEntity.setPost_tags(edt_tag.getText().toString());
+        newsFeedEntity.setBrand(edt_brand.getText().toString());
+        int delivery_type =0;
+        if(postage)delivery_type+=1;
+        if(collect)delivery_type+=3;
+        if(deliver)delivery_type+=5;
+        newsFeedEntity.setDelivery_option(delivery_type);
+        String deliver_cost = "";
+        if(deliver)
+            deliver_cost = edt_deliver_cost.getText().toString();
+        newsFeedEntity.setDelivery_cost(deliver_cost);
+        newsFeedEntity.setItem_title(edt_item.getText().toString());
+        newsFeedEntity.setPost_condition(spiner_condition.getSelectedItem().toString());
+        if(edt_stock.getText().toString().length()==0)
+            newsFeedEntity.setStock_level(0);
+        else
+            newsFeedEntity.setStock_level(Integer.parseInt(edt_stock.getText().toString()));
+        newsFeedEntity.setIs_multi(multitype);
+        if(multitype>0)
+            newsFeedEntity.setIs_multi(1);
+        newsFeedEntity.setHashMap(hashMap);
+        newsFeedEntity.setStockMap(stockMap);
+        newsFeedEntity.setBooleans(stockAdapter.booleans);
+        newsFeedEntity.setStock_levels(stockAdapter.stock_levels);
+        newsFeedEntity.setPrices(stockAdapter.prices);
+        newsFeedEntity.setCompletedValue(completedValue);
+        newsFeedEntity.setVideovalue(videovalue);
+         newsFeedEntity.setPost_type(2);
         if(multitype==0){
-            uploadSalePost();
+            uploadSalePost(newsFeedEntity,0,-1);
         }else {
+            newsFeedEntities.add(newsFeedEntity);
             activityAnimation(anotherScene,R.id.lyt_container);
             loadlayout1();
         }
 
     }
 
-    void uploadSalePost(){
+    void uploadSalePost(NewsFeedEntity newsFeedEntity,int total_number,int groupId){
         showProgress();
         try {
             Map<String, String> params = new HashMap<>();
             params.put("token", Commons.token);
-            if(business_user)
-                params.put("poster_profile_type", "1");
-            else
-                params.put("poster_profile_type", "0");
-            params.put("media_type", String.valueOf(media_type));
-            params.put("title", edt_title.getText().toString());
-            params.put("description", edt_description.getText().toString());
-            params.put("price", edt_price.getText().toString());
-            params.put("is_deposit_required", "0");
-            params.put("category_title", spiner_category_type.getSelectedItem().toString());
-            params.put("location_id", txv_location.getText().toString());
+            params.put("poster_profile_type", String.valueOf(newsFeedEntity.getPoster_profile_type()));
+            params.put("media_type", String.valueOf(newsFeedEntity.getMedia_type()));
+            params.put("title", newsFeedEntity.getTitle());
+            params.put("description", newsFeedEntity.getDescription());
+            params.put("price", newsFeedEntity.getPrice());
+            params.put("is_deposit_required", newsFeedEntity.getIs_deposit_required());
+            params.put("category_title", newsFeedEntity.getCategory_title());
+            params.put("location_id", newsFeedEntity.getLocation_id());
             // 0 - none selected, 1 - Cash on Colleciton, 2 - PayPal, 3 - both Cash and PayPal
-            if(cash && paypal)
-                params.put("payment_options", "3");
-            else if(cash)
-                params.put("payment_options", "1");
-            else
-                params.put("payment_options", "2");
-            params.put("post_tags", edt_tag.getText().toString());
-            params.put("brand", edt_brand.getText().toString());
-            int delivery_type =0;
-            if(postage)delivery_type+=1;
-            if(collect)delivery_type+=3;
-            if(deliver)delivery_type+=5;
-            params.put("delivery_option", String.valueOf(delivery_type));
-            String deliver_cost = "";
-            if(deliver)
-                deliver_cost = edt_deliver_cost.getText().toString();
-            params.put("delivery_cost", deliver_cost);
-            params.put("item_title", edt_item.getText().toString());
-            params.put("post_condition", spiner_condition.getSelectedItem().toString());
-            params.put("make_post", String.valueOf(isPosting));
-            if(edt_stock.getText().toString().length()==0)
-                params.put("stock_level","0");
-            else
-                params.put("stock_level",edt_stock.getText().toString());
-            JSONArray attributes = new JSONArray();
-            params.put("is_multi", String.valueOf(multitype));
 
-            for ( String key : hashMap.keySet() ) {
+            params.put("payment_options", String.valueOf(newsFeedEntity.getPayment_options()));
+            params.put("post_tags", newsFeedEntity.getPost_tags());
+            params.put("brand",  newsFeedEntity.getBrand());
+            params.put("delivery_option", String.valueOf(newsFeedEntity.getDelivery_option()));
+            params.put("delivery_cost", newsFeedEntity.getDelivery_cost());
+            params.put("item_title", newsFeedEntity.getItem_title());
+            params.put("post_condition", newsFeedEntity.getPost_condition());
+            params.put("make_post", String.valueOf(isPosting));
+            params.put("stock_level",String.valueOf(newsFeedEntity.getStock_level()));
+            params.put("is_multi", String.valueOf(newsFeedEntity.getIs_multi()));
+            if(groupId!=-1){
+                params.put("multi_pos", String.valueOf(newsFeedEntities.size()-total_number-1));
+                params.put("multi_group", String.valueOf(groupId));
+            }
+            JSONArray attributes = new JSONArray();
+            for ( String key : newsFeedEntity.getHashMap().keySet() ) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("attribute_name",key);
-                String str = hashMap.get(key).get(0);
-                for(int i =1;i<hashMap.get(key).size();i++)
+                String str = newsFeedEntity.getHashMap().get(key).get(0);
+                for(int i =1;i<newsFeedEntity.getHashMap().get(key).size();i++)
                 {
-                    str+="," + (hashMap.get(key).get(i));
+                    str+="," + (newsFeedEntity.getHashMap().get(key).get(i));
                 }
                 jsonObject.put("values",str);
                 attributes.put(jsonObject);
@@ -534,13 +615,13 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             params.put("attributes",attributes.toString());
             //File part
             ArrayList<File> post = new ArrayList<>();
-            if(media_type ==1) {
-                for (int i = 0; i < completedValue.size(); i++) {
-                    File file = new File(completedValue.get(i));
+            if(newsFeedEntity.getMedia_type() ==1) {
+                for (int i = 0; i < newsFeedEntity.getCompletedValue().size(); i++) {
+                    File file = new File(newsFeedEntity.getCompletedValue().get(i));
                     post.add(file);
                 }
             }else {
-                File file = new File(videovalue);
+                File file = new File(newsFeedEntity.getVideovalue());
                 post.add(file);
             }
             String API_LINK = API.ADD_PRODUCT,imageTitle = "post_imgs";
@@ -555,11 +636,11 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                     try {
                         if(jsonObject.getBoolean("result")) {
 //                            Log.d("bbbbb",jsonObject.toString());
-                            if(hashMap.size()>0){
-                                NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
-                                newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
-                                updateProductVariants(newsFeedEntity);
-                            }else {
+                            if(newsFeedEntity.getHashMap().size()>0){
+                                NewsFeedEntity newsFeedEntity1 = new NewsFeedEntity();
+                                newsFeedEntity1.initDetailModel(jsonObject.getJSONObject("extra"));
+                                updateProductVariants(newsFeedEntity,newsFeedEntity1,total_number);
+                            }else if(total_number==0) {
                                 closeProgress();
                                 setResult(RESULT_OK);
                                 finish(NewSalePostActivity.this);
@@ -596,22 +677,22 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         }
     }
 
-    void updateProductVariants(NewsFeedEntity newsFeedEntity){
-        for(int i =0;i<newsFeedEntity.getVariationModels().size();i++){
-                if(stockAdapter.booleans.get(i)){
-                    uploadProductVaiants(newsFeedEntity.getVariationModels().get(i),i);
+    void updateProductVariants(NewsFeedEntity newsFeedEntity,NewsFeedEntity serverResponse,int total_number){
+        for(int i =0;i<serverResponse.getVariationModels().size();i++){
+                if(newsFeedEntity.getBooleans().get(i)){
+                    uploadProductVaiants(serverResponse.getVariationModels().get(i),i,newsFeedEntity, total_number);
                 }
         }
 
     }
-    void uploadProductVaiants(VariationModel variationModel,int posstion){
+    void uploadProductVaiants(VariationModel variationModel,int posstion,NewsFeedEntity newsFeedEntity,int total_number){
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
                 API.UPDATE_PRODUCT_VARIANT,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
-                        if(posstion == hashMap.size()-1){
+                        if(posstion == newsFeedEntity.getHashMap().size()-1 && total_number==0){
                             closeProgress();
                             setResult(RESULT_OK);
                             finish(NewSalePostActivity.this);
@@ -631,8 +712,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 params.put("id", String.valueOf(variationModel.getId()));
-                params.put("stock_level", stockAdapter.stock_levels.get(posstion));
-                params.put("price", stockAdapter.prices.get(posstion));
+                params.put("stock_level", newsFeedEntity.getStock_levels().get(posstion));
+                params.put("price", newsFeedEntity.getPrices().get(posstion));
                 return params;
             }
         };
