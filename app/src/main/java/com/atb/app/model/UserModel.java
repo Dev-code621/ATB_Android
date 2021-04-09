@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 public  class UserModel {
 
-    int id, complete,bt_customer_id;
-    String email, password, imvUrl, firstname, lastname, location, sex, birhtday, invitecode,bt_paypal_account;
+    int id, complete;
+    String email, password, imvUrl, firstname, lastname, location, sex, birhtday, invitecode;
     String userName, fb_user_id, facebook_token, description, post_search_region= "null";
     String status_reason, stripe_customer_token, stripe_connect_account, push_tokenm, invited_by;
     double latitude, longitude;
@@ -33,6 +33,15 @@ public  class UserModel {
     SettingInfoModel settingInfoModel = new SettingInfoModel();
     ArrayList<FeedInfoModel>feedInfoModels = new ArrayList<>();
     ArrayList<FollowerModel>followerModels = new ArrayList<>();
+    String bt_customer_id,bt_paypal_account;
+
+    public void setBt_customer_id(String bt_customer_id) {
+        this.bt_customer_id = bt_customer_id;
+    }
+
+    public String getBt_customer_id() {
+        return bt_customer_id;
+    }
 
     public ArrayList<FollowerModel> getFollowerModels() {
         return followerModels;
@@ -40,14 +49,6 @@ public  class UserModel {
 
     public void setFollowerModels(ArrayList<FollowerModel> followerModels) {
         this.followerModels = followerModels;
-    }
-
-    public int getBt_customer_id() {
-        return bt_customer_id;
-    }
-
-    public void setBt_customer_id(int bt_customer_id) {
-        this.bt_customer_id = bt_customer_id;
     }
 
     public String getBt_paypal_account() {

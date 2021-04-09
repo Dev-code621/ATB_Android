@@ -44,10 +44,13 @@ import com.atb.app.preference.Preference;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.view.zoom.ImageZoomButton;
 import com.atb.app.view.zoom.ZoomAnimation;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.common.internal.service.Common;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -268,6 +271,111 @@ public abstract class CommonActivity extends BaseActivity {
         if(!imageType)
             imv_image.setVisibility(View.GONE);
         tooltip.show();
+
+    }
+
+
+    public void getPaymentToken(String price){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_BRAINTREE_CLIENT_TOKEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("afafa",json);
+                        try{
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                String clicent_token = jsonObject.getJSONObject("msg").getString("client_token");
+                                String clicent_id = jsonObject.getJSONObject("msg").getString("customer_id");
+                                processPayment(price,clicent_id,clicent_token);
+                            }else {
+                                showAlertDialog("Server Connection Error!");
+
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    public void paymentProcessing( Map<String, String> payment_params ,int type){
+        String api_link = API.MAKE_PP_PAYMENT;
+        if(type == 1){
+            api_link = API.ADD_PP_SUB;
+        }
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(!jsonObject.getBoolean("result"))
+                                showAlertDialog(jsonObject.getString("msg"));
+                            else {
+                                finishPayment();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params  =   payment_params;
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    public void processPayment(String price, String clicent_id, String clicnet_token){
+
+    }
+
+    public void finishPayment(){
 
     }
 

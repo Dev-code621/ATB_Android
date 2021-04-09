@@ -195,6 +195,8 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             case R.id.txv_update:
                 setResult(Commons.location_code);
                 Commons.location = edt_serach.getText().toString();
+                Commons.lat = myCordianite.latitude;
+                Commons.lng = myCordianite.longitude;
                 finish(this);
                 break;
             case R.id.lyt_send:

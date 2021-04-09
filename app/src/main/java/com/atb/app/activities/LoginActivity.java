@@ -220,6 +220,11 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 userModel.setPost_count(userObject.getInt("post_count"));
                 userModel.setFollow_count(userObject.getInt("follow_count"));
                 userModel.setFollowers_count(userObject.getInt("followers_count"));
+                if(userObject.has("bt_customer_id")){
+                    userModel.setBt_customer_id(userObject.getString("bt_customer_id"));
+                    userModel.setBt_paypal_account(userObject.getString("bt_paypal_account"));
+
+                }
                 if(!jsonObject.getJSONObject("extra").getString("business_info").equals("null")){
                     JSONObject business_info = jsonObject.getJSONObject("extra").getJSONObject("business_info");
                     BusinessModel businessModel = new BusinessModel();

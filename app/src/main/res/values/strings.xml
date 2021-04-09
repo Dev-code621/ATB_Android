@@ -269,4 +269,7 @@
         The current bid is the highest bid so far for the current period. The profile picture to the left of the current bid is the current highest bidder for that particular tag word/phrase. The Blue circle to the right of the current bid is the number of bids that have been made for that particular tag word or phrase.</string>
     <string name="your_bid"><b>YOUR BID\n\n</b>
         Your bid is the amount you wish to place for that tag word or phrase. There are 5 places that can bid on for each particular tag word or phrase and are shown in order of how they will be seen when an ATB member looks for that specific tag word or phrase 1 being at the top and 5 being at the bottom. The top three spots hold special prominence as they are pinned to the op with remaining two, along with any other search results becoming scroll-able.\n\nBids must be higher then the current bid for that spot and must be in incresements of £0.50.\n\nYou cannot bid on more than spot, although that does not stop you from having multiple businesses set-up.\n\nOnce a bid has been placed it cannot be reversed!</string>
+    <string name="str_postage">    This product includes free postage at your\ncurrent location</string>
+    <string name="str_collect">  We will send you the indications of the \nlocation after completing your order.</string>
+
 </resources>

@@ -527,6 +527,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         newsFeedEntity.setIs_deposit_required("0");
         newsFeedEntity.setCategory_title(spiner_category_type.getSelectedItem().toString());
         newsFeedEntity.setLocation_id(txv_location.getText().toString());
+        newsFeedEntity.setLang(Commons.lng);
+        newsFeedEntity.setLat(Commons.lat);
         if(cash && paypal)
             newsFeedEntity.setPayment_options(3);
         else if(cash)
@@ -584,8 +586,9 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             params.put("is_deposit_required", newsFeedEntity.getIs_deposit_required());
             params.put("category_title", newsFeedEntity.getCategory_title());
             params.put("location_id", newsFeedEntity.getLocation_id());
+            params.put("lat", String.valueOf(newsFeedEntity.getLat()));
+            params.put("lng", String.valueOf(newsFeedEntity.getLang()));
             // 0 - none selected, 1 - Cash on Colleciton, 2 - PayPal, 3 - both Cash and PayPal
-
             params.put("payment_options", String.valueOf(newsFeedEntity.getPayment_options()));
             params.put("post_tags", newsFeedEntity.getPost_tags());
             params.put("brand",  newsFeedEntity.getBrand());

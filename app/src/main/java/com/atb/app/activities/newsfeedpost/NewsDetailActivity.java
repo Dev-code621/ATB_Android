@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.other.ChatActivity;
 import com.atb.app.activities.profile.ReportPostActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
@@ -49,16 +50,26 @@ import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.FeedDetailDialog;
+import com.atb.app.dialog.PaymentBookingDialog;
+import com.atb.app.dialog.SelectDeliveryoptionDialog;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
+import com.atb.app.model.VariationModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.VenmoAccountNonce;
+import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.gson.Gson;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -72,6 +83,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class NewsDetailActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_back,imv_profile,imv_navigation,imv_camera,imv_send,imv_close,imv_like,imv_bookmark;
@@ -109,6 +121,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     ArrayList<TextView> txv_attribute = new ArrayList<>();
     ImageView imv_cart,imv_videoplay;
     int flowerid = -1;
+    ArrayList<String> selected_Variation = new ArrayList<>();
+    int REQUEST_PAYMENT_CODE =10034;
+    Map<String, String> payment_params = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +191,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         lyt_sale_button = findViewById(R.id.lyt_sale_button);
         lyt_book_service = findViewById(R.id.lyt_book_service);
         lyt_like = findViewById(R.id.lyt_like);
-
+        txv_buy_sale.setOnClickListener(this);
         lyt_like.setOnClickListener(this);
         imv_bookmark.setOnClickListener(this);
         setSliderAdapter = new SliderImageAdapter(this);
@@ -339,6 +354,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
     void initialLayout(){
+        selected_Variation.clear();
         setSliderAdapter.renewItems(newsFeedEntity.getPostImageModels());
         if(newsFeedEntity.getPoster_profile_type()==0) {
             Glide.with(NewsDetailActivity.this).load(newsFeedEntity.getUserModel().getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
@@ -385,13 +401,17 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_postage_cost.setText("£" + newsFeedEntity.getDelivery_cost());
                 txv_location.setText(newsFeedEntity.getPost_location());
                 for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
+                    final int finaI = i;
+
                     txv_attribute.get(i).setText(newsFeedEntity.getAttribute_titles().get(i));
                     lyt_attribute.get(i).setVisibility(View.VISIBLE);
                     recycler_view_attribue.get(i).setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
                     recycler_view_attribue.get(i).setAdapter(new SelectOneItemAdapter(this, newsFeedEntity.getAttribute_map().get(newsFeedEntity.getAttribute_titles().get(i)), new SelectOneItemAdapter.OnSelectListener() {
                         @Override
                         public void onSelect(String path) {
-                            Log.d("aaaa","path");
+                            if(selected_Variation.size()==finaI)
+                                selected_Variation.add("");
+                            selected_Variation.set(finaI,path);
                         }
                     }));
                 }
@@ -514,8 +534,68 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             case R.id.imv_bookmark:
                savePost();
                 break;
+            case R.id.txv_buy_sale:
+
+                if(selected_Variation.size()==newsFeedEntity.getAttribute_map().size()){
+                    selectDeliveryDialog();
+                }else{
+
+                }
+                break;
         }
     }
+    void selectDeliveryDialog(){
+        VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+        if(variationModel.getStock_level()==0){
+            showAlertDialog("The product is out of stock!");
+            return;
+        }
+        SelectDeliveryoptionDialog deliveryoptionDialog = new SelectDeliveryoptionDialog();
+        deliveryoptionDialog.setOnConfirmListener(new SelectDeliveryoptionDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(int type) {
+                confirmPaymentDialog(type);
+            }
+        },newsFeedEntity);
+        deliveryoptionDialog.show(getSupportFragmentManager(), "DeleteMessage");
+    }
+    void confirmPaymentDialog(int type){
+        PaymentBookingDialog paymentBookingDialog = new PaymentBookingDialog();
+        paymentBookingDialog.setOnConfirmListener(new PaymentBookingDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(int payment_type) {
+                if(payment_type ==1){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("usereId",newsFeedEntity.getUserModel().getId());
+                    goTo(NewsDetailActivity.this, ChatActivity.class,false,bundle);
+                }else {
+                    getPaymentToken(newsFeedEntity.getPrice());
+                }
+            }
+        },newsFeedEntity,type);
+        paymentBookingDialog.show(getSupportFragmentManager(), "DeleteMessage");
+    }
+
+    @Override
+    public void processPayment(String price, String client_id,String clicnet_token){
+        payment_params.clear();
+        payment_params.put("token",Commons.token);
+        payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+        payment_params.put("amount",price);
+        payment_params.put("toUserId", String.valueOf(Commons.g_user.getBusinessModel().getId()));
+        payment_params.put("is_business","1");
+        payment_params.put("quantity","1");
+        payment_params.put("serviceId",newsFeedEntity.getProduct_id());
+
+        DropInRequest dropInRequest = new DropInRequest()
+                .clientToken(clicnet_token)
+                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+                .collectDeviceData(true)
+                .vaultManager(true);
+        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
+    }
+
+
 
     @Override
     public void UserProfile(UserModel userModel,int usertype){
@@ -1015,7 +1095,32 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             completedValue.addAll(returnValue);
             reloadImages();
+        }else  if (requestCode == REQUEST_PAYMENT_CODE) {
+            if (resultCode == RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                payment_params.put("paymentNonce",Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+                    payment_params.put("paymentMethod","Paypal");
+                }else {
+                    payment_params.put("paymentMethod","Card");
+                }
+                paymentProcessing(payment_params,0);
+
+                String deviceData = result.getDeviceData();
+                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+                    String venmoUsername = venmoAccountNonce.getUsername();
+                }
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("error:", error.toString());
+            }
         }
+
     }
 
     void reloadImages(){

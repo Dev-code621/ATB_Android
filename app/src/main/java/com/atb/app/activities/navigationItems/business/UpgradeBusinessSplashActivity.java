@@ -2,8 +2,11 @@ package com.atb.app.activities.navigationItems.business;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,11 +18,21 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.model.submodel.SlideModel;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.VenmoAccountNonce;
+import com.braintreepayments.cardform.view.CardForm;
+import com.fxn.pix.Pix;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class UpgradeBusinessSplashActivity extends CommonActivity {
     ImageView imv_back;
@@ -28,6 +41,9 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
     ArrayList<SlideModel>slideModels = new ArrayList<>();
     TextView txv_next;
     int subscriptionType ; //0 first , 1 : user , 2;business
+    Map<String, String> payment_params = new HashMap<>();
+    int REQUEST_PAYMENT_CODE =10034;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,12 +92,61 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType == 0)
                     goTo(UpgradeBusinessSplashActivity.this, UpdateBusinessActivity.class,true);
                 else {
-                    setResult(Commons.subscription_code);
-                    finish(UpgradeBusinessSplashActivity.this);
-
-
+                    getPaymentToken("4.99");
                 }
             }
         });
     }
+
+
+    @Override
+    public void processPayment(String price, String client_id,String clicnet_token){
+        payment_params.clear();
+        payment_params.put("token",Commons.token);
+        payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+        DropInRequest dropInRequest = new DropInRequest()
+                .clientToken(clicnet_token)
+                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+                .collectDeviceData(true)
+                .vaultManager(true);
+        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PAYMENT_CODE) {
+            if (resultCode == RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+                    payment_params.put("paymentMethod","Paypal");
+                }else {
+                    payment_params.put("paymentMethod","Card");
+                }
+                paymentProcessing(payment_params,1);
+
+                String deviceData = result.getDeviceData();
+                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+                    String venmoUsername = venmoAccountNonce.getUsername();
+                }
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("error:", error.toString());
+            }
+        }
+    }
+    @Override
+    public void finishPayment(){
+        Commons.g_user.getBusinessModel().setPaid(1);
+        setResult(Commons.subscription_code);
+        finish(UpgradeBusinessSplashActivity.this);
+    }
+
+
 }

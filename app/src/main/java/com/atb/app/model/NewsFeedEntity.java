@@ -24,7 +24,7 @@ public class NewsFeedEntity {
     String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason;
     String price,deposit,delivery_cost,is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
     int payment_options,delivery_option,is_active,is_sold;
-    double lat,lng;
+    double lat = 0,lng=0;
     int is_multi,multi_pos,scheduled,likes,comments;
     String read_created,profile_name,profile_image,post_postage ;
 
@@ -869,5 +869,21 @@ public class NewsFeedEntity {
             if(attributeModels.get(i).getAttribute_title().equals(attributeModel.getAttribute_title()) && attributeModels.get(i).getVariant_attirbute_value().equals(attributeModel.getVariant_attirbute_value()))return  true;
         }
         return false;
+    }
+
+    public VariationModel productHasStock(ArrayList<String>arrayList){
+        for(int i =0;i<variationModels.size();i++){
+            VariationModel variationModel = variationModels.get(i);
+            boolean flag =false;
+            for(int j =0;j<variationModel.attributeModels.size();j++){
+                AttributeModel atr = variationModel.attributeModels.get(j);
+                if(!atr.getVariant_attirbute_value().equals(arrayList.get(j))) {
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag)return variationModel;
+        }
+        return  null;
     }
 }

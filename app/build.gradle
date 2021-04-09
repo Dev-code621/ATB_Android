@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.atb.app"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -64,6 +64,15 @@ android {
         useLibrary 'org.apache.http.legacy'
     }
 
+}
+repositories {
+    maven {
+        url  "https://cardinalcommerce.bintray.com/android"
+        credentials {
+            username 'braintree-team-sdk@cardinalcommerce'
+            password '220cc9476025679c4e5c843666c27d97cfb0f951'
+        }
+    }
 }
 
 dependencies {
@@ -169,6 +178,8 @@ dependencies {
     //tooltip
     implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.3'
 
-
-
+    //paypal(brantree)
+    implementation 'com.braintreepayments.api:braintree:3.12.0'
+    implementation 'com.braintreepayments.api:drop-in:4.6.0'
+    implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2'
 }

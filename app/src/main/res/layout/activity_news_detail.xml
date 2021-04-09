@@ -757,11 +757,10 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="60dp"
-                        android:text="Buy Now £20.00"
+                        android:text="Buy Now"
                         android:gravity="center"
                         android:textColor="@color/white"
                         style="@style/btn_buttonStyle"
-                        android:enabled="false"
                         android:textSize="18sp"
                         android:background="@drawable/button_rectangle_round"/>
                     <ImageView
