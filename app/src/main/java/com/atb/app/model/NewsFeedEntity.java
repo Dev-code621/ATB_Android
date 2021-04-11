@@ -730,7 +730,8 @@ public class NewsFeedEntity {
             description = jsonObject.getString("description");
             brand = jsonObject.getString("brand");
             price = jsonObject.getString("price");
-            deposit = jsonObject.getString("deposit");
+            if(jsonObject.has("deposit"))
+                deposit = jsonObject.getString("deposit");
             is_deposit_required = jsonObject.getString("is_deposit_required");
             category_title = jsonObject.getString("category_title");
             item_title = jsonObject.getString("item_title");
@@ -754,12 +755,14 @@ public class NewsFeedEntity {
                 lat = jsonObject.getDouble("lat");
             if(!jsonObject.getString("lng").equals("null"))
                 lng = jsonObject.getDouble("lng");
-            is_multi = jsonObject.getInt("is_multi");
+            if(jsonObject.has("is_multi"))
+                 is_multi = jsonObject.getInt("is_multi");
             if(jsonObject.has("multi_pos")){
                 if(!jsonObject.getString("multi_pos").equals("null"))
                     multi_pos = jsonObject.getInt("multi_pos");
             }
-            multi_group = jsonObject.getString("multi_group");
+            if(jsonObject.has("multi_group"))
+                 multi_group = jsonObject.getString("multi_group");
             if(jsonObject.has("service_id"))
               service_id = jsonObject.getString("service_id");
             if(jsonObject.has("product_id"))

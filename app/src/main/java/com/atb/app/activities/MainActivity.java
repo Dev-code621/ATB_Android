@@ -288,4 +288,10 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             chatFragment.setProfile(flag);
         return  flag;
     }
+
+    @Override
+    public void login() {
+        if(chatFragment!=null)
+            chatFragment.getLastmessage();
+    }
 }

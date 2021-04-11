@@ -146,7 +146,12 @@
     <ListView
         android:id="@+id/list_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:listSelector="@color/transparent"
+        android:scrollbars="none">
 
     </ListView>
 </LinearLayout>

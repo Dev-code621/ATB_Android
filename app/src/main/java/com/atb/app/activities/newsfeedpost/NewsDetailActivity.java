@@ -32,7 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.other.ChatActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.profile.ReportPostActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
@@ -51,6 +51,8 @@ import com.atb.app.commons.Helper;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.FeedDetailDialog;
 import com.atb.app.dialog.PaymentBookingDialog;
+import com.atb.app.dialog.PaymentSuccessDialog;
+import com.atb.app.dialog.ProductVariationSelectDialog;
 import com.atb.app.dialog.SelectDeliveryoptionDialog;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.NewsFeedEntity;
@@ -69,7 +71,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
-import com.google.android.gms.common.internal.service.Common;
 import com.google.gson.Gson;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -124,6 +125,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     ArrayList<String> selected_Variation = new ArrayList<>();
     int REQUEST_PAYMENT_CODE =10034;
     Map<String, String> payment_params = new HashMap<>();
+    int deliveryOption = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +211,15 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             if (bundle != null) {
                 postId= bundle.getInt("postId");
                 commentVisible= bundle.getBoolean("CommentVisible");
-                loadLayout();
+                if(commentVisible == false){
+                    String user= bundle.getString("newfeedEntity");
+                    Gson gson = new Gson();
+                    newsFeedEntity = gson.fromJson(user, NewsFeedEntity.class);
+                    initialLayout();
+
+                }else {
+                    loadLayout();
+                }
             }
         }
         imv_back.setOnClickListener(this);
@@ -278,6 +288,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
                         }catch (Exception e){
                             Log.d("Exception ",e.toString());
+                            closeProgress();
                         }
                     }
                 },
@@ -379,6 +390,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         if(newsFeedEntity.getPostImageModels().size()>0){
             if(Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(0).getPath()))
                 imv_videoplay.setVisibility(View.VISIBLE);
+        }
+        if(!commentVisible){
+            FrameLayout lyt_bookmark = findViewById(R.id.lyt_bookmark);
+            lyt_bookmark.setVisibility(View.GONE);
+            LinearLayout lyt_comment_send = findViewById(R.id.lyt_comment_send);
+            lyt_comment_send.setVisibility(View.GONE);
         }
 
         switch (newsFeedEntity.getPost_type()) {
@@ -482,7 +499,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             lyt_sale_button.setVisibility(View.GONE);
             lyt_book_service.setVisibility(View.GONE);
         }
-
+        if(newsFeedEntity.getCommentModels().size()>0)
         commentAdapter.setRoomData(newsFeedEntity.getCommentModels());
         Helper.getListViewSize(list_comment);
 
@@ -539,22 +556,33 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 if(selected_Variation.size()==newsFeedEntity.getAttribute_map().size()){
                     selectDeliveryDialog();
                 }else{
-
+                     ProductVariationSelectDialog productVariationSelectDialog = new ProductVariationSelectDialog();
+                    productVariationSelectDialog.setOnConfirmListener(new ProductVariationSelectDialog.OnConfirmListener() {
+                        @Override
+                        public void onPurchase( ArrayList<String> Variation) {
+                            selected_Variation = Variation;
+                            selectDeliveryDialog();
+                        }
+                    },newsFeedEntity,selected_Variation);
+                    productVariationSelectDialog.show(getSupportFragmentManager(), "DeleteMessage");
                 }
                 break;
         }
     }
-    void selectDeliveryDialog(){
-        VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
-        if(variationModel.getStock_level()==0){
-            showAlertDialog("The product is out of stock!");
-            return;
+    void selectDeliveryDialog() {
+        if (selected_Variation.size() > 0){
+            VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+            if (variationModel.getStock_level() == 0) {
+                showAlertDialog("The product is out of stock!");
+                return;
+            }
         }
         SelectDeliveryoptionDialog deliveryoptionDialog = new SelectDeliveryoptionDialog();
         deliveryoptionDialog.setOnConfirmListener(new SelectDeliveryoptionDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int type) {
                 confirmPaymentDialog(type);
+                deliveryOption = type;
             }
         },newsFeedEntity);
         deliveryoptionDialog.show(getSupportFragmentManager(), "DeleteMessage");
@@ -563,30 +591,32 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         PaymentBookingDialog paymentBookingDialog = new PaymentBookingDialog();
         paymentBookingDialog.setOnConfirmListener(new PaymentBookingDialog.OnConfirmListener() {
             @Override
-            public void onConfirm(int payment_type) {
+            public void onConfirm(int payment_type,double price) {
                 if(payment_type ==1){
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("usereId",newsFeedEntity.getUserModel().getId());
-                    goTo(NewsDetailActivity.this, ChatActivity.class,false,bundle);
+                    gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
                 }else {
-                    getPaymentToken(newsFeedEntity.getPrice());
+                    getPaymentToken(String.valueOf(price),newsFeedEntity,deliveryOption,selected_Variation);
                 }
             }
-        },newsFeedEntity,type);
+        },newsFeedEntity,type,selected_Variation);
         paymentBookingDialog.show(getSupportFragmentManager(), "DeleteMessage");
     }
 
     @Override
-    public void processPayment(String price, String client_id,String clicnet_token){
+    public void processPayment(String price, String client_id,String clicnet_token, NewsFeedEntity newsFeedEntity1,int deliveryOption1, ArrayList<String> selected_Variation1){
         payment_params.clear();
         payment_params.put("token",Commons.token);
         payment_params.put("customerId",Commons.g_user.getBt_customer_id());
         payment_params.put("amount",price);
-        payment_params.put("toUserId", String.valueOf(Commons.g_user.getBusinessModel().getId()));
-        payment_params.put("is_business","1");
+        payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
+        payment_params.put("is_business",String.valueOf(newsFeedEntity.getPoster_profile_type() ));
         payment_params.put("quantity","1");
-        payment_params.put("serviceId",newsFeedEntity.getProduct_id());
-
+        payment_params.put("delivery_option",String.valueOf(deliveryOption));
+        if(selected_Variation.size()>0){
+            VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+            payment_params.put("variation_id",String.valueOf(variationModel.getId()));
+            payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
+        }
         DropInRequest dropInRequest = new DropInRequest()
                 .clientToken(clicnet_token)
                 .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
@@ -595,7 +625,17 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
     }
 
-
+    @Override
+    public void finishPayment() {
+        PaymentSuccessDialog paymentSuccessDialog = new PaymentSuccessDialog();
+        paymentSuccessDialog.setOnConfirmListener(new PaymentSuccessDialog.OnConfirmListener() {
+            @Override
+            public void onPurchase() {
+                goTo(NewsDetailActivity.this, PurchasesActivity.class,false);
+            }
+        },newsFeedEntity);
+        paymentSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+    }
 
     @Override
     public void UserProfile(UserModel userModel,int usertype){

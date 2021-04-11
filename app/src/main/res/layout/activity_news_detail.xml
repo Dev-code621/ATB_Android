@@ -166,6 +166,7 @@
                     android:listSelector="@color/transparent" />
             </LinearLayout>
             <FrameLayout
+                android:id="@+id/lyt_bookmark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
@@ -784,6 +785,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
     <LinearLayout
+        android:id="@+id/lyt_comment_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"

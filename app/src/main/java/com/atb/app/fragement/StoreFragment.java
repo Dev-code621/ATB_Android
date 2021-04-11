@@ -21,12 +21,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.StoreItemAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.PaymentBookingDialog;
+import com.atb.app.dialog.ProductVariationSelectDialog;
+import com.atb.app.dialog.SelectDeliveryoptionDialog;
 import com.atb.app.model.NewsFeedEntity;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,6 +51,8 @@ public class StoreFragment extends Fragment {
     ArrayList<NewsFeedEntity>newsFeedEntities = new ArrayList<>();
     RecyclerView recyclerView;
     StoreItemAdapter storeItemAdapter ;
+    ArrayList<String> selected_Variation = new ArrayList<>();
+    int deliveryOption = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,16 +81,19 @@ public class StoreFragment extends Fragment {
         storeItemAdapter = new StoreItemAdapter(context, 1, 0, new StoreItemAdapter.SelectListener() {
             @Override
             public void OnItemSelect(int posstion) {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("postId",newsFeedEntities.get(posstion).getId());
-//
-//                bundle.putBoolean("CommentVisible",false);
-//                ((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId",newsFeedEntities.get(posstion).getId());
+                bundle.putBoolean("CommentVisible",false);
+                Gson gson = new Gson();
+                String usermodel = gson.toJson(newsFeedEntities.get(posstion));
+                bundle.putString("newfeedEntity",usermodel);
+
+                ((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
             }
 
             @Override
             public void OnEditSelect(int posstion) {
-
+                Log.d("aaaaa","afaf");
             }
 
             @Override
@@ -91,7 +101,17 @@ public class StoreFragment extends Fragment {
                 if(Commons.selected_user.getId() == Commons.g_user.getId())
                     makePost(newsFeedEntities.get(posstion));
                 else {
-
+                    if(newsFeedEntities.get(posstion).getPost_type() == 2) {
+                        ProductVariationSelectDialog productVariationSelectDialog = new ProductVariationSelectDialog();
+                        productVariationSelectDialog.setOnConfirmListener(new ProductVariationSelectDialog.OnConfirmListener() {
+                            @Override
+                            public void onPurchase(ArrayList<String> Variation) {
+                                selected_Variation = Variation;
+                                selectDeliveryDialog(posstion);
+                            }
+                        }, newsFeedEntities.get(posstion), selected_Variation);
+                        productVariationSelectDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
+                    }
                 }
             }
         });
@@ -204,7 +224,8 @@ public class StoreFragment extends Fragment {
                             newsFeedEntities.clear();
                             for(int i =0;i<jsonArray.length();i++){
                                 NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
-                                newsFeedEntity.initModel(jsonArray.getJSONObject(i));
+                                newsFeedEntity.initDetailModel(jsonArray.getJSONObject(i));
+                                newsFeedEntity.setUserModel(Commons.selected_user);
                                 newsFeedEntities.add(newsFeedEntity);
                             }
                             addAdapter();
@@ -235,6 +256,34 @@ public class StoreFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void selectDeliveryDialog(int posstion) {
+        SelectDeliveryoptionDialog deliveryoptionDialog = new SelectDeliveryoptionDialog();
+        deliveryoptionDialog.setOnConfirmListener(new SelectDeliveryoptionDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(int type) {
+                confirmPaymentDialog(type,posstion);
+                deliveryOption = type;
+            }
+        },newsFeedEntities.get(posstion));
+        deliveryoptionDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
+    }
+
+    void confirmPaymentDialog(int type,int posstion){
+        PaymentBookingDialog paymentBookingDialog = new PaymentBookingDialog();
+        paymentBookingDialog.setOnConfirmListener(new PaymentBookingDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(int payment_type,double price) {
+                if(payment_type ==1){
+                    ((CommonActivity)context).gotochat(context,newsFeedEntities.get(posstion).getPoster_profile_type(),newsFeedEntities.get(posstion).getUserModel());
+
+                }else {
+                    ((CommonActivity)context).getPaymentToken(String.valueOf(price),newsFeedEntities.get(posstion),deliveryOption,selected_Variation);
+                }
+            }
+        },newsFeedEntities.get(posstion),type,selected_Variation);
+        paymentBookingDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
     }
 
 }

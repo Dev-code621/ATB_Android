@@ -17,6 +17,7 @@ import com.atb.app.adapter.SliderImageAdapter;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.SlideModel;
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
@@ -92,7 +93,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType == 0)
                     goTo(UpgradeBusinessSplashActivity.this, UpdateBusinessActivity.class,true);
                 else {
-                    getPaymentToken("4.99");
+                    getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
                 }
             }
         });
@@ -100,7 +101,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
 
 
     @Override
-    public void processPayment(String price, String client_id,String clicnet_token){
+    public void processPayment(String price, String client_id,String clicnet_token,NewsFeedEntity newsFeedEntity1,int deliveryOption1, ArrayList<String> selected_Variation1){
         payment_params.clear();
         payment_params.put("token",Commons.token);
         payment_params.put("customerId",Commons.g_user.getBt_customer_id());
@@ -118,7 +119,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
         if (requestCode == REQUEST_PAYMENT_CODE) {
             if (resultCode == RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                payment_params.put("paymentMethodNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
                 if(result.getPaymentMethodType().name().equals("PAYPAL")){
                     payment_params.put("paymentMethod","Paypal");
                 }else {

@@ -22,6 +22,8 @@ import com.atb.app.activities.navigationItems.other.LocationMapActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.NewsFeedEntity;
 
+import java.util.ArrayList;
+
 import static android.view.View.GONE;
 
 
@@ -49,6 +51,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
     public SelectDeliveryoptionDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity) {
         this.listener = listener;
         this.newsFeedEntity = newsFeedEntity;
+
         return null;
     }
 
@@ -162,6 +165,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_deliver));
             txv_type.setText("Deliver");
             txv_description.setText(getContext().getResources().getString(R.string.str_postage) +" " +  newsFeedEntity.getPost_location());
+            txv_cost.setText(newsFeedEntity.getDelivery_cost());
             selected_type = 5;
         }
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_next);

@@ -21,9 +21,12 @@ import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.VariationModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
+import java.util.ArrayList;
 
 public class PaymentBookingDialog extends DialogFragment {
 
@@ -31,6 +34,8 @@ public class PaymentBookingDialog extends DialogFragment {
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     int type =-1;
     int payment_type = -1;
+    ArrayList<String> selected_Variation = new ArrayList<>();
+    double total_price;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,10 +43,11 @@ public class PaymentBookingDialog extends DialogFragment {
         return inflater.inflate(R.layout.payment_booking_dialog, container, false);
     }
 
-    public ConfirmDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity,int type) {
+    public ConfirmDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity, int type, ArrayList<String> selected_Variation) {
         this.listener = listener;
         this.newsFeedEntity = newsFeedEntity;
         this.type = type;
+        this.selected_Variation = selected_Variation;
         return null;
     }
 
@@ -85,7 +91,7 @@ public class PaymentBookingDialog extends DialogFragment {
                 imv_cash2.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 txv_cash1.setTextColor(getResources().getColor(R.color.txt_color));
                 txv_cash2.setTextColor(getResources().getColor(R.color.head_color));
-                txv_pay.setText("Pay £" +newsFeedEntity.getPrice());
+                txv_pay.setText("Pay £" +total_price );
                 payment_type = 0;
 
             }
@@ -111,14 +117,22 @@ public class PaymentBookingDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if(payment_type>=0) {
-                    listener.onConfirm(payment_type);
+                    listener.onConfirm(payment_type,total_price);
                     dismiss();
                 }
             }
         });
 
         Glide.with(getContext()).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.profile_pic).into(imv_image);
+
         txv_price.setText("£"+ newsFeedEntity.getPrice());
+        total_price = Double.parseDouble(newsFeedEntity.getPrice());
+        txv_name.setText(newsFeedEntity.getBrand());
+        if (selected_Variation.size() > 0) {
+            VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+            txv_price.setText("£"+ variationModel.getPrice());
+            total_price = Double.parseDouble(variationModel.getPrice());
+        }
         if(type==1){
             txv_type.setText("Free postage");
             imv_type.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_postage));
@@ -130,6 +144,7 @@ public class PaymentBookingDialog extends DialogFragment {
             txv_type.setText("Deliver");
             imv_type.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_postage));
             txv_delivery_cost.setText("+£" + newsFeedEntity.getDelivery_cost());
+            total_price += Double.parseDouble(newsFeedEntity.getDelivery_cost());
         }
 
     }
@@ -149,7 +164,7 @@ public class PaymentBookingDialog extends DialogFragment {
     }
 
     public interface OnConfirmListener {
-        void onConfirm(int payment);
+        void onConfirm(int payment,double price);
     }
 }
 

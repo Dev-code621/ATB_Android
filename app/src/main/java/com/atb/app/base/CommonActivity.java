@@ -3,6 +3,7 @@ package com.atb.app.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.transition.ChangeBounds;
 import androidx.transition.Scene;
@@ -29,8 +32,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.User;
+import com.applozic.mobicomkit.listners.AlLoginHandler;
+import com.applozic.mobicomkit.listners.AlLogoutHandler;
+import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
+import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
+import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
+import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.api.API;
@@ -38,6 +50,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
@@ -275,7 +288,7 @@ public abstract class CommonActivity extends BaseActivity {
     }
 
 
-    public void getPaymentToken(String price){
+    public void getPaymentToken(String price,NewsFeedEntity newsFeedEntity,int deliveryOption,  ArrayList<String> selected_Variation){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -290,7 +303,8 @@ public abstract class CommonActivity extends BaseActivity {
                             if(jsonObject.getBoolean("result")){
                                 String clicent_token = jsonObject.getJSONObject("msg").getString("client_token");
                                 String clicent_id = jsonObject.getJSONObject("msg").getString("customer_id");
-                                processPayment(price,clicent_id,clicent_token);
+                                Commons.g_user.setBt_customer_id(clicent_id);
+                                processPayment(price,clicent_id,clicent_token,newsFeedEntity,deliveryOption,selected_Variation);
                             }else {
                                 showAlertDialog("Server Connection Error!");
 
@@ -371,12 +385,97 @@ public abstract class CommonActivity extends BaseActivity {
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
-    public void processPayment(String price, String clicent_id, String clicnet_token){
+    public void processPayment(String price, String clicent_id, String clicnet_token,NewsFeedEntity newsFeedEntity,int deliveryOption,ArrayList<String> selected_Variation){
 
     }
 
     public void finishPayment(){
 
+    }
+
+
+    public void loginApplozic(boolean flag){
+        showProgress();
+        Applozic.logoutUser(this, new AlLogoutHandler(){
+            @Override
+            public void onSuccess(Context context) {
+                loginChatsever(flag);
+            }
+
+            @Override
+            public void onFailure(Exception exception) {
+                loginChatsever(flag);
+            }
+        });
+    }
+    void loginChatsever(boolean flag){
+        User user = new User();
+        if(flag){
+            user.setUserId(String.valueOf(Commons.g_user.getBusinessModel().getId()) +"_"+ String.valueOf(Commons.g_user.getId()));
+            user.setImageLink(Commons.g_user.getBusinessModel().getBusiness_logo());
+            user.setDisplayName(Commons.g_user.getBusinessModel().getBusiness_name());
+            user.setPassword(String.valueOf(Commons.g_user.getBusinessModel().getId()) +"_"+ String.valueOf(Commons.g_user.getId()));
+        }else {
+            user.setUserId( String.valueOf(Commons.g_user.getId()));
+            user.setImageLink(Commons.g_user.getImvUrl());
+            user.setDisplayName(Commons.g_user.getUserName());
+            user.setPassword(String.valueOf(Commons.g_user.getId()));
+        }
+        user.setEmail(Commons.g_user.getEmail());
+        Applozic.loginUser(this, user, new AlLoginHandler() {
+            @Override
+            public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                Applozic.registerForPushNotification(CommonActivity.this, new AlPushNotificationHandler() {
+                    @Override
+                    public void onSuccess(RegistrationResponse registrationResponse) {
+
+                    }
+
+                    @Override
+                    public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+
+                    }
+
+                });
+                login();
+            }
+
+            @Override
+            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                closeProgress();
+                AlertDialog alertDialog = new AlertDialog.Builder(CommonActivity.this).create();
+                alertDialog.setTitle("Alert");
+                alertDialog.setMessage(exception.toString());
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Alert",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                if (!isFinishing()) {
+                    alertDialog.show();
+                }
+            }
+        });
+    }
+
+    public void login(){
+
+    }
+
+    public void gotochat(Context context, int userType,UserModel userModel){
+        Intent intent = new Intent(this, ConversationActivity.class);
+        String user_id = String.valueOf(userModel.getId());
+        String display_name = userModel.getUserName();
+        if(userType==1){
+            user_id = String.valueOf(userModel.getBusinessModel().getId())+"_" + String.valueOf(userModel.getId());
+            display_name = userModel.getBusinessModel().getBusiness_name();
+        }
+
+        intent.putExtra(ConversationUIService.USER_ID, user_id);
+        intent.putExtra(ConversationUIService.DISPLAY_NAME, display_name); //put it for displaying the title.
+        intent.putExtra(ConversationUIService.TAKE_ORDER,true); //Skip chat list for showing on back press
+        startActivity(intent);
     }
 
 }

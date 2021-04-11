@@ -9,27 +9,39 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.applozic.mobicomkit.api.conversation.ApplozicConversation;
+import com.applozic.mobicomkit.api.conversation.Message;
+import com.applozic.mobicomkit.contact.AppContactService;
+import com.applozic.mobicomkit.exception.ApplozicException;
+import com.applozic.mobicomkit.listners.MessageListHandler;
+import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
+import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
+import com.applozic.mobicommons.people.contact.Contact;
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
+import com.atb.app.adapter.MessageAdapter;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
-import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
     View view;
@@ -40,6 +52,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     TextView txv_name;
     ListView list_chat;
     Context context;
+    MessageAdapter messageAdapter ;
+    List<Message> messages = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,8 +86,34 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         }
-        setProfile(false);
+        list_chat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Contact contact = new AppContactService(context).getContactById(messages.get(position).getContactIds());
+                Intent intent = new Intent(context, ConversationActivity.class);
+                intent.putExtra(ConversationUIService.USER_ID, messages.get(position).getContactIds());
+                intent.putExtra(ConversationUIService.DISPLAY_NAME, contact.getDisplayName()); //put it for displaying the title.
+                intent.putExtra(ConversationUIService.TAKE_ORDER,true); //Skip chat list for showing on back press
+                startActivity(intent);
+            }
+        });
 
+    }
+
+    public void getLastmessage(){
+        messages.clear();
+        ApplozicConversation.getLatestMessageList(context, false, new MessageListHandler() {
+            @Override
+            public void onResult(List<Message> messageList, ApplozicException e) {
+                ((CommonActivity)context).closeProgress();
+                if(e == null){
+                    messages = messageList;
+                    messageAdapter.setRoomData(messageList);
+                }else{
+
+                }
+            }
+        });
     }
 
     @Override
@@ -112,12 +152,18 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_chat);
             txv_name.setText(Commons.g_user.getUserName());
         }
+        ((CommonActivity)context).loginApplozic(flag);
+
 
     }
     @Override
     public void onResume() {
         super.onResume();
         context =getActivity();
+        messageAdapter = new MessageAdapter(context);
+        list_chat.setAdapter(messageAdapter);
+        if(messages.size()==0)
+            setProfile(true);
     }
 
 }

@@ -38,9 +38,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.navigationItems.other.ChatActivity"
+        <activity android:name=".activities.navigationItems.PurchasesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name="com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity"
+            android:configChanges="keyboardHidden|screenSize|smallestScreenSize|screenLayout|orientation"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:parentActivityName="com.atb.app.activities.MainActivity"
+            android:theme="@style/AppTheme.FullScreen"
+            tools:node="replace">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
         <activity
             android:name=".activities.navigationItems.other.LocationMapActivity"
             android:screenOrientation="portrait"
@@ -251,6 +264,7 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
@@ -264,7 +278,6 @@
             </intent-filter>
         </activity>
 
-
         <provider
             android:name=".util.GenericFileProvider"
             android:authorities="com.atb.app.fileprovider"
@@ -276,6 +289,22 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource" />
         </provider>
+        <meta-data
+            android:name="com.applozic.application.key"
+            android:value="@string/applozic_key" /> <!-- Replace with your Applozic App ID -->
+
+        <meta-data
+            android:name="com.applozic.mobicomkit.notification.smallIcon"
+            android:resource="@mipmap/ic_launcher" /> <!-- Replace this with a valid resource name for Launcher white Icon -->
+
+        <meta-data
+            android:name="activity.open.on.notification"
+            android:value="com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity"
+            /> <!-- NOTE : Do NOT change this value -->
+
+        <meta-data
+            android:name="com.package.name"
+            android:value="${applicationId}" />
     </application>
 
 </manifest>

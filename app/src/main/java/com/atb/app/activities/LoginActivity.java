@@ -1,6 +1,8 @@
 package com.atb.app.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,12 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.User;
+import com.applozic.mobicomkit.listners.AlLoginHandler;
+import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
 import com.atb.app.R;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.api.API;
@@ -316,12 +325,14 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 finishAffinity();
                 Preference.getInstance().put(this, PrefConst.PREFKEY_USEREMAIL, edt_email.getText().toString());
                 Preference.getInstance().put(this, PrefConst.PREFKEY_USERPWD, edt_password.getText().toString());
+                if(Commons.g_user.getAccount_type() ==1)
+                    loginApplozic(true);
+                else
+                    loginApplozic(false);
                 goTo(LoginActivity.this, MainActivity.class,true);
             }
         }catch (Exception e){
             Log.d("bbbbb, " , e.toString());
         }
-
-
     }
 }

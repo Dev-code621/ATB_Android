@@ -194,6 +194,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
 
                 break;
             case R.id.txv_next:
+
                 register();
                 break;
             case R.id.txv_location:
@@ -295,6 +296,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 userModel.setFollow_count(userObject.getInt("follow_count"));
                 userModel.setFollowers_count(userObject.getInt("followers_count"));
                 Commons.g_user = userModel;
+                loginApplozic(false);
                 goTo(this, CreateFeedActivity.class,false);
             }
         }catch (Exception e){
