@@ -152,7 +152,7 @@ public class MainListFragment extends Fragment {
                 newsFeedEntity.initModel(newsObject);
                 newsFeedEntities.add(newsFeedEntity);
             }
-            mainFeedAdapter = new MainFeedAdapter(context,MainListFragment.this);
+            mainFeedAdapter = new MainFeedAdapter(context);
             list_main.setAdapter(mainFeedAdapter);
             mainFeedAdapter.setData(newsFeedEntities);
 

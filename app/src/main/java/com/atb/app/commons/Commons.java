@@ -107,6 +107,20 @@ public class Commons {
         return date;
     }
 
+    public static String getMonths(long milionsecond){
+        String date = "";
+        Date d = new Date(milionsecond*1000l);
+        SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
+        date = formatter.format(d);
+        return date;
+    }
+    public static String getDisplayDate4(long milionsecond){
+        String date = "";
+        Date d = new Date(milionsecond*1000l);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MMM.yyyy");
+        date = formatter.format(d);
+        return date;
+    }
     public static String  getDisplayDate1(String date){
         String dayName = "";
         SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");

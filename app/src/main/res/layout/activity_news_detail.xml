@@ -771,6 +771,7 @@
                         android:src="@drawable/icon_cart"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="20dp"
+                        android:visibility="gone"
                         android:background="@drawable/edit_rectangle_round"
                         android:padding="15dp"/>
                 </LinearLayout>

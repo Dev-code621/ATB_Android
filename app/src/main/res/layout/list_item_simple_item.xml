@@ -37,7 +37,8 @@
                         android:layout_height="20dp"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp"
-                        app:cardUseCompatPadding="false">
+                        app:cardUseCompatPadding="false"
+                        android:visibility="gone">
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/imv_profile"
                             android:layout_width="match_parent"
@@ -50,10 +51,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="JESSICA MCLAURENCE"
-                        style="@style/textTheme"
+                        style="@style/boldtextTheme"
                         android:textColor="@color/txt_color"
-                        android:textSize="13sp"
-                        android:layout_marginLeft="10dp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/txv_itemnumber"
@@ -61,7 +61,9 @@
                     android:layout_height="wrap_content"
                     android:text="4 Items"
                     style="@style/textTheme"
+                    android:visibility="gone"
                     android:textColor="@color/txt_color"
+
                     android:textSize="15sp" />
                 <TextView
                     android:id="@+id/txv_price"
@@ -69,11 +71,13 @@
                     android:layout_height="wrap_content"
                     android:text="Order Total: $4.90"
                     style="@style/textTheme"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/head_color"
                     android:textSize="15sp" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal">
                     <ImageView
                         android:layout_width="15dp"

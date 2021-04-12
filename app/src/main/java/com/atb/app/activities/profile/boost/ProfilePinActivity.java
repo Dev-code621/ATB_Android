@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.adapter.ProfilePinHeaderAdapter;
-import com.atb.app.adapter.SoldHeaderAdapter;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 

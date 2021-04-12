@@ -1,6 +1,7 @@
 package com.atb.app.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +14,26 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.Response;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.model.TransactionEntity;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SoldHeaderAdapter extends SectioningAdapter {
 
     static final String TAG = SoldHeaderAdapter.class.getSimpleName();
     static final boolean USE_DEBUG_APPEARANCE = false;
+    Context _context ;
+
 
     private class Section {
         int index;
@@ -64,7 +75,6 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             txv_price =  itemView.findViewById(R.id.txv_price);
             txv_time =  itemView.findViewById(R.id.txv_time);
 
-
         }
     }
 
@@ -98,35 +108,41 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     boolean showCollapsingSectionControls;
     boolean showAdapterPositions;
     boolean hasFooters;
-
-    public SoldHeaderAdapter(int numSections, int numItemsPerSection, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions) {
+    ArrayList<TransactionEntity> _roomDatas = new ArrayList<>();
+    HashMap<String, ArrayList<TransactionEntity> > hashMap = new HashMap();
+    public SoldHeaderAdapter(Context context,boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions,ArrayList<TransactionEntity> data) {
+        this._context = context;
         this.showModificationControls = showModificationControls;
         this.showCollapsingSectionControls = showCollapsingSectionControls;
         this.showAdapterPositions = showAdapterPositions;
         this.hasFooters = hasFooters;
+        if(data.size()>0) {
+            _roomDatas = data;
+            for (int i = 0; i < _roomDatas.size(); i++) {
+                String key = Commons.getMonths(_roomDatas.get(i).getCreated_at());
+                if(hashMap.get(key)==null){
+                    hashMap.put(key,new ArrayList<>());
+                }
+                hashMap.get(key).add(_roomDatas.get(i));
+            }
 
-        for (int i = 0; i < numSections; i++) {
-            appendSection(i, numItemsPerSection);
+            int index = 0;
+            for ( String hash_key : hashMap.keySet() ) {
+                appendSection(index,hash_key,hashMap.get(hash_key).size());
+                index++;
+            }
         }
     }
 
-    void appendSection(int index, int itemCount) {
+
+    void appendSection(int index, String str,int itemCount) {
         Section section = new Section();
         section.index = index;
         section.copyCount = 0;
-        String str = "This Month";
-        if(index!=0)
-            str = "Last Month";
         section.header = str;
-//
-//        if (this.hasFooters) {
-//            section.footer = "End of section " + index;
-//        }
-
         for (int j = 0; j < itemCount; j++) {
             section.items.add(index + "/" + j);
         }
-
         sections.add(section);
     }
 
@@ -209,9 +225,22 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     @Override
     public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemType) {
         Section s = sections.get(sectionIndex);
-        ItemViewHolder ivh = (ItemViewHolder) viewHolder;
+        ItemViewHolder holder = (ItemViewHolder) viewHolder;
 //        ivh.textView.setText(s.items.get(itemIndex));
 //        ivh.adapterPositionTextView.setText(Integer.toString(getAdapterPositionForSectionItem(sectionIndex, itemIndex)));
+        int index =0;
+        for ( String hash_key : hashMap.keySet() ) {
+            if(sectionIndex==index){
+                final TransactionEntity transactionEntity= hashMap.get(hash_key).get(itemIndex);
+                Glide.with(_context).load(transactionEntity.getImv_url()).placeholder(R.drawable.image_thumnail).dontAnimate().apply(RequestOptions.bitmapTransform(
+                        new RoundedCornersTransformation(_context, 20, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_image);
+                holder.txv_name.setText(transactionEntity.getTitle());
+                holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
+                holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()) +  " ORDER " + transactionEntity.getTransaction_id());
+
+            }
+            index++;
+        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -11,13 +11,13 @@
         android:paddingBottom="8dp"
         android:orientation="horizontal"
         android:background="@drawable/edit_rectangle_round"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/card_user_info_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:cardCornerRadius="20dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="25dp"
             android:layout_gravity="center"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="false"
@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="Keyboard repair"
                 android:layout_marginTop="4dp"
+                android:singleLine="true"
                 android:textSize="15sp"
                 style="@style/textTheme"
                 android:textColor="@color/txt_color"
@@ -68,15 +69,18 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:gravity="center">
+            android:layout_weight="1"
+            android:gravity="center|right">
             <TextView
                 android:id="@+id/txv_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="january 2021"
-                android:textSize="15sp"
+                android:text="january 2afafafaf021"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:gravity="right"
                 style="@style/textTheme"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/head_color"
                 android:ellipsize="end"/>
         </LinearLayout>

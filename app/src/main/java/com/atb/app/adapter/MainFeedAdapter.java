@@ -33,13 +33,11 @@ import java.util.ArrayList;
 public class MainFeedAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<NewsFeedEntity> newsFeedEntities = new ArrayList<>();
-    MainListFragment mainListFragment ;
    NewsFeedItemAdapter newsFeedItemAdapter;
     CustomHolder holder;
 
-    public MainFeedAdapter(Context context, MainListFragment fragment) {
+    public MainFeedAdapter(Context context) {
         this.context = context;
-        mainListFragment = fragment;
     }
 
     @Override

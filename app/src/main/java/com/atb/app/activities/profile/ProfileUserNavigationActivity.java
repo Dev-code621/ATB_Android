@@ -30,6 +30,7 @@ import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.ProfileActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.navigationItems.SavePostActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.TellYourFriendActivity;
@@ -120,6 +121,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         LinearLayout lyt_save_post = findViewById(R.id.lyt_save_post);
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_tell_frieds = findViewById(R.id.lyt_tell_frieds);
+        LinearLayout lyt_purchase = findViewById(R.id.lyt_purchase);
         lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
         lyt_busines_description = findViewById(R.id.lyt_busines_description);
         lyt_title = findViewById(R.id.lyt_title);
@@ -127,6 +129,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         lyt_fragement = findViewById(R.id.lyt_fragement);
         frame_chat = findViewById(R.id.frame_chat);
         imv_search = findViewById(R.id.imv_search);
+        lyt_purchase.setOnClickListener(this);
         imv_search.setOnClickListener(this);
         frame_chat.setOnClickListener(this);
         lyt_tell_frieds.setOnClickListener(this);
@@ -156,8 +159,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         lyt_on.setOnClickListener(this);
         imv_feed.setOnClickListener(this);
         imv_post.setOnClickListener(this);
-        Commons.selectUsertype = 0;
-        Commons.selected_user = Commons.g_user;
+
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Posts", PostsFragment.class));
         pages.add(FragmentPagerItem.of("Main", MainListFragment.class));
@@ -273,9 +275,15 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 drawer.closeDrawer(GravityCompat.END);
                 goTo(this, BookingActivity.class,false);
                 break;
+            case R.id.lyt_purchase:
+                drawer.closeDrawer(GravityCompat.END);
+                goTo(this, PurchasesActivity.class,false);
+                break;
             case R.id.lyt_item_sold:
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, ItemSoldActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("bussiness",false);
+                goTo(this, ItemSoldActivity.class,false,bundle);
                 break;
             case R.id.lyt_create_bio:
                 drawer.closeDrawer(GravityCompat.END);
@@ -283,7 +291,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 break;
             case R.id.lyt_set_range:
                 drawer.closeDrawer(GravityCompat.END);
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putBoolean("bussiness",false);
                 goTo(this, SetPostRangeActivity.class,false,bundle);
                 break;
@@ -300,6 +308,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 goTo(this, ContactAdminActivity.class,false);
                 break;
             case R.id.lyt_save_post:
+                drawer.closeDrawer(GravityCompat.END);
                 goTo(this, SavePostActivity.class,false);
                 break;
             case R.id.lyt_logout:
@@ -433,6 +442,8 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
     @Override
     protected void onResume() {
         super.onResume();
+        Commons.selectUsertype = 0;
+        Commons.selected_user = Commons.g_user;
         setColor(selectIcon);
         initLayout();
     }

@@ -151,8 +151,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_search.setOnClickListener(this);
         frame_chat.setOnClickListener(this);
         card_addstore.setOnClickListener(this);
-        Commons.selectUsertype = 1;
-        Commons.selected_user = Commons.g_user;
+
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Store", StoreFragment.class));
@@ -276,11 +275,13 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
             case R.id.lyt_item_sold:
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, ItemSoldActivity.class,false);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("bussiness",true);
+                goTo(this, ItemSoldActivity.class,false,bundle);
                 break;
             case R.id.lyt_create_bio:
                 drawer.closeDrawer(GravityCompat.END);
-                Bundle bundle = new Bundle();
+                bundle = new Bundle();
                 bundle.putBoolean("bussiness",true);
                 goTo(this, CreateAmendBioActivity.class,false,bundle);
                 break;
@@ -301,6 +302,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 goTo(this, ContactAdminActivity.class,false);
                 break;
             case R.id.lyt_save_post:
+                drawer.closeDrawer(GravityCompat.END);
                 goTo(this, SavePostActivity.class,false);
                 break;
             case R.id.lyt_logout:
@@ -451,6 +453,8 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
     @Override
     protected void onResume() {
         super.onResume();
+        Commons.selectUsertype = 1;
+        Commons.selected_user = Commons.g_user;
         setColor(selectIcon);
         initLayout();
     }

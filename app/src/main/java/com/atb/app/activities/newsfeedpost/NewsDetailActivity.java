@@ -498,6 +498,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             imv_bookmark.setVisibility(View.GONE);
             lyt_sale_button.setVisibility(View.GONE);
             lyt_book_service.setVisibility(View.GONE);
+            for(int i =0;i<lyt_attribute.size();i++)
+                lyt_attribute.get(i).setVisibility(View.GONE);
         }
         if(newsFeedEntity.getCommentModels().size()>0)
         commentAdapter.setRoomData(newsFeedEntity.getCommentModels());

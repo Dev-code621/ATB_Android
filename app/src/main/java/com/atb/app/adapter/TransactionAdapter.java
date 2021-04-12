@@ -11,8 +11,12 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.NotiEntity;
 import com.atb.app.model.TransactionEntity;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -68,10 +72,25 @@ public class TransactionAdapter extends BaseAdapter {
         } else {
             holder = (CustomHolder) convertView.getTag();
         }
-        final TransactionEntity noti_item = _roomDatas.get(position);
+        final TransactionEntity transactionEntity = _roomDatas.get(position);
 //        holder.txv_title.setText(noti_item.getTitle());
 //        holder.txv_content.setText(noti_item.getContent());
 //        holder.txv_time.setText(noti_item.getTime());
+        String imv_url = Commons.g_user.getImvUrl();
+        String username = Commons.g_user.getUserName();
+        if(transactionEntity.getIs_business() == 1) {
+            imv_url = Commons.g_user.getBusinessModel().getBusiness_logo();
+            username = Commons.g_user.getBusinessModel().getBusiness_name();
+        }
+        Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate()
+                .apply(RequestOptions.bitmapTransform(
+                        new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder)))
+                .into(holder.imv_profile);
+
+        holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
+        holder.txv_username.setText(username);
+        holder.txv_time.setText(Commons.getDatefromMilionSecond(transactionEntity.getCreated_at()));
+        holder.txv_category.setText(transactionEntity.getTransaction_type());
         return convertView;
     }
 

@@ -25,12 +25,16 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.TransactionEntity;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +47,7 @@ public class ItemSoldActivity extends CommonActivity {
     SoldHeaderAdapter soldHeaderAdapter ;
     CardView card_business;
     boolean business_user = false;
+    ArrayList<TransactionEntity> transactionEntities = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +84,12 @@ public class ItemSoldActivity extends CommonActivity {
             }
         });
 
-        soldHeaderAdapter = new SoldHeaderAdapter(2, 5, true, false, false, SHOW_ADAPTER_POSITIONS);
-        recyclerView.setAdapter(soldHeaderAdapter);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                business_user= bundle.getBoolean("bussiness");
+            }
+        }
 
         initLayout();
     }
@@ -94,8 +103,6 @@ public class ItemSoldActivity extends CommonActivity {
 
 
     void initLayout(){
-        if(Commons.g_user.getAccount_type()==1)
-            business_user = true;
         if(business_user)
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
@@ -114,8 +121,40 @@ public class ItemSoldActivity extends CommonActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
-                        Log.d("aaaa",json);
                         closeProgress();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                transactionEntities.clear();
+                                for(int i =0;i<jsonArray.length();i++){
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    TransactionEntity transactionEntity = new TransactionEntity();
+                                    transactionEntity.setId(object.getInt("id"));
+                                    transactionEntity.setUser_id(object.getInt("user_id"));
+                                    transactionEntity.setIs_business(object.getInt("is_business"));
+                                    transactionEntity.setTransaction_id(object.getString("transaction_id"));
+                                    transactionEntity.setTransaction_type(object.getString("transaction_type"));
+                                    transactionEntity.setTarget_id(object.getString("target_id"));
+                                    transactionEntity.setAmount(object.getDouble("amount"));
+                                    transactionEntity.setPayment_method(object.getString("payment_method"));
+                                    transactionEntity.setPayment_source(object.getString("payment_source"));
+                                    transactionEntity.setQuantity(object.getInt("quantity"));
+                                    transactionEntity.setPurchase_type(object.getString("purchase_type"));
+                                    if(!object.getString("delivery_option").equals("null"))
+                                        transactionEntity.setDelivery_option(object.getInt("delivery_option"));
+                                    transactionEntity.setCreated_at(object.getLong("created_at"));
+                                    transactionEntity.setImv_url(object.getJSONArray("product").getJSONObject(0).getJSONArray("post_imgs").getJSONObject(0).getString("path"));
+                                    transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
+                                    transactionEntities.add(transactionEntity);
+                                }
+                                soldHeaderAdapter = new SoldHeaderAdapter(ItemSoldActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,transactionEntities);
+                                recyclerView.setAdapter(soldHeaderAdapter);
+                            }
+                        }catch (Exception e){
+                            Log.d("exception", e.toString());
+                        }
 
                     }
                 },

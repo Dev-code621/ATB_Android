@@ -683,8 +683,10 @@ public class NewsFeedEntity {
                 postImageModel.setCreated_at(postImages.getLong("created_at"));
                 postImageModels.add(postImageModel);
             }
-            if(jsonObject.has("likes"))
-              likes = jsonObject.getInt("likes");
+            if(jsonObject.has("likes")) {
+
+                likes = jsonObject.getInt("likes");
+            }
             if(jsonObject.has("comments"))
                 comments = jsonObject.getInt("comments");
             if(jsonObject.has("read_created"))

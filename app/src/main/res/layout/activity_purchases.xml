@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.navigationItems.PurchasesActivity">
+    tools:context=".activities.navigationItems.PurchasesActivity"
+    android:orientation="vertical"
+    android:background="@color/head_color">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:paddingBottom="20dp">
+        <FrameLayout
+            android:id="@+id/lyt_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_user_info_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/imv_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:actualImageScaleType="centerCrop"
+                    app:placeholderImage="@drawable/profile_pic"/>
+            </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Purchase"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginLeft="20dp"/>
+        <TextView
+            android:id="@+id/txv_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/signup_popup_color"/>
+</LinearLayout>
