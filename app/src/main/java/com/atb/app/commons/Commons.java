@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class Commons {
     public static boolean g_isAppRunning=false;
@@ -42,6 +43,7 @@ public class Commons {
     public static int glide_boder = 10;
     public static int video_flag = -1;
     public static int subscription_code = -11111;
+    public static String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     public static String fileNameWithoutExtFromPath(String path) {
 
@@ -159,5 +161,44 @@ public class Commons {
         return  dayName;
     }
 
+    public static String getLocaltime(String date){
 
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date d = null;
+        try {
+            d = df.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String localtime= new SimpleDateFormat("hh:mm a").format(d);
+        return localtime;
+    }
+    public static int getMilionSecond(String date){
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+        Date d = null;
+        int time =0;
+        try {
+            d = df.parse(date);
+            time = (int)d.getTime()/1000;
+            if(time<0)time+=24*3600;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return time;
+    }
+    public static String gettimeFromMilionSecond(int time){
+        Date d = new Date(time*1000l);
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+        String localtime = df.format(d);
+
+        return localtime;
+    }
+
+    public static int getMonthnumber(String str){
+        for(int i =0;i<12;i++){
+            if(monthNames[i].equals(str))return i;
+        }
+        return -1;
+    }
 }

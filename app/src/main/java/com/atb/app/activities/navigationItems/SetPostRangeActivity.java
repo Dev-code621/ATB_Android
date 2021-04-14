@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +39,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -162,6 +166,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(progress/30)));
             drawMyLocation();
         }
+        moveCamera();
         // mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
@@ -184,13 +189,13 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.edt_serach:
-//                List<Place.Field> fields = Arrays.asList(Place.Field.values());
-//
-//                Intent intent = new Autocomplete.IntentBuilder(
-//                        AutocompleteActivityMode.OVERLAY, fields)
-//                        .setTypeFilter(TypeFilter.ADDRESS)
-//                        .build(this);
-//                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
+                List<Place.Field> fields = Arrays.asList(Place.Field.values());
+
+                Intent intent = new Autocomplete.IntentBuilder(
+                        AutocompleteActivityMode.OVERLAY, fields)
+                        .setTypeFilter(TypeFilter.ADDRESS)
+                        .build(this);
+                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
                 break;
             case R.id.txv_update:
                 setResult(Commons.location_code);
@@ -205,6 +210,18 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         }
     }
 
+
+    void moveCamera(){
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
+
+        Circle circle = googleMap.addCircle(new CircleOptions()
+                .center(myCordianite)
+                .radius(progress*1000)
+                .strokeColor(getResources().getColor(R.color.head_color))
+                .fillColor(getResources().getColor(R.color.header_color1)));
+
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -214,6 +231,8 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 Autocomplete.getStatusFromIntent(data).toString();
                 edt_serach.setText(place.getAddress());
                 myCordianite = place.getLatLng();
+                moveCamera();
+
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.

@@ -188,4 +188,8 @@ dependencies {
     //applozic chat sdk
     implementation 'com.applozic.communication.uiwidget:mobicomkitui:5.98'
 
+    //calendaly view
+    implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+
+
 }

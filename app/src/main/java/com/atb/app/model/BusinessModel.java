@@ -2,6 +2,7 @@ package com.atb.app.model;
 
 import android.util.Log;
 
+import com.atb.app.commons.Commons;
 import com.atb.app.model.submodel.DisableSlotModel;
 import com.atb.app.model.submodel.HolidayModel;
 import com.atb.app.model.submodel.OpeningTimeModel;
@@ -27,6 +28,41 @@ public class BusinessModel {
 
     public ArrayList<SocialModel> getSocialModels() {
         return socialModels;
+    }
+    ArrayList<ArrayList<String>> slots = new ArrayList<>();
+
+    public ArrayList<ArrayList<String>> getSlots() {
+        slots.clear();
+        if(openingTimeModels.size()==0)return slots;
+        for(int i =0;i<7;i++){
+            ArrayList<String>arrayList = new ArrayList<>();
+            slots.add(arrayList);
+        }
+        for(int i =0;i<7;i++){
+            int next_day = (i+1)%7;
+            if(openingTimeModels.get(i).getIs_available()==0)continue;
+            int start = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getStart()));
+            int end = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getEnd()));
+            if(end<0)end+=24*3600;
+            int count = (end-start)/3600;
+            for(int k=0;k<count;k++){
+                if(start%(24*3600)<= Commons.getMilionSecond("11:00 PM")) {
+                    slots.get(i).add(Commons.gettimeFromMilionSecond(start));
+                }else {
+                    slots.get(next_day).add(Commons.gettimeFromMilionSecond(start));
+                }
+                start+=3600;
+            }
+        }
+
+//        for(int i =0;i<7;i++){
+//            String str = "";
+//            for(int j =0;j<slots.get(i).size();j++){
+//                str = str + " " + slots.get(i).get(j);
+//            }
+//            Log.d("aaaaaaa",String.valueOf(i) + "   " +  str);
+//        }
+        return slots;
     }
 
     public void setSocialModels(ArrayList<SocialModel> socialModels) {

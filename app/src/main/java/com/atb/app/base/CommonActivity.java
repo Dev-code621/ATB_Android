@@ -130,7 +130,7 @@ public abstract class CommonActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         String time = format.format(d);
         return time;
@@ -138,7 +138,7 @@ public abstract class CommonActivity extends BaseActivity {
 
     public String getLocaltime(String date){
 
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date d = null;
         try {
@@ -149,6 +149,8 @@ public abstract class CommonActivity extends BaseActivity {
         String localtime= new SimpleDateFormat("hh:mm a").format(d);
         return localtime;
     }
+
+
     public boolean emailInvalied(String email){
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 

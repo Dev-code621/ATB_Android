@@ -10,7 +10,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:layout_width="250dp"
@@ -18,7 +19,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="bottom">
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -38,101 +39,89 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="20dp"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="right|bottom"
             android:src="@drawable/icon_close"
             android:tint="@color/lite_gray"/>
-        <LinearLayout
-            android:id="@+id/lyt_month"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="50dp"
-            android:gravity="center_vertical">
-            <TextView
-                android:id="@+id/txt_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/boldtextTheme"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/head_color"
-                android:textSize="16sp"/>
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ico_show"
-                android:layout_marginLeft="10dp"
-                android:tint="@color/head_color"/>
-        </LinearLayout>
     </FrameLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerView_date"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/icon_transaction" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/what_time"
-                style="@style/boldtextTheme"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/txt_color"
-                android:textSize="18sp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/lyt_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:gravity="center_vertical">
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="@string/show_confirm"
-                style="@style/boldtextTheme"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/head_color"
-                android:layout_gravity="right"
-                android:textSize="16sp"
-                android:gravity="right"/>
-            <ImageView
-                android:id="@+id/imv_selector"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/edit_category_selector"
-                android:layout_gravity="right|center" />
-        </LinearLayout>
-    </RelativeLayout>
-    <ListView
-        android:id="@+id/list_booking"
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:listSelector="@color/transparent"
-        android:scrollbars="none"/>
+        android:fillViewport="true"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.applikeysolutions.cosmocalendar.view.CalendarView
+                android:id="@+id/calendar_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:orientation="horizontal"
+                app:calendarBackgroundColor="@color/signup_popup_color"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icon_transaction" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/what_time"
+                        style="@style/boldtextTheme"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/txt_color"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/lyt_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/show_confirm"
+                        style="@style/boldtextTheme"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/head_color"
+                        android:layout_gravity="right"
+                        android:textSize="16sp"
+                        android:gravity="right"/>
+                    <ImageView
+                        android:id="@+id/imv_selector"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/edit_category_selector"
+                        android:layout_gravity="right|center" />
+                </LinearLayout>
+            </RelativeLayout>
+            <ListView
+                android:id="@+id/list_booking"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:listSelector="@color/transparent"
+                android:scrollbars="none"
+                android:layout_marginBottom="20dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

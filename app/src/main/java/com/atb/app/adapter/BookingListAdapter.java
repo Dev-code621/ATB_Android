@@ -27,7 +27,7 @@ public class BookingListAdapter extends BaseAdapter {
     private BookingActivity _context;
 
     HashMap<String,BookingEntity> _roomDatas = new HashMap<>();
-    String[]bookingSlot = new String[100];
+    ArrayList<String > bookingSlot = new ArrayList<>();
     public BookingListAdapter(BookingActivity context) {
 
         super();
@@ -35,9 +35,14 @@ public class BookingListAdapter extends BaseAdapter {
     }
 
 
-    public void setRoomData(HashMap<String,BookingEntity> data,String[] bookingSlot) {
+    public void setRoomData(HashMap<String,BookingEntity> data,ArrayList<String > bookingSlot) {
         _roomDatas = data;
         this.bookingSlot = bookingSlot;
+        notifyDataSetChanged();
+    }
+    public void init() {
+        this._roomDatas.clear();
+        this.bookingSlot.clear();
         notifyDataSetChanged();
     }
 
@@ -78,15 +83,15 @@ public class BookingListAdapter extends BaseAdapter {
             holder = (CustomHolder) convertView.getTag();
         }
 
-        final BookingEntity bookingEntity =  _roomDatas.get(bookingSlot[position]);
-        holder.txv_timeslot.setText(bookingSlot[position]);
-        if(bookingEntity==null){
+        final BookingEntity bookingEntity =  _roomDatas.get(bookingSlot.get(position));
+        holder.txv_timeslot.setText(bookingSlot.get(position));
+//        if(bookingEntity==null){
             holder.lyt_addbooking.setVisibility(View.VISIBLE);
             holder.lyt_booking.setVisibility(View.GONE);
-        }else {
-            holder.lyt_addbooking.setVisibility(View.GONE);
-            holder.lyt_booking.setVisibility(View.VISIBLE);
-        }
+//        }else {
+//            holder.lyt_addbooking.setVisibility(View.GONE);
+//            holder.lyt_booking.setVisibility(View.VISIBLE);
+//        }
 //        holder.txv_title.setText(noti_item.getTitle());
 //        holder.txv_content.setText(noti_item.getContent());
 //        holder.txv_time.setText(noti_item.getTime());
