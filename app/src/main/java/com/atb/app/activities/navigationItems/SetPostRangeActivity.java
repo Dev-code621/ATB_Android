@@ -1,15 +1,20 @@
 package com.atb.app.activities.navigationItems;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -64,6 +69,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class SetPostRangeActivity extends CommonActivity implements View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     ImageView imv_back;
@@ -124,12 +130,16 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap mMap) {
         googleMap = mMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(Commons.traffic);
         googleMap.setOnMarkerClickListener(this);
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
         setUpMap();
     }
 
@@ -149,7 +159,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
 
             // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(progress/30)));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
 
             drawMyLocation();
 
@@ -163,15 +173,14 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
 
             // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(progress/30)));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
             drawMyLocation();
         }
-        moveCamera();
+      //  moveCamera();
         // mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
     void drawMyLocation() {
-
         //showing the current location in map
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -180,7 +189,26 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             googleMap.setMyLocationEnabled(true);
 
         }
+        try {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
+            addresses = geocoder.getFromLocation(myCordianite.latitude, myCordianite.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+            edt_serach.setText(address);
+        }catch (Exception e){
+
+        }
+
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -205,7 +233,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.lyt_send:
-
+                setUpMap();
                 break;
         }
     }
@@ -232,8 +260,6 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 edt_serach.setText(place.getAddress());
                 myCordianite = place.getLatLng();
                 moveCamera();
-
-
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);

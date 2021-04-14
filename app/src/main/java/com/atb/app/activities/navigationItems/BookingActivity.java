@@ -18,6 +18,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.applikeysolutions.cosmocalendar.listeners.OnMonthChangeListener;
 import com.applikeysolutions.cosmocalendar.model.Day;
 import com.applikeysolutions.cosmocalendar.model.Month;
@@ -36,6 +42,8 @@ import com.atb.app.activities.newsfeedpost.ExistSalesPostActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.adapter.BookingDateAdapter;
 import com.atb.app.adapter.BookingListAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.BaseActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
@@ -43,9 +51,13 @@ import com.atb.app.commons.Helper;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.submodel.HolidayModel;
 import com.atb.app.model.submodel.OpeningTimeModel;
+import com.google.gson.JsonArray;
 import com.kal.rackmonthpicker.RackMonthPicker;
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener;
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -56,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -91,7 +104,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookingEntity bookingEntity = hashMap.get(bookingSlot.get(day).get(position));
-                if(bookingEntity == null) {
+                if(bookingEntity.getType()  == 0) {
                     Bundle bundle = new Bundle();
                     goTo(BookingActivity.this, CreateABookingActivity.class, false, bundle);
                     Log.d("aaa","Create");
@@ -175,6 +188,58 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         }
 
         calendarView.setDisabledDays(disabledDaysSet);
+        getBooking();
+    }
+
+    void getBooking(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_BOOKING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray arrayList = jsonObject.getJSONArray("extra");
+                            bookingEntities.clear();
+                            for(int i =0;i<arrayList.length();i++){
+                                BookingEntity bookingEntity = new BookingEntity();
+                                bookingEntity.initModel(arrayList.getJSONObject(i));
+                                bookingEntities.add(bookingEntity);
+
+                            }
+
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("is_business", "1");
+                params.put("month", String.valueOf(year) +" " + String.valueOf(month+1));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void loadBookingByday(int day){
@@ -182,10 +247,24 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         this.day = day;
         for(int i =0;i<bookingSlot.get(day).size();i++){
             BookingEntity bookingEntity = new BookingEntity();
-            hashMap.put(bookingSlot.get(day).get(i), bookingEntity);
+            int bookslot_id = slotBooked(bookingSlot.get(day).get(i));
+            if(bookslot_id>=0)
+                hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
+            else
+                hashMap.put(bookingSlot.get(day).get(i), bookingEntity);
         }
         bookingListAdapter.setRoomData(hashMap,bookingSlot.get(day));
         Helper.getListViewSize(list_booking);
+    }
+    int slotBooked(String str){
+        for(int i =0;i<bookingEntities.size();i++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(bookingEntities.get(i).getBooking_datetime()*1000l);
+            if(str.equals(Commons.gettimeFromMilionSecond(bookingEntities.get(i).getBooking_datetime())) && calendar.get(Calendar.DAY_OF_MONTH)-1 == day)
+                return i;
+        }
+
+        return -1;
     }
     @Override
     public void onClick(View v) {

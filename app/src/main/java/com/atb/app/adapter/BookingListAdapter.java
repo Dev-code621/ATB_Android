@@ -13,8 +13,12 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
+import com.atb.app.commons.Commons;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.NotiEntity;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,16 +89,29 @@ public class BookingListAdapter extends BaseAdapter {
 
         final BookingEntity bookingEntity =  _roomDatas.get(bookingSlot.get(position));
         holder.txv_timeslot.setText(bookingSlot.get(position));
-//        if(bookingEntity==null){
+        if(bookingEntity.getType() ==0){
             holder.lyt_addbooking.setVisibility(View.VISIBLE);
             holder.lyt_booking.setVisibility(View.GONE);
-//        }else {
-//            holder.lyt_addbooking.setVisibility(View.GONE);
-//            holder.lyt_booking.setVisibility(View.VISIBLE);
-//        }
-//        holder.txv_title.setText(noti_item.getTitle());
-//        holder.txv_content.setText(noti_item.getContent());
-//        holder.txv_time.setText(noti_item.getTime());
+        }else {
+            holder.lyt_addbooking.setVisibility(View.GONE);
+            holder.lyt_booking.setVisibility(View.VISIBLE);
+        }
+        String imv_url = "";
+        String name = bookingEntity.getUserModel().getUserName();
+        String email = bookingEntity.getUserModel().getEmail();
+        if(bookingEntity.getUserModel().getId()>=0)
+            if(bookingEntity.getUserModel().getAccount_type()==1) {
+                imv_url = bookingEntity.getUserModel().getBusinessModel().getBusiness_logo();
+                name = bookingEntity.getUserModel().getBusinessModel().getBusiness_name();
+                email = bookingEntity.getUserModel().getBusinessModel().getBusiness_website();
+            }
+            else {
+                imv_url = bookingEntity.getUserModel().getImvUrl();
+            }
+        Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A6BFDE", Commons.glide_boder))).into(holder.imv_profile);
+            holder.txv_name.setText(name);
+            holder.txv_id.setText(email);
         return convertView;
     }
 

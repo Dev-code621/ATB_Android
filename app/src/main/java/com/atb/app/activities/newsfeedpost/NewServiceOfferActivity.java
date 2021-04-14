@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -167,6 +171,17 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             }
         });
 
+        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
+                SpannableString ss = new SpannableString(text);
+                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                txv_post.setText(ss);
+            }
+        });
         toggle_deposit.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {

@@ -108,22 +108,24 @@
                 android:layout_marginLeft="10dp">
                 <TextView
                     android:id="@+id/txv_name"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Women Haircut"
                     style="@style/boldtextTheme"
+                    android:singleLine="true"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/white"
                     android:textSize="18sp"/>
                 <TextView
                     android:id="@+id/txv_id"
-                    android:layout_width="150dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Jessica.@Xandi"
                     style="@style/textTheme"
+                    android:singleLine="true"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="15sp"/>
             </LinearLayout>
             <View
                 android:layout_width="0dp"

@@ -3,9 +3,11 @@ package com.atb.app.activities.navigationItems.business;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -45,6 +47,7 @@ import com.atb.app.util.MultiPartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
@@ -67,6 +70,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
+import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
+
 public class UpdateBusinessActivity extends CommonActivity implements View.OnClickListener , ImageUtils.ImageAttachmentListener{
     ImageView imv_back,imv_profile,imv_fb_selector,imv_instagram_selector,imv_twitter_selector;
     EditText edt_business_name,edt_yourwebsite,edt_tell_us,edt_instagram_name,edt_twitter_name,edt_tag;
@@ -85,6 +91,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     boolean insurance_camera = false;
     AddInsuranceDialog addInsuranceDialog;
     boolean twitter_connect = false,instagram_connect = false, facebook_connect =false;
+    ImageView imv_tag_detail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +121,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         lyt_twitter_content = findViewById(R.id.lyt_twitter_content);
         list_certification = findViewById(R.id.list_certification);
         list_insurance = findViewById(R.id.list_insurance);
-
+        imv_tag_detail = findViewById(R.id.imv_tag_detail);
+        imv_tag_detail.setOnClickListener(this);
         imv_back.setOnClickListener(this);
         imv_profile.setOnClickListener(this);
         lyt_setoperation_hour.setOnClickListener(this);
@@ -705,6 +713,23 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 break;
             case R.id.lyt_save:
                 gotoSaveBusiness();
+                break;
+            case  R.id.imv_tag_detail:
+                new SimpleTooltip.Builder(this)
+                        .anchorView(imv_tag_detail)
+                        .text("Please add single word tags that best represent what your business is about, this will make it easier for customers to find you via the search page")
+                        .gravity(Gravity.TOP)
+                        .animated(true)
+                        .transparentOverlay(false)
+                        .textColor(Color.WHITE)
+                        .setWidth(Commons.phone_width)
+                        .dismissOnOutsideTouch(true)
+                        .dismissOnInsideTouch(true)
+                        .modal(true)
+                        .animated(true)
+                        .animationDuration(2000)
+                        .build()
+                        .show();
                 break;
         }
     }

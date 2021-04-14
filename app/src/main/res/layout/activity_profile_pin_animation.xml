@@ -209,6 +209,7 @@
                             android:text="@string/how_des_work"
                             android:textColor="@color/txt_color"
                             android:layout_marginTop="10dp"
+                            android:layout_marginBottom="30dp"
                             android:textSize="14sp"/>
                     </LinearLayout>
                 </ScrollView>

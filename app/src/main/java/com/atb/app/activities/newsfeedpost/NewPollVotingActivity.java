@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +47,7 @@ import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -164,6 +169,17 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
         });
         recyclerView_images.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerView_images.setAdapter(pollEmageAdapter);
+        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
+                SpannableString ss = new SpannableString(text);
+                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                txv_post.setText(ss);
+            }
+        });
 
         initLayout();
     }

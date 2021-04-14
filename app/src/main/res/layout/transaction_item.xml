@@ -11,8 +11,7 @@
         android:paddingBottom="8dp"
         android:orientation="horizontal"
         android:background="@drawable/edit_rectangle_round"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginTop="5dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/card_user_info_image"
             android:layout_width="50dp"

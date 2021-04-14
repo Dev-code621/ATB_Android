@@ -126,5 +126,6 @@ public class API {
     public static final String  GET_ITEMS_SOLD =   API_BASE_URL + "transaction/get_items_sold";
     public static final String UPDATE_PRODUCT_VARIANT = API_BASE_URL + "profile/update_variant_product";
     public static final String GET_PURCHASES       =   API_BASE_URL + "transaction/get_purchases";
+    public static final String GET_BOOKING       =   API_BASE_URL + "booking/get_bookings";
 
 }

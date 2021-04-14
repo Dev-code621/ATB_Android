@@ -17,7 +17,7 @@
     <string name="singin_instead">Sign In Instead></string>
     <string name="signup3">Use Your Email For Sign Up</string>
     <string name="signup4">We will use the following email every time you try to sign up in our app</string>
-    <string name="create_password">Next: Crete a Password ></string>
+    <string name="create_password">Next: Create a Password ></string>
     <string name="confirm_email">Confirm Email</string>
     <string name="back_toemail">Back To Email</string>
     <string name="set_password">Set a Password</string>
@@ -156,7 +156,7 @@
     <string name="transaction_histsory">Transaction History</string>
     <string name="transaction">Transactions</string>
     <string name="contact_admin">Contact Admin</string>
-    <string name="saved_post">Saves Posts</string>
+    <string name="saved_post">Saved Posts</string>
     <string name="logout">Log out</string>
     <string name="business_description">Upgrade to a Business Account</string>
     <string name="business_description1">Upload Business Logo</string>
@@ -251,8 +251,8 @@
     <string name="how_des_work">Each week, the 5 slots at the top of the relevant feed become available for businesses to promote themselves via an auction process.
         \n\nBids begin on Monday at <font color='#A6BFDE'><b>00:00</b></font> with each pin starting at <font color='#A6BFDE'><b>£ 5.00</b></font> with the auction process lasting for one week, during this time all businesses can bid to have their profile promoted.
         \n\nOnce the bidding process has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bid will have their Logo pinned to the top of the feed which will be linked to their profile.
-        \n\nAdditionally, each business will have a post of their Store Profile posted every X number of posts on the relevant feed and will have a notification sent to all users informing them of their promotion ** Once the auction process for the week has completed,
-        \n\nit will be reset back to £ 5.00 giving all businesses equal opportunity to promote their business</string>
+        \n\nAdditionally, each business will have a post of their Store Profile posted every X number of posts on the relevant feed and will have a notification sent to all users informing them of their promotion
+        \n\nOnce the auction process for the week has completed,it will be reset back to £ 5.00 giving all businesses equal opportunity to promote their business</string>
     <string name="how_des_work1">
         ATB users can use the search feature to find businesses or posts relevant to the keyword or phrase they are looking for.\n\n
         The user has the option to search through two databases - Either the Post database or the Business Directory database.\n\n

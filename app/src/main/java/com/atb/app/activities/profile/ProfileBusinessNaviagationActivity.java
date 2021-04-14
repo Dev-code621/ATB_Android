@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -70,6 +71,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
     FragmentTransaction ft;
     ChatFragment chatFragment;
     FrameLayout lyt_fragement,frame_chat;
+    String facebook ="" ,instagra = "",twitter ="";
     int selectIcon =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +204,18 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         txv_following.setText(String.valueOf(Commons.g_user.getFollow_count()));
         txv_post.setText(String.valueOf(Commons.g_user.getPost_count()));
         txv_description.setText(Commons.g_user.getBusinessModel().getBusiness_bio());
+        for(int i =0;i<Commons.g_user.getBusinessModel().getSocialModels().size();i++){
+            if(Commons.g_user.getBusinessModel().getSocialModels().get(i).getType()==0){
+                imv_facebook.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                facebook = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+            }else if(Commons.g_user.getBusinessModel().getSocialModels().get(i).getType()==1){
+                imv_instagram.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                instagra = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+            }else {
+                imv_twitter.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                twitter = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+            }
+        }
     }
 
     @Override
@@ -331,15 +345,15 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
 
             case R.id.imv_facebook:
-
+                goToUrl ( "http://facebook.com/" + facebook);
                 break;
 
             case R.id.imv_instagram:
-
+                goToUrl ( "https://instagram.com/" + instagra );
                 break;
 
             case R.id.imv_twitter:
-
+                goToUrl ( "http://twitter.com/" + twitter);
                 break;
 
             case R.id.lyt_follower:
@@ -376,6 +390,13 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
 
         }
     }
+
+    private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
+
     void gotoLogout(){
         ConfirmDialog confirmDialog = new ConfirmDialog();
         confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {

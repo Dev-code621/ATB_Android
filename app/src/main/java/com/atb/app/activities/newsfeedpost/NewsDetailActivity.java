@@ -706,8 +706,14 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-                               if(flowerid ==0)flowerid = 1;
-                               else flowerid = 0;
+                               if(flowerid ==0){
+                                   flowerid = 1;
+                                   showAlertDialog("You are following this user!");
+                               }
+                               else{
+                                   flowerid = 0;
+                                   showAlertDialog("You removed this follow!");
+                               }
                             }
                         }catch (Exception e){
                             Log.d("Exception ",e.toString());

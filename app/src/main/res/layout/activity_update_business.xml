@@ -487,16 +487,23 @@
                     android:layout_gravity="right|center"
                     android:tint="@color/white"/>
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/add_tag_business"
-                    android:gravity="center"
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"
                     android:paddingLeft="0dp"
                     android:textSize="17sp"
                     android:layout_marginLeft="5dp"
                     android:paddingRight="0dp" />
+                <ImageView
+                    android:id="@+id/imv_tag_detail"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_report1"
+                    android:layout_gravity="right|center"
+                    android:tint="@color/white"/>
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"

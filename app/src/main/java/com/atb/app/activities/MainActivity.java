@@ -65,6 +65,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     ArrayList<BoostModel>boostModels = new ArrayList<>();
     BoostItemAdapter boostAdapter ;
     ChatFragment chatFragment;
+    ImageView imv_title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +85,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         card_unread_noti = findViewById(R.id.card_unread_noti);
         card_unread_chat = findViewById(R.id.card_unread_chat);
         recycler_view_boost = findViewById(R.id.recycler_view_boost);
+        imv_title = findViewById(R.id.imv_title);
+        imv_title.setOnClickListener(this);
 
         imv_search.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
@@ -150,6 +153,10 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 break;
             case R.id.frame_noti:
                 goTo(this, NotificationActivity.class,false);
+                break;
+            case R.id.imv_title:
+                if(mainListFragment!=null)
+                    mainListFragment.uiRefresh();
                 break;
         }
     }

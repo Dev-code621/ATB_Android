@@ -34,14 +34,14 @@
             android:layout_marginLeft="10dp"
             android:textColor="@color/txt_color"/>
         <LinearLayout
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/edit_rectangle_round"
             android:layout_marginRight="10dp">
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/icon_paymentblue"
                 android:layout_gravity="center"/>
             <EditText
@@ -64,7 +64,7 @@
             android:layout_marginRight="10dp">
             <TextView
                 android:id="@+id/txv_minus"
-                android:layout_width="50dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_rectangle_round"
                 android:text="-"
@@ -84,7 +84,7 @@
                 android:singleLine="true" />
             <TextView
                 android:id="@+id/txv_plus"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/button_rectangle_round"
                 android:text="+"

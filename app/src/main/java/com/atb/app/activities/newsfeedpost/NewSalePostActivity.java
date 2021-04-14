@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.adapter.MultiPostFeedAdapter;
@@ -42,7 +47,9 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.AddVariationDialog;
+import com.atb.app.dialog.ConfirmBookingDialog;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.ConfirmVariationDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.VariationModel;
@@ -97,6 +104,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     boolean cash = false, paypal = false,postage=false,collect=false,deliver =false;
     ArrayList<NewsFeedEntity> newsFeedEntities  = new ArrayList<>();
     MultiPostFeedAdapter postFeedAdapter;
+    ImageView imv_variation_description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +138,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 isPosting= bundle.getInt("isPosting");
             }
         }
+
         loadLayout();
         Keyboard();
     }
@@ -259,6 +268,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         toggle_free_postage = sceneRoot.findViewById(R.id.toggle_free_postage);
         edt_deliver_cost = sceneRoot.findViewById(R.id.edt_deliver_cost);
         lyt_deliver = sceneRoot.findViewById(R.id.lyt_deliver);
+        imv_variation_description = sceneRoot.findViewById(R.id.imv_variation_description);
+        imv_variation_description.setOnClickListener(this);
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
@@ -275,6 +286,18 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 }
             }
         });
+        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
+                SpannableString ss = new SpannableString(text);
+                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                txv_post.setText(ss);
+            }
+        });
+
 
         toggle_cash.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
@@ -429,6 +452,17 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             case R.id.lyt_selectall:
                 imv_stocker_check.setEnabled(!imv_stocker_check.isEnabled());
                 stockAdapter.setSelect(imv_stocker_check.isEnabled());
+                break;
+            case R.id.imv_variation_description:
+                ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog();
+                confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        setResult(RESULT_OK);
+                        finish(NewSalePostActivity.this);
+                    }
+                });
+                confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
                 break;
         }
     }

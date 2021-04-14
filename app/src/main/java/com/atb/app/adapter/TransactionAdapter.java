@@ -89,7 +89,7 @@ public class TransactionAdapter extends BaseAdapter {
 
         holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
         holder.txv_username.setText(username);
-        holder.txv_time.setText(Commons.getDatefromMilionSecond(transactionEntity.getCreated_at()));
+        holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()));
         holder.txv_category.setText(transactionEntity.getTransaction_type());
         return convertView;
     }

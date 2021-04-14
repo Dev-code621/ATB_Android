@@ -42,7 +42,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
     TextView txv_email,txv_signin,txv_next;
     ImageView imv_back,imv_back1,imv_selector1,imv_selector2;
     EditText edt_email,edit_confirm_email;
-    RecyclerView recyclerView_images;
+    RecyclerView recyclerView_images,recyclerView_images1;
     ViewGroup sceneRoot;
 
     @Override
@@ -81,6 +81,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
         edt_email = sceneRoot.findViewById(R.id.edt_email);
         edit_confirm_email = sceneRoot.findViewById(R.id.edit_confirm_email);
         recyclerView_images = sceneRoot.findViewById(R.id.recyclerView_images);
+        recyclerView_images1 = sceneRoot.findViewById(R.id.recyclerView_images1);
         imv_back.setOnClickListener(this);
         imv_back1.setOnClickListener(this);
         imv_selector1.setOnClickListener(this);
@@ -97,6 +98,14 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                 edt_email.setText(edt_email.getText().toString() + path);
             }
         }));
+          recyclerView_images1.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView_images1.setAdapter(new EmailAdapter(this, list, new EmailAdapter.OnEmailSelectListener() {
+            @Override
+            public void onEmailSelect(String path) {
+                edit_confirm_email.setText(edit_confirm_email.getText().toString() + path);
+            }
+        }));
+
 
         edt_email.addTextChangedListener(new TextWatcher() {
             @Override

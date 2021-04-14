@@ -43,7 +43,7 @@ import static com.atb.app.base.BaseActivity.closeProgress;
 import static com.atb.app.base.BaseActivity.showProgress;
 import static com.atb.app.base.BaseActivity.showToast;
 
-public class MainListFragment extends Fragment {
+public class MainListFragment extends Fragment  implements SwipyRefreshLayout.OnRefreshListener{
     View view;
     ListView list_main;
     Context context;
@@ -64,19 +64,22 @@ public class MainListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         list_main = (ListView)view.findViewById(R.id.list_main);
         ui_refreshLayout = (SwipyRefreshLayout) view.findViewById(R.id.refresh);
-        ui_refreshLayout.setDirection(SwipyRefreshLayoutDirection.TOP);
         getList();
-        ui_refreshLayout.setOnRefreshListener(new SwipyRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh(SwipyRefreshLayoutDirection direction) {
-                if(direction == SwipyRefreshLayoutDirection.TOP){
-                    getList();
-                    ui_refreshLayout.setRefreshing(false);
+        ui_refreshLayout.setDirection(SwipyRefreshLayoutDirection.BOTH);
+        ui_refreshLayout.setOnRefreshListener(this);
+    }
+    @Override
+    public void onRefresh(SwipyRefreshLayoutDirection direction) {
+        Log.d("aaaaa","aaaa");
+        if(direction == SwipyRefreshLayoutDirection.TOP){
+            getList();
+            ui_refreshLayout.setRefreshing(false);
 
-                }
-            }
-        });
+        }
+    }
 
+    public void uiRefresh(){
+        ui_refreshLayout.setDirection(SwipyRefreshLayoutDirection.TOP);
     }
 
 

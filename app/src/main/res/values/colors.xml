@@ -28,6 +28,7 @@
     <color name="signup_popup_color">#EFEFEF</color>
     <color name="background_color1">#FAFAFA</color>
     <color name="signup_textcolor">#707070</color>
+    <color name="tooltipcolor">#737373</color>
 
     <color name="head_color">#A6BFDE</color>
     <color name="transparent_header">#A8A6BFDE</color>

@@ -285,9 +285,12 @@ public class BusinessModel {
                 socialModel.setCreated_at(social.getLong("created_at"));
                 getSocialModels().add(socialModel);
             }
-            setPost_count(business_info.getInt("post_count"));
-            setFollowers_count(business_info.getInt("followers_count"));
-            setFollow_count(business_info.getInt("follow_count"));
+            if(business_info.has("post_count"))
+                 setPost_count(business_info.getInt("post_count"));
+            if(business_info.has("followers_count"))
+                setFollowers_count(business_info.getInt("followers_count"));
+            if(business_info.has("follow_count"))
+                setFollow_count(business_info.getInt("follow_count"));
         }catch (Exception e){
             Log.d("aaaaa",e.toString());
         }
