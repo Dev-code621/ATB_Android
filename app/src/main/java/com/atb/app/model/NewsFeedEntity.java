@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class NewsFeedEntity {
     // postType:  "Advice", "Sales", "Service", "Poll"
     // "Text", "Image", "Video"
+    // 0 - none selected, 1 - Cash on Colleciton, 2 - PayPal, 3 - both Cash and PayPal
     int id,user_id,post_type,poster_profile_type,media_type;
     boolean type;
     boolean select = false;

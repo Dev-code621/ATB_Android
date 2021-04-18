@@ -16,12 +16,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.atb.app.R;
+import com.atb.app.model.BookingEntity;
 
 public class RequestPaypalDialog extends DialogFragment {
 
     private ConfirmDialog.OnConfirmListener listener;
     TextView txv_booking_price,txv_deposit,txv_pending_funds;
     LinearLayout lyt_request_payment;
+    BookingEntity bookingEntity = new BookingEntity();
+    public RequestPaypalDialog(BookingEntity bookingEntity) {
+        this.bookingEntity = bookingEntity;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,6 +47,10 @@ public class RequestPaypalDialog extends DialogFragment {
         txv_deposit = view.findViewById(R.id.txv_deposit);
         txv_pending_funds = view.findViewById(R.id.txv_pending_funds);
         lyt_request_payment = view.findViewById(R.id.lyt_request_payment);
+
+        txv_booking_price.setText("£" + bookingEntity.getNewsFeedEntity().getPrice());
+        txv_deposit.setText("£" + bookingEntity.getNewsFeedEntity().getDeposit());
+        txv_pending_funds.setText("£" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - Double.parseDouble(bookingEntity.getNewsFeedEntity().getDeposit())));
 
         lyt_request_payment.setOnClickListener(new View.OnClickListener() {
             @Override

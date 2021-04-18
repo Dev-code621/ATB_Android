@@ -194,6 +194,15 @@ public class Commons {
 
         return localtime;
     }
+    public static String getUTCtimeFromMilionSecond(int time){
+        Date d = new Date(time*1000l);
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String localtime = df.format(d);
+
+        return localtime;
+    }
+
 
     public static int getMonthnumber(String str){
         for(int i =0;i<12;i++){

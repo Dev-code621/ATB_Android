@@ -480,4 +480,8 @@ public abstract class CommonActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    public void disableSlot(int time,boolean flag){
+
+    }
+
 }

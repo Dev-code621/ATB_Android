@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp">
+    android:layout_marginLeft="10dp"
+    android:id="@+id/lyt_container">
     <TextView
         android:id="@+id/txv_timeslot"
         android:layout_width="150dp"
@@ -22,13 +23,14 @@
         <LinearLayout
             android:id="@+id/lyt_addbooking"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="70dp"
             android:background="@drawable/edit_rectangle_round"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
             <ImageView
+                android:id="@+id/imv_disalbe"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/leftdetail"
@@ -40,6 +42,7 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="20dp">
                 <TextView
+                    android:id="@+id/txv_disable"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/free_slot"
@@ -48,6 +51,7 @@
                     android:textColor="@color/signup_textcolor"
                     android:textSize="15sp"/>
                 <TextView
+                    android:id="@+id/txv_add"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/add_booking"
@@ -67,13 +71,19 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"/>
-            <ImageView
-                android:id="@+id/imv_selector"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/edit_category_selector"
-                android:layout_gravity="right|center"
-                android:layout_marginRight="10dp" />
+            <LinearLayout
+                android:id="@+id/lyt_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/imv_selector"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/edit_selector"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="10dp" />
+            </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/lyt_booking"

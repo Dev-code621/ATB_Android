@@ -33,6 +33,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
+import com.atb.app.activities.profile.FollowerAndFollowingActivity;
 import com.atb.app.activities.profile.ReportPostActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
@@ -193,6 +195,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         lyt_sale_button = findViewById(R.id.lyt_sale_button);
         lyt_book_service = findViewById(R.id.lyt_book_service);
         lyt_like = findViewById(R.id.lyt_like);
+        txv_book_service.setOnClickListener(this);
+        lyt_book_service.setOnClickListener(this);
+        imv_bubble.setOnClickListener(this);
         txv_buy_sale.setOnClickListener(this);
         lyt_like.setOnClickListener(this);
         imv_bookmark.setOnClickListener(this);
@@ -568,6 +573,17 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     },newsFeedEntity,selected_Variation);
                     productVariationSelectDialog.show(getSupportFragmentManager(), "DeleteMessage");
                 }
+                break;
+            case R.id.imv_bubble:
+                gotochat(this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
+                break;
+            case R.id.lyt_book_service:
+                Bundle bundle = new Bundle();
+
+                Gson gson = new Gson();
+                String newfeedentity = gson.toJson(newsFeedEntity);
+                bundle.putString("newsFeedEntity",newfeedentity);
+                goTo(this, BookFromPostActivity.class,false,bundle);
                 break;
         }
     }

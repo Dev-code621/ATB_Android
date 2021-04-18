@@ -127,5 +127,12 @@ public class API {
     public static final String UPDATE_PRODUCT_VARIANT = API_BASE_URL + "profile/update_variant_product";
     public static final String GET_PURCHASES       =   API_BASE_URL + "transaction/get_purchases";
     public static final String GET_BOOKING       =   API_BASE_URL + "booking/get_bookings";
-
+    public static final String REQEST_PAYMENT = API_BASE_URL + "business/request_payment";
+    public static final String REQUEST_RATING = API_BASE_URL + "business/request_rating";
+    public static final String CANCEL_BOOKING = API_BASE_URL + "booking/cancel_booking";
+    public static final String SEARCH_USER = API_BASE_URL + "booking/search_user";
+    public static final String CREATE_BOOKING = API_BASE_URL + "booking/create_booking";
+    public static final String CREATE_DISABLESLOT = API_BASE_URL + "business/add_disabled_slot";
+    public static final String DELETE_DISABLESLOT = API_BASE_URL + "business/delete_disabled_slot";
+    public static final String FINISHBOOKING = API_BASE_URL + "booking/complete_booking";
 }

@@ -272,5 +272,6 @@
     <string name="str_postage">    This product includes free postage at your\ncurrent location</string>
     <string name="str_collect">  We will send you the indications of the \nlocation after completing your order.</string>
     <string name="applozic_key">emtrac2ba61d90383c69a7fbc7db07725fa3e5b</string>
-
+    <string name="exist_user">This user already have an account, we will link the user to the booking</string>
+    <string name="unexist_user">No matches were found, please manually field the contact fields</string>
 </resources>

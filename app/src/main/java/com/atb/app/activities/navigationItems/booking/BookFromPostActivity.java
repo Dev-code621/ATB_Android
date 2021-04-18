@@ -1,6 +1,7 @@
-package com.atb.app.activities.navigationItems;
+package com.atb.app.activities.navigationItems.booking;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,8 +25,7 @@ import com.applikeysolutions.cosmocalendar.selection.SingleSelectionManager;
 import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.atb.app.R;
-import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
-import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
+import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.adapter.BookingListAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -33,6 +33,8 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
 import com.atb.app.model.BookingEntity;
+import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.DisableSlotModel;
 import com.atb.app.model.submodel.HolidayModel;
 import com.google.gson.Gson;
@@ -53,7 +55,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-public class BookingActivity extends CommonActivity implements View.OnClickListener, OnDaySelectedListener {
+public class BookFromPostActivity extends CommonActivity implements View.OnClickListener , OnDaySelectedListener {
+    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     ImageView imv_back,imv_selector;
     LinearLayout lyt_selector;
     ListView list_booking;
@@ -66,10 +69,21 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
     ArrayList<String> selected_bookingSlot  = new ArrayList<>();
 
     CalendarView calendarView;
+    UserModel userModel = new UserModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_booking);
+        setContentView(R.layout.activity_book_from_post);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                String feed= bundle.getString("newsFeedEntity");
+                Gson gson = new Gson();
+                newsFeedEntity = gson.fromJson(feed, NewsFeedEntity.class);
+                userModel = newsFeedEntity.getUserModel();
+            }
+        }
+
         imv_back = findViewById(R.id.imv_back);
         imv_selector = findViewById(R.id.imv_selector);
         lyt_selector = findViewById(R.id.lyt_selector);
@@ -84,23 +98,6 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookingEntity bookingEntity = hashMap.get(selected_bookingSlot.get(position));
-                if(bookingEntity.getType()  == 0) {
-                    Bundle bundle = new Bundle();
-                    Gson gson = new Gson();
-                    String bookingModel = gson.toJson(bookingEntity);
-                    bundle = new Bundle();
-                    bundle.putString("bookModel",bookingModel);
-                    startActivityForResult(new Intent(BookingActivity.this, CreateABookingActivity.class).putExtra("data",bundle),1);
-                    overridePendingTransition(0, 0);
-                }else if(bookingEntity.getType()==1) {
-                    Bundle bundle = new Bundle();
-                    Gson gson = new Gson();
-                    String bookingModel = gson.toJson(bookingEntity);
-                    bundle = new Bundle();
-                    bundle.putString("bookModel",bookingModel);
-                    startActivityForResult(new Intent(BookingActivity.this, BookingViewActivity.class).putExtra("data",bundle),1);
-                    overridePendingTransition(0, 0);
-                }
             }
         });
 
@@ -128,7 +125,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         int year=c.get(Calendar.YEAR);
         int month=c.get(Calendar.MONTH);
         EndDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-;
+        ;
         loadBooking(year,month);
 
     }
@@ -139,7 +136,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         bookingListAdapter.init();
         Helper.getListViewSize(list_booking);
         Set<Long> disabledDaysSet = new HashSet<>();
-        ArrayList<ArrayList<String>> slots  = Commons.g_user.getBusinessModel().getSlots();
+        ArrayList<ArrayList<String>> slots  = userModel.getBusinessModel().getSlots();
         bookingSlot.clear();
         for(int i =1;i<=EndDate;i++){
             Calendar c = Calendar.getInstance();
@@ -151,8 +148,8 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
             arrayList.addAll(slots.get(weekDay-1));
             bookingSlot.add(arrayList);
         }
-        for(int i =0;i<Commons.g_user.getBusinessModel().getHolidayModels().size();i++){
-            HolidayModel holidayModel = Commons.g_user.getBusinessModel().getHolidayModels().get(i);
+        for(int i =0;i<userModel.getBusinessModel().getHolidayModels().size();i++){
+            HolidayModel holidayModel = userModel.getBusinessModel().getHolidayModels().get(i);
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(holidayModel.getDay_off()*1000);
             long start = holidayModel.getDay_off();
@@ -219,7 +216,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("user_id", String.valueOf(userModel.getId()));
                 params.put("is_business", "1");
                 params.put("month", String.valueOf(year) +" " + String.valueOf(month+1));
                 return params;
@@ -244,7 +241,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                 hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
             else {
                 int disableSlot_id = disableSlot(bookingSlot.get(day).get(i));
-               // bookingEntity.setType(-1);
+                // bookingEntity.setType(-1);
                 if(disableSlot_id<0)
                     hashMap.put(bookingSlot.get(day).get(i), bookingEntity);
                 else{
@@ -262,20 +259,20 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         Helper.getListViewSize(list_booking);
     }
     int disableSlot(String str){
-        for(int i = 0; i< Commons.g_user.getBusinessModel().getDisableSlotModels().size(); i++){
+        for(int i = 0; i< userModel.getBusinessModel().getDisableSlotModels().size(); i++){
             int milionSecond = getMilonSecond(str);
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
             df.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date d = null;
             int time =0;
             try {
-                d = df.parse(Commons.g_user.getBusinessModel().getDisableSlotModels().get(i).getStart());
+                d = df.parse(userModel.getBusinessModel().getDisableSlotModels().get(i).getStart());
                 time = (int)d.getTime()/1000;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            Long disableMilionSecond = Commons.g_user.getBusinessModel().getDisableSlotModels().get(i).getDay_timestamp() + time;
+            Long disableMilionSecond = userModel.getBusinessModel().getDisableSlotModels().get(i).getDay_timestamp() + time;
             if(milionSecond == disableMilionSecond)
                 return i;
         }
@@ -363,23 +360,23 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                         closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
-                           if(jsonObject.getBoolean("result")) {
-                               if (flag) {
-                                    Commons.g_user.getBusinessModel().getDisableSlotModels().remove(remove_id[0]);
-                               } else {
-                                   JSONObject disable_slot = jsonObject.getJSONObject("extra");
-                                   DisableSlotModel disableSlotModel = new DisableSlotModel();
-                                   disableSlotModel.setId(disable_slot.getInt("id"));
-                                   disableSlotModel.setUser_id(disable_slot.getInt("user_id"));
-                                   disableSlotModel.setDay_timestamp(disable_slot.getLong("day_timestamp"));
-                                   disableSlotModel.setStart(disable_slot.getString("start"));
-                                   disableSlotModel.setEnd(disable_slot.getString("end"));
-                                   disableSlotModel.setCreated_at(disable_slot.getLong("created_at"));
-                                   disableSlotModel.setUpdated_at(disable_slot.getLong("updated_at"));
-                                   Commons.g_user.getBusinessModel().getDisableSlotModels().add(disableSlotModel);
-                               }
-                           }
-                           loadBookingByday(day);
+                            if(jsonObject.getBoolean("result")) {
+                                if (flag) {
+                                    userModel.getBusinessModel().getDisableSlotModels().remove(remove_id[0]);
+                                } else {
+                                    JSONObject disable_slot = jsonObject.getJSONObject("extra");
+                                    DisableSlotModel disableSlotModel = new DisableSlotModel();
+                                    disableSlotModel.setId(disable_slot.getInt("id"));
+                                    disableSlotModel.setUser_id(disable_slot.getInt("user_id"));
+                                    disableSlotModel.setDay_timestamp(disable_slot.getLong("day_timestamp"));
+                                    disableSlotModel.setStart(disable_slot.getString("start"));
+                                    disableSlotModel.setEnd(disable_slot.getString("end"));
+                                    disableSlotModel.setCreated_at(disable_slot.getLong("created_at"));
+                                    disableSlotModel.setUpdated_at(disable_slot.getLong("updated_at"));
+                                    userModel.getBusinessModel().getDisableSlotModels().add(disableSlotModel);
+                                }
+                            }
+                            loadBookingByday(day);
 
                         }catch (Exception e){
 
@@ -404,22 +401,22 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                     params.put("start", Commons.getUTCtimeFromMilionSecond(milionSecond));
                     params.put("end", Commons.getUTCtimeFromMilionSecond(milionSecond + 3600));
                 }else{
-                    for(int i = 0; i< Commons.g_user.getBusinessModel().getDisableSlotModels().size(); i++){
+                    for(int i = 0; i< userModel.getBusinessModel().getDisableSlotModels().size(); i++){
                         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
                         df.setTimeZone(TimeZone.getTimeZone("UTC"));
                         Date d = null;
                         int time =0;
                         try {
-                            d = df.parse(Commons.g_user.getBusinessModel().getDisableSlotModels().get(i).getStart());
+                            d = df.parse(userModel.getBusinessModel().getDisableSlotModels().get(i).getStart());
                             time = (int)d.getTime()/1000;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
 
-                        Long disableMilionSecond = Commons.g_user.getBusinessModel().getDisableSlotModels().get(i).getDay_timestamp() + time;
+                        Long disableMilionSecond = userModel.getBusinessModel().getDisableSlotModels().get(i).getDay_timestamp() + time;
                         if(milionSecond == disableMilionSecond) {
                             remove_id[0] = i;
-                            params.put("slot_id", String.valueOf(Commons.g_user.getBusinessModel().getDisableSlotModels().get(i).getId()));
+                            params.put("slot_id", String.valueOf(userModel.getBusinessModel().getDisableSlotModels().get(i).getId()));
                             break;
                         }
                     }

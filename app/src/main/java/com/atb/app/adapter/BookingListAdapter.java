@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.NotiEntity;
@@ -28,20 +29,20 @@ import java.util.Set;
 
 public class BookingListAdapter extends BaseAdapter {
 
-    private BookingActivity _context;
+    private Context _context;
 
     HashMap<String,BookingEntity> _roomDatas = new HashMap<>();
     ArrayList<String > bookingSlot = new ArrayList<>();
-    public BookingListAdapter(BookingActivity context) {
+    public BookingListAdapter(Context context) {
 
         super();
         this._context = context;
     }
-
-
     public void setRoomData(HashMap<String,BookingEntity> data,ArrayList<String > bookingSlot) {
-        _roomDatas = data;
-        this.bookingSlot = bookingSlot;
+        _roomDatas.clear();
+        _roomDatas.putAll(data);
+        this.bookingSlot.clear();
+        this.bookingSlot.addAll(bookingSlot);
         notifyDataSetChanged();
     }
     public void init() {
@@ -53,7 +54,7 @@ public class BookingListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return _roomDatas.size();
+        return bookingSlot.size();
     }
 
     @Override
@@ -82,6 +83,12 @@ public class BookingListAdapter extends BaseAdapter {
             holder.txv_id = (TextView) convertView.findViewById(R.id.txv_id);
             holder.imv_profile = (ImageView) convertView.findViewById(R.id.imv_profile);
             holder.txv_timeslot = (TextView) convertView.findViewById(R.id.txv_timeslot);
+            holder.lyt_container = (LinearLayout)convertView.findViewById(R.id.lyt_container);
+            holder.imv_disalbe = convertView.findViewById(R.id.imv_disalbe);
+            holder.txv_disable = convertView.findViewById(R.id.txv_disable);
+            holder.txv_add = convertView.findViewById(R.id.txv_add);
+            holder.lyt_select = convertView.findViewById(R.id.lyt_select);
+            holder.imv_selector = convertView.findViewById(R.id.imv_selector);
             convertView.setTag(holder);
         } else {
             holder = (CustomHolder) convertView.getTag();
@@ -89,37 +96,49 @@ public class BookingListAdapter extends BaseAdapter {
 
         final BookingEntity bookingEntity =  _roomDatas.get(bookingSlot.get(position));
         holder.txv_timeslot.setText(bookingSlot.get(position));
+        holder.imv_selector.setEnabled(true);
         if(bookingEntity.getType() ==0){
             holder.lyt_addbooking.setVisibility(View.VISIBLE);
             holder.lyt_booking.setVisibility(View.GONE);
-        }else {
+            holder.txv_add.setText("Add A Booking");
+            holder.txv_disable.setVisibility(View.VISIBLE);
+            holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.leftdetail));
+        }else if(bookingEntity.getType()==1){
             holder.lyt_addbooking.setVisibility(View.GONE);
             holder.lyt_booking.setVisibility(View.VISIBLE);
+        }else {
+            holder.txv_add.setText("Disable a slot");
+            holder.txv_disable.setVisibility(View.GONE);
+            holder.lyt_addbooking.setVisibility(View.VISIBLE);
+            holder.lyt_booking.setVisibility(View.GONE);
+            holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_minus1));
+            holder.imv_selector.setEnabled(false);
+
         }
+
+        holder.lyt_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.imv_selector.setEnabled(!holder.imv_selector.isEnabled());
+                ((CommonActivity)(_context)).disableSlot(bookingEntity.getBooking_datetime(),holder.imv_selector.isEnabled());
+            }
+        });
         String imv_url = "";
-        String name = bookingEntity.getUserModel().getUserName();
-        String email = bookingEntity.getUserModel().getEmail();
-        if(bookingEntity.getUserModel().getId()>=0)
-            if(bookingEntity.getUserModel().getAccount_type()==1) {
-                imv_url = bookingEntity.getUserModel().getBusinessModel().getBusiness_logo();
-                name = bookingEntity.getUserModel().getBusinessModel().getBusiness_name();
-                email = bookingEntity.getUserModel().getBusinessModel().getBusiness_website();
-            }
-            else {
-                imv_url = bookingEntity.getUserModel().getImvUrl();
-            }
+        if(bookingEntity.getUser_id()>=0) {
+            imv_url = bookingEntity.getUserModel().getImvUrl();
+        }
         Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A6BFDE", Commons.glide_boder))).into(holder.imv_profile);
-            holder.txv_name.setText(name);
-            holder.txv_id.setText(email);
+        holder.txv_id.setText( bookingEntity.getUserModel().getUserName());
+        holder.txv_name.setText(bookingEntity.getNewsFeedEntity().getTitle());
         return convertView;
     }
 
 
     public class CustomHolder {
-        LinearLayout lyt_addbooking,lyt_booking;
-        ImageView imv_profile;
-        TextView txv_name,txv_id,txv_timeslot;
+        LinearLayout lyt_addbooking,lyt_booking,lyt_container,lyt_select;
+        ImageView imv_profile,imv_disalbe,imv_selector;
+        TextView txv_name,txv_id,txv_timeslot,txv_disable,txv_add;
     }
 
 

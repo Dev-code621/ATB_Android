@@ -6,13 +6,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class BookingEntity {
-    int id,service_id,user_id,business_user_id,booking_datetime,is_reminder_enabled;
+    int id,service_id,user_id = -1,business_user_id,booking_datetime,is_reminder_enabled;
     String state,email,full_name,phone,total_cost,remaining;
     long created_at,updated_at;
     UserModel userModel = new UserModel();
     BusinessModel businessModel = new BusinessModel();
     TransactionEntity transactionEntity = new TransactionEntity();
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+    //0 free slot, 1: booked slot : -1: disalbe solot
     int type = 0;
 
     public int getType() {
