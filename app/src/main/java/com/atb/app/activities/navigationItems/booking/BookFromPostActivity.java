@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -26,17 +28,35 @@ import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.BookingListAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
+import com.atb.app.dialog.ConfirmBookingDialog;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.DepositDialog;
+import com.atb.app.dialog.PaymentSuccessDialog;
+import com.atb.app.dialog.ServiceBookingSuccessDialog;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
+import com.atb.app.model.VariationModel;
 import com.atb.app.model.submodel.DisableSlotModel;
 import com.atb.app.model.submodel.HolidayModel;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.VenmoAccountNonce;
+import com.braintreepayments.cardform.view.CardForm;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -52,6 +72,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -67,9 +88,13 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     BookingListAdapter bookingListAdapter ;
     HashMap<String,BookingEntity>hashMap = new HashMap<>();
     ArrayList<String> selected_bookingSlot  = new ArrayList<>();
-
+    TextView txv_booking;
     CalendarView calendarView;
     UserModel userModel = new UserModel();
+    Map<String, String> payment_params = new HashMap<>();
+    BookingEntity bookingEntity = new BookingEntity();
+    TextView txv_name,txv_title;
+    ImageView imv_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,10 +114,15 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         lyt_selector = findViewById(R.id.lyt_selector);
         list_booking = findViewById(R.id.list_booking);
         calendarView = findViewById(R.id.calendar_view);
+        txv_booking = findViewById(R.id.txv_booking);
+        imv_image = findViewById(R.id.imv_image);
+        txv_name = findViewById(R.id.txv_name);
+        txv_title = findViewById(R.id.txv_title);
 
+        txv_booking.setOnClickListener(this);
         imv_back.setOnClickListener(this);
         lyt_selector.setOnClickListener(this);
-        bookingListAdapter = new BookingListAdapter(this);
+        bookingListAdapter = new BookingListAdapter(this,1);
         list_booking.setAdapter(bookingListAdapter);
         list_booking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -125,7 +155,9 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         int year=c.get(Calendar.YEAR);
         int month=c.get(Calendar.MONTH);
         EndDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-        ;
+        txv_title.setText(newsFeedEntity.getTitle()+ " at ");
+        txv_name.setText(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_name());
+        Glide.with(_context).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).into(imv_image);
         loadBooking(year,month);
 
     }
@@ -232,11 +264,12 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     void loadBookingByday(int day){
         hashMap.clear();
         this.day = day;
+        txv_booking.setVisibility(View.GONE);
         for(int i =0;i<bookingSlot.get(day).size();i++){
             BookingEntity bookingEntity = new BookingEntity();
             bookingEntity.setBooking_datetime(getMilonSecond(bookingSlot.get(day).get(i)));
+            bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+3600));
             int bookslot_id = slotBooked(bookingSlot.get(day).get(i));
-
             if(bookslot_id>=0)
                 hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
             else {
@@ -316,7 +349,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 selected_bookingSlot.clear();
                 if(imv_selector.isEnabled()){
                     for(int i =0;i<bookingSlot.get(day).size();i++){
-                        if(hashMap.get(bookingSlot.get(day).get(i)).getType()==1) {
+                        if(hashMap.get(bookingSlot.get(day).get(i)).getType()==0) {
                             selected_bookingSlot.add(bookingSlot.get(day).get(i));
                         }
                     }
@@ -327,8 +360,44 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 bookingListAdapter.setRoomData(hashMap,selected_bookingSlot);
                 Helper.getListViewSize(list_booking);
                 break;
+            case R.id.txv_booking:
+                if(newsFeedEntity.getIs_deposit_required().equals("1")){
+                    DepositDialog depositDialog = new DepositDialog();
+                    depositDialog.setOnConfirmListener(new DepositDialog.OnConfirmListener() {
+                        @Override
+                        public void onPurchase() {
+                            ArrayList<String> selected_Variation = new ArrayList<>();
+                            getPaymentToken(String.valueOf(newsFeedEntity.getDeposit()),newsFeedEntity,0,selected_Variation);
+                        }
+                    },newsFeedEntity);
+                    depositDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                }else {
+                    createBooking("");
+                }
+                break;
         }
     }
+
+    @Override
+    public void processPayment(String price, String clicent_id, String clicnet_token, NewsFeedEntity newsFeedEntity, int deliveryOption, ArrayList<String> selected_Variation) {
+        payment_params.clear();
+        payment_params.put("token",Commons.token);
+        payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+        payment_params.put("amount",price);
+        payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
+        payment_params.put("is_business","1");
+        payment_params.put("quantity","1");
+        payment_params.put("serviceId",String.valueOf(newsFeedEntity.getService_id()));
+        DropInRequest dropInRequest = new DropInRequest()
+                .clientToken(clicnet_token)
+                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+                .collectDeviceData(true)
+                .vaultManager(true);
+        startActivityForResult(dropInRequest.getIntent(this), Commons.REQUEST_PAYMENT_CODE);
+
+    }
+
+
 
     @Override
     public void onDaySelected() {
@@ -339,11 +408,146 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onResume();
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode== Activity.RESULT_OK){
-            loadBooking(year,month);
+        if (requestCode == Commons.REQUEST_PAYMENT_CODE) {
+            if (resultCode == RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+                    payment_params.put("paymentMethod","Paypal");
+                }else {
+                    payment_params.put("paymentMethod","Card");
+                }
+                Log.d("aaaaa",payment_params.toString());
+
+                paymentProcessing(payment_params,0);
+
+                String deviceData = result.getDeviceData();
+                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+                    String venmoUsername = venmoAccountNonce.getUsername();
+                }
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("error:", error.toString());
+            }
         }
+
     }
 
+    @Override
+    public void finishPayment(String transaction_id) {
+        createBooking(transaction_id);
+    }
+
+    void createBooking(String transaction_id){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.CREATE_BOOKING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                String booking_id = jsonObject.getJSONObject("extra").getString("id");
+                                updateTransaction(transaction_id,booking_id);
+                            }else {
+                                closeProgress();
+
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("business_user_id", String.valueOf(userModel.getId()));
+                params.put("service_id", String.valueOf(newsFeedEntity.getService_id()));
+                params.put("booking_datetime", String.valueOf(bookingEntity.getBooking_datetime()));
+                params.put("is_reminder_enabled", "0");
+                params.put("total_cost", newsFeedEntity.getPrice());
+                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void updateTransaction(String transaction_id, String booking_id){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.UPDATE_TRANSCATION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                ServiceBookingSuccessDialog serviceBookingSuccessDialog = new ServiceBookingSuccessDialog();
+                                serviceBookingSuccessDialog.setOnConfirmListener(new ServiceBookingSuccessDialog.OnConfirmListener() {
+                                    @Override
+                                    public void onPurchase() {
+                                        setResult(-200);
+                                        goTo(BookFromPostActivity.this,MyBookingActivity.class,true);
+                                    }
+                                    @Override
+                                    public void returnMyATB() {
+                                        setResult(-200);
+                                        finish(BookFromPostActivity.this);
+                                    }
+                                },newsFeedEntity);
+                                serviceBookingSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("booking_id", booking_id);
+                params.put("transaction_id", transaction_id);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     @Override
     public void disableSlot(int milionSecond,boolean flag) {
         int[] remove_id = {-1};
@@ -431,5 +635,12 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
 
+    }
+
+    @Override
+    public void selectBooking(int posstion) {
+        txv_booking.setVisibility(View.VISIBLE);
+        bookingEntity = hashMap.get(selected_bookingSlot.get(posstion));
+        txv_booking.setText("Book for " + String.valueOf(day+1) + "rd at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
     }
 }

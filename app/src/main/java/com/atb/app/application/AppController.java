@@ -28,6 +28,8 @@ import com.zxy.tiny.Tiny;
 
 import java.util.function.Supplier;
 
+import io.branch.referral.Branch;
+
 public class AppController extends Application {
 
     private static AppController instance;
@@ -49,6 +51,10 @@ public class AppController extends Application {
         super.onCreate();
         MultiDex.install(this);
         Tiny.getInstance().init(this);
+        // Branch logging for debugging
+        Branch.enableLogging();
+        // Branch object initialization
+        Branch.getAutoInstance(this);
         instance = this;
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig

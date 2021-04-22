@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.other.ProfileRatingActivity;
 import com.atb.app.adapter.ReviewAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -80,6 +81,7 @@ public class ReviewActivity extends CommonActivity {
             }
         });
 
+
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -88,9 +90,21 @@ public class ReviewActivity extends CommonActivity {
                 userModel = gson.fromJson(user, UserModel.class);
             }
         }
+
+        txv_rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson gson = new Gson();
+                String usermodel = gson.toJson(userModel);
+                Bundle bundle = new Bundle();
+                bundle.putString("userModel",usermodel);
+                goTo(ReviewActivity.this, ProfileRatingActivity.class,false,bundle);
+            }
+        });
+
         reviewAdapter = new ReviewAdapter(this);
         list_review.setAdapter(reviewAdapter);
-        getRatings();
+
 
     }
     void initLayout(){
@@ -170,5 +184,11 @@ public class ReviewActivity extends CommonActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getRatings();
     }
 }

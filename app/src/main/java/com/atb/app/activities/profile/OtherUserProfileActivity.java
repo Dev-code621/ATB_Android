@@ -6,6 +6,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.applozic.mobicomkit.contact.AppContactService;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
@@ -23,12 +31,15 @@ import com.applozic.mobicommons.people.contact.Contact;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.PaymentSuccessDialog;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
+import com.atb.app.model.FollowerModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.VariationModel;
@@ -48,15 +59,17 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class OtherUserProfileActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider {
-    ImageView imv_back,imv_profile,imv_rating,imv_profile_chat,imv_facebook,imv_instagram,imv_twitter;
+    ImageView imv_back,imv_profile,imv_rating,imv_profile_chat,imv_facebook,imv_instagram,imv_twitter,imv_on,imv_follow;
     FrameLayout lyt_profile;
-    TextView txv_name,txv_id,txv_follower,txv_following,txv_post,txv_description;
+    TextView txv_name,txv_id,txv_follower,txv_following,txv_post,txv_description,txv_follow,txv_on;
     LinearLayout lyt_follower,lyt_following,lyt_post,lyt_following_on,lyt_on,lyt_busines_description;
     SmartTabLayout viewPagerTab;
     ViewPager viewPager;
@@ -65,9 +78,12 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
     Map<String, String> payment_params = new HashMap<>();
     int REQUEST_PAYMENT_CODE =10034;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+    String facebook ="" ,instagra = "",twitter ="";
+    int followModelId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_other_user_profile);
         imv_back = findViewById(R.id.imv_back);
         imv_profile = findViewById(R.id.imv_profile);
@@ -90,14 +106,15 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
         lyt_on = findViewById(R.id.lyt_on);
         viewPagerTab = findViewById(R.id.viewpagertab);
         viewPager = findViewById(R.id.viewpager);
+        imv_on = findViewById(R.id.imv_on);
+        imv_follow = findViewById(R.id.imv_follow);
+        txv_follow = findViewById(R.id.txv_follow);
+        txv_on = findViewById(R.id.txv_on);
         lyt_busines_description = findViewById(R.id.lyt_busines_description);
         imv_back.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
         imv_rating.setOnClickListener(this);
         imv_profile_chat.setOnClickListener(this);
-        imv_facebook.setOnClickListener(this);
-        imv_instagram.setOnClickListener(this);
-        imv_twitter.setOnClickListener(this);
         lyt_follower.setOnClickListener(this);
         lyt_following.setOnClickListener(this);
         lyt_post.setOnClickListener(this);
@@ -139,6 +156,24 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
             viewPager.setAdapter(adapter);
             viewPagerTab.setViewPager(viewPager);
             viewPagerTab.setCustomTabView(this);
+            for(int i =0;i<userModel.getBusinessModel().getSocialModels().size();i++){
+                if(userModel.getBusinessModel().getSocialModels().get(i).getType()==0){
+                    imv_facebook.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                    facebook = userModel.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                    imv_facebook.setOnClickListener(this);
+
+                }else if(userModel.getBusinessModel().getSocialModels().get(i).getType()==1){
+                    imv_instagram.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                    instagra = userModel.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                    imv_instagram.setOnClickListener(this);
+
+                }else {
+                    imv_twitter.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                    twitter = userModel.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                    imv_twitter.setOnClickListener(this);
+
+                }
+            }
         }else {
             Glide.with(this).load(userModel.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
@@ -161,6 +196,45 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
             viewPager.setAdapter(adapter);
             viewPagerTab.setViewPager(viewPager);
             viewPagerTab.setCustomTabView(this);
+        }
+
+        setFollow();
+
+    }
+    void setFollow(){
+         followModelId = -1;
+        for(int i =0;i<userModel.getFollowerModels().size();i++){
+            FollowerModel follower = userModel.getFollowerModels().get(i);
+            if(follower.getFollow_user_id() == Commons.g_user.getId() && follower.getFollower_user_id() == userModel.getId()){
+                followModelId = i;
+                break;
+            }
+        }
+
+        if(followModelId ==-1){
+            lyt_on.setVisibility(View.GONE);
+            lyt_following_on.setBackground(getResources().getDrawable(R.drawable.round_button1));
+            txv_follow.setText("Follow");
+            txv_follow.setTextColor(getResources().getColor(R.color.txt_color));
+            imv_follow.setColorFilter(getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
+        }else {
+            lyt_following_on.setBackground(getResources().getDrawable(R.drawable.round_button_theme));
+            txv_follow.setText("Following");
+            txv_follow.setTextColor(getResources().getColor(R.color.white));
+            imv_follow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            lyt_on.setVisibility(View.VISIBLE);
+            FollowerModel followerModel = userModel.getFollowerModels().get(followModelId);
+            if(followerModel.getPost_notifications()==0){
+                lyt_on.setBackground(getResources().getDrawable(R.drawable.round_button1));
+                txv_on.setText("OFF");
+                txv_on.setTextColor(getResources().getColor(R.color.txt_color));
+                imv_on.setColorFilter(getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
+            }else {
+                lyt_on.setBackground(getResources().getDrawable(R.drawable.round_button_theme));
+                txv_on.setText("ON");
+                txv_on.setTextColor(getResources().getColor(R.color.white));
+                imv_on.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            }
         }
     }
 
@@ -212,16 +286,17 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
                 goTo(this,ReviewActivity.class,false,bundle);
                 break;
             case R.id.imv_facebook:
-
+                goToUrl ( "http://facebook.com/" + facebook);
                 break;
 
             case R.id.imv_instagram:
-
+                goToUrl ( "https://instagram.com/" + instagra );
                 break;
 
             case R.id.imv_twitter:
-
+                goToUrl ( "http://twitter.com/" + twitter);
                 break;
+
             case R.id.imv_profile_chat:
                 gotochat(this,userType,userModel);
                 break;
@@ -248,8 +323,129 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
 
                 break;
             case R.id.lyt_on:
+                notificationChange();
+                break;
+            case R.id.lyt_following_on:
+                addFollow();
                 break;
         }
+    }
+
+    void notificationChange(){
+        String apilink = API.LIKE_NOTIFICATIONS;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                apilink,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                int notification = 0;
+                                if(userModel.getFollowerModels().get(followModelId).getPost_notifications()==0)notification = 1;
+                                userModel.getFollowerModels().get(followModelId).setPost_notifications(notification);
+                                if(notification ==1)
+                                    showToast("The notification are now\\nActive for this account");
+                                else
+                                    showToast("The notification have been\\nDisabled for this user");
+                                setFollow();
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                String notification = "0";
+                if(userModel.getFollowerModels().get(followModelId).getPost_notifications()==0)notification = "1";
+                params.put("token", Commons.token);
+                params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("follower_user_id", String.valueOf(userModel.getId()));
+                params.put("notifications",notification );
+
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    void addFollow(){
+        String apilink = API.ADD_FOLLOW;
+        if(followModelId !=-1)
+            apilink = API.DELETE_FOLLOWER;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                apilink,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                if(followModelId ==-1){
+                                    FollowerModel followerModel = new FollowerModel();
+                                    followerModel.setFollow_user_id(Commons.g_user.getId());
+                                    followerModel.setFollower_user_id(userModel.getId());
+                                    userModel.getFollowerModels().add(followerModel);
+                                }
+                                else{
+                                    userModel.getFollowerModels().remove(followModelId);
+                                }
+                                setFollow();
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("follow_user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("follower_user_id", String.valueOf(userModel.getId()));
+                if(followModelId==-1){
+                    params.put("follow_business_id", "0");
+                    params.put("follower_business_id", "0");
+                }
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    private void goToUrl (String url) {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
     }
 
     @Override
@@ -307,7 +503,7 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
     }
 
     @Override
-    public void finishPayment() {
+    public void finishPayment(String transaction_id) {
         PaymentSuccessDialog paymentSuccessDialog = new PaymentSuccessDialog();
         paymentSuccessDialog.setOnConfirmListener(new PaymentSuccessDialog.OnConfirmListener() {
             @Override

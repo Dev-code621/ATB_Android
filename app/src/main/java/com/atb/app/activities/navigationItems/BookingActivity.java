@@ -78,7 +78,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
 
         imv_back.setOnClickListener(this);
         lyt_selector.setOnClickListener(this);
-        bookingListAdapter = new BookingListAdapter(this);
+        bookingListAdapter = new BookingListAdapter(this,0);
         list_booking.setAdapter(bookingListAdapter);
         list_booking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

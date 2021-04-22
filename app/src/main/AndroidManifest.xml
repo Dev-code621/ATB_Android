@@ -38,7 +38,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.navigationItems.booking.BookFromPostActivity"
+        <activity android:name=".activities.navigationItems.other.BookingRateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity android:name=".activities.navigationItems.other.ProfileRatingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.booking.MyBookingViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.booking.MyBookingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
+            android:name=".activities.navigationItems.booking.BookFromPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen" />
         <activity
@@ -254,10 +269,28 @@
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <data android:scheme="yourapp" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+            <!-- Branch App Links (optional) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="atb.app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="atb.app.link" />
+            </intent-filter>
         </activity>
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ni0ofRv7D5RNhBAjiZhaUognsFfHXQMQ" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_DDG6jBhZX91nXoOOIbjiA3DvJtvTfb7j" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"

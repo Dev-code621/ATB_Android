@@ -135,4 +135,6 @@ public class API {
     public static final String CREATE_DISABLESLOT = API_BASE_URL + "business/add_disabled_slot";
     public static final String DELETE_DISABLESLOT = API_BASE_URL + "business/delete_disabled_slot";
     public static final String FINISHBOOKING = API_BASE_URL + "booking/complete_booking";
+    public static final String REPORT_BOOKING = API_BASE_URL + "booking/create_booking_report";
+    public static final String UPDATE_TRANSCATION = API_BASE_URL + "profile/set_transaction_booking_id";
 }

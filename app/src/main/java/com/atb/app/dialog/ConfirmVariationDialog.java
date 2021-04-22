@@ -22,6 +22,10 @@ public class ConfirmVariationDialog extends DialogFragment {
     private ConfirmDialog.OnConfirmListener listener;
     TextView txt_email;
     TextView txv_create;
+    int type =0;
+    public ConfirmVariationDialog(int type) {
+        this.type = type;
+    }
 
     @Nullable
     @Override
@@ -39,6 +43,28 @@ public class ConfirmVariationDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         ImageView imv_close = view.findViewById(R.id.imv_close);
+        ImageView imv_image = view.findViewById(R.id.imv_image);
+        TextView txv_title = view.findViewById(R.id.txv_title);
+        TextView txv_description = view.findViewById(R.id.txv_description);
+        TextView txv_deposit = view.findViewById(R.id.txv_deposit);
+        if(type == 1){
+            imv_image.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.icon_deposit));
+            txv_title.setText("Why a deposit?");
+            txv_description.setText("The purpose of the deposit is to proect both you and the business. The deposit secures your booking with the business, in the event of the business cancelling the booking your deposit will be refunded. If you cancel the booking, the businesses has the right to keep the deposit paid or alternatively rebook you for another date. Please note that the deposit paid will be deducted from the cost of the service once completed (e.g. if the services costs £20 and you have paid a £5 deposit, then you will only need to pay £15 to the business");
+        }else if(type ==2){
+            txv_deposit.setVisibility(View.VISIBLE);
+            imv_image.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.icon_cancel));
+
+            txv_title.setText("Cancellations Within");
+            txv_description.setText("Cancellations within is the period of time a purchaser of the service has to cancel the service booked for a full refund, if you choose to cancel after this time then the business is entitled to keep the deposit. After the cancellation period has lapsed, the business may refund you your deposit at their discretion");
+        }
+
+        txv_deposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         imv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

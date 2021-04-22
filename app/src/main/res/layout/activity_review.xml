@@ -396,7 +396,6 @@
             android:textColor="@color/white"
             android:layout_marginTop="20dp"
             style="@style/btn_buttonStyle"
-            android:enabled="false"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/button_rectangle_round"/>

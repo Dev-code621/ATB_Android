@@ -143,7 +143,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
         }
     }
     @Override
-    public void finishPayment(){
+    public void finishPayment(String transaction_id){
         Commons.g_user.getBusinessModel().setPaid(1);
         setResult(Commons.subscription_code);
         finish(UpgradeBusinessSplashActivity.this);

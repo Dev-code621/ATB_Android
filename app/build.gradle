@@ -190,6 +190,11 @@ dependencies {
 
     //calendaly view
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+    //deep link
+    implementation 'io.branch.sdk.android:library:5.+'
+    implementation 'com.google.firebase:firebase-appindexing:19.0.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:16+'
+    implementation 'androidx.browser:browser:1.0.0'
 
 
 }

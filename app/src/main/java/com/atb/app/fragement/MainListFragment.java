@@ -1,6 +1,7 @@
 package com.atb.app.fragement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.MainFeedAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -186,7 +188,12 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                 }
             });
 
-
+            if(Commons.feed_id!=-1){
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId",Commons.feed_id);
+                bundle.putBoolean("CommentVisible",true);
+                startActivityForResult(new Intent(context, NewsDetailActivity.class).putExtra("data",bundle),1);
+            }
 
 
         }catch (Exception e){

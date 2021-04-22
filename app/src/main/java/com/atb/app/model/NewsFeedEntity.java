@@ -5,6 +5,7 @@ import android.util.Log;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.submodel.AttributeModel;
+import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.model.submodel.PostImageModel;
 import com.atb.app.model.submodel.VotingModel;
 
@@ -40,6 +41,10 @@ public class NewsFeedEntity {
     UserModel userModel = new UserModel();
     ArrayList<VariationModel> variationModels = new ArrayList<>();
     ArrayList<String>attribute_titles = new ArrayList<>();
+    ArrayList<InsuranceModel> insuranceModels = new ArrayList<>();
+    ArrayList<InsuranceModel> qualifications = new ArrayList<>();
+
+
     int stock_level;
     HashMap<String, ArrayList<String>>hashMap = new HashMap<>();
     HashMap<String, VariationModel>stockMap = new HashMap<>();
@@ -48,6 +53,23 @@ public class NewsFeedEntity {
     public ArrayList<String>prices = new ArrayList<>();
     ArrayList<String>completedValue = new ArrayList<>();
     String videovalue ="";
+
+
+    public ArrayList<InsuranceModel> getInsuranceModels() {
+        return insuranceModels;
+    }
+
+    public void setInsuranceModels(ArrayList<InsuranceModel> insuranceModels) {
+        this.insuranceModels = insuranceModels;
+    }
+
+    public ArrayList<InsuranceModel> getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(ArrayList<InsuranceModel> qualifications) {
+        this.qualifications = qualifications;
+    }
 
     public ArrayList<String> getCompletedValue() {
         return completedValue;
@@ -735,6 +757,8 @@ public class NewsFeedEntity {
             price = jsonObject.getString("price");
             if(jsonObject.has("deposit"))
                 deposit = jsonObject.getString("deposit");
+            if(jsonObject.has("deposit_amount"))
+                deposit = jsonObject.getString("deposit_amount");
             is_deposit_required = jsonObject.getString("is_deposit_required");
             category_title = jsonObject.getString("category_title");
             item_title = jsonObject.getString("item_title");
@@ -863,6 +887,24 @@ public class NewsFeedEntity {
                         }
                     }
                     attribute_map.put(attribute_titles.get(i),mapValue);
+                }
+            }
+            if(jsonObject.has("insurance")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("insurance");
+                insuranceModels.clear();
+                for(int i =0;i<jsonArray.length();i++){
+                    InsuranceModel insuranceModel = new InsuranceModel();
+                    insuranceModel.initModel(jsonArray.getJSONObject(i));
+                    insuranceModels.add(insuranceModel);
+                }
+            }
+            if(jsonObject.has("qualification")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("qualification");
+                qualifications.clear();
+                for(int i =0;i<jsonArray.length();i++){
+                    InsuranceModel insuranceModel = new InsuranceModel();
+                    insuranceModel.initModel(jsonArray.getJSONObject(i));
+                    qualifications.add(insuranceModel);
                 }
             }
         }catch (Exception e){

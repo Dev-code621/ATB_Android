@@ -20,11 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/imv_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/step1"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp"/>
+                android:scaleType="centerCrop"
+                android:paddingTop="30dp"/>
             <ImageView
                 android:id="@+id/imv_close"
                 android:layout_width="30dp"
@@ -36,6 +38,7 @@
         </FrameLayout>
 
         <TextView
+            android:id="@+id/txv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Use variations"
@@ -44,7 +47,7 @@
             android:textSize="22sp"
             android:layout_marginTop="20dp"/>
         <TextView
-            android:id="@+id/txt_email"
+            android:id="@+id/txv_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="The variation button allows you to create\nbespoke descriptions for your product\ngiving you greater flexibitlity when selling\ndifferent variations of the same product"
@@ -53,6 +56,23 @@
             android:textColor="@color/txt_color"
             android:textSize="15sp"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/txv_deposit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="I understand"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_rectangle_round" />
     </LinearLayout>
 </LinearLayout>

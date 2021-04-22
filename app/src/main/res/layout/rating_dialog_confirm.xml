@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/transparent_header">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_rectangle_round"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="20dp">
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_user_info_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:cardCornerRadius="30dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                app:cardBackgroundColor="@color/head_color">
+                <ImageView
+                    android:id="@+id/imv_profile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/star4"
+                    android:tint="@color/white"/>
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom|right"
+                android:src="@drawable/icon_checked"/>
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done!"
+            style="@style/boldtextTheme"
+            android:textColor="@color/head_color"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You have sent your Rating!"
+            android:gravity="center"
+            style="@style/textTheme"
+            android:textColor="@color/txt_color"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/lyt_back"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:background="@drawable/button_rectangle_round"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_book"
+                android:tint="@color/white"/>
+            <TextView
+                android:id="@+id/txv_create"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:text="Go to back to My Bookings"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"
+                style="@style/boldtextTheme"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

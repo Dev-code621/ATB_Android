@@ -77,7 +77,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     int maxImagecount = 9;
      int insurance_id = -1,qualitfication_id = -1;
      boolean cash = false, paypal = false;
-     int is_deposit_required = 0,candellation = 0;
+     int is_deposit_required = 0,candellation = 14;
      float deposit_amount =0.00f;
      int isPosting;
      RelativeLayout lyt_product,lyt_post;
@@ -408,7 +408,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 initLayout();
                 break;
             case R.id.txv_plus:
-                if(candellation==3)break;
+                if(candellation==30)break;
                 candellation++;
                 initLayout();
                 break;

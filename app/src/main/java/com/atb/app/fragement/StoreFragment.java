@@ -226,6 +226,7 @@ public class StoreFragment extends Fragment {
                                 NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
                                 newsFeedEntity.initDetailModel(jsonArray.getJSONObject(i));
                                 newsFeedEntity.setUserModel(Commons.selected_user);
+                                newsFeedEntity.setService_id(String.valueOf(newsFeedEntity.getId()));
                                 newsFeedEntities.add(newsFeedEntity);
                             }
                             addAdapter();

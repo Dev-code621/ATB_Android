@@ -327,7 +327,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                     params.put("is_multi", "0");
                 else {
                     params.put("is_multi", "1");
-                    params.put("multi_pos", String.valueOf(postCount));
+                    params.put("multi_pos", String.valueOf(posstion));
                     params.put("multi_group", group_id);
                 }
                 if(scheduledOn>0)

@@ -1,6 +1,7 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,12 +34,15 @@ public class BookingListAdapter extends BaseAdapter {
 
     HashMap<String,BookingEntity> _roomDatas = new HashMap<>();
     ArrayList<String > bookingSlot = new ArrayList<>();
-    public BookingListAdapter(Context context) {
-
+    int type =0;
+    int select_posstion = -1;
+    public BookingListAdapter(Context context, int type) {
         super();
         this._context = context;
+        this.type = type;
     }
     public void setRoomData(HashMap<String,BookingEntity> data,ArrayList<String > bookingSlot) {
+        select_posstion = -1;
         _roomDatas.clear();
         _roomDatas.putAll(data);
         this.bookingSlot.clear();
@@ -89,48 +93,100 @@ public class BookingListAdapter extends BaseAdapter {
             holder.txv_add = convertView.findViewById(R.id.txv_add);
             holder.lyt_select = convertView.findViewById(R.id.lyt_select);
             holder.imv_selector = convertView.findViewById(R.id.imv_selector);
+            holder.view_line = convertView.findViewById(R.id.view_line);
             convertView.setTag(holder);
         } else {
             holder = (CustomHolder) convertView.getTag();
         }
 
         final BookingEntity bookingEntity =  _roomDatas.get(bookingSlot.get(position));
-        holder.txv_timeslot.setText(bookingSlot.get(position));
-        holder.imv_selector.setEnabled(true);
-        if(bookingEntity.getType() ==0){
-            holder.lyt_addbooking.setVisibility(View.VISIBLE);
-            holder.lyt_booking.setVisibility(View.GONE);
-            holder.txv_add.setText("Add A Booking");
-            holder.txv_disable.setVisibility(View.VISIBLE);
-            holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.leftdetail));
-        }else if(bookingEntity.getType()==1){
-            holder.lyt_addbooking.setVisibility(View.GONE);
-            holder.lyt_booking.setVisibility(View.VISIBLE);
-        }else {
-            holder.txv_add.setText("Disable a slot");
-            holder.txv_disable.setVisibility(View.GONE);
-            holder.lyt_addbooking.setVisibility(View.VISIBLE);
-            holder.lyt_booking.setVisibility(View.GONE);
-            holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_minus1));
-            holder.imv_selector.setEnabled(false);
+        if(type ==0 ) {
+            //manualy booking
+            holder.txv_timeslot.setText(bookingSlot.get(position));
+            holder.imv_selector.setEnabled(true);
+            if (bookingEntity.getType() == 0) {
+                holder.lyt_addbooking.setVisibility(View.VISIBLE);
+                holder.lyt_booking.setVisibility(View.GONE);
+                holder.txv_add.setText("Add A Booking");
+                holder.txv_disable.setVisibility(View.VISIBLE);
+                holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.leftdetail));
+                holder.txv_add.setTextColor(_context.getResources().getColor(R.color.txt_color));
+                holder.imv_disalbe.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
 
-        }
-
-        holder.lyt_select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.imv_selector.setEnabled(!holder.imv_selector.isEnabled());
-                ((CommonActivity)(_context)).disableSlot(bookingEntity.getBooking_datetime(),holder.imv_selector.isEnabled());
+            } else if (bookingEntity.getType() == 1) {
+                holder.lyt_addbooking.setVisibility(View.GONE);
+                holder.lyt_booking.setVisibility(View.VISIBLE);
+            } else {
+                holder.txv_add.setText("Disabled a slot");
+                holder.txv_disable.setVisibility(View.GONE);
+                holder.lyt_addbooking.setVisibility(View.VISIBLE);
+                holder.lyt_booking.setVisibility(View.GONE);
+                holder.txv_add.setTextColor(_context.getResources().getColor(R.color.txvcolor_trasnparent));
+                holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_minus1));
+                holder.imv_disalbe.setColorFilter(_context.getResources().getColor(R.color.txvcolor_trasnparent), PorterDuff.Mode.SRC_IN);
+                holder.imv_selector.setEnabled(false);
             }
-        });
-        String imv_url = "";
-        if(bookingEntity.getUser_id()>=0) {
-            imv_url = bookingEntity.getUserModel().getImvUrl();
+            holder.lyt_select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.imv_selector.setEnabled(!holder.imv_selector.isEnabled());
+                    ((CommonActivity) (_context)).disableSlot(bookingEntity.getBooking_datetime(), holder.imv_selector.isEnabled());
+                }
+            });
+            String imv_url = "";
+            if (bookingEntity.getUser_id() >= 0) {
+                imv_url = bookingEntity.getUserModel().getImvUrl();
+            }
+            Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A6BFDE", Commons.glide_boder))).into(holder.imv_profile);
+            holder.txv_id.setText(bookingEntity.getUserModel().getUserName());
+            holder.txv_name.setText(bookingEntity.getNewsFeedEntity().getTitle());
+        }else {
+            holder.txv_timeslot.setText(bookingSlot.get(position));
+            holder.lyt_select.setVisibility(View.GONE);
+            holder.view_line.setVisibility(View.GONE);
+            if (bookingEntity.getType() == 0) {
+                holder.lyt_addbooking.setVisibility(View.VISIBLE);
+                holder.lyt_booking.setVisibility(View.GONE);
+                holder.txv_add.setText("Add A Booking");
+                holder.txv_disable.setText(bookingEntity.getBookingDuration());
+                holder.txv_disable.setVisibility(View.VISIBLE);
+                holder.txv_disable.setTextColor(_context.getResources().getColor(R.color.signup_textcolor));
+                holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.leftdetail));
+                holder.txv_add.setTextColor(_context.getResources().getColor(R.color.txt_color));
+                holder.imv_disalbe.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                holder.lyt_addbooking.setBackground(_context.getResources().getDrawable(R.drawable.edit_rectangle_round));
+                if(position==select_posstion){
+                    holder.lyt_addbooking.setBackground(_context.getResources().getDrawable(R.drawable.button_rectangle_round));
+                    holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_checked));
+                    holder.imv_disalbe.setColorFilter(_context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+                    holder.txv_add.setTextColor(_context.getResources().getColor(R.color.white));
+                    holder.txv_disable.setTextColor(_context.getResources().getColor(R.color.white));
+                    holder.txv_add.setText("Selected");
+                }
+            } else{
+                holder.txv_add.setText("Not Available");
+                holder.txv_disable.setVisibility(View.GONE);
+                holder.lyt_addbooking.setVisibility(View.VISIBLE);
+                holder.lyt_booking.setVisibility(View.GONE);
+                holder.txv_add.setTextColor(_context.getResources().getColor(R.color.white));
+                holder.imv_disalbe.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_minus1));
+                holder.imv_disalbe.setColorFilter(_context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+                holder.imv_selector.setEnabled(false);
+                holder.lyt_addbooking.setBackground(_context.getResources().getDrawable(R.drawable.disable_rectangle_round));
+            }
+
+            holder.lyt_addbooking.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(bookingEntity.getType()==0) {
+                        ((CommonActivity) _context).selectBooking(position);
+                        select_posstion = position;
+                        notifyDataSetChanged();
+                    }
+                }
+            });
         }
-        Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
-                new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A6BFDE", Commons.glide_boder))).into(holder.imv_profile);
-        holder.txv_id.setText( bookingEntity.getUserModel().getUserName());
-        holder.txv_name.setText(bookingEntity.getNewsFeedEntity().getTitle());
         return convertView;
     }
 
@@ -139,6 +195,7 @@ public class BookingListAdapter extends BaseAdapter {
         LinearLayout lyt_addbooking,lyt_booking,lyt_container,lyt_select;
         ImageView imv_profile,imv_disalbe,imv_selector;
         TextView txv_name,txv_id,txv_timeslot,txv_disable,txv_add;
+        View view_line;
     }
 
 

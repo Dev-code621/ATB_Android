@@ -84,6 +84,7 @@ public class ReviewModel {
             setId(jsonObject.getInt("id"));
             setUserid(jsonObject.getInt("user_id"));
             setRating(jsonObject.getInt("rating"));
+            if(getRating()>5)setRating(5);
             setReview(jsonObject.getString("review"));
             setCreated_at(jsonObject.getLong("created_at"));
             JSONObject rater = jsonObject.getJSONObject("rater");

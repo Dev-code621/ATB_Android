@@ -43,4 +43,5 @@
     <color name="green">#7CCE4E</color>
     <color name="line_color">#BEBEBE</color>
     <color name="line_white">#A0FFFFFF</color>
+    <color name="star_color">#F4B850</color>
 </resources>

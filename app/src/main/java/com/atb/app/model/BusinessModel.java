@@ -23,7 +23,6 @@ public class BusinessModel {
     ArrayList<OpeningTimeModel> openingTimeModels = new ArrayList<>();
     ArrayList<HolidayModel> holidayModels = new ArrayList<>();
     ArrayList<DisableSlotModel> disableSlotModels = new ArrayList<>();
-    ArrayList<ServiceModel> serviceModels = new ArrayList<>();
     ArrayList<SocialModel> socialModels = new ArrayList<>();
 
     public ArrayList<SocialModel> getSocialModels() {
@@ -43,7 +42,7 @@ public class BusinessModel {
             if(openingTimeModels.get(i).getIs_available()==0)continue;
             int start = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getStart()));
             int end = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getEnd()));
-            if(end<0)end+=24*3600;
+            if(end<start)start-=24*3600;
             int count = (end-start)/3600;
             for(int k=0;k<count;k++){
                 if(start%(24*3600)<= Commons.getMilionSecond("11:00 PM")) {
@@ -211,14 +210,6 @@ public class BusinessModel {
 
     public void setDisableSlotModels(ArrayList<DisableSlotModel> disableSlotModels) {
         this.disableSlotModels = disableSlotModels;
-    }
-
-    public ArrayList<ServiceModel> getServiceModels() {
-        return serviceModels;
-    }
-
-    public void setServiceModels(ArrayList<ServiceModel> serviceModels) {
-        this.serviceModels = serviceModels;
     }
 
     public void initModel(JSONObject business_info){

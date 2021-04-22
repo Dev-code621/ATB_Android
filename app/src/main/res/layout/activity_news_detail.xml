@@ -462,6 +462,7 @@
                         android:layout_height="1dp"
                         android:layout_weight="1"/>
                     <TextView
+                        android:id="@+id/txv_insure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
@@ -470,6 +471,7 @@
                         android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
+                        android:id="@+id/imv_insure"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
@@ -498,6 +500,7 @@
                         android:layout_height="1dp"
                         android:layout_weight="1"/>
                     <TextView
+                        android:id="@+id/txv_qualitfied"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/boldtextTheme"
@@ -506,6 +509,7 @@
                         android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                     <ImageView
+                        android:id="@+id/imv_qualitfied"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"

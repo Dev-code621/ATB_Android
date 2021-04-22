@@ -367,7 +367,7 @@ public class CreateBooking2Activity extends CommonActivity implements View.OnCli
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 params.put("business_user_id", String.valueOf(Commons.g_user.getId()));
-                params.put("service_id", String.valueOf(newsFeedEntity.getId()));
+                params.put("service_id", String.valueOf(newsFeedEntity.getService_id()));
                 params.put("booking_datetime", String.valueOf(time));
                 params.put("is_reminder_enabled", "0");
                 params.put("total_cost", newsFeedEntity.getPrice());

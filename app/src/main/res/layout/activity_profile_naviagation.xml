@@ -17,19 +17,19 @@
         android:id="@+id/nav_view"
         android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
         android:fitsSystemWindows="true"
+        android:layout_gravity="end"
         android:background="@color/main_color"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_atb"
+            android:text="Settings"
             style="@style/boldtextTheme"
             android:textColor="@color/txt_color"
             android:textSize="25sp"
             android:orientation="vertical"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="100dp"
             android:paddingLeft="30dp"/>
         <ScrollView
             android:layout_width="match_parent"
@@ -43,9 +43,11 @@
                 android:layout_marginTop="10dp">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="30dp">
+                    android:layout_marginLeft="30dp"
+                    android:visibility="gone">
                     <FrameLayout
                         android:layout_width="50dp"
                         android:layout_height="50dp">
@@ -74,7 +76,8 @@
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_marginLeft="60dp"
                     android:layout_marginTop="10dp"
@@ -110,15 +113,18 @@
                     android:background="@color/line_color"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"/>
+                    android:layout_marginRight="20dp"
+                    android:visibility="gone"/>
                 <LinearLayout
                     android:id="@+id/lyt_show_notis"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layout_marginLeft="30dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -134,7 +140,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_upgrade_business"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -157,7 +164,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_booking"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -179,7 +187,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_item_sold"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -201,7 +210,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_create_bio"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -223,7 +233,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_set_range"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -245,7 +256,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_user_setting"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -267,7 +279,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_transaction"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -289,7 +302,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_contact_admin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -311,7 +325,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_save_post"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp">
@@ -333,7 +348,8 @@
                 <LinearLayout
                     android:id="@+id/lyt_logout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp"

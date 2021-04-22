@@ -50,6 +50,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.FollowerModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
@@ -228,15 +229,14 @@ public abstract class CommonActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
-                        closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             UserModel userModel = new UserModel();
                             userModel.initModel(jsonObject.getJSONObject("msg").getJSONObject("profile"));
-                            UserProfile(userModel,userType);
+                            getFollow(userModel,userType);
 
                         }catch (Exception e){
-
+                            closeProgress();
                         }
                     }
                 },
@@ -254,6 +254,59 @@ public abstract class CommonActivity extends BaseActivity {
                 params.put("token", Commons.token);
                 params.put("user_id", String.valueOf(id));
 
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void getFollow(UserModel userModel,int userType){
+        showProgress();
+
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_FOLLOWER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                userModel.getFollowerModels().clear();
+                                for(int i =0;i<jsonArray.length();i++){
+                                    JSONObject follow = jsonArray.getJSONObject(i);
+                                    FollowerModel followerModel = new FollowerModel();
+                                    followerModel.initModel(follow);
+                                    userModel.getFollowerModels().add(followerModel);
+
+                                }
+                                UserProfile(userModel,userType);
+                            }
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("follower_user_id", String.valueOf(userModel.getId()));
+                params.put("follower_business_id", "0");
                 return params;
             }
         };
@@ -350,13 +403,24 @@ public abstract class CommonActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
+                        Log.d("aaaaa",json);
                         closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
+                            JSONArray jsonArray = jsonObject.getJSONArray("msg");
                             if(!jsonObject.getBoolean("result"))
                                 showAlertDialog(jsonObject.getString("msg"));
                             else {
-                                finishPayment();
+                                String id ="";
+                                for(int i=0;i<jsonArray.length();i++){
+                                    JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);
+                                    if(object.getString("transaction_type").equals("Sale")) {
+                                        id = object.getString("id");
+                                        break;
+                                    }
+
+                                }
+                                finishPayment(id);
                             }
 
                         } catch (JSONException e) {
@@ -391,7 +455,7 @@ public abstract class CommonActivity extends BaseActivity {
 
     }
 
-    public void finishPayment(){
+    public void finishPayment(String transaction_id){
 
     }
 
@@ -481,6 +545,9 @@ public abstract class CommonActivity extends BaseActivity {
     }
 
     public void disableSlot(int time,boolean flag){
+
+    }
+    public void selectBooking(int posstion){
 
     }
 

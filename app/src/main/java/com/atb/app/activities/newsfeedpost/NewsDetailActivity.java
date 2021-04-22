@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,6 +36,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
+import com.atb.app.activities.navigationItems.other.LocationMapActivity;
+import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.activities.profile.FollowerAndFollowingActivity;
 import com.atb.app.activities.profile.ReportPostActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
@@ -51,6 +55,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.ConfirmVariationDialog;
 import com.atb.app.dialog.FeedDetailDialog;
 import com.atb.app.dialog.PaymentBookingDialog;
 import com.atb.app.dialog.PaymentSuccessDialog;
@@ -83,10 +88,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.Branch;
+import io.branch.referral.util.BranchEvent;
+import io.branch.referral.util.LinkProperties;
 
 public class NewsDetailActivity extends CommonActivity implements View.OnClickListener {
     ImageView imv_back,imv_profile,imv_navigation,imv_camera,imv_send,imv_close,imv_like,imv_bookmark;
@@ -112,10 +123,10 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     TextView txv_advicename1,txv_advicename1_description,txv_title,txv_title_description,txv_category,txv_startprice,txv_depist_price,txv_cancelday,txv_areacovered;
     LinearLayout lyt_advice_image,lyt_text,lyt_offered,lyt_deposit,lyt_cancel,lyt_area,lyt_insured,lyt_qualitfied,lyt_sale_button;
-    ImageView imv_txv_type;
+    ImageView imv_txv_type,imv_qualitfied,imv_insure;
     ListView lyt_votelist;
     VotingListAdapter votingListAdapter;
-    TextView txv_book_service;
+    TextView txv_book_service,txv_insure,txv_qualitfied;
     ImageView imv_bubble;
     LinearLayout lyt_sale_post,lyt_location,lyt_book_service;
     TextView txv_brand,txv_price,txv_postage_cost,txv_location,txv_buy_sale;
@@ -186,8 +197,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         txv_areacovered = findViewById(R.id.txv_areacovered);
         lyt_offered = findViewById(R.id.lyt_offered);
         lyt_deposit = findViewById(R.id.lyt_deposit);
+        lyt_deposit.setOnClickListener(this);
         lyt_cancel = findViewById(R.id.lyt_cancel);
+        lyt_cancel.setOnClickListener(this);
         lyt_area = findViewById(R.id.lyt_area);
+        lyt_area.setOnClickListener(this);
         lyt_insured = findViewById(R.id.lyt_insured);
         lyt_qualitfied = findViewById(R.id.lyt_qualitfied);
         imv_bubble = findViewById(R.id.imv_bubble);
@@ -195,6 +209,10 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         lyt_sale_button = findViewById(R.id.lyt_sale_button);
         lyt_book_service = findViewById(R.id.lyt_book_service);
         lyt_like = findViewById(R.id.lyt_like);
+        imv_insure = findViewById(R.id.imv_insure);
+        imv_qualitfied = findViewById(R.id.imv_qualitfied);
+        txv_insure = findViewById(R.id.txv_insure);
+        txv_qualitfied = findViewById(R.id.txv_qualitfied);
         txv_book_service.setOnClickListener(this);
         lyt_book_service.setOnClickListener(this);
         imv_bubble.setOnClickListener(this);
@@ -446,7 +464,23 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_depist_price.setText("£"+newsFeedEntity.getDeposit());
                 txv_cancelday.setText(newsFeedEntity.getCancellations()+" days");
                 txv_areacovered.setText(newsFeedEntity.getPost_location());
+                if(newsFeedEntity.getInsuranceModels().size()==0){
+                    txv_insure.setText("No");
+                    imv_insure.setVisibility(View.GONE);
+                }else {
+                    txv_insure.setText("Yes");
+                    imv_insure.setVisibility(View.VISIBLE);
+                    lyt_insured.setOnClickListener(this);
+                }
 
+                  if(newsFeedEntity.getQualifications().size()==0){
+                    txv_qualitfied.setText("No");
+                    imv_qualitfied.setVisibility(View.GONE);
+                }else {
+                      txv_qualitfied.setText("Yes");
+                      imv_qualitfied.setVisibility(View.VISIBLE);
+                      lyt_qualitfied.setOnClickListener(this);
+                }
                 break;
             case 4:
                 txv_title_description.setVisibility(View.GONE);
@@ -583,7 +617,35 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 Gson gson = new Gson();
                 String newfeedentity = gson.toJson(newsFeedEntity);
                 bundle.putString("newsFeedEntity",newfeedentity);
-                goTo(this, BookFromPostActivity.class,false,bundle);
+                startActivityForResult(new Intent(this, BookFromPostActivity.class).putExtra("data",bundle),1);
+                break;
+            case R.id.lyt_deposit:
+                ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog(1);
+                confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                    }
+                });
+                confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
+            case R.id.lyt_area:
+                bundle = new Bundle();
+                bundle.putDouble("lat",newsFeedEntity.getLat());
+                bundle.putDouble("lang" ,newsFeedEntity.getLang());
+                goTo(this, LocationMapActivity.class,false,bundle);
+                break;
+            case R.id.lyt_cancel:
+                confirmBookingDialog = new ConfirmVariationDialog(2);
+                confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                    }
+                });
+                confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
+            case R.id.lyt_insurance:
+                break;
+            case R.id.lyt_qualitfied:
                 break;
         }
     }
@@ -644,7 +706,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     }
 
     @Override
-    public void finishPayment() {
+    public void finishPayment(String transaction_id) {
         PaymentSuccessDialog paymentSuccessDialog = new PaymentSuccessDialog();
         paymentSuccessDialog.setOnConfirmListener(new PaymentSuccessDialog.OnConfirmListener() {
             @Override
@@ -801,10 +863,31 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     //edit post
                 }
             }
-
             @Override
             public void onShare() {
+                LinkProperties linkProperties = new LinkProperties()
+                        .setChannel("facebook")
+                        .setFeature("sharing")
+                        .addControlParameter("nav_here",String.valueOf(newsFeedEntity.getId()))
+                        .addControlParameter("android_url", "https://play.google.com/store");
+                String path = "";
+                if(newsFeedEntity.getPostImageModels().size()>0)
+                    path = newsFeedEntity.getPostImageModels().get(0).getPath();
+                BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                        .setCanonicalIdentifier("content/" + String.valueOf(newsFeedEntity.getId()))
+                        .setTitle(newsFeedEntity.getTitle())
+                        .setContentDescription(newsFeedEntity.getDescription())
+                        .setContentImageUrl(path)
+                        .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                        .addContentMetadata("property1", "blue")
+                        .addContentMetadata("property2", "red");
 
+                String url  = branchUniversalObject.getShortUrl(NewsDetailActivity.this,
+                        linkProperties);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/html");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(url));
+                startActivity(Intent.createChooser(sharingIntent, "Share using"));
             }
         },type,flowerid);
         feedDetailDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
@@ -819,18 +902,17 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
-                        Log.d("aaaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-                                int posterBusinessID = 0;
+                                int posterID = 0;
                                 if(newsFeedEntity.getPoster_profile_type()==1)
-                                    posterBusinessID = newsFeedEntity.getUserModel().getBusinessModel().getId();
+                                    posterID = newsFeedEntity.getUserModel().getId();
                                 JSONArray jsonArray = jsonObject.getJSONArray("msg");
                                 for(int i =0;i<jsonArray.length();i++){
                                     int followingUserID = jsonArray.getJSONObject(i).getInt("follower_user_id");
-                                    int followingBusinessID = jsonArray.getJSONObject(i).getInt("follower_business_id");
-                                    if(followingUserID== newsFeedEntity.getUser_id() && followingBusinessID ==posterBusinessID){
+                                    int follower_user_id = jsonArray.getJSONObject(i).getInt("follower_user_id");
+                                    if(followingUserID== newsFeedEntity.getUser_id() && follower_user_id ==posterID){
                                         flowerid = 1;
                                         gotoSettingPopup();
                                         return;
@@ -1183,6 +1265,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
                 Log.d("error:", error.toString());
             }
+        }else if(resultCode ==-200){
+            finish(this);
         }
 
     }

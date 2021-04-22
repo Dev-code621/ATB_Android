@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.activities.profile.boost.BoostActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
@@ -40,6 +41,7 @@ import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.gson.Gson;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
@@ -123,6 +125,10 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             boostModels.add(boostModel);
         }
         boostAdapter.setRoomData(boostModels);
+
+
+
+
     }
 
 

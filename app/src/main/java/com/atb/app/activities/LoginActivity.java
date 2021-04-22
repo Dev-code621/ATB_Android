@@ -29,6 +29,8 @@ import com.applozic.mobicomkit.api.account.user.User;
 import com.applozic.mobicomkit.listners.AlLoginHandler;
 import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.BookingActivity;
+import com.atb.app.activities.navigationItems.booking.MyBookingActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -330,6 +332,8 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 else
                     loginApplozic(false);
                 goTo(LoginActivity.this, MainActivity.class,true);
+               // goTo(LoginActivity.this, BookingActivity.class,true);
+
             }
         }catch (Exception e){
             Log.d("bbbbb, " , e.toString());

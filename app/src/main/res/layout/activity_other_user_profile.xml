@@ -79,7 +79,7 @@
                 android:id="@+id/imv_rating"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/star3"
+                android:src="@drawable/star4"
                 android:layout_marginRight="10dp"/>
             <ImageView
                 android:id="@+id/imv_profile_chat"
@@ -178,25 +178,27 @@
             <LinearLayout
                 android:id="@+id/lyt_following_on"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/round_button_theme"
                 android:layout_marginLeft="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:gravity="center"
-                android:visibility="gone">
+
+                android:gravity="center">
                 <ImageView
+                    android:id="@+id/imv_follow"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/account_logo"
                     android:tint="@color/white"/>
                 <TextView
+                    android:id="@+id/txv_follow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/textTheme"
                     android:text="@string/following"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
                     android:textSize="14sp"
                     android:textColor="@color/white"/>
             </LinearLayout>
@@ -211,16 +213,19 @@
                 android:paddingRight="5dp"
                 android:gravity="center">
                 <ImageView
+                    android:id="@+id/imv_on"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/icon_noti"
                     android:tint="@color/white"/>
                 <TextView
+                    android:id="@+id/txv_on"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/textTheme"
-                    android:text="ON"
+                    android:text="OFF"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:textSize="15sp"
                     android:textColor="@color/white"/>
             </LinearLayout>

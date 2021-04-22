@@ -137,7 +137,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
                 }
                 break;
             case R.id.txv_request_paypal:
-                RequestPaypalDialog requestPaypalDialog = new RequestPaypalDialog(bookingEntity);
+                RequestPaypalDialog requestPaypalDialog = new RequestPaypalDialog(bookingEntity,0);
                 requestPaypalDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
                     @Override
                     public void onConfirm() {

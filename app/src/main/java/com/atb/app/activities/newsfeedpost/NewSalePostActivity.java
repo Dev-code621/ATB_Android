@@ -454,7 +454,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 stockAdapter.setSelect(imv_stocker_check.isEnabled());
                 break;
             case R.id.imv_variation_description:
-                ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog();
+                ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog(0);
                 confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
                     @Override
                     public void onConfirm() {

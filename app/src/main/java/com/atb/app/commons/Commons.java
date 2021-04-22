@@ -43,8 +43,9 @@ public class Commons {
     public static int glide_boder = 10;
     public static int video_flag = -1;
     public static int subscription_code = -11111;
+    public static int REQUEST_PAYMENT_CODE =10034;
     public static String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-
+    public static int feed_id =-1;
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

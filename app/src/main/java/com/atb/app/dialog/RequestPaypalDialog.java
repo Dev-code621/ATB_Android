@@ -24,8 +24,10 @@ public class RequestPaypalDialog extends DialogFragment {
     TextView txv_booking_price,txv_deposit,txv_pending_funds;
     LinearLayout lyt_request_payment;
     BookingEntity bookingEntity = new BookingEntity();
-    public RequestPaypalDialog(BookingEntity bookingEntity) {
+    int type;
+    public RequestPaypalDialog(BookingEntity bookingEntity,int type) {
         this.bookingEntity = bookingEntity;
+        this.type = type;
     }
 
     @Nullable
@@ -47,10 +49,20 @@ public class RequestPaypalDialog extends DialogFragment {
         txv_deposit = view.findViewById(R.id.txv_deposit);
         txv_pending_funds = view.findViewById(R.id.txv_pending_funds);
         lyt_request_payment = view.findViewById(R.id.lyt_request_payment);
+        TextView txv_title = view.findViewById(R.id.txv_title);
+        TextView txv_description = view.findViewById(R.id.txv_description);
+        TextView txv_button = view.findViewById(R.id.txv_button);
+        if(type==0){
+
+        }else {
+            txv_title.setText("Pay now with your\nPaypal account");
+            txv_description.setText("You can pay now the complete the bill from your phone. You can also pay by cash the day of the service");
+            txv_button.setText("Pay £" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()));
+        }
 
         txv_booking_price.setText("£" + bookingEntity.getNewsFeedEntity().getPrice());
-        txv_deposit.setText("£" + bookingEntity.getNewsFeedEntity().getDeposit());
-        txv_pending_funds.setText("£" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - Double.parseDouble(bookingEntity.getNewsFeedEntity().getDeposit())));
+        txv_deposit.setText("£" + bookingEntity.getPaid_amount());
+        txv_pending_funds.setText("£" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()));
 
         lyt_request_payment.setOnClickListener(new View.OnClickListener() {
             @Override

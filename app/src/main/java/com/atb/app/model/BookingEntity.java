@@ -5,16 +5,38 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class BookingEntity {
     int id,service_id,user_id = -1,business_user_id,booking_datetime,is_reminder_enabled;
     String state,email,full_name,phone,total_cost,remaining;
     long created_at,updated_at;
     UserModel userModel = new UserModel();
     BusinessModel businessModel = new BusinessModel();
-    TransactionEntity transactionEntity = new TransactionEntity();
+    ArrayList<TransactionEntity>transactionEntities = new ArrayList<>();
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+    String bookingDuration = "";
+    double paid_amount =0.0;
     //0 free slot, 1: booked slot : -1: disalbe solot
+
+
+    public double getPaid_amount() {
+        return paid_amount;
+    }
+
+    public void setPaid_amount(double paid_amount) {
+        this.paid_amount = paid_amount;
+    }
+
     int type = 0;
+
+    public String getBookingDuration() {
+        return bookingDuration;
+    }
+
+    public void setBookingDuration(String bookingDuration) {
+        this.bookingDuration = bookingDuration;
+    }
 
     public int getType() {
         return type;
@@ -152,13 +174,6 @@ public class BookingEntity {
         this.businessModel = businessModel;
     }
 
-    public TransactionEntity getTransactionEntity() {
-        return transactionEntity;
-    }
-
-    public void setTransactionEntity(TransactionEntity transactionEntity) {
-        this.transactionEntity = transactionEntity;
-    }
 
     public NewsFeedEntity getNewsFeedEntity() {
         return newsFeedEntity;
@@ -186,9 +201,10 @@ public class BookingEntity {
             setCreated_at(jsonObject.getLong("created_at"));
             setUpdated_at(jsonObject.getLong("updated_at"));
             JSONArray transactions = jsonObject.getJSONArray("transactions");
-            if(transactions.length()>0){
-                JSONObject object = transactions.getJSONObject(0);
-                transactionEntity = new TransactionEntity();
+            transactionEntities.clear();
+            for(int i =0;i<transactions.length();i++) {
+                JSONObject object = transactions.getJSONObject(i);
+                TransactionEntity transactionEntity = new TransactionEntity();
                 transactionEntity.setId(object.getInt("id"));
                 transactionEntity.setUser_id(object.getInt("user_id"));
                 transactionEntity.setIs_business(object.getInt("is_business"));
@@ -200,9 +216,12 @@ public class BookingEntity {
                 transactionEntity.setPayment_source(object.getString("payment_source"));
                 transactionEntity.setQuantity(object.getInt("quantity"));
                 transactionEntity.setPurchase_type(object.getString("purchase_type"));
-                if(!object.getString("delivery_option").equals("null"))
+                if (!object.getString("delivery_option").equals("null"))
                     transactionEntity.setDelivery_option(object.getInt("delivery_option"));
                 transactionEntity.setCreated_at(object.getLong("created_at"));
+                if(transactionEntity.getTransaction_type().equals("Sale"))
+                    paid_amount += Math.abs(transactionEntity.getAmount());
+                transactionEntities.add(transactionEntity);
             }
             if(jsonObject.has("user")){
                 JSONArray users = jsonObject.getJSONArray("user");

@@ -422,13 +422,13 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_report"
-                android:tint="@color/txt_color"/>
+                android:tint="@color/discard_color"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/cancel_booking"
                 style="@style/textTheme"
-                android:textColor="@color/txt_color"
+                android:textColor="@color/discard_color"
                 android:textSize="16sp"
                 android:layout_marginLeft="10dp"/>
             <View
@@ -440,7 +440,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/btn_arrow"
-                android:tint="@color/txt_color"/>
+                android:tint="@color/discard_color"/>
         </LinearLayout>
         <TextView
             android:visibility="gone"
