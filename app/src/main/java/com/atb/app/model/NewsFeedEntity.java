@@ -45,7 +45,7 @@ public class NewsFeedEntity {
     ArrayList<InsuranceModel> qualifications = new ArrayList<>();
 
 
-    int stock_level;
+    int stock_level =0;
     HashMap<String, ArrayList<String>>hashMap = new HashMap<>();
     HashMap<String, VariationModel>stockMap = new HashMap<>();
     ArrayList<String>stock_levels = new ArrayList<>();

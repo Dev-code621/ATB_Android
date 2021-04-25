@@ -104,6 +104,16 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AlertDilogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+        <item name="android:windowBackground">@color/white_transparent</item>
+        <item name="android:textColorPrimary">@color/txt_color</item>
+        <item name="android:textColor">@color/txt_color</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">@font/segoe_ui_semibold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/alert_rectangle_round</item>
 
+    </style>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.atb.app.fragement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.newsfeedpost.EditSalesPostActivity;
+import com.atb.app.activities.newsfeedpost.NewServiceOfferActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.StoreItemAdapter;
 import com.atb.app.api.API;
@@ -53,6 +56,7 @@ public class StoreFragment extends Fragment {
     StoreItemAdapter storeItemAdapter ;
     ArrayList<String> selected_Variation = new ArrayList<>();
     int deliveryOption = 0;
+    int REQUEST_EDITFEED =23232;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +97,21 @@ public class StoreFragment extends Fragment {
 
             @Override
             public void OnEditSelect(int posstion) {
-                Log.d("aaaaa","afaf");
+                NewsFeedEntity newsFeedEntity = newsFeedEntities.get(posstion);
+                Bundle bundle = new Bundle();
+                Gson gson = new Gson();
+                String string = gson.toJson(newsFeedEntity);
+                bundle.putBoolean("edit",true);
+                bundle.putString("newsFeedEntity",string);
+                if(newsFeedEntity.getPost_type()==2){
+                    startActivityForResult(new Intent(getActivity()
+                            , EditSalesPostActivity.class).putExtra("data",bundle),REQUEST_EDITFEED);
+                    getActivity().overridePendingTransition(0, 0);
+                }else if(newsFeedEntity.getPost_type() ==3){
+                    startActivityForResult(new Intent(getActivity()
+                            , NewServiceOfferActivity.class).putExtra("data",bundle),REQUEST_EDITFEED);
+                    getActivity().overridePendingTransition(0, 0);
+                }
             }
 
             @Override

@@ -137,4 +137,8 @@ public class API {
     public static final String FINISHBOOKING = API_BASE_URL + "booking/complete_booking";
     public static final String REPORT_BOOKING = API_BASE_URL + "booking/create_booking_report";
     public static final String UPDATE_TRANSCATION = API_BASE_URL + "profile/set_transaction_booking_id";
+    public static final String  UPDATE_POST_API = API_BASE_URL + "post/update_content";
+    public static final String  UPDATE_SERVICE = API_BASE_URL + "profile/update_service";
+    public static final String  UPDATE_PRODUCT = API_BASE_URL + "profile/update_product";
+
 }

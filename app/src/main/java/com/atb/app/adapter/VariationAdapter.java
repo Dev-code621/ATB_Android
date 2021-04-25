@@ -21,10 +21,10 @@ import java.util.Set;
 
 public class VariationAdapter extends BaseAdapter {
 
-    private NewSalePostActivity _context;
+    private Context _context;
 
     HashMap<String, ArrayList<String>> _roomDatas = new HashMap<>();
-    public VariationAdapter(NewSalePostActivity context) {
+    public VariationAdapter(Context context) {
 
         super();
         this._context = context;

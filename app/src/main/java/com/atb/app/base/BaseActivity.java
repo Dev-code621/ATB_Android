@@ -131,10 +131,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
 
     public static void showAlertDialog(String msg) {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(_context).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(_context,R.style.AlertDilogTheme).create();
        // alertDialog.setTitle(getString(R.string.app_name));
         alertDialog.setTitle("ATB");
         alertDialog.setMessage(msg);
+
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, _context.getString(R.string.ok),
 
                 new DialogInterface.OnClickListener() {

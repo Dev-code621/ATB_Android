@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,14 +37,19 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectMediaDialog;
+import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.google.android.gms.common.internal.service.Common;
+import com.google.gson.Gson;
 
 
 import org.angmarch.views.NiceSpinner;
@@ -73,6 +79,8 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     boolean business_user = false;
     int maxImagecount = 3;
     int media_type =0;
+    boolean editable =false;
+    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,31 +121,9 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 // This example uses String, but your type can be any
                 String item = String.valueOf(parent.getItemAtPosition(position));
                 media_type = position;
-                if(position==0){
-                    lyt_image_video.setVisibility(View.GONE);
-                }else if(position==1){
-                    lyt_image_video.setVisibility(View.VISIBLE);
-                    lyt_image.setVisibility(View.VISIBLE);
-                    lyt_video.setVisibility(View.GONE);
-
-                }else{
-                    lyt_image_video.setVisibility(View.VISIBLE);
-                    lyt_image.setVisibility(View.GONE);
-                    lyt_video.setVisibility(View.VISIBLE);
-                }
+                initLayout();
             }
 
-        });
-        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
-        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-            @Override
-            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
-                SpannableString ss = new SpannableString(text);
-                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                txv_post.setText(ss);
-            }
         });
         for(int i =0;i<imageViews.size();i++){
             int finalI = i;
@@ -148,23 +134,53 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 }
             });
         }
+
+
+
+        String str = "Post in ";
+        if(editable) str = "Update in ";
+            txv_post.setText(str +  spiner_category_type.getSelectedItem().toString());
+        String finalStr = str;
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+
+                String text = finalStr +  spiner_category_type.getSelectedItem().toString();
+                SpannableString ss = new SpannableString(text);
+                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                ss.setSpan(boldSpan, 0, finalStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                txv_post.setText(ss);
+            }
+        });
         initLayout();
         Keyboard();
     }
 
     void initLayout(){
-        for(int i =0;i<imageViews.size();i++){
+        for (int i = 0; i < imageViews.size(); i++) {
             imageViews.get(i).setVisibility(View.VISIBLE);
-            if(!business_user && i>3)imageViews.get(i).setVisibility(View.GONE);
+            if (!business_user && i > 3) imageViews.get(i).setVisibility(View.GONE);
         }
-        if(business_user)
+        if (business_user)
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         else
             Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
-        if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
+        if (Commons.g_user.getAccount_type() == 0) card_business.setVisibility(View.GONE);
 
+        if(media_type==0){
+            lyt_image_video.setVisibility(View.GONE);
+        }else if(media_type==1){
+            lyt_image_video.setVisibility(View.VISIBLE);
+            lyt_image.setVisibility(View.VISIBLE);
+            lyt_video.setVisibility(View.GONE);
+
+        }else{
+            lyt_image_video.setVisibility(View.VISIBLE);
+            lyt_image.setVisibility(View.GONE);
+            lyt_video.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -231,6 +247,11 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         showProgress();
         try {
             Map<String, String> params = new HashMap<>();
+            String API_LINK = API.CREATE_POST_API;
+            if(editable) {
+                API_LINK = API.UPDATE_POST_API;
+                params.put("id", String.valueOf(newsFeedEntity.getId()));
+            }
             params.put("token", Commons.token);
             params.put("type", "1");
             params.put("media_type", String.valueOf(media_type));
@@ -249,20 +270,33 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             params.put("delivery_option", "0");
             params.put("delivery_cost", "0");
             //File part
-
             ArrayList<File> post = new ArrayList<>();
-            if(media_type ==1) {
+            String post_image_uris = "";
+            if (media_type == 1) {
                 for (int i = 0; i < completedValue.size(); i++) {
-                    File file = new File(completedValue.get(i));
+                    if(URLUtil.isNetworkUrl(completedValue.get(i)))
+                        post_image_uris += completedValue.get(i) + ",";
+                    else {
+                        post_image_uris  +="data" +",";
+                        File file = new File(completedValue.get(i));
+                        post.add(file);
+                    }
+                }
+                post_image_uris = post_image_uris.substring(0,post_image_uris.length()-1);
+            } else if (media_type == 2) {
+                if(URLUtil.isNetworkUrl(videovalue)){
+                    post_image_uris = videovalue;
+                }else {
+                    post_image_uris = "data";
+                    File file = new File(videovalue);
                     post.add(file);
                 }
-            }else if(media_type == 2) {
-                File file = new File(videovalue);
-                post.add(file);
             }
-            String API_LINK = API.CREATE_POST_API;
-            String imageTitle = "post_imgs";
+            if(editable){
+                params.put("post_img_uris", post_image_uris);
+            }
 
+            String imageTitle = "post_imgs";
             Map<String, String> mHeaderPart= new HashMap<>();
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
             mHeaderPart.put("Accept", "application/json");

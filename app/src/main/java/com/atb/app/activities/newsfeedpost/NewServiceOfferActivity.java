@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -42,6 +44,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.google.gson.Gson;
 import com.zcw.togglebutton.ToggleButton;
 
 import org.angmarch.views.NiceSpinner;
@@ -82,6 +85,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
      int isPosting;
      RelativeLayout lyt_product,lyt_post;
      ImageView imv_back;
+    boolean editable =false;
+    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +156,10 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 isPosting= bundle.getInt("isPosting");
+                editable= bundle.getBoolean("edit");
+                String string = bundle.getString("newsFeedEntity");
+                Gson gson = new Gson();
+                newsFeedEntity = gson.fromJson(string, NewsFeedEntity.class);
             }
         }
 
@@ -171,14 +180,18 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             }
         });
 
-        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
+        String str = "Post in ";
+        if(editable) str = "Update in ";
+        txv_post.setText(str +  spiner_category_type.getSelectedItem().toString());
+        String finalStr = str;
         spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
+
+                String text = finalStr +  spiner_category_type.getSelectedItem().toString();
                 SpannableString ss = new SpannableString(text);
                 StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(boldSpan, 0, finalStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 txv_post.setText(ss);
             }
         });
@@ -280,8 +293,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }else {
             txv_insurance.setVisibility(View.GONE);
             lyt_insurance.setVisibility(View.VISIBLE);
-            txv_insurance_name.setText(qualifications.get(qualitfication_id).getCompany() + " " + qualifications.get(qualitfication_id).getReference() );
-            txv_insurance_time.setText("Expires" + qualifications.get(qualitfication_id).getExpiry());
+            txv_insurance_name.setText(insuranceModels.get(insurance_id).getCompany() + " " + insuranceModels.get(insurance_id).getReference() );
+            txv_insurance_time.setText("Expires" + insuranceModels.get(insurance_id).getExpiry());
         }
         txt_cancelday.setText(String.valueOf(candellation));
     }
@@ -304,6 +317,70 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         },arrayList);
         selectInsuranceDialog.show(getSupportFragmentManager(), "action picker");
     }
+
+    void loadEdit(){
+        if(editable) {
+            completedValue.clear();
+            for (int i = 0; i < newsFeedEntity.getPostImageModels().size(); i++) {
+                if (Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(i).getPath())) {
+                    videovalue = newsFeedEntity.getPostImageModels().get(i).getPath();
+                } else {
+                    completedValue.add(newsFeedEntity.getPostImageModels().get(i).getPath());
+                }
+            }
+            media_type = newsFeedEntity.getMedia_type();
+            spiner_media_type.setSelectedIndex(media_type-1);
+            if (media_type == 1)
+                reloadImages();
+            else if (media_type == 2)
+                reloadVideo();
+
+            edt_title.setText(newsFeedEntity.getTitle());
+            edt_description.setText(newsFeedEntity.getDescription());
+            String[] array = getResources().getStringArray(R.array.category_type);
+            for (int i = 0; i < array.length; i++) {
+                if (array[i].equals(newsFeedEntity.getCategory_title())) {
+                    spiner_category_type.setSelectedIndex(i);
+                    break;
+                }
+            }
+            edt_price.setText(newsFeedEntity.getPrice());
+            edt_deposit.setText(newsFeedEntity.getDeposit());
+            candellation = Integer.parseInt(newsFeedEntity.getCancellations());
+            txv_location.setText(newsFeedEntity.getPost_location());
+            if(Double.parseDouble(newsFeedEntity.getDeposit())>0)
+                toggle_deposit.setToggleOn();
+            if(newsFeedEntity.getQualifications().size()>0){
+                toggle_quality.setToggleOn();
+                for(int i =0;i<qualifications.size();i++)
+                    if(newsFeedEntity.getQualifications().get(0).getId() == qualifications.get(i).getId()){
+                        qualitfication_id = i;
+                        break;
+                    }
+            }
+            if(newsFeedEntity.getInsuranceModels().size()>0){
+                toggle_insurance.setToggleOn();
+                for(int i =0;i<insuranceModels.size();i++)
+                    if(newsFeedEntity.getInsuranceModels().get(0).getId() == insuranceModels.get(i).getId()){
+                        insurance_id = i;
+                        break;
+                    }
+            }
+
+            if(newsFeedEntity.getPayment_options()== 3){
+                toggle_cash.setToggleOn();
+                toggle_paypal.setToggleOn();
+                cash = true; paypal =true;
+            }else  if(newsFeedEntity.getPayment_options() ==2){
+                paypal =true;
+                toggle_paypal.setToggleOn();
+            }else if(newsFeedEntity.getPayment_options() ==1) {
+                cash = true;
+                toggle_cash.setToggleOn();
+            }
+            initLayout();
+        }
+    }
     void loadingQalification_Insurance(){
         showProgress();
         StringRequest myRequest = new StringRequest(
@@ -324,6 +401,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                                     insuranceModels.add(insuranceModel);
                                 else
                                     qualifications.add(insuranceModel);
+                                loadEdit();
                             }
 
                         }catch (Exception e){
@@ -441,10 +519,16 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }
         showProgress();
         try {
+            String API_LINK =API.ADD_SERVICE,imageTitle = "post_imgs";
+            Map<String, String> params = new HashMap<>();
+            if(editable) {
+                API_LINK = API.UPDATE_SERVICE;
+                params.put("id", String.valueOf(newsFeedEntity.getService_id()));
+            }
             deposit_amount = 0.00f;
             if(edt_deposit.getText().toString().length()>0)
             deposit_amount = Float.parseFloat(edt_deposit.getText().toString());
-            Map<String, String> params = new HashMap<>();
+
             params.put("token", Commons.token);
             params.put("poster_profile_type", "1");
             params.put("media_type", String.valueOf(media_type));
@@ -482,16 +566,30 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             params.put("make_post", String.valueOf(isPosting));
             //File part
             ArrayList<File> post = new ArrayList<>();
+            String post_image_uris = "";
             if(media_type ==1) {
                 for (int i = 0; i < completedValue.size(); i++) {
-                    File file = new File(completedValue.get(i));
+                    if(URLUtil.isNetworkUrl(completedValue.get(i)))
+                        post_image_uris += completedValue.get(i) + ",";
+                    else {
+                        post_image_uris  +="data" +",";
+                        File file = new File(completedValue.get(i));
+                        post.add(file);
+                    }
+                }
+                post_image_uris = post_image_uris.substring(0,post_image_uris.length()-1);
+            }else {
+                if(URLUtil.isNetworkUrl(videovalue)){
+                    post_image_uris = videovalue;
+                }else {
+                    post_image_uris = "data";
+                    File file = new File(videovalue);
                     post.add(file);
                 }
-            }else {
-                File file = new File(videovalue);
-                post.add(file);
             }
-            String API_LINK =API.ADD_SERVICE,imageTitle = "post_imgs";
+            if(editable){
+                params.put("post_img_uris", post_image_uris);
+            }
 
             Map<String, String> mHeaderPart= new HashMap<>();
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");

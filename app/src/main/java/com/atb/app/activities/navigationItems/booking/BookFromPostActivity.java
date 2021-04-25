@@ -95,6 +95,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     BookingEntity bookingEntity = new BookingEntity();
     TextView txv_name,txv_title;
     ImageView imv_image;
+    long today = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +159,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         txv_title.setText(newsFeedEntity.getTitle()+ " at ");
         txv_name.setText(newsFeedEntity.getUserModel().getBusinessModel().getBusiness_name());
         Glide.with(_context).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).into(imv_image);
+        today= c.getTimeInMillis()-24*3600000;
         loadBooking(year,month);
 
     }
@@ -401,6 +403,14 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
 
     @Override
     public void onDaySelected() {
+        if(calendarView.getSelectedDates().get(0).getTimeInMillis()<today){
+            showAlertDialog("Please choice futher day");
+            hashMap.clear();
+            selected_bookingSlot.clear();
+            bookingListAdapter.setRoomData(hashMap,selected_bookingSlot);
+            Helper.getListViewSize(list_booking);
+            return;
+        }
         loadBookingByday(calendarView.getSelectedDays().get(0).getDayNumber()-1);
     }
 

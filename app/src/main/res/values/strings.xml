@@ -274,4 +274,5 @@
     <string name="applozic_key">emtrac2ba61d90383c69a7fbc7db07725fa3e5b</string>
     <string name="exist_user">This user already have an account, we will link the user to the booking</string>
     <string name="unexist_user">No matches were found, please manually field the contact fields</string>
+    <string name="feed_select">Selecting <b>My ATB</b> combines all your groups into one\nfeed so you can view multiple groups simultaneously</string>
 </resources>

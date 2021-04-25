@@ -28,12 +28,12 @@ import java.util.HashMap;
 
 public class StockAdapter extends BaseAdapter {
 
-    private NewSalePostActivity _context;
+    private Context _context;
     HashMap<String, VariationModel> _roomDatas = new HashMap<>();
     public ArrayList<Boolean>booleans = new ArrayList<>();
     public ArrayList<String>prices = new ArrayList<>();
     public ArrayList<String>stock_levels = new ArrayList<>();
-    public StockAdapter(NewSalePostActivity context) {
+    public StockAdapter(Context context) {
 
         super();
         this._context = context;

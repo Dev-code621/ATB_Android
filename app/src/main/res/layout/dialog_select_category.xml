@@ -9,23 +9,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp">
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Feed"
-            android:id="@+id/tv_title"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            android:layout_centerInParent="true"
-            android:textColor="@color/txt_color"/>
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp">
+            <ImageView
+                android:src="@drawable/icon_feed"
+                android:layout_width="30dp"
+                android:layout_alignParentRight="true"
+                android:tint="@color/head_color"
+                android:layout_height="30dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feed"
+                android:id="@+id/tv_title"
+                android:textSize="19sp"
+                android:layout_marginLeft="5dp"
+                android:theme="@style/boldtextTheme"
+                android:layout_centerInParent="true"
+                android:textColor="@color/txt_color"/>
+        </LinearLayout>
+
         <ImageView
             android:src="@drawable/close"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:id="@+id/iv_close"
             android:layout_alignParentRight="true"
-            android:layout_height="40dp" />
+            android:tint="@color/head_color"
+            android:layout_height="30dp" />
 
     </RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/feed_select"
+        android:textSize="14sp"
+        android:theme="@style/textTheme"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/txt_color"/>
     <TextView
         android:id="@+id/txv_myatb"
         android:layout_width="match_parent"
@@ -33,12 +59,12 @@
         android:text="@string/my_atb"
         android:gravity="center"
         android:textColor="@color/white"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         style="@style/btn_buttonStyle"
         android:background="@drawable/button_rectangle_round"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginBottom="20dp"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

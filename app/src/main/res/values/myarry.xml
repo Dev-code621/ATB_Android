@@ -28,8 +28,8 @@
         <item name="6">Home</item>
         <item name="7">Events</item>
         <item name="8">Health &amp; Well-Being</item>
-        <item name="9">Sesonal</item>
-        <item name="10">General</item>
+        <item name="9">Celebrations</item>
+        <item name="10">Miscellaneous</item>
     </string-array>
     <string-array name="condition_type" >
         <item name="0">New</item>

@@ -137,6 +137,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     int flowerid = -1;
     ArrayList<String> selected_Variation = new ArrayList<>();
     int REQUEST_PAYMENT_CODE =10034;
+    int REQUEST_EDITFEED =23232;
     Map<String, String> payment_params = new HashMap<>();
     int deliveryOption = 0;
     @Override
@@ -307,6 +308,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                             JSONObject jsonObject = new JSONObject(json);
                             newsFeedEntity = new NewsFeedEntity();
                             newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
+                            initialLayout();
                             getSavedList();
 
                         }catch (Exception e){
@@ -860,7 +862,28 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 if(finalType){
                     addFollow();
                 }else {
-                    //edit post
+                    Bundle bundle = new Bundle();
+                    Gson gson = new Gson();
+                    String string = gson.toJson(newsFeedEntity);
+                    bundle.putBoolean("edit",true);
+                    bundle.putString("newsFeedEntity",string);
+                    switch (newsFeedEntity.getPost_type()) {
+                        case 1:
+                            startActivityForResult(new Intent(NewsDetailActivity.this, NewAdviceActivity.class).putExtra("data",bundle),REQUEST_EDITFEED);
+                            overridePendingTransition(0, 0);
+                            break;
+                        case 2:
+                            startActivityForResult(new Intent(NewsDetailActivity.this, EditSalesPostActivity.class).putExtra("data",bundle),REQUEST_EDITFEED);
+                            overridePendingTransition(0, 0);
+                            break;
+                        case 3:
+                            startActivityForResult(new Intent(NewsDetailActivity.this, NewServiceOfferActivity.class).putExtra("data",bundle),REQUEST_EDITFEED);
+                            overridePendingTransition(0, 0);
+                            break;
+                        case 4:
+                            break;
+                    }
+
                 }
             }
             @Override
@@ -1267,6 +1290,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             }
         }else if(resultCode ==-200){
             finish(this);
+        }else  if(resultCode == RESULT_OK && requestCode == REQUEST_EDITFEED){
+            onResume();
+            loadLayout();
         }
 
     }

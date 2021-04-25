@@ -64,7 +64,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
     BookingListAdapter bookingListAdapter ;
     HashMap<String,BookingEntity>hashMap = new HashMap<>();
     ArrayList<String> selected_bookingSlot  = new ArrayList<>();
-
+    long today = 0 ;
     CalendarView calendarView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +128,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         int year=c.get(Calendar.YEAR);
         int month=c.get(Calendar.MONTH);
         EndDate = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-;
+        today= c.getTimeInMillis()-24*3600000;
         loadBooking(year,month);
 
     }
@@ -335,6 +335,14 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
 
     @Override
     public void onDaySelected() {
+        if(calendarView.getSelectedDates().get(0).getTimeInMillis()<today){
+            showAlertDialog("Please choice futher day");
+            hashMap.clear();
+            selected_bookingSlot.clear();
+            bookingListAdapter.setRoomData(hashMap,selected_bookingSlot);
+            Helper.getListViewSize(list_booking);
+            return;
+        }
         loadBookingByday(calendarView.getSelectedDays().get(0).getDayNumber()-1);
     }
 
