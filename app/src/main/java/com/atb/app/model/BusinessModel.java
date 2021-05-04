@@ -24,11 +24,29 @@ public class BusinessModel {
     ArrayList<HolidayModel> holidayModels = new ArrayList<>();
     ArrayList<DisableSlotModel> disableSlotModels = new ArrayList<>();
     ArrayList<SocialModel> socialModels = new ArrayList<>();
-
+    int reviews = 0;
+    double rating = 0.0;
     public ArrayList<SocialModel> getSocialModels() {
         return socialModels;
     }
     ArrayList<ArrayList<String>> slots = new ArrayList<>();
+
+
+    public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 
     public ArrayList<ArrayList<String>> getSlots() {
         slots.clear();
@@ -282,6 +300,10 @@ public class BusinessModel {
                 setFollowers_count(business_info.getInt("followers_count"));
             if(business_info.has("follow_count"))
                 setFollow_count(business_info.getInt("follow_count"));
+            if(business_info.has("reviews"))
+                setReviews(business_info.getInt("reviews"));
+            if(business_info.has("rating"))
+                setRating(business_info.getDouble("rating"));
         }catch (Exception e){
             Log.d("aaaaa",e.toString());
         }

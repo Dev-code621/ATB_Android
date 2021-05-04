@@ -19,6 +19,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.activities.profile.boost.BoostActivity;
@@ -27,7 +33,10 @@ import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
+import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.adapter.BoostItemAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
@@ -47,7 +56,12 @@ import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
@@ -64,7 +78,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     FrameLayout frame_noti,frame_chat;
     CardView card_unread_noti,card_unread_chat;
     RecyclerView recycler_view_boost;
-    ArrayList<BoostModel>boostModels = new ArrayList<>();
+    HashMap<String,  ArrayList<BoostModel>>boostModels = new HashMap<>();
     BoostItemAdapter boostAdapter ;
     ChatFragment chatFragment;
     ImageView imv_title;
@@ -107,28 +121,20 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         recycler_view_boost.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         boostAdapter = new BoostItemAdapter(this,  new BoostItemAdapter.OnSelectListener() {
             @Override
-            public void onSelectItem(int posstion) {
-                if(posstion ==0)
+            public void onSelectItem(BoostModel boostModel) {
+                if(!boostModel.isEmptyModel())
                     goTo(MainActivity.this, BoostActivity.class,false);
-                else
-                    getuserProfile(49,1);
+                else{
+                     getuserProfile(boostModel.getUserModel().getId(),1);
+
+                }
             }
 
         });
        // boostAdapter.setHasStableIds(true);
         recycler_view_boost.setItemAnimator(null);
         recycler_view_boost.setAdapter(boostAdapter);
-        for(int i=0;i<10;i++){
-            BoostModel boostModel = new BoostModel();
-            boostModel.setName("test name" + String.valueOf(i));
-            boostModel.setImv_pic("https://atb-test-files.s3.eu-west-2.amazonaws.com/690825476604ba863511047.68183948profileimg.jpg");
-            boostModels.add(boostModel);
-        }
-        boostAdapter.setRoomData(boostModels);
-
-
-
-
+        getProfilepines();
     }
 
 
@@ -182,7 +188,89 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             txv_category.setText(Constants.category_word[posstion]);
             Commons.main_category = Constants.category_word[posstion];
         }
+        getProfilepines();
         mainListFragment.getList();
+
+
+    }
+
+    void getProfilepines(){
+      //  showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GETPROFILEPINES_API,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                       // closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray jsonArray =jsonObject.getJSONArray("extra");
+                            boostModels.clear();
+                            for(int i =0;i<Constants.category_word.length;i++){
+                                ArrayList<BoostModel> arrayList = new ArrayList<>();
+                                for(int j =0;j<6;j++){
+                                    BoostModel boostModel = new BoostModel();
+                                   arrayList.add(boostModel);
+                                }
+                                boostModels.put(Constants.category_word[i],arrayList);
+                            }
+                            for(int i =0;i<jsonArray.length();i++){
+                                BoostModel boostModel = new BoostModel();
+                                boostModel.initModel(jsonArray.getJSONObject(i));
+                                //Log.d("bbbbbbbb",String.valueOf(boostModels.get(boostModel.getCategory()).size()));
+                                switch (boostModel.getBidon()) {
+                                    case 0:
+                                        if(boostModel.getPosition()==0){
+                                            boostModels.get(boostModel.getCategory()).set(3,boostModel);
+                                        }else {
+                                            boostModels.get(boostModel.getCategory()).set(0,boostModel);
+                                        }
+                                        break;
+                                    case 1:
+                                        if(boostModel.getPosition()==0){
+                                            boostModels.get(boostModel.getCategory()).set(1,boostModel);
+                                        }else {
+                                            boostModels.get(boostModel.getCategory()).set(5,boostModel);
+                                        }
+                                        break;
+                                    case 2:
+                                        if(boostModel.getPosition()==0){
+                                            boostModels.get(boostModel.getCategory()).set(2,boostModel);
+                                        }else {
+                                            boostModels.get(boostModel.getCategory()).set(4,boostModel);
+                                        }
+                                        break;
+                                }
+
+                            }
+                            boostAdapter.setRoomData(boostModels);
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("category", txv_category.getText().toString());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){

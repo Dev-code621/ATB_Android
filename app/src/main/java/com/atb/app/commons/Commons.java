@@ -34,7 +34,7 @@ public class Commons {
     public static String token = "";
     public static int location_code = 1100;
     public static String[] Months;
-    public static String main_category ="MY ATB";
+    public static String main_category ="My ATB";
     public static  int selectUsertype; //-1:main page: 1: business: 0 : user
     public static int phone_height;
     public static int phone_width;
@@ -46,6 +46,8 @@ public class Commons {
     public static int REQUEST_PAYMENT_CODE =10034;
     public static String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     public static int feed_id =-1;
+    public static HashMap<String, ArrayList<String>>region = new HashMap<>();
+    public static ArrayList<String> county = new ArrayList<>();
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

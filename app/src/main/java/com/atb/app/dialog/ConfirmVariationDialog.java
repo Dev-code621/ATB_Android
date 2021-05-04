@@ -57,11 +57,19 @@ public class ConfirmVariationDialog extends DialogFragment {
 
             txv_title.setText("Cancellations Within");
             txv_description.setText("Cancellations within is the period of time a purchaser of the service has to cancel the service booked for a full refund, if you choose to cancel after this time then the business is entitled to keep the deposit. After the cancellation period has lapsed, the business may refund you your deposit at their discretion");
+        }else  if(type ==3){
+            txv_deposit.setVisibility(View.VISIBLE);
+            imv_image.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.hama));
+
+            txv_title.setText("Confirm Your Bid");
+            txv_description.setText("Once you confirm the bid this cannot be reversed. If your bid is successful and once the auction has completed, we will take the payment for the bid amount.");
+            txv_deposit.setText("I Understand, Place Bid");
         }
 
         txv_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onConfirm();
                 dismiss();
             }
         });

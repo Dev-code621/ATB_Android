@@ -17,11 +17,22 @@ import androidx.cardview.widget.CardView;
 
 import com.atb.app.R;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.model.BoostModel;
+import com.atb.app.util.RoundedCornersTransformation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 
@@ -31,6 +42,7 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     static final boolean USE_DEBUG_APPEARANCE = false;
     int type;
     Context context;
+    int county = 0,region =0;
     private class Section {
         int index;
         int copyCount;
@@ -121,7 +133,7 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     boolean showCollapsingSectionControls;
     boolean showAdapterPositions;
     boolean hasFooters;
-
+    ArrayList<BoostModel>room_data = new ArrayList<>();
     public ProfilePinHeaderAdapter(int numSections, int numItemsPerSection, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions, int type, Context context) {
         this.context = context;
         this.showModificationControls = showModificationControls;
@@ -134,6 +146,20 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
         }
     }
 
+    public void setRoomData(ArrayList<BoostModel>boostModels){
+        room_data.clear();
+        room_data.addAll(boostModels);
+        notifyAllSectionsDataSetChanged();
+    }
+
+    public void setRoomData(ArrayList<BoostModel>boostModels,int county , int region){
+        room_data.clear();
+        room_data.addAll(boostModels);
+        this.county = county;
+        this.region= region;
+        notifyAllSectionsDataSetChanged();
+    }
+
     void appendSection(int index, int itemCount) {
         Section section = new Section();
         section.index = index;
@@ -141,9 +167,9 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
 
         String str = "Bid By Country";
         if (index == 1)
-            str = "Bid By Region";
+            str = "Bid By County";
         else if (index == 2)
-            str = "Bid By City";
+            str = "Bid By Region";
         section.header = str;
 
 //
@@ -244,6 +270,49 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
                 ((CommonActivity)(context)).showToolTip("Current Bids",v,true);
             }
         });
+        if(type ==1){
+            BoostModel boostModel = new BoostModel();
+            boostModel.setTotal_bids(0);
+            boostModel.setPrice("5.0");
+            boostModel.setPosition(itemIndex);
+            for(int i =0;i<room_data.size();i++){
+                if(room_data.get(i).getPosition() == itemIndex){
+                    boostModel = room_data.get(i);
+                    break;
+                }
+            }
+            ivh.txv_number.setText(String.valueOf(boostModel.getTotal_bids()));
+            ivh.txv_price.setText("£" + boostModel.getPrice());
+            ivh.txv_bidnumber.setText(String.valueOf(boostModel.getPosition()+1));
+            Glide.with(context).load(boostModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(ivh.imv_profile);
+            ivh.txv_bid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((CommonActivity)(context)).placeBid(itemIndex,ivh.txv_bidprice.getText().toString());
+                }
+            });
+        }else if(type ==0){
+            BoostModel boostModel = new BoostModel();
+            boostModel.setTotal_bids(0);
+            boostModel.setPrice("5.0");
+            boostModel.setPosition(itemIndex);
+            if(room_data.size()>0) {
+                if(room_data.get(sectionIndex * 2 + itemIndex).isEmptyModel())
+                  boostModel = room_data.get(sectionIndex * 2 + itemIndex);
+            }
+            ivh.txv_number.setText(String.valueOf(boostModel.getTotal_bids()));
+            ivh.txv_price.setText("£" + boostModel.getPrice());
+            ivh.txv_bidnumber.setText(String.valueOf(boostModel.getPosition()+1));
+            Glide.with(context).load(boostModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(ivh.imv_profile);
+            ivh.txv_bid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((CommonActivity)(context)).placeBid(sectionIndex*2+ itemIndex,ivh.txv_bidprice.getText().toString());
+                }
+            });
+        }
 //        ivh.textView.setText(s.items.get(itemIndex));
 //        ivh.adapterPositionTextView.setText(Integer.toString(getAdapterPositionForSectionItem(sectionIndex, itemIndex)));
     }
@@ -252,7 +321,7 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerType) {
         Section s = sections.get(sectionIndex);
-        HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
+        final HeaderViewHolder hvh = (HeaderViewHolder) viewHolder;
         hvh.lyt_currentbid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,12 +342,35 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
             hvh.textView.setText(s.header);
         }
 
-        if(sectionIndex==1){
-            //hvh.spiner.attachDataSource();
-        }else {
+        if(sectionIndex ==0){
+            hvh.spiner.setText("United Kingdom");
+            List<String> dataset = new LinkedList<>(Arrays.asList("United Kingdom"));
+            hvh.spiner.attachDataSource(dataset);
+          //  Log.d("aaaaaaaaaaa",String.valueOf(dataset));
+        }
+        else if(sectionIndex==1){
+            hvh.spiner.attachDataSource(Commons.county);
+            hvh.spiner.setSelectedIndex(county);
+          //  Log.d("bbbbbbbbb",Commons.county.get(county)  +  "   "  +String.valueOf(Commons.region.get(Commons.county.get(county))));
 
+        }else if(sectionIndex==2) {
+         //   Log.d("bbbbbbbbb",Commons.county.get(county)  +  "   "  +String.valueOf(Commons.region.get(Commons.county.get(county))));
+            hvh.spiner.attachDataSource(Commons.region.get(Commons.county.get(county)));
+            hvh.spiner.setSelectedIndex(region);
         }
 
+        hvh.spiner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                if(sectionIndex == 1) {
+                    county = position;
+                    region = 0;
+                    ((CommonActivity)(context)).getAction(county,0);
+                }else if(sectionIndex ==2){
+                    ((CommonActivity)(context)).getAction(county,position);
+                }
+            }
+        });
 
     }
 

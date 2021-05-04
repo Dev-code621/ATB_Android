@@ -6,21 +6,44 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Time;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.newsfeedpost.NewSalePostActivity;
+import com.atb.app.activities.profile.SearchActivity;
 import com.atb.app.adapter.ProfilePinHeaderAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.model.BoostModel;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.atb.app.activities.navigationItems.ItemSoldActivity.SHOW_ADAPTER_POSITIONS;
 
@@ -108,6 +131,35 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
         soldHeaderAdapter = new ProfilePinHeaderAdapter(1, 5, true, false, false, SHOW_ADAPTER_POSITIONS,1,this);
         recyclerView.setAdapter(soldHeaderAdapter);
 
+
+       loadDate();
+
+
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                loadDate();
+            }
+        });
+
+        edt_tag.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    loadDate();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+    void loadDate(){
+        Map<String, String> params = new HashMap<>();
+        params.put("token", Commons.token);
+        params.put("type","1");
+        params.put("category",spiner_category_type.getSelectedItem().toString());
+        params.put("tags","");
+        getAuctions(params);
     }
 
     @Override
@@ -117,8 +169,74 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
                 finish(this);
                 break;
             case R.id.lyt_save:
-
+                finish(this);
                 break;
         }
+    }
+
+    @Override
+    public void getBideers(ArrayList<BoostModel> boostModels) {
+        soldHeaderAdapter.setRoomData(boostModels);
+    }
+
+    @Override
+    public void placeBid(int posstion, String price) {
+        ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog(3);
+        confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm() {
+                Bid(posstion, price);
+            }
+        });
+        confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+
+
+    }
+
+    void Bid(int posstion, String price){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.PLACEBID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                               // showAlertDialog(jsonObject.getString("msg"));
+                                loadDate();
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("type","1");
+                params.put("category",spiner_category_type.getSelectedItem().toString());
+                params.put("tags",edt_tag.getText().toString());
+                params.put("position",String.valueOf(posstion));
+                params.put("price",price);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 }

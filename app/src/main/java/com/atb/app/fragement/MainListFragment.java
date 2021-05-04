@@ -96,7 +96,7 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
         String apilink = API.GET_USERS_POSTS;
         if(Commons.selectUsertype==-1) {
             apilink = API.GET_ALL_FEED_API;
-            if (!Commons.main_category.equals("MY ATB")) {
+            if (!Commons.main_category.equals("My ATB")) {
                 apilink = API.GET_SELECTED_FEED_API;
             }
         }
@@ -180,7 +180,6 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                     if (this.currentScrollState == SCROLL_STATE_IDLE) {
 
                         int index = list_main.getFirstVisiblePosition();
-                        Log.d("bbbbbbbbbbbbbbb", String.valueOf(index));
                         mainFeedAdapter.changeItem(index);
 
                     }

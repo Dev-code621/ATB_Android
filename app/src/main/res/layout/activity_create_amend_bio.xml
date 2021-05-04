@@ -60,7 +60,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:paddingTop="15dp"
-
                 style="@style/edit_inputtext"
                 android:gravity="start"/>
         </FrameLayout>

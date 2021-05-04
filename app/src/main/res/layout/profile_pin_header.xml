@@ -31,7 +31,6 @@
             android:id="@+id/spiner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="United Kingdom"
             android:textSize="18sp"
             app:popupTextAlignment="center"
             android:textColor="@color/head_color"

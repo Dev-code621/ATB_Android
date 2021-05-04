@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -25,18 +26,15 @@ import java.util.HashMap;
 
 public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.ViewHolder> {
     private final Context context;
-    private ArrayList<BoostModel>roomData = new ArrayList<>();
+    private HashMap<String,  ArrayList<BoostModel>> roomData = new HashMap<>();
     private OnSelectListener listener;
     public BoostItemAdapter(Context context,  OnSelectListener listener) {
         this.listener = listener;
         this.context = context;
     }
-    public void setRoomData(ArrayList<BoostModel>boostModels) {
+    public void setRoomData(  HashMap<String,  ArrayList<BoostModel>> boostModels) {
         roomData.clear();
-        BoostModel boostModel = new BoostModel();
-        boostModel.setName("Boost your\nBusiness");
-        roomData.add(boostModel);
-        roomData.addAll(boostModels);
+        roomData.putAll(boostModels);
         notifyDataSetChanged();
     }
 
@@ -51,39 +49,47 @@ public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        if(position ==0){
+        int key_number = position/6;
+        int index = position %6;
+        BoostModel boostModel = roomData.get(Constants.category_word[key_number]).get(index);
+        if(!boostModel.isEmptyModel() ){
             holder.imv_profile.setVisibility(View.GONE);
             holder.imv_add.setVisibility(View.VISIBLE);
             holder.txv_add.setVisibility(View.VISIBLE);
             holder.txv_name.setVisibility(View.GONE);
+            holder.txv_name.setText("Boost your\nBusiness");
         }else {
             holder.imv_profile.setVisibility(View.VISIBLE);
             holder.imv_add.setVisibility(View.GONE);
             holder.txv_add.setVisibility(View.GONE);
             holder.txv_name.setVisibility(View.VISIBLE);
+
+            Glide.with(context).load(boostModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
+            holder.txv_name.setText(boostModel.getUserModel().getBusinessModel().getBusiness_name());
         }
-        BoostModel boostModel = roomData.get(position);
-        Glide.with(context).load(boostModel.getImv_pic()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
-                new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
-        holder.txv_name.setText(boostModel.getName());
         holder.imv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onSelectItem(position);
+                listener.onSelectItem(boostModel);
             }
         });
 
         holder.imv_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onSelectItem(position);
+                listener.onSelectItem(boostModel);
             }
         });
 
     }
     @Override
     public int getItemCount() {
-        return roomData.size();
+        if(roomData.size()==0)return 0;
+        if(Commons.main_category.equals(context.getResources().getString(R.string.my_atb)))
+            return 60;
+        else
+            return 6;
     }
 
 
@@ -105,6 +111,6 @@ public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.View
     }
 
     public interface OnSelectListener{
-        void onSelectItem(int posstion);
+        void onSelectItem(BoostModel boostModel);
     }
 }

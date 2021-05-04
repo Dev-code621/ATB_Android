@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="@drawable/edit_rectangle_round">
+        android:background="@drawable/edit_rectangle_round"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
         <androidx.cardview.widget.CardView
             android:id="@+id/card_user_info_image"
             android:layout_width="50dp"

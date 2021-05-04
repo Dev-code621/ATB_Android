@@ -27,13 +27,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.adapter.EmailAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.UserModel;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Signup1Activity extends CommonActivity implements View.OnClickListener {
     Scene aScene,anotherScene;
@@ -208,12 +220,58 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                 UserModel userModel = new UserModel();
                 userModel.setEmail(edt_email.getText().toString());
                 Commons.g_user = userModel;
-                goTo(this, Signup2Activity.class,false);
+                checkEmailValidation();
+
                 break;
 
         }
     }
 
+    void checkEmailValidation(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.EMAIL_VALID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("aaaaaaa",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                finishAffinity();
+                                goTo(Signup1Activity.this, Signup2Activity.class,false);
+                            }else {
+                                showAlertDialog(Commons.token);
+                            }
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", Commons.g_user.getEmail());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     void gotoFacebookLogin(){
 
     }

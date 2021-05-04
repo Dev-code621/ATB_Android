@@ -13,15 +13,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.adapter.ProfilePinHeaderAdapter;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.model.BoostModel;
 
 import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.json.JSONObject;
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.atb.app.activities.navigationItems.ItemSoldActivity.SHOW_ADAPTER_POSITIONS;
 
@@ -32,6 +48,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
     LinearLayout lyt_save;
     ImageView imv_back;
     ProfilePinHeaderAdapter soldHeaderAdapter ;
+    int county =0,region =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +123,16 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
         });
 
         soldHeaderAdapter = new ProfilePinHeaderAdapter(3, 2, true, false, false, SHOW_ADAPTER_POSITIONS,0,this);
+       // soldHeaderAdapter.setHasStableIds(false);
         recyclerView.setAdapter(soldHeaderAdapter);
+
+        getAction(county,region);
+        spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+            @Override
+            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                getAction(county,region);
+            }
+        });
 
     }
 
@@ -117,10 +143,125 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
                 finish(this);
                 break;
             case R.id.lyt_save:
-
+                finish(this);
                 break;
         }
     }
 
+    @Override
+    public void getAction(int county, int region) {
+        this.county = county;
+        this.region = region;
+        Map<String, String> params = new HashMap<>();
+        params.put("token", Commons.token);
+        params.put("type","0");
+        params.put("category",spiner_category_type.getSelectedItem().toString());
+        params.put("country","United Kingdom");
+        params.put("county",Commons.county.get(county));
+        params.put("region",Commons.region.get(Commons.county.get(county)).get(region));
+        getAuctions(params);
+    }
 
+    @Override
+    public void getBideers(ArrayList<BoostModel> boostModels) {
+        ArrayList<BoostModel>arrayList = new ArrayList<>();
+        for(int i =0;i<6;i++){
+            BoostModel boostModel = new BoostModel();
+            arrayList.add(boostModel);
+        }
+        for(int i =0;i<boostModels.size();i++){
+            BoostModel boostModel = boostModels.get(i);
+            switch (boostModel.getBidon()) {
+                case 0:
+                    if(boostModel.getPosition()==0){
+                        arrayList.set(0,boostModel);
+                    }else {
+                        arrayList.set(1,boostModel);
+                    }
+                    break;
+                case 1:
+                    if(boostModel.getPosition()==0){
+                        arrayList.set(2,boostModel);
+                    }else {
+                        arrayList.set(3,boostModel);
+                    }
+                    break;
+                case 2:
+                    if(boostModel.getPosition()==0){
+                        arrayList.set(4,boostModel);
+                    }else {
+                        arrayList.set(5,boostModel);
+                    }
+                    break;
+            }
+        }
+        soldHeaderAdapter.setRoomData(arrayList,county,region);
+    }
+
+    @Override
+    public void placeBid(int posstion, String price) {
+        ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog(3);
+        confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm() {
+                Bid(posstion, price);
+            }
+        });
+        confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+
+
+    }
+
+    void Bid(int posstion, String price){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.PLACEBID,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                //showAlertDialog(jsonObject.getString("msg"));
+                                getAction(county,region);
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("type","0");
+                params.put("category",spiner_category_type.getSelectedItem().toString());
+                params.put("position",String.valueOf(posstion%2));
+                if(posstion/2==0)
+                    params.put("country","United Kingdom");
+                else if(posstion/2==1)
+                    params.put("county",Commons.county.get(county));
+                else
+                    params.put("region",Commons.region.get(Commons.county.get(county)).get(region));
+                params.put("price",price);
+                Log.d("aaaaaaa",params.toString());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
 }

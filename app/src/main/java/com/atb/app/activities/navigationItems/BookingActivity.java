@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -411,6 +412,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                     params.put("day_timestamp", String.valueOf(day_timestamp));
                     params.put("start", Commons.getUTCtimeFromMilionSecond(milionSecond));
                     params.put("end", Commons.getUTCtimeFromMilionSecond(milionSecond + 3600));
+                    Log.d("aaaaaaa",params.toString());
                 }else{
                     for(int i = 0; i< Commons.g_user.getBusinessModel().getDisableSlotModels().size(); i++){
                         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");

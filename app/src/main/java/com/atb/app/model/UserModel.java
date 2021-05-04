@@ -34,6 +34,15 @@ public  class UserModel {
     ArrayList<FeedInfoModel>feedInfoModels = new ArrayList<>();
     ArrayList<FollowerModel>followerModels = new ArrayList<>();
     String bt_customer_id,bt_paypal_account;
+    double distance = 0.0;
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 
     public void setBt_customer_id(String bt_customer_id) {
         this.bt_customer_id = bt_customer_id;
@@ -42,6 +51,8 @@ public  class UserModel {
     public String getBt_customer_id() {
         return bt_customer_id;
     }
+
+
 
     public ArrayList<FollowerModel> getFollowerModels() {
         return followerModels;
@@ -381,6 +392,9 @@ public  class UserModel {
                     businessModel.initModel(business_info);
                     setBusinessModel(businessModel);
                 }
+
+            if(userObject.has("distance"))
+                setDistance(userObject.getDouble("distance"));
 
         }catch (Exception e){
             Log.d("aaaaaaa",e.toString());

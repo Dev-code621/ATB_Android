@@ -50,6 +50,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
+import com.atb.app.model.BoostModel;
 import com.atb.app.model.FollowerModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
@@ -62,12 +63,17 @@ import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.common.internal.service.Common;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
+import com.opencsv.CSVReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -461,7 +467,7 @@ public abstract class CommonActivity extends BaseActivity {
 
 
     public void loginApplozic(boolean flag){
-        showProgress();
+        //showProgress();
         Applozic.logoutUser(this, new AlLogoutHandler(){
             @Override
             public void onSuccess(Context context) {
@@ -508,7 +514,6 @@ public abstract class CommonActivity extends BaseActivity {
 
             @Override
             public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
-                closeProgress();
                 AlertDialog alertDialog = new AlertDialog.Builder(CommonActivity.this).create();
                 alertDialog.setTitle("Alert");
                 alertDialog.setMessage(exception.toString());
@@ -551,4 +556,91 @@ public abstract class CommonActivity extends BaseActivity {
 
     }
 
+    public void readCSV(){
+        try {
+            InputStreamReader is = new InputStreamReader(getResources().openRawResource(R.raw.uk_towns));
+
+            BufferedReader reader = new BufferedReader(is);
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String county = line.split(",")[0];
+                String region = line.split(",")[5];
+                if(Commons.region.get(county) ==null){
+                    Commons.region.put(county, new ArrayList<>());
+                }
+                Commons.region.get(county).add(region);
+                if(duplicateCounty(county))
+                    continue;
+                Commons.county.add(county);
+            }
+        } catch (IOException e) {
+            Log.d("aaaaaaaa",e.toString());
+        }
+    }
+
+    boolean duplicateCounty(String county){
+        for(int i =0;i<Commons.county.size();i++){
+            if(Commons.county.get(i).equals(county))return true;
+        }
+        return false;
+    }
+
+    public void getAuctions(Map<String, String> input){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.AUCTION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray jsonArray =jsonObject.getJSONArray("extra");
+                            ArrayList<BoostModel>boostModels = new ArrayList<>();
+                            for(int i =0;i<jsonArray.length();i++){
+                                BoostModel boostModel = new BoostModel();
+                                boostModel.initModel(jsonArray.getJSONObject(i));
+                                boostModels.add(boostModel);
+                            }
+                            getBideers(boostModels);
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params = input;
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+
+    }
+    public void getBideers(ArrayList<BoostModel>boostModels){
+
+    }
+
+    public void placeBid(int posstion, String price){
+
+    }
+
+    public void getAction(int county, int region){
+
+    }
 }

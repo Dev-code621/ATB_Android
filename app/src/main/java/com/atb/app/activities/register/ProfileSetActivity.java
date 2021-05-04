@@ -84,7 +84,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
     ViewGroup sceneRoot;
     Scene aScene,anotherScene;
     SimpleDraweeView imv_profile;
-    EditText edt_username,edt_firstname,edt_lastname,edt_invitecode;
+    EditText edt_username,edt_firstname,edt_lastname,edt_invitecode,edt_bio;
     TextView txv_male,txv_female,txv_next,txv_location,edt_birthday;
     ImageView imv_selector2,imv_selector1;
     FrameLayout lyt_paste;
@@ -129,6 +129,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         imv_selector1 = sceneRoot.findViewById(R.id.imv_selector1);
         lyt_paste  = sceneRoot.findViewById(R.id.lyt_paste);
         txv_next  = sceneRoot.findViewById(R.id.txv_next);
+        edt_bio = findViewById(R.id.edt_bio);
 
         imv_profile.setOnClickListener(this);
         txv_female.setOnClickListener(this);
@@ -225,6 +226,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
             params.put("lat", String.valueOf(Commons.g_user.getLatitude()));
             params.put("lng", String.valueOf(Commons.g_user.getLongitude()));
             params.put("range", String.valueOf(Commons.g_user.getRange()));
+            params.put("bio",edt_bio.getText().toString());
             params.put("token", Commons.token);
 
 

@@ -100,6 +100,16 @@
                 android:hint="@string/last_name"
                 style="@style/edit_inputtext"
                 android:layout_marginTop="10dp"/>
+            <EditText android:id="@+id/edt_bio"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:inputType="text"
+                android:maxLines="5"
+                android:hint="@string/description"
+                android:paddingTop="15dp"
+                android:layout_marginTop="10dp"
+                style="@style/edit_inputtext"
+                android:gravity="start"/>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

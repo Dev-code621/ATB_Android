@@ -140,5 +140,9 @@ public class API {
     public static final String  UPDATE_POST_API = API_BASE_URL + "post/update_content";
     public static final String  UPDATE_SERVICE = API_BASE_URL + "profile/update_service";
     public static final String  UPDATE_PRODUCT = API_BASE_URL + "profile/update_product";
-
+    public static final String EMAIL_VALID = API_BASE_URL + "auth/is_email_used";
+    public static final String GETPROFILEPINES_API = API_BASE_URL + "/auction/profilepins";
+    public static final String SEARCH_BUSINESS = API_BASE_URL + "search/business";
+    public static final String AUCTION = API_BASE_URL + "auction/auctions";
+    public static final String PLACEBID = API_BASE_URL + "auction/placebid";
 }
