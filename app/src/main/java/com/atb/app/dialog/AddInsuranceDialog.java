@@ -74,22 +74,22 @@ public class AddInsuranceDialog extends DialogFragment {
         txv_addtitle = (TextView) view.findViewById(R.id.txv_addtitle);
         if(insuranceModel == null) {
             if (type == 0) {
-                txv_title.setText("Add An Insurance");
-                txv_addtitle.setText("Add An Insurance");
+                txv_title.setText("Add Insurance");
+                txv_addtitle.setText("Add Insurance");
                 edt_company.setHint("Insurance Company");
                 edt_number.setHint("Insurance Number");
                 txv_time.setHint("Insurance Expiry");
             } else if (type == 1) {
-                txv_title.setText("Add An Certification");
-                txv_addtitle.setText("Add An Certification");
+                txv_title.setText("Add Certification");
+                txv_addtitle.setText("Add Certification");
                 edt_company.setHint("Qualified Service Name");
                 edt_number.setHint("Certification Number");
                 txv_time.setHint("Qualified Since");
             }
         }else {
             if (type == 0) {
-                txv_title.setText("Update An Insurance");
-                txv_addtitle.setText("Update An Insurance");
+                txv_title.setText("Update Insurance");
+                txv_addtitle.setText("Update Insurance");
                 edt_company.setHint("Insurance Company");
                 edt_number.setHint("Insurance Number");
                 txv_time.setHint("Insurance Expiry");

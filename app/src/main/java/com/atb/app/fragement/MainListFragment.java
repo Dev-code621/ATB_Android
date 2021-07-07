@@ -72,8 +72,9 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
     }
     @Override
     public void onRefresh(SwipyRefreshLayoutDirection direction) {
-        Log.d("aaaaa","aaaa");
         if(direction == SwipyRefreshLayoutDirection.TOP){
+            if(context == MainActivity._context)
+                ((MainActivity)(context)).getProfilepines();
             getList();
             ui_refreshLayout.setRefreshing(false);
 
@@ -81,7 +82,7 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
     }
 
     public void uiRefresh(){
-        ui_refreshLayout.setDirection(SwipyRefreshLayoutDirection.TOP);
+        list_main.setSelection(0);
     }
 
 

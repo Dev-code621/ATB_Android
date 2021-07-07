@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -43,6 +45,7 @@ import com.atb.app.activities.profile.ReportPostActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
+import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.adapter.CommentAdapter;
 import com.atb.app.adapter.PollEmageAdapter;
 import com.atb.app.adapter.SelectOneItemAdapter;
@@ -56,7 +59,9 @@ import com.atb.app.commons.Constants;
 import com.atb.app.commons.Helper;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.dialog.DepositDialog;
 import com.atb.app.dialog.FeedDetailDialog;
+import com.atb.app.dialog.InsuranceViewDialog;
 import com.atb.app.dialog.PaymentBookingDialog;
 import com.atb.app.dialog.PaymentSuccessDialog;
 import com.atb.app.dialog.ProductVariationSelectDialog;
@@ -87,8 +92,17 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -219,6 +233,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         imv_bubble.setOnClickListener(this);
         txv_buy_sale.setOnClickListener(this);
         lyt_like.setOnClickListener(this);
+        lyt_location.setOnClickListener(this);
         imv_bookmark.setOnClickListener(this);
         setSliderAdapter = new SliderImageAdapter(this);
         imageSlider.setSliderAdapter(setSliderAdapter);
@@ -439,9 +454,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_category.setVisibility(View.VISIBLE);
                 lyt_sale_post.setVisibility(View.VISIBLE);
                 txv_brand.setText(newsFeedEntity.getPost_brand());
-                txv_price.setText("£" + newsFeedEntity.getPrice());
+                if(newsFeedEntity.getIs_sold()==1){
+                    txv_price.setTextColor(getResources().getColor(R.color.discard_color));
+                    txv_price.setText("SOLD");
+                }else {
+                    txv_price.setText("£" + newsFeedEntity.getPrice());
+                    txv_price.setTextColor(getResources().getColor(R.color.txt_color));
+                }
                 txv_postage_cost.setText("£" + newsFeedEntity.getDelivery_cost());
-                txv_location.setText(newsFeedEntity.getPost_location());
+                String[] location = newsFeedEntity.getPost_location().split(",");
+                txv_location.setText(location[location.length-1]);
                 for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
                     final int finaI = i;
 
@@ -535,7 +557,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             imv_bookmark.setImageDrawable(getResources().getDrawable(R.drawable.bookmar_unfill));
             imv_bookmark.setColorFilter(getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
         }
-        if(newsFeedEntity.getUser_id()==Commons.g_user.getId()){
+        if(newsFeedEntity.getUser_id()==Commons.g_user.getId() || newsFeedEntity.getIs_sold() ==1 ) {
             imv_bookmark.setVisibility(View.GONE);
             lyt_sale_button.setVisibility(View.GONE);
             lyt_book_service.setVisibility(View.GONE);
@@ -553,6 +575,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imv_back:
+                //setResult(RESULT_OK);
                 finish(this);
                 break;
             case R.id.imv_close:
@@ -645,11 +668,119 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 });
                 confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
                 break;
-            case R.id.lyt_insurance:
+            case R.id.lyt_insured:
+
+                InsuranceViewDialog insuranceViewDialog = new InsuranceViewDialog();
+                insuranceViewDialog.setOnConfirmListener(new InsuranceViewDialog.OnConfirmListener() {
+                    @Override
+                    public void onDownload() {
+                        new DownloadFileFromURL().execute(newsFeedEntity.getInsuranceModels().get(0).getFile());
+                    }
+                },newsFeedEntity.getInsuranceModels(),0);
+                insuranceViewDialog.show(getSupportFragmentManager(), "DeleteMessage");
                 break;
             case R.id.lyt_qualitfied:
+                insuranceViewDialog = new InsuranceViewDialog();
+                insuranceViewDialog.setOnConfirmListener(new InsuranceViewDialog.OnConfirmListener() {
+                    @Override
+                    public void onDownload() {
+                        new DownloadFileFromURL().execute(newsFeedEntity.getQualifications().get(0).getFile());
+                    }
+                },newsFeedEntity.getQualifications(),1);
+                insuranceViewDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                break;
+            case R.id.lyt_location:
+                bundle = new Bundle();
+                bundle.putDouble("lat",newsFeedEntity.getLat());
+                bundle.putDouble("lang" ,newsFeedEntity.getLang());
+                goTo(this, LocationMapActivity.class,false,bundle);
                 break;
         }
+    }
+    public class DownloadFileFromURL extends AsyncTask<String, String, String> {
+        /**
+         * Before starting background thread Show Progress Bar Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgress();
+        }
+
+        /**
+         * Downloading file in background thread
+         * */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                URL url = new URL(f_url[0]);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                // this will be useful so that you can show a tipical 0-100%
+                // progress bar
+                int lenghtOfFile = connection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(),
+                        8192);
+
+                // Output stream
+                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                Log.d("aaaaa",path.getPath());
+                String[] str = f_url[0].split("/");
+                File file = new File(path, str[str.length-1]);
+
+                OutputStream output = new FileOutputStream(file);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+                closeProgress();
+            }
+
+            return null;
+        }
+
+        /**
+         * Updating progress bar
+         * */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after the file was downloaded
+            closeProgress();
+            showAlertDialog("The file has been downloaded and saved successfully!");
+
+        }
+
     }
     void selectDeliveryDialog() {
         if (selected_Variation.size() > 0){
@@ -697,7 +828,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         if(selected_Variation.size()>0){
             VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
             payment_params.put("variation_id",String.valueOf(variationModel.getId()));
-            payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
+           // payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
+        }else {
+            payment_params.put("product_id",String.valueOf(newsFeedEntity.getProduct_id()));
         }
         DropInRequest dropInRequest = new DropInRequest()
                 .clientToken(clicnet_token)
@@ -731,9 +864,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     void deletePost(){
         showProgress();
+        String api_link = API.DELETE_POST;
+        if(!commentVisible){
+            if(newsFeedEntity.getPost_type() == 2)
+                api_link = API.DELETE_PRODUCT;
+            else if(newsFeedEntity.getPost_type()==3)
+                api_link = API.DELETE_SERVICE;
+        }
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
-                API.DELETE_POST,
+                api_link,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
@@ -761,7 +901,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                params.put("post_id", String.valueOf(postId));
+                if(commentVisible) {
+                    params.put("post_id", String.valueOf(postId));
+                }else{
+                    params.put("id", String.valueOf(postId));
+                }
                 return params;
             }
         };
@@ -836,25 +980,28 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         feedDetailDialog.setOnConfirmListener(new FeedDetailDialog.OnConfirmListener() {
             @Override
             public void onReportPost() {
-                if(finalType){
+                if(finalType) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("postId",postId);
-                    goTo(NewsDetailActivity.this, ReportPostActivity.class,false);
+                    bundle.putInt("postId", postId);
+                    goTo(NewsDetailActivity.this, ReportPostActivity.class, false);
+                }else
+                    stockOut();
+            }
+
+            @Override
+            public void onBlockUser() {
+                if(finalType){
+                    //block user
                 }else {
                     ConfirmDialog confirmDialog = new ConfirmDialog();
                     confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
                         @Override
                         public void onConfirm() {
-                                deletePost();
+                            deletePost();
                         }
                     },"Would you like to remove this post?");
                     confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
                 }
-            }
-
-            @Override
-            public void onBlockUser() {
-
             }
 
             @Override
@@ -912,8 +1059,54 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(url));
                 startActivity(Intent.createChooser(sharingIntent, "Share using"));
             }
-        },type,flowerid);
+        },type,flowerid,newsFeedEntity);
         feedDetailDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+    }
+
+    void stockOut(){
+        showProgress();
+        String api_link =  API.SET_SOLD;
+        if(newsFeedEntity.getIs_sold()==1)
+            api_link = API.RELIST;
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            if(newsFeedEntity.getIs_sold()==0)
+                                newsFeedEntity.setIs_sold(1);
+                            else
+                                newsFeedEntity.setIs_sold(0);
+                            initialLayout();
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("product_id", String.valueOf(newsFeedEntity.getProduct_id()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
     void getFollow(){
         showProgress();
@@ -1214,6 +1407,60 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         parentModel = commentModel;
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInputFromInputMethod(edt_comment.getWindowToken(), 0);
+    }
+
+    public void likeComment(int posstion,CommentModel commentModel){
+        if(commentModel.getCommenter_user_id() == Commons.g_user.getId()){
+            showAlertDialog(getResources().getString(R.string.your_own_comment_like));
+            return;
+        }
+        String api_link = API.POST_COMMENT_LIKE_API;
+        if(commentModel.getLevel()==1)
+            api_link = API.POST_COMMENT_REPLY_LIKE_API;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                commentModel.setLike(!commentModel.isLike());
+                                commentAdapter.notifyDataSetChanged();
+                            }
+
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(commentModel.getLevel()==1)
+                    params.put("reply_id", String.valueOf(commentModel.getId()));
+                else
+                    params.put("comment_id", String.valueOf(commentModel.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void  initComment(){

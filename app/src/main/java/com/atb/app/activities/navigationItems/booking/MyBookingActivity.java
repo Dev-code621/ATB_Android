@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,6 +97,7 @@ public class MyBookingActivity extends CommonActivity implements View.OnClickLis
                     public void onResponse(String json) {
                         closeProgress();
                         try {
+                            Log.d("aaaaaa",json);
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray arrayList = jsonObject.getJSONArray("extra");
                             bookingEntities.clear();

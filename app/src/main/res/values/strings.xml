@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ATB</string>
     <string name="str_back_one_more_end">Pressing once more will terminate</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="email_address">Email Address</string>
     <string name="password">Password</string>
@@ -25,7 +25,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="complete_user">Complete and set your profile ></string>
     <string name="account_created">Your account has been created</string>
-    <string name="complete_profile">Now Please complete you profile</string>
+    <string name="complete_profile">Now please complete your profile</string>
     <string name="set_picture">Set a Profile Picture</string>
     <string name="username">Username</string>
     <string name="first_name">First Name</string>
@@ -122,10 +122,10 @@
     <string name="cancel_day">Cancellation Within Day(s)</string>
     <string name="area_covered">Area Covered</string>
     <string name="require_insurance">Does This Service Require Insurance?</string>
-    <string name="require_quality">Does This Service Require Qualitifications?</string>
+    <string name="require_quality">Does This Service Require Qualifications?</string>
 
     <string name="no_insurance">No Insurances Added</string>
-    <string name="no_quality">No Qualitifications Added</string>
+    <string name="no_quality">No Qualifications Added</string>
     <string name="make_question">Make a question...</string>
     <string name="add_picture">Add Picture</string>
     <string name="options">Options</string>
@@ -150,7 +150,7 @@
     <string name="bookings">Bookings</string>
     <string name="item_sold">Items Sold</string>
     <string name="creat_amend">Create / Amend Bio</string>
-    <string name="set_post_range">Set Post Range</string>
+    <string name="set_post_range">Location &amp; Radius</string>
     <string name="post_range">Post Range</string>
     <string name="user_setting">User Settings</string>
     <string name="transaction_histsory">Transaction History</string>
@@ -165,17 +165,17 @@
     <string name="add_website">Add your website</string>
     <string name="tell_us_business">Tell us about your business</string>
     <string name="set_operation_hour">Set Operating hours</string>
-    <string name="set_operation_hour_description">This will let to people know where to book for a service</string>
+    <string name="set_operation_hour_description">This will populate your booking system based upon the availability you have provided</string>
     <string name="not_set_yet">Not Set Yet</string>
     <string name="add_insurance_quality">Add Insurances and Qualifications</string>
-    <string name="add_insurance_quality_description">Add your qualifications here in case some of your services requieres insurances or certificates. You can do this later.</string>
+    <string name="add_insurance_quality_description">If your Business requires Insurance or Certification then please provide details of them here. You can leave these blank if your Business does not require them. If you fail to provide the required documentation your application may be refused.</string>
     <string name="add_certification">Add Certification</string>
     <string name="add_insurance">Add Insurance</string>
     <string name="link_social_media">Link your social media</string>
     <string name="instagram">Instagram</string>
     <string name="twitter">Twitter</string>
     <string name="add_tag_business">Add tags for your business</string>
-    <string name="add_tag_business_description">This will help users to find your post and products easily.</string>
+    <string name="add_tag_business_description">Add up to 5 tags that best represent your business, this will make it easier for customers to find you on the ATB Directory.</string>
     <string name="type_a_tag">Type a Tag</string>
     <string name="save_business_detail">Save Business Details </string>
     <string name="input_username">Type your username</string>
@@ -230,7 +230,7 @@
     <string name="modification_booking">[Send a modification request to the\nbooking instead]</string>
     <string name="write_a_comment">Write a comment</string>
     <string name="your_own_comment">You can not reply to your own comments</string>
-
+    <string name="your_own_comment_like">You can not like to your own comments</string>
     <string name="price_start">Price, starting from</string>
     <string name="need_deposit">Needs a deposit of</string>
     <string name="cancel_within">Cancellations Within</string>
@@ -269,10 +269,27 @@
         The current bid is the highest bid so far for the current period. The profile picture to the left of the current bid is the current highest bidder for that particular tag word/phrase. The Blue circle to the right of the current bid is the number of bids that have been made for that particular tag word or phrase.</string>
     <string name="your_bid"><b>YOUR BID\n\n</b>
         Your bid is the amount you wish to place for that tag word or phrase. There are 5 places that can bid on for each particular tag word or phrase and are shown in order of how they will be seen when an ATB member looks for that specific tag word or phrase 1 being at the top and 5 being at the bottom. The top three spots hold special prominence as they are pinned to the op with remaining two, along with any other search results becoming scroll-able.\n\nBids must be higher then the current bid for that spot and must be in incresements of £0.50.\n\nYou cannot bid on more than spot, although that does not stop you from having multiple businesses set-up.\n\nOnce a bid has been placed it cannot be reversed!</string>
-    <string name="str_postage">    This product includes free postage at your\ncurrent location</string>
+    <string name="str_postage">    This product includes free postage at your\ncurrent location:</string>
     <string name="str_collect">  We will send you the indications of the \nlocation after completing your order.</string>
     <string name="applozic_key">emtrac2ba61d90383c69a7fbc7db07725fa3e5b</string>
     <string name="exist_user">This user already have an account, we will link the user to the booking</string>
     <string name="unexist_user">No matches were found, please manually field the contact fields</string>
     <string name="feed_select">Selecting <b>My ATB</b> combines all your groups into one\nfeed so you can view multiple groups simultaneously</string>
+
+    <string name="action_voice_rec">action voice rec</string>
+    <string name="action_location">action location</string>
+    <string name="action_taxi">action taxi</string>
+    <string name="action_change_colors">change style</string>
+
+    <string name="forgotpassword1">Password Forgotten?</string>
+    <string name="forgotpassword2">To recover your password, you need dto enter your registered email address.
+     We will send you the recovery code to your email</string>
+
+    <string name="forgotpassword3">Receovery Code Verification</string>
+    <string name="forgotpassword4">Please enter the 6 digit code to recover your\npassword. If you"'"re not getting a recovery code yet,\nPlease click resent button</string>
+    <string name="upgrade_account">You need to upgrade your account to business to\nboost your business profile!</string>
+    <string name="location_detail">Tell us your location and radius.\nATB will then be able to provide you with relevant posts and connect you with businesses in your local area.</string>
+
+    <string name="facebook_app_id">167721437413305</string>
+    <string name="fb_login_protocol_scheme">fb167721437413305</string>
 </resources>

@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.activities.profile.boost.BoostActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
@@ -42,6 +44,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.SelectCategoryDialog;
+import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
@@ -122,11 +125,32 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         boostAdapter = new BoostItemAdapter(this,  new BoostItemAdapter.OnSelectListener() {
             @Override
             public void onSelectItem(BoostModel boostModel) {
-                if(!boostModel.isEmptyModel())
-                    goTo(MainActivity.this, BoostActivity.class,false);
-                else{
-                     getuserProfile(boostModel.getUserModel().getId(),1);
+                if(Commons.g_user.getAccount_type() == 0){
+                    SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+                    selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+                        @Override
+                        public void OnCamera() {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("subScriptionType",0);
+                            goTo(MainActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
+                        }
 
+                        @Override
+                        public void OnAlbum() {
+
+                        }
+                    },getResources().getString(R.string.upgrade_account),getResources().getString(R.string.yes),getResources().getString(R.string.no));
+                    selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+                }else {
+                    if (!boostModel.isEmptyModel())
+                        goTo(MainActivity.this, BoostActivity.class, false);
+                    else {
+                        if (boostModel.getUserModel().getId() == Commons.g_user.getId())
+                            startActivityForResult(new Intent(MainActivity.this, ProfileBusinessNaviagationActivity.class), 1);
+                        else
+                            getuserProfile(boostModel.getUserModel().getId(), 1);
+
+                    }
                 }
             }
 
@@ -135,6 +159,13 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         recycler_view_boost.setItemAnimator(null);
         recycler_view_boost.setAdapter(boostAdapter);
         getProfilepines();
+
+        getFirebaseToken();
+    }
+
+    void getFirebaseToken(){
+        //this.startService(new Intent(this, FcmMessagingService.class));
+
     }
 
 
@@ -194,7 +225,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
 
     }
 
-    void getProfilepines(){
+    public void getProfilepines(){
       //  showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -203,6 +234,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onResponse(String json) {
                        // closeProgress();
+                        Log.d("aaaaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray =jsonObject.getJSONArray("extra");

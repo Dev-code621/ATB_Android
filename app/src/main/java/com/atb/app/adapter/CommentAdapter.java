@@ -1,6 +1,7 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.SpannableString;
@@ -132,6 +133,23 @@ public class CommentAdapter extends BaseAdapter {
                 _context.replyComment(commentModel.getParentPosstion(),_roomDatas.get(position));
             }
         });
+        holder.lyt_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _context.likeComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+            }
+        });
+
+        if(commentModel.isLike()){
+            holder.txv_like.setText("Liked");
+            holder.imv_like.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_heart));
+            holder.imv_like.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+
+        }else {
+            holder.txv_like.setText("Like");
+            holder.imv_like.setImageDrawable(_context.getResources().getDrawable(R.drawable.icon_health_unselect));
+
+        }
 
         return convertView;
     }

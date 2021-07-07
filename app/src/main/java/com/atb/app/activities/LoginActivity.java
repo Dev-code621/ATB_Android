@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,8 +31,12 @@ import com.applozic.mobicomkit.listners.AlLoginHandler;
 import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
+import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.navigationItems.TellYourFriendActivity;
 import com.atb.app.activities.navigationItems.booking.MyBookingActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.register.Signup1Activity;
+import com.atb.app.activities.register.forgotPassword.ForgotPasswordActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -45,17 +50,35 @@ import com.atb.app.model.submodel.SocialModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginActivity extends CommonActivity implements View.OnClickListener {
     TextView txv_login,txv_signup;
     LinearLayout lyt_facebook;
     EditText  edt_email,edt_password;
+    ImageView imv_forgot_password;
+    CallbackManager callbackManager;
+    private LoginManager loginManager;
+    LoginButton loginButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +88,69 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
         lyt_facebook = findViewById(R.id.lyt_facebook);
         edt_email = findViewById(R.id.edt_email);
         edt_password = findViewById(R.id.edt_password);
-
         txv_login.setOnClickListener(this);
         lyt_facebook.setOnClickListener(this);
         txv_signup.setOnClickListener(this);
+        imv_forgot_password = findViewById(R.id.imv_forgot_password);
+        imv_forgot_password.setOnClickListener(this);
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        List< String > permissionNeeds = Arrays.asList( "email");
+        loginButton.setPermissions(permissionNeeds);
+        loginButton.registerCallback(callbackManager,
+                new FacebookCallback < LoginResult > () {@Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    System.out.println("onSuccess");
+
+                   Commons.fbtoken = "fb_"+ loginResult.getAccessToken()
+                            .getUserId();
+                    Log.i("accessToken", Commons.fbtoken);
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            loginResult.getAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {@Override
+                            public void onCompleted(JSONObject object,
+                                                    GraphResponse response) {
+                                Log.d("aaaaa",object.toString());
+                                try {
+                                    String id = object.getString("id");
+                                    try {
+                                        URL profile_pic = new URL(
+                                                "http://graph.facebook.com/" + id + "/picture?type=large");
+                                        Log.i("profile_pic",
+                                                profile_pic + "");
+
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                loginManager.getInstance().logOut();
+                                gotoLogin(0);
+                            }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields",
+                            "id,name,email,gender, birthday");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("onError");
+                        Log.v("LoginActivity", exception.getCause().toString());
+                    }
+                });
+
         edt_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -119,7 +201,14 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
     void loadLayout(){
         edt_email.setText(Preference.getInstance().getValue(this, PrefConst.PREFKEY_USEREMAIL, ""));
         edt_password.setText(Preference.getInstance().getValue(this, PrefConst.PREFKEY_USERPWD, ""));
-        if(edt_email.getText().toString().length()>0 && edt_password.getText().toString().length()>0)gotoLogin();
+        int type = Preference.getInstance().getValue(this, PrefConst.PREFKEY_TYPE, 1);
+        if(type == 1) {
+            if (edt_email.getText().toString().length() > 0 && edt_password.getText().toString().length() > 0)
+                gotoLogin(1);
+        }else {
+            Commons.fbtoken = Preference.getInstance().getValue(this, PrefConst.PREFKEY_FBTOKEN, "");
+            gotoLogin(0);
+        }
     }
     void Keyboard(){
         RelativeLayout lytContainer = (RelativeLayout) findViewById(R.id.lyt_container);
@@ -144,18 +233,21 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.txv_login:
 
-                gotoLogin();
+                gotoLogin(1);
                 break;
             case R.id.lyt_facebook:
-
+                loginButton.performClick();
                 break;
             case R.id.txv_signup:
                 goTo(this, Signup1Activity.class,false);
                 break;
+            case R.id.imv_forgot_password:
+                goTo(this, ForgotPasswordActivity.class,false);
+                break;
         }
     }
 
-    void gotoLogin(){
+    void gotoLogin(int type){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -164,7 +256,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
-                        parseResponse(json);
+                        parseResponse(json,type);
                     }
                 },
                 new Response.ErrorListener() {
@@ -178,8 +270,15 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("email", edt_email.getText().toString());
-                params.put("pwd", edt_password.getText().toString());
+                if(type == 1) {
+                    params.put("email", edt_email.getText().toString());
+                    params.put("pwd", edt_password.getText().toString());
+                }else {
+                    params.put("email", "");
+                    params.put("pwd", "");
+                }
+                params.put("fbToken",Commons.fbtoken);
+                params.put("fcmtoken",Commons.fcmtoken);
                 return params;
             }
         };
@@ -191,7 +290,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
 
     }
 
-    void parseResponse(String json){
+    void parseResponse(String json,int type){
         try {
             JSONObject jsonObject = new JSONObject(json);
             if(jsonObject.getBoolean("result")== false)
@@ -325,18 +424,29 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 }
                 Commons.g_user = userModel;
                 finishAffinity();
-                Preference.getInstance().put(this, PrefConst.PREFKEY_USEREMAIL, edt_email.getText().toString());
-                Preference.getInstance().put(this, PrefConst.PREFKEY_USERPWD, edt_password.getText().toString());
+                Preference.getInstance().put(this, PrefConst.PREFKEY_TYPE, type);
+                if(type == 1) {
+                    Preference.getInstance().put(this, PrefConst.PREFKEY_USEREMAIL, edt_email.getText().toString());
+                    Preference.getInstance().put(this, PrefConst.PREFKEY_USERPWD, edt_password.getText().toString());
+                }else {
+                    Preference.getInstance().put(this, PrefConst.PREFKEY_FBTOKEN, Commons.fbtoken);
+                }
+
                 if(Commons.g_user.getAccount_type() ==1)
                     loginApplozic(true);
                 else
                     loginApplozic(false);
                 goTo(LoginActivity.this, MainActivity.class,true);
-               // goTo(LoginActivity.this, BookingActivity.class,true);
+                //goTo(LoginActivity.this, UpdateBusinessActivity.class,true);
 
             }
         }catch (Exception e){
             Log.d("bbbbb, " , e.toString());
         }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

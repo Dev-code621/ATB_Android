@@ -1,50 +1,36 @@
 package com.atb.app.activities.navigationItems;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.atb.app.R;
-import com.atb.app.activities.LoginActivity;
-import com.atb.app.activities.MainActivity;
-import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
-import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.util.search.ColorSuggestion;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
+import com.atb.app.util.search.ColorWrapper;
+import com.atb.app.util.search.DataHelper;
 import com.atb.app.util.GpsInfo;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -56,17 +42,10 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.theartofdev.edmodo.cropper.CropImage;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
-import com.zxy.tiny.Tiny;
-import com.zxy.tiny.callback.FileCallback;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -80,8 +59,10 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
     SupportMapFragment mapFragment;
     private GoogleMap googleMap;
     private LatLng myCordianite;
-    float progress = 0.0f;
-    long lat,lang;
+    FloatingSearchView mSearchView ;
+    public static final long FIND_SUGGESTION_SIMULATED_DELAY = 250;
+    private String mLastQuery = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,21 +79,21 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         imv_back.setOnClickListener(this);
         txv_update.setOnClickListener(this);
         lyt_send.setOnClickListener(this);
-
-        if(!Commons.g_user.getPost_search_region().equals("null")){
-            seekbarProgress.setProgress(Float.parseFloat(Commons.g_user.getPost_search_region()));
-            txv_progress.setText(Commons.g_user.getPost_search_region() + "KM");
-            progress = Float.parseFloat(Commons.g_user.getPost_search_region());
-
+        mSearchView = findViewById(R.id.floating_search_view);
+        mapFragment.getMapAsync(this);
+        setupSearchBar();
+        if(!Commons.g_user.getLocation().equals("null")){
+            txv_progress.setText(50 + "KM");
+            seekbarProgress.setProgress(50);
+            myCordianite = Commons.LatLang.get(Commons.g_user.getLocation());
         }
         seekbarProgress.setOnSeekChangeListener(new OnSeekChangeListener() {
             @Override
             public void onSeeking(SeekParams seekParams) {
                 txv_progress.setText(String.valueOf(seekParams.progress)+"KM");
-                if(seekParams.progress==300)
-                    txv_progress.setText("KM");
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(15f-(seekParams.progress/30)));
-
+//                if(seekParams.progress==80)
+//                    txv_progress.setText("KM");
+                moveCamera();
 
             }
 
@@ -126,7 +107,6 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
 
             }
         });
-        mapFragment.getMapAsync(this);
 
     }
 
@@ -139,11 +119,78 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         googleMap.setOnMarkerClickListener(this);
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-        setUpMap();
+        //setUpMap();
+        moveCamera();
     }
 
 
+    void setupSearchBar(){
+        DataHelper.init();
+        mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+            @Override
+            public void onSearchTextChanged(String oldQuery, final String newQuery) {
+
+                if (!oldQuery.equals("") && newQuery.equals("")) {
+                    mSearchView.clearSuggestions();
+                } else {
+
+                    mSearchView.showProgress();
+                    DataHelper.findSuggestions(SetPostRangeActivity.this, newQuery, 5,
+                            FIND_SUGGESTION_SIMULATED_DELAY, new DataHelper.OnFindSuggestionsListener() {
+
+                                @Override
+                                public void onResults(List<ColorSuggestion> results) {
+
+                                    //this will swap the data and
+                                    //render the collapse/expand animations as necessary
+                                    mSearchView.swapSuggestions(results);
+
+                                    //let the users know that the background
+                                    //process has completed
+                                    mSearchView.hideProgress();
+                                }
+                            });
+                }
+            }
+        });
+
+        mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+                mLastQuery = searchSuggestion.getBody();
+                mSearchView.setSearchBarTitle(mLastQuery);
+                myCordianite = Commons.LatLang.get(mLastQuery);
+                edt_serach.setText(mLastQuery);
+                mSearchView.clearSuggestions();
+                moveCamera();
+            }
+
+            @Override
+            public void onSearchAction(String query) {
+                mLastQuery = query;
+            }
+        });
+
+        mSearchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
+            @Override
+            public void onFocus() {
+
+                //show suggestions when search bar gains focus (typically history suggestions)
+                mSearchView.swapSuggestions(DataHelper.getHistory(SetPostRangeActivity.this, 3));
+
+            }
+
+            @Override
+            public void onFocusCleared() {
+
+                //set the title of the bar so that when focus is returned a new query begins
+                mSearchView.setSearchBarTitle(mLastQuery);
+
+                //you can also set setSearchText(...) to make keep the query there when not focused and when focus returns
+                //mSearchView.setSearchText(searchSuggestion.getBody());
+            }
+        });
+    }
     private void setUpMap() {
 
         GpsInfo gpsInfo = new GpsInfo(this);
@@ -235,21 +282,26 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.lyt_send:
-                setUpMap();
+                //setUpMap();
                 break;
         }
     }
 
 
     void moveCamera(){
+        googleMap.clear();
+        double radius = 1000*seekbarProgress.getProgress();
+        double scale = radius / 500;
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
-
         Circle circle = googleMap.addCircle(new CircleOptions()
                 .center(myCordianite)
-                .radius(progress*1000)
+                .radius(radius)
                 .strokeColor(getResources().getColor(R.color.head_color))
                 .fillColor(getResources().getColor(R.color.header_color1)));
-
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo((float)(14 - Math.log(scale) / Math.log(2))), 2000, null);
+        googleMap.addMarker(new MarkerOptions()
+                .position(myCordianite)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mappin)));
 
     }
     @Override

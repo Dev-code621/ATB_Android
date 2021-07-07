@@ -441,7 +441,8 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 finish(this);
                 break;
             case R.id.lyt_profile:
-                SelectprofileDialog(this);
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
                 break;
 
             case R.id.imv_videothumnail:

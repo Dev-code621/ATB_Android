@@ -48,7 +48,7 @@ public class LocationMapActivity extends CommonActivity implements  OnMapReadyCa
         googleMap = mMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(Commons.traffic);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 7f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f));
     }
 
 

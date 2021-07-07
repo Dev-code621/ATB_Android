@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "790302185980",
+    "project_id": "trim-bot-310607",
+    "storage_bucket": "trim-bot-310607.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790302185980:android:07861efde36946a7ca3a79",
+        "android_client_info": {
+          "package_name": "com.atb.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790302185980-2nk9puik4httmea6gomsgetgii6cd660.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.atb.app",
+            "certificate_hash": "70b1ad16b64f7f8a47d2e6f950b1f6db35db2c99"
+          }
+        },
+        {
+          "client_id": "790302185980-ju7isaei685bud4rnvfnpm0ks6hrpadu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp3z9Eaeap_IPQ_HTvbJrR-Q15Y5dS9uI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790302185980-ju7isaei685bud4rnvfnpm0ks6hrpadu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

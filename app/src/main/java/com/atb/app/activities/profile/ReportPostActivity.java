@@ -102,7 +102,8 @@ public class ReportPostActivity extends CommonActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-                                finish(ReportPostActivity.this);
+                                showAlertDialog("It's been reported Successfully!");
+                                //finish(ReportPostActivity.this);
                             }else
                                 showAlertDialog(jsonObject.getString("msg"));
                         }catch (Exception e){

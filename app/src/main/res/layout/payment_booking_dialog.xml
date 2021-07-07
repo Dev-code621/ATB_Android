@@ -141,16 +141,33 @@
                 android:layout_height="30dp"
                 android:src="@drawable/ic_paymentpaypal"
                 android:tint="@color/head_color"/>
-            <TextView
-                android:id="@+id/txv_paypal"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Use your PayPal account"
-                android:gravity="center"
-                android:textColor="@color/txt_color"
-                android:layout_marginLeft="10dp"
-                android:textSize="16sp"
-                style="@style/boldtextTheme" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/txv_paypal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Use your PayPal account"
+                    android:gravity="center"
+                    android:textColor="@color/txt_color"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    style="@style/boldtextTheme" />
+                <TextView
+                    android:id="@+id/txv_paypal_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="richard@gmail.com"
+                    android:gravity="center"
+                    android:textColor="@color/txt_color"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    style="@style/textTheme" />
+            </LinearLayout>
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"

@@ -94,7 +94,7 @@
                 android:id="@+id/imv_rating"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/star4"
+                android:src="@drawable/star3"
                 android:layout_marginRight="10dp"/>
             <ImageView
                 android:id="@+id/imv_profile_chat"
@@ -116,6 +116,7 @@
                     android:src="@drawable/ic_navigation"/>
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/imv_dot"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
@@ -191,7 +192,8 @@
                 android:layout_marginLeft="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/txv_post"
                     android:layout_width="wrap_content"
@@ -260,7 +262,6 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/lyt_busines_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -271,14 +272,13 @@
                 android:id="@+id/txv_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 style="@style/textTheme"
-                android:text="This is test description"
-                android:maxLines="1"
                 android:layout_marginLeft="5dp"
                 android:textSize="14sp"
                 android:textColor="@color/txt_color"/>
             <LinearLayout
+                android:id="@+id/lyt_busines_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -328,9 +328,9 @@
                 app:stl_distributeEvenly="true"
                 app:stl_indicatorColor="@color/head_color"
                 app:stl_indicatorInterpolation="linear"
-                app:stl_indicatorThickness="3dp"
-                app:stl_underlineThickness="1dp"
-                app:stl_dividerColor = "@color/head_color"
+                app:stl_indicatorThickness="2dp"
+                app:stl_underlineThickness="0dp"
+                app:stl_dividerColor = "@color/main_color"
                 app:stl_defaultTabTextColor = "@color/head_color"
                 app:stl_underlineColor ="@color/main_color" />
             <androidx.viewpager.widget.ViewPager

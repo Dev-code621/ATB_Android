@@ -80,7 +80,10 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
         if(Commons.selected_user.getId() == Commons.g_user.getId()){
             holder.txv_make_post.setText("Make a Post");
         }else {
-            String text = "Buy £" + newsFeedEntity.getPrice();
+            String text = "Buy £";
+            if(newsFeedEntity.getPost_type()==3)
+                text = "Book £";
+           text+= newsFeedEntity.getPrice();
             holder.lyt_editpost.setVisibility(View.GONE);
             holder.txv_make_post.setText(text);
         }

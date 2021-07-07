@@ -45,13 +45,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +65,7 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
     LinearLayout lyt_back,lyt_addimage,lyt_imvselect;
     FrameLayout lyt_profile;
     RecyclerView recyclerView_images;
-    EditText edt_question,edt_duration;
+    EditText edt_question;
     ImageView imv_selector,imv_profile;
     NiceSpinner spiner_category_type;
     CardView card_business;
@@ -73,6 +79,8 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
     ArrayList<String>returnValue = new ArrayList<>();
     PollEmageAdapter pollEmageAdapter;
     boolean business_user = false;
+    TextView txv_duration;
+    long upload_Second;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +90,8 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
         lyt_profile = findViewById(R.id.lyt_profile);
         recyclerView_images = findViewById(R.id.recyclerView_images);
         edt_question = findViewById(R.id.edt_question);
-        edt_duration = findViewById(R.id.edt_duration);
         imv_selector = findViewById(R.id.imv_selector);
+        txv_duration = findViewById(R.id.txv_duration);
         imv_selector.setEnabled(false);
         lyt_imvselect = findViewById(R.id.lyt_imvselect);
         spiner_category_type = findViewById(R.id.spiner_category_type);
@@ -180,6 +188,9 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
                 txv_post.setText(ss);
             }
         });
+        Calendar now = Calendar.getInstance();
+        upload_Second = now.getTimeInMillis()/1000 + 24*3600 ;
+
 
         initLayout();
     }
@@ -255,10 +266,11 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
         if(edt_question.getText().toString().length()==0){
             showAlertDialog("Please input the question");
             return;
-        }else if(!imv_selector.isEnabled()){
-            showAlertDialog("Please confirm the poll duration");
-            return;
         }
+//        else if(!imv_selector.isEnabled()){
+//            showAlertDialog("Please confirm the poll duration");
+//            return;
+//        }
         int count =0;
         for(int i =0;i<viewcount;i++){
             if(editTexts.get(i).getText().toString().length()>0)count++;
@@ -298,7 +310,7 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
             params.put("location_id", "0");
             params.put("delivery_option", "0");
             params.put("delivery_cost", "0");
-            params.put("poll_day", edt_duration.getText().toString());
+            params.put("poll_day", String.valueOf(upload_Second));
             String poll_options ="";
             for(int i =0;i<viewcount;i++){
                 if(editTexts.get(i).getText().toString().length()>0){
@@ -365,10 +377,11 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
                 finish(this);
                 break;
             case R.id.lyt_imvselect:
-                imv_selector.setEnabled(!imv_selector.isEnabled());
+                selectDate();
                 break;
             case R.id.lyt_profile:
-                SelectprofileDialog(this);
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
                 break;
             case R.id.txv_post:
                 postPoll();
@@ -378,6 +391,48 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
                 break;
         }
     }
+
+    void selectDate(){
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+                        TimePickerDialog time = com.wdullaer.materialdatetimepicker.time.TimePickerDialog.newInstance(
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+                                        DateFormat formart = new SimpleDateFormat("hh:mm a");
+                                        Calendar calendar = Calendar.getInstance();
+                                        calendar.set(year,monthOfYear,dayOfMonth,hourOfDay,minute);
+                                        long distance =  (calendar.getTimeInMillis() - now.getTimeInMillis())/1000;
+
+                                        txv_duration.setText(String.valueOf(distance/(24*3600)) + " days " + String.valueOf((distance%(24*3600))/3600) + "hours");
+                                        upload_Second = calendar.getTimeInMillis()/1000;
+
+
+
+                                        //txv_starttime.get(finalI).setText(formart.format(calendar.getTime()));
+                                    }
+                                },
+                                now.get(Calendar.HOUR_OF_DAY),
+                                now.get(Calendar.MINUTE),
+                                false
+                        );
+                        time.setTitle("Please choice time");
+                        time.show(getSupportFragmentManager(), "Timepickerdialog");
+                    }
+                },
+                now.get(Calendar.YEAR), // Initial year selection
+                now.get(Calendar.MONTH), // Initial month selection
+                now.get(Calendar.DAY_OF_MONTH) // Inital day selection
+        );
+        dpd.show(getSupportFragmentManager(), "Datepickerdialog");
+
+
+    }
+
 
     void selectImage(){
         Options options = Options.init()

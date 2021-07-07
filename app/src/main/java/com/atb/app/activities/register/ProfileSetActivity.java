@@ -30,9 +30,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.SplashActivity;
@@ -91,6 +94,8 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
     private ImageUtils imageUtils;
     private File profileImage;
     String photoPath = "",birthday = "";
+    boolean usernameFalg = false;
+    LinearLayout lyt_username;
     int gender = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +134,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         imv_selector1 = sceneRoot.findViewById(R.id.imv_selector1);
         lyt_paste  = sceneRoot.findViewById(R.id.lyt_paste);
         txv_next  = sceneRoot.findViewById(R.id.txv_next);
+        lyt_username = sceneRoot.findViewById(R.id.lyt_username);
         edt_bio = findViewById(R.id.edt_bio);
 
         imv_profile.setOnClickListener(this);
@@ -144,6 +150,24 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
         edt_lastname.addTextChangedListener(this);
         txv_location.addTextChangedListener(this);
         edt_birthday.addTextChangedListener(this);
+        edt_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                usernameFalg =false;
+                lyt_username.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(edt_username.length()>0)
+                    identifyUserName();
+            }
+        });
     }
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -175,6 +199,50 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
     }
 
 
+
+    void identifyUserName(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.IS_USERNAME_USED,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("aaaaa",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(!jsonObject.getBoolean("result")){
+                                usernameFalg = true;
+                                lyt_username.setBackground(getResources().getDrawable(R.drawable.rectangle_red_round));
+                            }else {
+                                lyt_username.setBackground(getResources().getDrawable(R.drawable.rectangle_green_round));
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user_name", edt_username.getText().toString());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -199,6 +267,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 register();
                 break;
             case R.id.txv_location:
+                Commons.g_user.setLocation("null");
                 startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
                 overridePendingTransition(0, 0);
                 break;
@@ -209,6 +278,10 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
     }
 
     void register(){
+        if(usernameFalg){
+            showAlertDialog("The username was already taken.");
+            return;
+        }
         showProgress();
         try {
             File file = null;

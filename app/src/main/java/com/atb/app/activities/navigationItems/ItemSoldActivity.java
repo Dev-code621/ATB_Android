@@ -70,6 +70,7 @@ public class ItemSoldActivity extends CommonActivity {
                 SelectprofileDialog(ItemSoldActivity.this);
             }
         });
+        initLayout();
 
         StickyHeaderLayoutManager stickyHeaderLayoutManager = new StickyHeaderLayoutManager();
         recyclerView.setLayoutManager(stickyHeaderLayoutManager);
@@ -91,7 +92,7 @@ public class ItemSoldActivity extends CommonActivity {
             }
         }
 
-        initLayout();
+
     }
 
     @Override
@@ -149,8 +150,10 @@ public class ItemSoldActivity extends CommonActivity {
                                     transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
                                     transactionEntities.add(transactionEntity);
                                 }
-                                soldHeaderAdapter = new SoldHeaderAdapter(ItemSoldActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,transactionEntities);
-                                recyclerView.setAdapter(soldHeaderAdapter);
+                                if(transactionEntities.size()>0){
+                                    soldHeaderAdapter = new SoldHeaderAdapter(ItemSoldActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,transactionEntities);
+                                    recyclerView.setAdapter(soldHeaderAdapter);
+                                }
                             }
                         }catch (Exception e){
                             Log.d("exception", e.toString());

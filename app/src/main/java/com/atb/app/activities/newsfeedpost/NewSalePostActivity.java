@@ -50,12 +50,19 @@ import com.atb.app.dialog.AddVariationDialog;
 import com.atb.app.dialog.ConfirmBookingDialog;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.VariationModel;
 import com.atb.app.model.submodel.AttributeModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.VenmoAccountNonce;
+import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
@@ -71,6 +78,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static com.atb.app.commons.Commons.REQUEST_PAYMENT_CODE;
 
 public class NewSalePostActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_header;
@@ -105,6 +115,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     ArrayList<NewsFeedEntity> newsFeedEntities  = new ArrayList<>();
     MultiPostFeedAdapter postFeedAdapter;
     ImageView imv_variation_description;
+    LinearLayout lyt_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -363,11 +374,18 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         ListView list_multipost = sceneRoot.findViewById(R.id.list_multipost);
         LinearLayout lyt_addproduct = sceneRoot.findViewById(R.id.lyt_addproduct);
         LinearLayout lyt_publish = sceneRoot.findViewById(R.id.lyt_publish);
+        lyt_text= sceneRoot.findViewById(R.id.lyt_text);
         list_multipost.setAdapter(postFeedAdapter);
         postFeedAdapter.setData(newsFeedEntities);
-
         lyt_addproduct.setOnClickListener(this);
         lyt_publish.setOnClickListener(this);
+        if(newsFeedEntities.size()>0) {
+            lyt_publish.setVisibility(View.VISIBLE);
+            lyt_text.setVisibility(View.GONE);
+        }else {
+            lyt_publish.setVisibility(View.GONE);
+            lyt_text.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -399,7 +417,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 loadlayout1();
                 break;
             case R.id.lyt_profile:
-                SelectprofileDialog(this);
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
                 break;
             case R.id.lyt_addproduct:
                 activityAnimation(aScene,R.id.lyt_container);
@@ -443,7 +462,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 addVariationDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
                 break;
             case R.id.txv_post:
-                postSale();
+                postVerification();
                 break;
             case R.id.txv_location:
                 startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
@@ -509,7 +528,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
-    void postSale(){
+    void postVerification(){
         if(media_type==1 && completedValue.size() ==0){
             showAlertDialog("Please add image for your service");
             return;
@@ -529,13 +548,15 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         }else if(edt_price.getText().toString().length() ==0){
             showAlertDialog("Please input price.");
             return;
-        }else if(edt_tag.getText().toString().length()==0){
-            showAlertDialog("Please input tags.");
-            return;
-        }else if(edt_item.getText().toString().length()==0){
-            showAlertDialog("Please input the item.");
-            return;
-        }else if(!cash && !paypal){
+        }
+//        else if(edt_tag.getText().toString().length()==0){
+//            showAlertDialog("Please input tags.");
+//            return;
+//        }else if(edt_item.getText().toString().length()==0){
+//            showAlertDialog("Please input the item.");
+//            return;
+//        }
+        else if(!cash && !paypal){
             showAlertDialog("Please input payment option.");
             return;
         }else if(txv_location.getText().toString().length()==0){
@@ -547,13 +568,28 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         }else  if(deliver){
             if(edt_deliver_cost.getText().toString().length()==0){
                 showAlertDialog("Please input the cost for delivery.");
+                return;
             }
-            return;
         }
+
+        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+            GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+            confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+                @Override
+                public void onConfirm() {
+                    getPaymentToken();
+                }
+            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+        }else
+            postSale();
+
+    }
+    void postSale(){
 
         NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
         int post_TYPE = 0;
-        if(business_user)
+        if(business_user || isPosting==0)
             post_TYPE = 1;
         newsFeedEntity.setPoster_profile_type(post_TYPE);
         newsFeedEntity.setMedia_type(media_type);
@@ -870,7 +906,80 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             initLayout();
         }else if(resultCode == Commons.location_code){
             txv_location.setText(Commons.location);
+        }else if (requestCode == REQUEST_PAYMENT_CODE) {
+            if (resultCode == RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                Map<String, String> payment_params = new HashMap<>();
+                payment_params.put("token",Commons.token);
+                payment_params.put("paymentMethodNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+//                    payment_params.put("paymentMethod","Paypal");
+//                }else {
+//                    payment_params.put("paymentMethod","Card");
+//                }
+//                paymentProcessing(payment_params,0);
+
+                String deviceData = result.getDeviceData();
+                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+                    String venmoUsername = venmoAccountNonce.getUsername();
+                }
+                retrievePayPal(payment_params);
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("error:", error.toString());
+            }
         }
+    }
+
+    void retrievePayPal(Map<String, String> payment_params){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_PP_ADDRESS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            Log.d("aaaa",json);
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                Commons.g_user.setBt_paypal_account(jsonObject.getString("msg"));
+                                postSale();
+                            }else {
+                                showAlertDialog(jsonObject.getString("msg"));
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                return payment_params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void reloadImages(){
@@ -931,6 +1040,59 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 return false;
             }
         });
+    }
+
+    void getPaymentToken(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_BRAINTREE_CLIENT_TOKEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("afafa",json);
+                        try{
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                String clicent_token = jsonObject.getJSONObject("msg").getString("client_token");
+                                String clicent_id = jsonObject.getJSONObject("msg").getString("customer_id");
+                                Commons.g_user.setBt_customer_id(clicent_id);
+                                DropInRequest dropInRequest = new DropInRequest()
+                                        .clientToken(clicent_token)
+                                        .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+                                        .collectDeviceData(true)
+                                        .vaultManager(true);
+                                startActivityForResult(dropInRequest.getIntent(NewSalePostActivity.this), REQUEST_PAYMENT_CODE);
+                            }else {
+                                showAlertDialog("Server Connection Error!");
+
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     @Override

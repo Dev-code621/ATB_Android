@@ -81,7 +81,9 @@ public class SearchAdapter extends BaseAdapter {
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
         holder.txv_name.setText(userModel.getBusinessModel().getBusiness_name());
         holder.txv_description.setText(userModel.getBusinessModel().getBusiness_bio());
-        holder.txv_distance.setText(String.valueOf(userModel.getDistance())+"KM");
+        String distance = String.valueOf(new DecimalFormat("##.#").format(userModel.getDistance()/1000l));
+
+        holder.txv_distance.setText(distance+"KM");
         holder.txv_star.setText(String.valueOf(new DecimalFormat("##.#").format(userModel.getBusinessModel().getRating()))+" / 5.0 (" +String.valueOf(userModel.getBusinessModel().getReviews())+")");
         holder.lyt_item.setOnClickListener(new View.OnClickListener() {
             @Override

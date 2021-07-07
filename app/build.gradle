@@ -167,6 +167,7 @@ dependencies {
 
     //time Picker
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+
     //place api
     implementation 'com.google.android.libraries.places:places:2.4.0'
 
@@ -193,10 +194,35 @@ dependencies {
     //deep link
     implementation 'io.branch.sdk.android:library:5.+'
     implementation 'com.google.firebase:firebase-appindexing:19.0.0'
-    implementation 'com.google.android.gms:play-services-ads-identifier:16+'
+   // implementation 'com.google.android.gms:play-services-ads-identifier:16+'
     implementation 'androidx.browser:browser:1.0.0'
     // openCSV
     implementation 'com.opencsv:opencsv:4.6'
+    //search
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 
+    //verification code Input
+    implementation 'com.jacktuotuo.customview:verificationcodeview:1.0.5'
 
+    //facebook
+    implementation 'com.facebook.android:facebook-core:[8,9)'
+    implementation 'com.facebook.android:facebook-login:[8,9)'
+    implementation 'com.facebook.android:facebook-share:[8,9)'
+    implementation 'com.facebook.android:facebook-messenger:[8,9)'
+    implementation 'com.facebook.android:facebook-applinks:[8,9)'
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    implementation "androidx.activity:activity:1.2.3"
+
+    ///PDF choice and view
+    implementation 'com.github.jaiselrahman:FilePicker:1.3.2'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
+    //firebase push
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.google.firebase:firebase-core:19.0.0'
+    implementation 'com.google.firebase:firebase-analytics'
+}
+apply plugin: 'com.google.gms.google-services'
+configurations {
+    all*.exclude group: 'xpp3', module: 'xpp3'
 }

@@ -3,6 +3,7 @@ package com.atb.app.activities.register;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
     ImageView imv_back,imv_selector1,imv_selector2;
     EditText edt_password,edt_confirm_password;
     TextView txv_next;
+    boolean flag1 = true,flag2 = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +64,9 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
                 if(edt_password.getText().toString().equals(edt_confirm_password.getText().toString()) && edt_password.getText().toString().length()>0){
                     txv_next.setEnabled(true);
                     txv_next.setTextColor(_context.getResources().getColor(R.color.white));
-                    imv_selector1.setEnabled(false);
-                    imv_selector2.setEnabled(false);
+
                 }else {
                     txv_next.setEnabled(false);
-                    imv_selector1.setEnabled(true);
-                    imv_selector2.setEnabled(true);
                     txv_next.setTextColor(_context.getResources().getColor(R.color.line_white));
 
                 }
@@ -100,10 +99,24 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
                 finish(this);
                 break;
             case R.id.imv_selector1:
-                edt_password.setText("");
+                if(flag1){
+                    edt_password.setInputType(InputType.TYPE_CLASS_TEXT);
+                    imv_selector1.setImageDrawable(getResources().getDrawable(R.drawable.icon_password_visible));
+                }else {
+                    edt_password.setInputType(0x00000081);
+                    imv_selector1.setImageDrawable(getResources().getDrawable(R.drawable.icon_password_invisible));
+                }
+                flag1 = !flag1;
                 break;
             case R.id.imv_selector2:
-                edt_confirm_password.setText("");
+                if(flag2){
+                    edt_confirm_password.setInputType(InputType.TYPE_CLASS_TEXT);
+                    imv_selector2.setImageDrawable(getResources().getDrawable(R.drawable.icon_password_visible));
+                }else {
+                    edt_confirm_password.setInputType(0x00000081);
+                    imv_selector2.setImageDrawable(getResources().getDrawable(R.drawable.icon_password_invisible));
+                }
+                flag2 = !flag2;
                 break;
             case R.id.txv_next:
                 Commons.g_user.setPassword(edt_password.getText().toString());
@@ -153,7 +166,7 @@ public class Signup2Activity extends CommonActivity implements View.OnClickListe
                 Map<String, String> params = new HashMap<>();
                 params.put("email", Commons.g_user.getEmail());
                 params.put("pwd", Commons.g_user.getPassword());
-                params.put("fbToken","");
+                params.put("fbToken",Commons.fbtoken);
                 params.put("fcmtoken","");
                 return params;
             }

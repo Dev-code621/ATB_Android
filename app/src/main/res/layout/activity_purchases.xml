@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Purchase"
+            android:text="Purchases"
             style="@style/boldtextTheme"
             android:textColor="@color/white"
             android:textSize="24sp"
@@ -54,6 +54,7 @@
             android:text="@string/ok"
             style="@style/boldtextTheme"
             android:textColor="@color/white"
+            android:padding="10dp"
             android:textSize="24sp"
             android:layout_marginRight="20dp"/>
     </LinearLayout>

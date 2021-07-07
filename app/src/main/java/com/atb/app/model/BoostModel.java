@@ -1,5 +1,7 @@
 package com.atb.app.model;
 
+import android.util.Log;
+
 import org.json.JSONObject;
 
 public class BoostModel {
@@ -156,7 +158,8 @@ public class BoostModel {
             setCategory(jsonObject.getString("category"));
             setTags(jsonObject.getString("tags"));
             setPosition(jsonObject.getInt("position"));
-            setPaid(jsonObject.getString("paid"));
+            if(jsonObject.has("paid"))
+              setPaid(jsonObject.getString("paid"));
             setCountry(jsonObject.getString("country"));
             setCounty(jsonObject.getString("county"));
             setRegion(jsonObject.getString("region"));
@@ -170,7 +173,7 @@ public class BoostModel {
             userModel.initModel(user_object);
             setEmptyModel(true);
         }catch (Exception e){
-
+            Log.d("aaaa",e.toString());
         }
     }
 }

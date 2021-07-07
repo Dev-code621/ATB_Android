@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
 import com.atb.app.activities.newsfeedpost.EditSalesPostActivity;
 import com.atb.app.activities.newsfeedpost.NewServiceOfferActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
@@ -91,8 +92,7 @@ public class StoreFragment extends Fragment {
                 Gson gson = new Gson();
                 String usermodel = gson.toJson(newsFeedEntities.get(posstion));
                 bundle.putString("newfeedEntity",usermodel);
-
-                ((CommonActivity)context).goTo(context, NewsDetailActivity.class,false,bundle);
+                startActivityForResult(new Intent(context, NewsDetailActivity.class).putExtra("data",bundle),1);
             }
 
             @Override
@@ -129,6 +129,13 @@ public class StoreFragment extends Fragment {
                             }
                         }, newsFeedEntities.get(posstion), selected_Variation);
                         productVariationSelectDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
+                    }else if(newsFeedEntities.get(posstion).getPost_type()==3){
+                        Bundle bundle = new Bundle();
+
+                        Gson gson = new Gson();
+                        String newfeedentity = gson.toJson(newsFeedEntities.get(posstion));
+                        bundle.putString("newsFeedEntity",newfeedentity);
+                        startActivityForResult(new Intent(context, BookFromPostActivity.class).putExtra("data",bundle),1);
                     }
                 }
             }
@@ -227,7 +234,7 @@ public class StoreFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
-    void loadStoreItems(){
+    public void loadStoreItems(){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -245,7 +252,8 @@ public class StoreFragment extends Fragment {
                                 newsFeedEntity.initDetailModel(jsonArray.getJSONObject(i));
                                 newsFeedEntity.setUserModel(Commons.selected_user);
                                 newsFeedEntity.setService_id(String.valueOf(newsFeedEntity.getId()));
-                                newsFeedEntities.add(newsFeedEntity);
+                                if(newsFeedEntity.getIs_active()==1)
+                                    newsFeedEntities.add(newsFeedEntity);
                             }
                             addAdapter();
 

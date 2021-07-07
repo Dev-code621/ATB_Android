@@ -103,9 +103,12 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         holder.imv_type.setImageResource(Constants.postType[newsFeedEntity.getPost_type()]);
         holder.imv_txv_type.setImageResource(Constants.postType[newsFeedEntity.getPost_type()]);
         holder.txv_description.setTextColor(context.getResources().getColor(R.color.txt_color));
+        holder.imv_heart.clearColorFilter();
+        holder.imv_heart.setColorFilter(context.getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
+        holder.imv_comment.clearColorFilter();
+        holder.imv_comment.setColorFilter(context.getResources().getColor(R.color.txt_color), PorterDuff.Mode.SRC_IN);
         holder.txv_price.setTextColor(context.getResources().getColor(R.color.head_color));
         holder.txv_deposit.setTextColor(context.getResources().getColor(R.color.txt_color));
-        holder.lyt_approve.setBackgroundColor(context.getResources().getColor(R.color.white));
         holder.imv_txv_type.setVisibility(View.GONE);
         if(Commons.selectUsertype==-1)
             holder.lyt_profile.setVisibility(View.VISIBLE);
@@ -117,11 +120,17 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             holder.txv_name.setTextColor(context.getResources().getColor(R.color.white));
             holder.txv_time.setTextColor(context.getResources().getColor(R.color.white));
             holder.lyt_profile.setBackgroundColor(context.getResources().getColor(R.color.head_color));
+            holder.lyt_content.setBackgroundColor(context.getResources().getColor(R.color.head_color));
+            holder.txv_description.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_price.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_deposit.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_comment.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_heart.setTextColor(context.getResources().getColor(R.color.white));
+            holder.imv_heart.clearColorFilter();
+            holder.imv_heart.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            holder.imv_comment.clearColorFilter();
+            holder.imv_comment.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
             if(newsFeedEntity.getPostImageModels().size()==0){
-                holder.lyt_approve.setBackgroundColor(context.getResources().getColor(R.color.head_color));
-                holder.txv_description.setTextColor(context.getResources().getColor(R.color.white));
-                holder.txv_price.setTextColor(context.getResources().getColor(R.color.white));
-                holder.txv_deposit.setTextColor(context.getResources().getColor(R.color.white));
                 holder.imv_txv_type.setVisibility(View.VISIBLE);
                 holder.imv_txv_type.clearColorFilter();
                 holder.imv_txv_type.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
@@ -131,6 +140,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             holder.txv_name.setTextColor(context.getResources().getColor(R.color.txt_color));
             holder.txv_time.setTextColor(context.getResources().getColor(R.color.txt_color));
             holder.lyt_profile.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.lyt_content.setBackgroundColor(context.getResources().getColor(R.color.white));
             if(newsFeedEntity.getPostImageModels().size()==0) {
                 holder.imv_txv_type.setVisibility(View.VISIBLE);
                 holder.imv_txv_type.clearColorFilter();
@@ -142,6 +152,11 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             holder.txv_price.setVisibility(View.VISIBLE);
         else
             holder.txv_price.setVisibility(View.GONE);
+
+        if(newsFeedEntity.getIs_sold()== 1 ){
+            holder.txv_price.setText("SOLD");
+            holder.txv_price.setTextColor(context.getResources().getColor(R.color.discard_color));
+        }
         if(newsFeedEntity.getPostImageModels().size()>0){
 
             holder.lyt_image.setVisibility(View.VISIBLE);
@@ -230,6 +245,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             }
         });
 
+
+
     }
 
 
@@ -291,8 +308,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txv_name,txv_time,txv_description,txv_price,txv_deposit,txv_heart,txv_comment;
-        ImageView imv_profile,imv_imageview,imv_group,imv_type,imv_txv_type,imv_videoplay;
-        LinearLayout lyt_container,lyt_approve,lyt_profile;
+        ImageView imv_profile,imv_imageview,imv_group,imv_type,imv_txv_type,imv_videoplay,imv_comment,imv_heart;
+        LinearLayout lyt_container,lyt_approve,lyt_profile,lyt_content;
         FrameLayout lyt_image;
         CardView card_imv_group,card_imv_type,imv_atb_approved;
         ListView lyt_votelist;
@@ -304,6 +321,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             txv_time = itemView.findViewById(R.id.txv_time);
             txv_description = itemView.findViewById(R.id.txv_description);
             txv_price = itemView.findViewById(R.id.txv_price);
+            imv_comment = itemView.findViewById(R.id.imv_comment);
+            imv_heart = itemView.findViewById(R.id.imv_heart);
             txv_deposit = itemView.findViewById(R.id.txv_deposit);
             txv_heart = itemView.findViewById(R.id.txv_heart);
             txv_comment = itemView.findViewById(R.id.txv_comment);
@@ -321,6 +340,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
             imv_videoplay = itemView.findViewById(R.id.imv_videoplay);
             lyt_profile = itemView.findViewById(R.id.lyt_profile);
             video_view = itemView.findViewById(R.id.video_view);
+            lyt_content = itemView.findViewById(R.id.lyt_content);
             if(getItemCount()>1){
                 ViewGroup.LayoutParams layoutParams = lyt_container.getLayoutParams();
                 DisplayMetrics metrics = new DisplayMetrics();

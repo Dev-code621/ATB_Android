@@ -197,7 +197,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         txv_following.setText(String.valueOf(Commons.g_user.getFollow_count()));
         txv_post.setText(String.valueOf(Commons.g_user.getPost_count()));
         lyt_busines_description.setVisibility(View.GONE);
-
+        txv_description.setText(Commons.g_user.getDescription());
     }
 
     @Override
@@ -214,7 +214,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 icon.setImageDrawable(res.getDrawable(R.drawable.icon_gride));
                 break;
             case 1:
-                icon.setImageDrawable(res.getDrawable(R.drawable.icon_sales));
+                icon.setImageDrawable(res.getDrawable(R.drawable.icon_store));
                 break;
             default:
                 throw new IllegalStateException("Invalid position: " + position);

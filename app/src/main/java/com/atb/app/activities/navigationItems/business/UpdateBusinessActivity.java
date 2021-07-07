@@ -1,13 +1,31 @@
 package com.atb.app.activities.navigationItems.business;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
+import android.text.style.ImageSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -24,6 +42,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.applozic.mobicommons.file.FileUtils;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetOperatingActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
@@ -33,6 +52,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
+import com.atb.app.commons.RealPathUtil;
 import com.atb.app.dialog.AddInsuranceDialog;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.PickImageDialog;
@@ -41,15 +61,29 @@ import com.atb.app.model.BusinessModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.model.submodel.SocialModel;
+import com.atb.app.model.submodel.TagModel;
 import com.atb.app.util.ImageUtils;
 import com.atb.app.util.MediaPicker;
 import com.atb.app.util.MultiPartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.internal.service.Common;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.jaiselrahman.filepicker.activity.FilePickerActivity;
+import com.jaiselrahman.filepicker.config.Configurations;
+import com.jaiselrahman.filepicker.model.MediaFile;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -62,16 +96,22 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zxy.tiny.Tiny;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
+
+import static com.applozic.mobicomkit.uiwidgets.conversation.adapter.MobiComAttachmentGridViewAdapter.REQUEST_CODE;
 
 public class UpdateBusinessActivity extends CommonActivity implements View.OnClickListener , ImageUtils.ImageAttachmentListener{
     ImageView imv_back,imv_profile,imv_fb_selector,imv_instagram_selector,imv_twitter_selector;
@@ -92,6 +132,14 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     AddInsuranceDialog addInsuranceDialog;
     boolean twitter_connect = false,instagram_connect = false, facebook_connect =false;
     ImageView imv_tag_detail;
+    boolean isTwise = false ;
+    boolean isEdit = true ;
+    ArrayList<TagModel>tagModels= new ArrayList<>();
+    int PICKFILE_REQUEST_CODE = -1000;
+    String facebook_name = "";
+    CallbackManager callbackManager;
+    private LoginManager loginManager;
+    LoginButton loginButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,8 +227,87 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 addInsuranceDialog.show(getSupportFragmentManager(), "action picker");
             }
         });
-        initLayout();
 
+        //editTag
+        double scaletype =getResources().getDisplayMetrics().density;
+        if(scaletype >=3.0){
+            isTwise = true ;
+        }
+        edt_tag.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // TODO Auto-generated method stub
+                if (count >= 1 && !isEdit) {
+                    if (!Character.isSpaceChar(s.charAt(0))) {
+                        if (s.charAt(start) == ' ')
+                            setTag(); // generate chips
+                    } else {
+                        edt_tag.getText().clear();
+                        edt_tag.setSelection(0);
+                    }
+
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isEdit) {
+                    setTag();
+                }else {
+                    String chips[] =edt_tag.getText().toString().trim().split(" ");
+                    for(int i =0;i<tagModels.size();i++){
+                        int flag = -1;
+                        for(int j =0;j<chips.length;j++){
+                            if(tagModels.get(i).getName().equals(chips[j])){
+                                flag =j;
+                                break;
+                            }
+                        }
+                        if(flag==-1){
+                            changeTag(tagModels.get(i).getName(),i);
+                        }
+                    }
+                }
+            }
+        });
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        List< String > permissionNeeds = Arrays.asList( "email");
+        loginButton.setPermissions(permissionNeeds);
+        loginButton.registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {@Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    System.out.println("onSuccess");
+
+                    facebook_name = loginResult.getAccessToken().getUserId();
+
+                    loginManager.getInstance().logOut();
+                    addSocial(0);
+                }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("onError");
+                        Log.v("LoginActivity", exception.getCause().toString());
+                    }
+                });
+
+
+        initLayout();
     }
 
     void initLayout(){
@@ -195,7 +322,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 txv_setoperate.setVisibility(View.GONE);
             loadingQalification_Insurance();
            initSocialPart();
-
+            getUserTags();
            if(Commons.g_user.getBusinessModel().getPaid()==0){
                ConfirmDialog confirmDialog = new ConfirmDialog();
                confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
@@ -243,6 +370,56 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 twitter_connect = true;
             }
         }
+    }
+
+    void getUserTags(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GETTAGS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                JSONArray jsonArray = jsonObject.getJSONArray("extra");
+                                tagModels.clear();
+                                String str ="";
+                                for(int i =0;i<jsonArray.length();i++){
+                                    TagModel tagModel = new TagModel();
+                                    tagModel.setId(jsonArray.getJSONObject(i).getInt("id"));
+                                    tagModel.setName(jsonArray.getJSONObject(i).getString("name"));
+                                    tagModels.add(tagModel);
+                                    str += tagModel.getName() + " ";
+                                }
+                                edt_tag.setText(str);
+
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     public void deleteInsurance(int posstion, int type){
@@ -307,6 +484,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+                        Log.d("aaaaaaaaaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray = jsonObject.getJSONArray("extra");
@@ -465,8 +643,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
+                        Log.d("addsocial",json);
                         closeProgress();
-                        Log.d("aaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
@@ -476,6 +654,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                                 socialModel.setUser_id(Commons.g_user.getId());
                                 if(type ==0) {
                                     imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
+                                    socialModel.setSocial_name(facebook_name);
                                 }
                                 else if(type ==1) {
                                     imv_instagram_selector.setEnabled(!imv_instagram_selector.isEnabled());
@@ -511,7 +690,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 }else if(type ==1 )
                     params.put("social_name", edt_instagram_name.getText().toString());
                 else{
-
+                    params.put("social_name", facebook_name);
                 }
                 return params;
             }
@@ -533,6 +712,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+                        Log.d("remove social",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
@@ -560,7 +740,6 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        Log.d("aaaa",error.toString());
 
                     }
                 }) {
@@ -569,7 +748,6 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 params.put("type",String.valueOf(type));
-                Log.d("aaaa",params.toString());
                 return params;
             }
         };
@@ -590,10 +768,10 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             showAlertDialog("Please input business name.");
             return;
         }
-        if(edt_yourwebsite.getText().toString().length()==0){
-            showAlertDialog("Please input business website url.");
-            return;
-        }
+//        if(edt_yourwebsite.getText().toString().length()==0){
+//            showAlertDialog("Please input business website url.");
+//            return;
+//        }
         if(edt_tell_us.getText().toString().length() ==0){
             showAlertDialog("Please add your business infomation.");
             return;
@@ -613,6 +791,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             params.put("business_website",edt_yourwebsite.getText().toString());
             params.put("business_profile_name",edt_business_name.getText().toString());
             params.put("business_bio",edt_tell_us.getText().toString());
+            params.put("timezone","0");
             if(Commons.g_user.getAccount_type() == 1)
                 params.put("id",String.valueOf(businessModel.getId()));
             MultiPartRequest reqMultiPart = new MultiPartRequest(api_link, new Response.ErrorListener() {
@@ -680,8 +859,11 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 showInsuranceDialog(0);
                 break;
             case R.id.lyt_facebook:
-                imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
-                //addSocial(0);
+               // imv_fb_selector.setEnabled(!imv_fb_selector.isEnabled());
+                if(imv_fb_selector.isEnabled())
+                    loginButton.performClick();
+                else
+                    deleteSocial(0);
                 break;
             case R.id.lyt_twitter:
                 if(!imv_twitter_selector.isEnabled()){
@@ -741,6 +923,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
+
                     }
                 })
                 .check();
@@ -812,22 +995,25 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         selectMediaDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
             @Override
             public void OnCamera() {
-                MediaPicker mediaPicker = new MediaPicker(UpdateBusinessActivity.this);
-                PickImageDialog pickImageDialog = new PickImageDialog();
-                pickImageDialog.setImagePickListener(mediaPicker.getAllShownPDFPath(UpdateBusinessActivity.this), new PickImageDialog.OnImagePickListener() {
-                    @Override
-                    public void OnImagePick(String path) {
-//                        Uri uri = Uri.fromFile(new File(path));
-//
-//                        Intent intent = CropImage.activity(uri)
-//                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
-//                                .getIntent(UpdateBusinessActivity.this);
-//
-//                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
-                });
-                pickImageDialog.show(getSupportFragmentManager(), "pick image");
-                mediaPicker.chooseImage();
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent.setType("*/*");
+//                startActivityForResult(intent, 2000);
+                Intent intent = new Intent(UpdateBusinessActivity.this, FilePickerActivity.class);
+                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                        .setCheckPermission(true)
+                        .setSuffixes("pdf")
+                        .setSingleChoiceMode(true)
+                        .enableImageCapture(true)
+                        .setShowImages(true)
+                        .setShowVideos(false)
+                        .enableImageCapture(true)
+                        .setShowFiles(true)
+                        .setMaxSelection(1)
+                        .setSkipZeroSizeFiles(true)
+                        .build());
+                startActivityForResult(intent, 2000);
+
             }
 
             @Override
@@ -872,6 +1058,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         imageUtils.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -912,8 +1099,28 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 if(businessModel.getOpeningTimeModels().size()>0 || businessModel.getHolidayModels().size()>0)
                     txv_setoperate.setVisibility(View.GONE);
             }
+        }else if(requestCode ==2000){
+            if(data!=null) {
+//                final Uri resultUri = data.getData();
+//                File file = new File(RealPathUtil.getRealPath(UpdateBusinessActivity.this, resultUri));
+//                insuranceFile_path = file.getPath();
+//                if(insuranceFile_path.contains("documents")){
+//                    insuranceFile_path = resultUri.getPath();
+//                }
+//                Log.d("file===", insuranceFile_path);
+//                Log.d("file===", String.valueOf(resultUri));
+//                addInsuranceDialog.setFileName();
+
+                ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+                if(files.size()>0) {
+                    Log.d("file===", String.valueOf(files.get(0).getPath()));
+                    insuranceFile_path = String.valueOf(files.get(0).getPath());
+                    addInsuranceDialog.setFileName();
+                }
+            }
         }
     }
+
 
     @Override
     public void image_attachment(int from, String filename, Bitmap file, Uri uri) {
@@ -924,4 +1131,155 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
 
     }
+
+    public void setTag() {
+        if (edt_tag.getText().toString().contains(" ")) // check comman in string
+        {
+
+            SpannableStringBuilder ssb = new SpannableStringBuilder(edt_tag.getText());
+            // split string wich comma
+            String chips[] =edt_tag.getText().toString().trim().split(" ");
+
+            for(int i=0;i<chips.length;i++){
+                for(int j =i+1;j<chips.length;j++){
+                    if(chips[i].equals(chips[j])){
+                        String str = "";
+                        for(int k =0;k<chips.length;k++){
+                            if(k==j)continue;
+                            str += chips[k] + " ";
+                        }
+                        isEdit = true ;
+                        edt_tag.setText(str);
+                        edt_tag.setSelection(edt_tag.getText().length());
+                        return;
+                    }
+                }
+            }
+            int x = 0;
+            for (String c : chips) {
+                LayoutInflater lf = (LayoutInflater)getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                TextView textView = (TextView) lf.inflate(
+                        R.layout.tag_edittext, null);
+                textView.setText(c); // set text
+                int spec = View.MeasureSpec.makeMeasureSpec(0,
+                        View.MeasureSpec.UNSPECIFIED);
+                textView.measure(spec, spec);
+                textView.layout(0, 0, textView.getMeasuredWidth(),
+                        textView.getMeasuredHeight());
+                Bitmap b = Bitmap.createBitmap(textView.getWidth(),
+                        textView.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(b);
+                canvas.translate(-textView.getScrollX(), -textView.getScrollY());
+                textView.draw(canvas);
+                textView.setDrawingCacheEnabled(true);
+                Bitmap cacheBmp = textView.getDrawingCache();
+                Bitmap viewBmp = cacheBmp.copy(Bitmap.Config.ARGB_8888, true);
+                textView.destroyDrawingCache(); // destory drawable
+                BitmapDrawable bmpDrawable = new BitmapDrawable(viewBmp);
+                int width = bmpDrawable.getIntrinsicWidth() ;
+                int height = bmpDrawable.getIntrinsicHeight() ;
+                if(isTwise){
+                    width = width *2 ;
+                    height = height *2;
+                }
+                bmpDrawable.setBounds(0, 0,width ,height);
+                ssb.setSpan(new ImageSpan(bmpDrawable), x, x + c.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                x = x + c.length() + 1;
+
+
+            }
+            for(int i =0;i<chips.length;i++){
+                int flag = -1;
+                for(int j =0;j<tagModels.size();j++){
+                    if(tagModels.get(j).getName().equals(chips[i])){
+                        flag =i;
+                        break;
+                    }
+                }
+                if(flag==-1){
+                    changeTag(chips[i],-1);
+                }
+            }
+            // set chips span
+            isEdit = false ;
+            edt_tag.setText(ssb);
+            // move cursor to last
+            edt_tag.setSelection(edt_tag.getText().length());
+        }
+
+    }
+    public  int convertDpToPixel(float dp){
+        Resources resources = getApplicationContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int)px;
+    }
+
+    void changeTag(String str,int id){
+        if(tagModels.size()==5 && id==-1){
+
+            String text = "";
+            for(int i =0;i<tagModels.size();i++){
+                text += tagModels.get(i).getName()+ " ";
+            }
+            edt_tag.setText(text);
+            showAlertDialog("You can input only 5 tags");
+            return;
+        }
+        String api_link = API.ADDTAG;
+        if(id!=-1)api_link = API.REMOVETAG;
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("aaa",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(id == -1){
+                                TagModel tagModel = new TagModel();
+                                tagModel.setId(jsonObject.getJSONObject("extra").getInt("id"));
+                                tagModel.setName(str);
+                                tagModels.add(tagModel);
+                            }else {
+                                for(int i =0;i<tagModels.size();i++){
+                                    if(tagModels.get(i).getName().equals(str))tagModels.remove(i);
+                                }
+                            }
+
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(id==-1)
+                    params.put("tag_name", str);
+                else
+                    params.put("tag_id", String.valueOf(tagModels.get(id).getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+
 }

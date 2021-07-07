@@ -31,6 +31,7 @@
     <color name="tooltipcolor">#737373</color>
 
     <color name="head_color">#A6BFDE</color>
+    <color name="progress_color">#C1D4EC</color>
     <color name="transparent_header">#A8A6BFDE</color>
     <color name="transparent_post">#A8505459</color>
     <color name="header_color1">#48A6BFDE</color>

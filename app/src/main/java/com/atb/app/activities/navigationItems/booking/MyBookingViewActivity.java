@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,6 +54,7 @@ import com.zcw.togglebutton.ToggleButton;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -100,7 +102,6 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                 String books= bundle.getString("bookModel");
                 Gson gson = new Gson();
                 bookingEntity = gson.fromJson(books, BookingEntity.class);
-                Log.d("aaaaaa",String.valueOf(bookingEntity.getId()));
             }
         }
 
@@ -135,6 +136,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                 finish(this);
                 break;
             case R.id.lyt_add_calendar:
+                addEvent();
                 break;
             case R.id.lyt_message:
                 if(bookingEntity.getUser_id()>0) {
@@ -158,6 +160,11 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                 requestPaypalDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
                 break;
             case R.id.lyt_request_change:
+                Gson gson = new Gson();
+                String booking = gson.toJson(bookingEntity);
+                Bundle bundle = new Bundle();
+                bundle.putString("bookingEntity",booking);
+                startActivityForResult(new Intent(this, ChangeBookingActivity.class).putExtra("data",bundle),1);
                 break;
             case R.id.lyt_request_rating:
                 requestPayment(1);
@@ -361,5 +368,28 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE dd MMM");
         date = formatter.format(d);
         return date;
+    }
+    public void addEvent() {
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.TITLE, bookingEntity.getNewsFeedEntity().getTitle());
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, bookingEntity.getNewsFeedEntity().getPost_location());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Booking");
+
+        GregorianCalendar calDate = new GregorianCalendar(2012, 10, 02);
+        Long start_time = bookingEntity.getBooking_datetime()*1000l;
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                start_time);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                start_time+ 3600000l);
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+
+
+        intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
+        intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+        startActivity(intent);
     }
 }

@@ -153,6 +153,7 @@
                         app:cardCornerRadius="30dp"
                         android:layout_gravity="center"
                         app:cardElevation="0dp"
+                        android:visibility="gone"
                         app:cardUseCompatPadding="false"
                         android:layout_marginLeft="20dp"
                         app:cardBackgroundColor="#DD4B39">
@@ -202,6 +203,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/txv_code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

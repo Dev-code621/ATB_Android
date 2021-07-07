@@ -4,6 +4,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -264,7 +265,7 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
                     icon.setImageDrawable(res.getDrawable(R.drawable.icon_gride));
                     break;
                 case 1:
-                    icon.setImageDrawable(res.getDrawable(R.drawable.icon_sales));
+                    icon.setImageDrawable(res.getDrawable(R.drawable.icon_store));
                     break;
                 default:
                     throw new IllegalStateException("Invalid position: " + position);
@@ -286,15 +287,33 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
                 goTo(this,ReviewActivity.class,false,bundle);
                 break;
             case R.id.imv_facebook:
-                goToUrl ( "http://facebook.com/" + facebook);
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(facebook);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
                 break;
 
             case R.id.imv_instagram:
-                goToUrl ( "https://instagram.com/" + instagra );
+                Uri uri = Uri.parse("http://instagram.com/_u/" + instagra);
+                Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+                likeIng.setPackage("com.instagram.android");
+                try {
+                    startActivity(likeIng);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://instagram.com/" + instagra)));
+                }
                 break;
 
             case R.id.imv_twitter:
-                goToUrl ( "http://twitter.com/" + twitter);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("twitter://user?screen_name=["+ twitter+"]"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://twitter.com/#!/["+ twitter+  "]")));
+                }
                 break;
 
             case R.id.imv_profile_chat:
@@ -440,12 +459,6 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
-    }
-
-    private void goToUrl (String url) {
-        Uri uriUrl = Uri.parse(url);
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        startActivity(launchBrowser);
     }
 
     @Override

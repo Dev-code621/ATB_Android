@@ -695,11 +695,12 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
                             android:layout_marginLeft="10dp"
                             android:gravity="center_vertical">
                             <TextView android:id="@+id/txv_insurance_name"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
                                 android:hint="@string/no_quality"
@@ -709,16 +710,18 @@
                                 android:textColor="@color/txt_color"
                                 android:text="TEST test" />
                             <TextView android:id="@+id/txv_insurance_time"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="match_parent"
+                                android:maxLines="2"
                                 android:hint="@string/no_quality"
-                                android:gravity="center_vertical"
+                                android:gravity="center_vertical|right"
                                 android:textSize="15sp"
-                                android:layout_marginTop="5dp"
+                                android:layout_gravity="end"
                                 style="@style/textTheme"
+                                android:layout_marginRight="10dp"
                                 android:textColor="@color/head_color"
-                                android:text="TEST test" />
+                                android:text="Expire\n 2023-45-343434" />
                         </LinearLayout>
                     </LinearLayout>
 

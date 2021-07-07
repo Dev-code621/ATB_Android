@@ -1,14 +1,19 @@
 package com.atb.app.activities.profile.boost;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -23,8 +28,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.LoginActivity;
+import com.atb.app.activities.SplashActivity;
+import com.atb.app.activities.navigationItems.BookingActivity;
+import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
 import com.atb.app.activities.newsfeedpost.NewSalePostActivity;
 import com.atb.app.activities.profile.SearchActivity;
+import com.atb.app.activities.register.forgotPassword.ForgotPasswordActivity;
+import com.atb.app.activities.register.forgotPassword.InputVerificationCodeActivity;
 import com.atb.app.adapter.ProfilePinHeaderAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -158,7 +169,7 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
         params.put("token", Commons.token);
         params.put("type","1");
         params.put("category",spiner_category_type.getSelectedItem().toString());
-        params.put("tags","");
+        params.put("tags",edt_tag.getText().toString());
         getAuctions(params);
     }
 
@@ -206,7 +217,11 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
                                // showAlertDialog(jsonObject.getString("msg"));
-                                loadDate();
+                                String approval_link = jsonObject.getJSONObject("extra").getString("approval_link");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("web_link",approval_link);
+                                startActivityForResult(new Intent(PinPointActivity.this, ApprovePaymentActivity.class).putExtra("data",bundle),1);
+                                overridePendingTransition(0, 0);                                //loadDate();
                             }
                         }catch (Exception e){
 
@@ -238,5 +253,17 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onResume();
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            loadDate();
+
+        }else {
+            showAlertDialog("Payment authorization has been cancelled!");
+        }
     }
 }

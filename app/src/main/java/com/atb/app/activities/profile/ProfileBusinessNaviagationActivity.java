@@ -1,6 +1,8 @@
 package com.atb.app.activities.profile;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
@@ -48,6 +50,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentTransaction;
@@ -73,6 +76,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
     FrameLayout lyt_fragement,frame_chat;
     String facebook ="" ,instagra = "",twitter ="";
     int selectIcon =0;
+    StoreFragment storeFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,9 +144,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_rating.setOnClickListener(this);
         imv_profile_chat.setOnClickListener(this);
         lyt_navigation.setOnClickListener(this);
-        imv_facebook.setOnClickListener(this);
-        imv_instagram.setOnClickListener(this);
-        imv_twitter.setOnClickListener(this);
+
         lyt_follower.setOnClickListener(this);
         lyt_following.setOnClickListener(this);
         lyt_post.setOnClickListener(this);
@@ -153,10 +155,19 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_search.setOnClickListener(this);
         frame_chat.setOnClickListener(this);
         card_addstore.setOnClickListener(this);
+        setupFragment();
+        drawer = findViewById(R.id.drawer_layout);
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                .setDrawerLayout(drawer)
+                .build();
 
 
+    }
+    void setupFragment(){
         FragmentPagerItems pages = new FragmentPagerItems(this);
-        pages.add(FragmentPagerItem.of("Store", StoreFragment.class));
+        storeFragment = new StoreFragment();
+        pages.add(FragmentPagerItem.of("Store", storeFragment.getClass()));
         pages.add(FragmentPagerItem.of("Posts", PostsFragment.class));
         viewPagerTab.setCustomTabView(this);
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
@@ -184,14 +195,6 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
 
             }
         });
-
-        drawer = findViewById(R.id.drawer_layout);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
-
-
     }
 
 
@@ -208,12 +211,15 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
             if(Commons.g_user.getBusinessModel().getSocialModels().get(i).getType()==0){
                 imv_facebook.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 facebook = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                imv_facebook.setOnClickListener(this);
             }else if(Commons.g_user.getBusinessModel().getSocialModels().get(i).getType()==1){
                 imv_instagram.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 instagra = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                imv_instagram.setOnClickListener(this);
             }else {
                 imv_twitter.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 twitter = Commons.g_user.getBusinessModel().getSocialModels().get(i).getSocial_name();
+                imv_twitter.setOnClickListener(this);
             }
         }
     }
@@ -345,15 +351,33 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
 
             case R.id.imv_facebook:
-                goToUrl ( "http://facebook.com/" + facebook);
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(facebook);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
                 break;
 
             case R.id.imv_instagram:
-                goToUrl ( "https://instagram.com/" + instagra );
+                Uri uri = Uri.parse("http://instagram.com/_u/" + instagra);
+                Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+                likeIng.setPackage("com.instagram.android");
+                try {
+                    startActivity(likeIng);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://instagram.com/" + instagra)));
+                }
                 break;
 
             case R.id.imv_twitter:
-                goToUrl ( "http://twitter.com/" + twitter);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("twitter://user?screen_name=["+ twitter+"]"));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://twitter.com/#!/["+ twitter+  "]")));
+                }
                 break;
 
             case R.id.lyt_follower:
@@ -390,13 +414,6 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
 
         }
     }
-
-    private void goToUrl (String url) {
-        Uri uriUrl = Uri.parse(url);
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        startActivity(launchBrowser);
-    }
-
     void gotoLogout(){
         ConfirmDialog confirmDialog = new ConfirmDialog();
         confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
@@ -470,7 +487,14 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
             imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            onResume();
+            setupFragment();
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();

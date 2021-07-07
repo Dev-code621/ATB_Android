@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -21,8 +22,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
+import com.atb.app.base.BaseActivity;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.model.NewsFeedEntity;
 import com.bumptech.glide.Glide;
+
+import java.text.DecimalFormat;
 
 public class DepositDialog extends DialogFragment {
 
@@ -47,22 +53,38 @@ public class DepositDialog extends DialogFragment {
         TextView txv_name = view.findViewById(R.id.txv_name);
         TextView txv_description = view.findViewById(R.id.txv_description);
         TextView txv_pay = view.findViewById(R.id.txv_pay);
-        txv_price.setText("£" + newsFeedEntity.getDeposit());
+        LinearLayout lyt_select = view.findViewById(R.id.lyt_select);
+        ImageView imv_selector = view.findViewById(R.id.imv_selector);
+        txv_price.setText("£" + String.format("%.2f",Float.parseFloat(newsFeedEntity.getDeposit())));
+
         txv_name.setText(newsFeedEntity.getTitle());
-        String text1 = "You are about to book the service and it requires a\n" ;
-        String text2 = "£"+newsFeedEntity.getDeposit() + " deposit";
-        SpannableString ss = new SpannableString(text1+text2);
-        StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-        ss.setSpan(boldSpan, text1.length(), text1.length()+newsFeedEntity.getDeposit().length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        txv_description.setText(ss);
+        String text1 = "Please Tick box to confirm that you agree with " ;
+        String text2 = newsFeedEntity.getUserModel().getBusinessModel().getBusiness_name();
+        String text3 = " cancellation policy of ";
+        String text4 = newsFeedEntity.getCancellations() +" days";
+        String text5 = " and deposit payment of ";
+        String text6= "£" + String.format("%.2f",Float.parseFloat(newsFeedEntity.getDeposit()));
+        String  ss = text1 + "<b>" + text2 + "</b> " + text3 + "<b>" + text4 + "</b> "+ text5 + "<b>" + text6 + "</b> ";
+        txv_description.setText(Html.fromHtml(ss));
 
-        txv_pay.setText("Pay £"+ newsFeedEntity.getDeposit() + " Deposit and Book");
-
+        txv_pay.setText("Pay £"+ String.format("%.2f",Float.parseFloat(newsFeedEntity.getDeposit())) + " Deposit and Book");
+        imv_selector.setEnabled(false);
         txv_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onPurchase();
-                dismiss();
+                if(imv_selector.isEnabled()) {
+                    listener.onPurchase();
+                    dismiss();
+                }else {
+                    ((BookFromPostActivity)(getContext())).showAlertDialog("You need to agree to the business Deposit & Cancellation policy.");
+                }
+            }
+        });
+
+        lyt_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imv_selector.setEnabled(!imv_selector.isEnabled());
             }
         });
     }

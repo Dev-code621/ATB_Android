@@ -133,7 +133,7 @@ public class SetOperatingActivity extends CommonActivity implements View.OnClick
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                        DateFormat formart = new SimpleDateFormat("hh:mm a");
+                                        DateFormat formart = new SimpleDateFormat("HH:mm a");
                                         Calendar calendar = Calendar.getInstance();
                                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                         calendar.set(Calendar.MINUTE, minute);
@@ -159,7 +159,7 @@ public class SetOperatingActivity extends CommonActivity implements View.OnClick
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-                                        DateFormat formart = new SimpleDateFormat("hh:mm a");
+                                        DateFormat formart = new SimpleDateFormat("HH:mm a");
                                         Calendar calendar = Calendar.getInstance();
                                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                         calendar.set(Calendar.MINUTE, minute);
@@ -407,6 +407,12 @@ public class SetOperatingActivity extends CommonActivity implements View.OnClick
                 selectCategoryDialog.setOnConfirmListener(new SelectHolidayDialog.OnConfirmListener() {
                     @Override
                     public void onConfirm(String title, long date) {
+//                        for(int i =0 ; i<businessModel.getHolidayModels().size();i++){
+//                            HolidayModel holidayModel = businessModel.getHolidayModels().get(i);
+//                            if(holidayModel.getName().equals(title)){
+//                                showAlertDialog("");
+//                            }
+//                        }
                         addHoliday(title,date/1000l);
                     }
                 });

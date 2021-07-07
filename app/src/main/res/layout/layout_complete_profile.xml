@@ -76,14 +76,19 @@
                     android:layout_marginLeft="20dp"
                     style="@style/textTheme"/>
             </LinearLayout>
-            <EditText android:id="@+id/edt_username"
+            <LinearLayout
+                android:id="@+id/lyt_username"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:singleLine="true"
-                android:inputType="textEmailAddress"
-                android:hint="@string/username"
-                style="@style/edit_inputtext"
-                android:layout_marginTop="20dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+                <EditText android:id="@+id/edt_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/username"
+                    style="@style/edit_inputtext" />
+            </LinearLayout>
             <EditText android:id="@+id/edt_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -103,7 +108,7 @@
             <EditText android:id="@+id/edt_bio"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:maxLines="5"
                 android:hint="@string/description"
                 android:paddingTop="15dp"

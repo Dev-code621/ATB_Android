@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,12 @@ import com.atb.app.adapter.SelectInsuranceAdapter;
 import com.atb.app.model.submodel.InsuranceModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class SelectHolidayDialog extends DialogFragment {
     private OnConfirmListener listener;
-
+    Long second;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,7 +49,8 @@ public class SelectHolidayDialog extends DialogFragment {
         EditText edt_title = (EditText)view.findViewById(R.id.edt_title);
         CalendarView calender = (CalendarView)view.findViewById(R.id.calender);
         LinearLayout lyt_add_calendar = (LinearLayout)view.findViewById(R.id.lyt_add_calendar);
-
+        Calendar c = Calendar.getInstance();
+        second = c.getTimeInMillis();
         edt_title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,7 +63,7 @@ public class SelectHolidayDialog extends DialogFragment {
                     lyt_add_calendar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            listener.onConfirm(edt_title.getText().toString(),calender.getDate());
+                            listener.onConfirm(edt_title.getText().toString(),second);
                             dismiss();
                         }
                     });
@@ -70,6 +73,16 @@ public class SelectHolidayDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        calender.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                Log.d("aaaaaaaa",String.valueOf(calender.getDate()));
+                Calendar c = Calendar.getInstance();
+                c.set(year,month,dayOfMonth);
+                second = c.getTimeInMillis();
             }
         });
     }

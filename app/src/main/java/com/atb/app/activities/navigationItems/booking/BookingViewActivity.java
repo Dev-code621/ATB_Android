@@ -1,11 +1,20 @@
 package com.atb.app.activities.navigationItems.booking;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -31,7 +40,9 @@ import com.google.gson.Gson;
 import com.zcw.togglebutton.ToggleButton;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,6 +139,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
                 finish(this);
                 break;
             case R.id.lyt_add_calendar:
+                addEvent();
                 break;
             case R.id.lyt_message:
                 if(bookingEntity.getUser_id()>0)
@@ -147,6 +159,11 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
                 requestPaypalDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
                 break;
             case R.id.lyt_request_change:
+                Gson gson = new Gson();
+                String booking = gson.toJson(bookingEntity);
+                Bundle bundle = new Bundle();
+                bundle.putString("bookingEntity",booking);
+                startActivityForResult(new Intent(this, ChangeRequestBookingActivity.class).putExtra("data",bundle),1);
                 break;
             case R.id.lyt_request_rating:
                 requestPayment(1);
@@ -277,5 +294,41 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE dd MMM");
         date = formatter.format(d);
         return date;
+    }
+
+    public void addEvent() {
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.TITLE, bookingEntity.getNewsFeedEntity().getTitle());
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, bookingEntity.getNewsFeedEntity().getPost_location());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Booking");
+
+        GregorianCalendar calDate = new GregorianCalendar(2012, 10, 02);
+        Long start_time = bookingEntity.getBooking_datetime()*1000l;
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                start_time);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                start_time+ 3600000l);
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+
+
+        intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE);
+        intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+
+        startActivity(intent);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onResume();
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            showAlertDialog("The request has been sent. We will inform you when it's confirmed by the user");
+            int time=data.getIntExtra("Time",0);
+            bookingEntity.setBooking_datetime(time);
+            loadLayout();
+
+        }
     }
 }

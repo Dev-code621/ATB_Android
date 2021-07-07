@@ -11,7 +11,7 @@
     android:paddingTop="5dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         android:background="@drawable/edit_rectangle_round"
         android:layout_marginLeft="20dp"
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/boldtextTheme"
                     android:text="Wedding R US"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textColor="@color/head_color"/>
                 <ImageView
                     android:layout_width="15dp"
@@ -74,7 +74,7 @@
                 android:theme="@style/textTheme"
                 android:text="we have a good location"
                 android:maxLines="2"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/txt_color"/>
             <LinearLayout
                 android:layout_width="match_parent"

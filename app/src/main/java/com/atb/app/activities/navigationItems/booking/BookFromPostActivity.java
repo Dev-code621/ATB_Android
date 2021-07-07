@@ -161,7 +161,6 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         Glide.with(_context).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).into(imv_image);
         today= c.getTimeInMillis()-24*3600000;
         loadBooking(year,month);
-
     }
     void loadBooking(int year,int month){
         imv_selector.setEnabled(false);
@@ -651,6 +650,6 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     public void selectBooking(int posstion) {
         txv_booking.setVisibility(View.VISIBLE);
         bookingEntity = hashMap.get(selected_bookingSlot.get(posstion));
-        txv_booking.setText("Book for " + String.valueOf(day+1) + "rd at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
+        txv_booking.setText("Book for " + String.valueOf(day+1) + "th at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
     }
 }

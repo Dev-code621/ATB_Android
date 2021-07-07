@@ -135,7 +135,50 @@ public class ReviewActivity extends CommonActivity {
         }
 
         imv_star.setRating(rate/5.0f);
+        canRateBusiness();
+    }
 
+    void canRateBusiness(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.CANRATEBUSINESS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getJSONObject("extra").getInt("can_rate") == 1){
+                                txv_rate.setVisibility(View.VISIBLE);
+                            }
+
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("toUserId", String.valueOf(userModel.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void getRatings(){
@@ -146,6 +189,7 @@ public class ReviewActivity extends CommonActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
+
                         closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);

@@ -1,8 +1,11 @@
 package com.atb.app.activities.profile.boost;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -224,8 +227,11 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-                                //showAlertDialog(jsonObject.getString("msg"));
-                                getAction(county,region);
+                                String approval_link = jsonObject.getJSONObject("extra").getString("approval_link");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("web_link",approval_link);
+                                startActivityForResult(new Intent(ProfilePinActivity.this, ApprovePaymentActivity.class).putExtra("data",bundle),1);
+                                overridePendingTransition(0, 0);
                             }
                         }catch (Exception e){
 
@@ -263,5 +269,16 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onResume();
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            getAction(county,region);
+        }else {
+            showAlertDialog("Payment authorization has been cancelled!");
+        }
     }
 }

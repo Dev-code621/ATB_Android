@@ -12,6 +12,7 @@ public class API {
 
     public static final String STAGE_ONE_REGISTER_API = API_BASE_URL + "auth/register_stage_one";
     public static final String LOGIN_API = API_BASE_URL + "auth/login";
+
     public static final String REGISTER_API = API_BASE_URL + "auth/register";
     public static final String UPDATE_FEED_API = API_BASE_URL + "auth/update_feed";
 
@@ -63,6 +64,9 @@ public class API {
 
     public static final String REPORT_POST_API = API_BASE_URL + "post/add_report_post";
     public static final String POST_LIKE_API = API_BASE_URL + "post/add_like_post";
+    public static final String POST_COMMENT_LIKE_API = API_BASE_URL + "post/add_like_comment";
+    public static final String POST_COMMENT_REPLY_LIKE_API = API_BASE_URL + "post/add_like_reply";
+
     public static final String WRITE_COMMENT_API = API_BASE_URL + "post/add_comment_post";
     public static final String REPLY_COMMENT_API = API_BASE_URL + "post/add_comment_reply";
     public static final String LOAD_REPLIES_API = API_BASE_URL + "post/get_sub_comment";
@@ -79,9 +83,11 @@ public class API {
     public static final String GET_POST_COUNT = API_BASE_URL + "profile/getpostcount";
 
     public static final String GET_NOTIFICATIONS = API_BASE_URL + "profile/get_notifications";
+    public static final String READ_NOTIFICATIONS = API_BASE_URL + "profile/read_notification";
 
     public static final String ADD_BUSINESS_REVIEWS = API_BASE_URL + "profile/addbusinessreviews";
     public static final String GET_BUSINESS_REVIEWS = API_BASE_URL + "profile/getbusinessreview";
+    public static final String CANRATEBUSINESS= API_BASE_URL + "profile/can_rate_business";
 
     public static final String ADD_CONNECT_ACCOUNT = API_BASE_URL + "profile/add_connect_account";
     public static final String MAKE_PAYMENT = API_BASE_URL + "profile/make_payment";
@@ -111,7 +117,8 @@ public class API {
     public static final String IS_USERNAME_USED = API_BASE_URL + "auth/is_username_used";
 
     public static final String DELETE_POST = API_BASE_URL + "post/delete_post";
-
+    public static final String DELETE_PRODUCT = API_BASE_URL + "profile/delete_product";
+    public static final String DELETE_SERVICE = API_BASE_URL + "profile/delete_service";
     public static final String GET_CART_PRODUCTS = API_BASE_URL + "post/get_cart_products";
 
     public static final String GET_BUSINESS_ITEMS  =   API_BASE_URL + "profile/get_business_items";
@@ -132,6 +139,7 @@ public class API {
     public static final String CANCEL_BOOKING = API_BASE_URL + "booking/cancel_booking";
     public static final String SEARCH_USER = API_BASE_URL + "booking/search_user";
     public static final String CREATE_BOOKING = API_BASE_URL + "booking/create_booking";
+    public static final String UPDATE_BOOKING = API_BASE_URL + "booking/update_booking";
     public static final String CREATE_DISABLESLOT = API_BASE_URL + "business/add_disabled_slot";
     public static final String DELETE_DISABLESLOT = API_BASE_URL + "business/delete_disabled_slot";
     public static final String FINISHBOOKING = API_BASE_URL + "booking/complete_booking";
@@ -145,4 +153,9 @@ public class API {
     public static final String SEARCH_BUSINESS = API_BASE_URL + "search/business";
     public static final String AUCTION = API_BASE_URL + "auction/auctions";
     public static final String PLACEBID = API_BASE_URL + "auction/placebid";
+
+    public static final String GETTAGS = API_BASE_URL + "profile/get_tags";
+    public static final String ADDTAG = API_BASE_URL + "profile/add_tag";
+    public static final String REMOVETAG = API_BASE_URL + "profile/delete_tag";
+
 }

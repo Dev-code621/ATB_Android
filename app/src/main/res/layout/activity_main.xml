@@ -90,7 +90,7 @@
                 android:layout_gravity="center"
                 app:cardElevation="0dp"
                 android:layout_marginBottom="10dp"
-                app:cardBackgroundColor="@color/line_color"
+                app:cardBackgroundColor="@color/head_color"
                 app:cardUseCompatPadding="false">
                 <TextView
                     android:id="@+id/txv_category"
@@ -99,8 +99,9 @@
                     android:text="@string/my_atb"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    app:textAllCaps="true"
                     android:layout_gravity="center"
-                    style="@style/textTheme"
+                    android:fontFamily="@font/didot_regular"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </androidx.cardview.widget.CardView>
@@ -132,12 +133,15 @@
             android:layout_height="30dp"
             android:layout_weight="1"
             android:src="@drawable/icon_home"
+            android:tint="@color/txt_color"
             android:layout_gravity="center"/>
         <ImageView
             android:id="@+id/imv_search"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_weight="1"
+            android:tint="@color/txt_color"
+
             android:src="@drawable/icon_search"
             android:layout_gravity="center"/>
         <ImageView
@@ -145,6 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_weight="1"
+            android:tint="@color/txt_color"
             android:src="@drawable/icon_addpost"
             android:layout_gravity="center"/>
 
@@ -159,6 +164,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/icon_message"
+                android:tint="@color/txt_color"
                 android:layout_gravity="center"/>
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_unread_chat"

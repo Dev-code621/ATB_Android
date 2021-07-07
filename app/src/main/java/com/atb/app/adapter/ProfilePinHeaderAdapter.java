@@ -269,6 +269,7 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
             public void onClick(View v) {
                 ((CommonActivity)(context)).showToolTip("Current Bids",v,true);
             }
+
         });
         if(type ==1){
             BoostModel boostModel = new BoostModel();

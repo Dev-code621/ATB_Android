@@ -7,6 +7,7 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
+import com.google.android.gms.maps.model.LatLng;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 
@@ -32,6 +33,8 @@ public class Commons {
     public static UserModel selected_user;
     public static VideoPlayerManager<MetaData> mVideoPlayerManager;
     public static String token = "";
+    public static String fbtoken = "";
+    public static String fcmtoken = "";
     public static int location_code = 1100;
     public static String[] Months;
     public static String main_category ="My ATB";
@@ -48,6 +51,7 @@ public class Commons {
     public static int feed_id =-1;
     public static HashMap<String, ArrayList<String>>region = new HashMap<>();
     public static ArrayList<String> county = new ArrayList<>();
+    public static HashMap<String, LatLng>LatLang = new HashMap<>();
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

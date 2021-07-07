@@ -301,7 +301,7 @@
                 app:stl_indicatorInterpolation="linear"
                 app:stl_indicatorThickness="3dp"
                 app:stl_underlineThickness="1dp"
-                app:stl_dividerColor = "@color/head_color"
+                app:stl_dividerColor = "@color/main_color"
                 app:stl_defaultTabTextColor = "@color/head_color"
                 app:stl_underlineColor ="@color/main_color" />
             <androidx.viewpager.widget.ViewPager

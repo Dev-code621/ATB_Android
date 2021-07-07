@@ -84,7 +84,9 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType>0)
                     finish(UpgradeBusinessSplashActivity.this);
                 else
-                    goTo(UpgradeBusinessSplashActivity.this,BusinessProductPostActivity.class,true);
+                    finish(UpgradeBusinessSplashActivity.this);
+                   // goTo(UpgradeBusinessSplashActivity.this,BusinessProductPostActivity.class,true);
+
             }
         });
         txv_next.setOnClickListener(new View.OnClickListener() {

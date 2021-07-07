@@ -5,9 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -62,8 +65,11 @@ import com.atb.app.view.zoom.ZoomAnimation;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.common.internal.service.Common;
+import com.google.android.gms.maps.model.LatLng;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 import com.opencsv.CSVReader;
+import com.shockwave.pdfium.PdfDocument;
+import com.shockwave.pdfium.PdfiumCore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -569,6 +575,8 @@ public abstract class CommonActivity extends BaseActivity {
                 if(Commons.region.get(county) ==null){
                     Commons.region.put(county, new ArrayList<>());
                 }
+                LatLng latLng = new LatLng(Double.parseDouble(line.split(",")[2]),Double.parseDouble(line.split(",")[3]));
+                Commons.LatLang.put(region + ", " + county +", United Kingdom" ,latLng);
                 Commons.region.get(county).add(region);
                 if(duplicateCounty(county))
                     continue;
@@ -595,6 +603,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+                        Log.d("aaaaa",json);
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray =jsonObject.getJSONArray("extra");
@@ -642,5 +651,44 @@ public abstract class CommonActivity extends BaseActivity {
 
     public void getAction(int county, int region){
 
+    }
+
+    //method to get the right URL to use in the intent
+    public String getFacebookPageURL(String pagename) {
+        String FACEBOOK_URL = "https://www.facebook.com/" + pagename;
+
+        PackageManager packageManager = getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + pagename;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
+        }
+    }
+
+    public Bitmap generateImageFromPdf(Uri pdfUri) {
+        int pageNumber = 0;
+        PdfiumCore pdfiumCore = new PdfiumCore(this);
+        try {
+            //http://www.programcreek.com/java-api-examples/index.php?api=android.os.ParcelFileDescriptor
+            ParcelFileDescriptor fd = getContentResolver().openFileDescriptor(pdfUri, "r");
+            PdfDocument pdfDocument = pdfiumCore.newDocument(fd);
+            pdfiumCore.openPage(pdfDocument, pageNumber);
+            int width = pdfiumCore.getPageWidthPoint(pdfDocument, pageNumber);
+            int height = pdfiumCore.getPageHeightPoint(pdfDocument, pageNumber);
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            pdfiumCore.renderPageBitmap(pdfDocument, bmp, pageNumber, 0, 0, width, height);
+            //saveImage(bmp);
+            pdfiumCore.closeDocument(pdfDocument); // important!
+            return bmp;
+        } catch(Exception e) {
+            //todo with exception
+            Log.d("Excetption====", e.toString());
+        }
+        return null;
     }
 }

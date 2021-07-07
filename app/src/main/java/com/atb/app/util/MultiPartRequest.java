@@ -61,7 +61,7 @@ public class MultiPartRequest extends Request<String> {
             entity.writeTo(bos);
 
         } catch (IOException e) {
-            VolleyLog.e("IOException writing to ByteArrayOutputStream");
+            VolleyLog.e(e.toString());
         }
         return bos.toByteArray();
     }

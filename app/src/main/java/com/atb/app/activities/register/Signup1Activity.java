@@ -12,6 +12,7 @@ import androidx.transition.TransitionManager;
 import androidx.transition.TransitionSet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,17 +35,32 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.profile.FollowerAndFollowingActivity;
 import com.atb.app.adapter.EmailAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.UserModel;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Signup1Activity extends CommonActivity implements View.OnClickListener {
@@ -56,7 +72,10 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
     EditText edt_email,edit_confirm_email;
     RecyclerView recyclerView_images,recyclerView_images1;
     ViewGroup sceneRoot;
-
+    CallbackManager callbackManager;
+    private LoginManager loginManager;
+    LoginButton loginButton;
+    String email = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +86,8 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                 Scene.getSceneForLayout(sceneRoot, R.layout.signup_email_layout1, this);
 
       activityAnimation(aScene,R.id.lyt_container);
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
         loadLayout1();
 
     }
@@ -77,12 +98,71 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
         txv_signin = sceneRoot.findViewById(R.id.txv_signin);
         imv_back = findViewById(R.id.imv_back);
         lyt_top = findViewById(R.id.lyt_top);
-
-
+        imv_back.setOnClickListener(this);
 
         lyt_facebook.setOnClickListener(this);
         txv_email.setOnClickListener(this);
         txv_signin.setOnClickListener(this);
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        List< String > permissionNeeds = Arrays.asList( "email");
+        loginButton.setPermissions(permissionNeeds);
+        loginButton.registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {@Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    System.out.println("onSuccess");
+
+                    Commons.fbtoken = "fb_"+ loginResult.getAccessToken()
+                            .getUserId();
+                    Log.i("accessToken",    Commons.fbtoken);
+
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            loginResult.getAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {@Override
+                            public void onCompleted(JSONObject object,
+                                                    GraphResponse response) {
+
+
+                                try {
+                                    String id = object.getString("id");
+                                    try {
+                                        URL profile_pic = new URL(
+                                                "http://graph.facebook.com/" + id + "/picture?type=large");
+                                        Log.i("profile_pic",
+                                                profile_pic + "");
+
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+                                    email = object.getString("email");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                loginManager.getInstance().logOut();
+                                activityAnimation(anotherScene,R.id.lyt_container);
+                                lyt_top.setVisibility(View.GONE);
+                                loadLayout2();
+                            }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields",
+                            "id,name,email,gender, birthday");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
+
+                    @Override
+                    public void onCancel() {
+                        System.out.println("onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("onError");
+                        Log.v("LoginActivity", exception.getCause().toString());
+                    }
+                });
     }
     void  loadLayout2(){
         txv_next = sceneRoot.findViewById(R.id.txv_next);
@@ -99,6 +179,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
         imv_selector1.setOnClickListener(this);
         imv_selector2.setOnClickListener(this);
         txv_next.setOnClickListener(this);
+
         String[] list = getResources().getStringArray(R.array.email_list);
 
         Keyboard();
@@ -172,7 +253,8 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
 
             }
         });
-
+        edt_email.setText(email);
+        edit_confirm_email.setText(email);
     }
 
     void Keyboard() {
@@ -192,7 +274,7 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lyt_facebook:
-                gotoFacebookLogin();
+                loginButton.performClick();
                 break;
             case R.id.txv_email:
                 activityAnimation(anotherScene,R.id.lyt_container);
@@ -236,14 +318,14 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
-                        Log.d("aaaaaaa",json);
+
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
                                 finishAffinity();
                                 goTo(Signup1Activity.this, Signup2Activity.class,false);
                             }else {
-                                showAlertDialog(Commons.token);
+                                showAlertDialog(jsonObject.getString("msg"));
                             }
 
                         }catch (Exception e){
@@ -272,7 +354,9 @@ public class Signup1Activity extends CommonActivity implements View.OnClickListe
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
-    void gotoFacebookLogin(){
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

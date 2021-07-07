@@ -122,6 +122,8 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
         else
             Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.icon_image1).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
+        if(Commons.g_user.getAccount_type()==0) card_business.setVisibility(View.GONE);
+
 
     }
     @Override
@@ -174,7 +176,8 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                 }
                 break;
             case R.id.lyt_profile:
-                SelectprofileDialog(this);
+                if(Commons.g_user.getAccount_type()==1)
+                    SelectprofileDialog(this);
 
                 break;
             case R.id.txv_post:
@@ -384,7 +387,8 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                                 NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
                                 newsFeedEntity.initModel(jsonPost);
                                 newsFeedEntity.setPost_type(type);
-                                newsFeedEntities.add(newsFeedEntity);
+                                if(newsFeedEntity.getIs_active() == 1)
+                                    newsFeedEntities.add(newsFeedEntity);
                             }
                             postFeedAdapter.setData(newsFeedEntities);
 

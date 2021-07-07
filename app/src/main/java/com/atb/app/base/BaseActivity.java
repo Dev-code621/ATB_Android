@@ -129,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
         _progressDlg = null;
     }
 
-    public static void showAlertDialog(String msg) {
+    public void showAlertDialog(String msg) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(_context,R.style.AlertDilogTheme).create();
        // alertDialog.setTitle(getString(R.string.app_name));

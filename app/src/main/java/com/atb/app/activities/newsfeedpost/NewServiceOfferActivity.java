@@ -34,12 +34,19 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
+import com.braintreepayments.api.dropin.DropInActivity;
+import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.VenmoAccountNonce;
+import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
@@ -56,6 +63,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static com.atb.app.commons.Commons.REQUEST_PAYMENT_CODE;
 
 public class NewServiceOfferActivity extends CommonActivity implements View.OnClickListener {
 
@@ -294,7 +304,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             txv_insurance.setVisibility(View.GONE);
             lyt_insurance.setVisibility(View.VISIBLE);
             txv_insurance_name.setText(insuranceModels.get(insurance_id).getCompany() + " " + insuranceModels.get(insurance_id).getReference() );
-            txv_insurance_time.setText("Expires" + insuranceModels.get(insurance_id).getExpiry());
+            txv_insurance_time.setText("Expires\n" + insuranceModels.get(insurance_id).getExpiry());
         }
         txt_cancelday.setText(String.valueOf(candellation));
     }
@@ -454,7 +464,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 finish(this);
                 break;
             case R.id.txv_post:
-                postService();
+                postVerification();
                 break;
             case R.id.imv_videothumnail:
                 videovalue = "";
@@ -493,7 +503,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }
     }
 
-    void postService(){
+    void postVerification(){
         if(media_type==1 && completedValue.size() ==0){
             showAlertDialog("Please add image for your service");
             return;
@@ -517,6 +527,20 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             showAlertDialog("Please input payment option.");
             return;
         }
+        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+            GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+            confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+                @Override
+                public void onConfirm() {
+                    getPaymentToken();
+                }
+            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+        }else
+            postService();
+    }
+    void postService(){
+
         showProgress();
         try {
             String API_LINK =API.ADD_SERVICE,imageTitle = "post_imgs";
@@ -696,7 +720,79 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             reloadVideo();
         }else if(resultCode == Commons.location_code){
             txv_location.setText(Commons.location);
+        }else if (requestCode == REQUEST_PAYMENT_CODE) {
+            if (resultCode == RESULT_OK) {
+                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                Map<String, String> payment_params = new HashMap<>();
+                payment_params.put("token",Commons.token);
+                payment_params.put("paymentMethodNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+                payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+//                    payment_params.put("paymentMethod","Paypal");
+//                }else {
+//                    payment_params.put("paymentMethod","Card");
+//                }
+//                paymentProcessing(payment_params,0);
+
+                String deviceData = result.getDeviceData();
+                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+                    String venmoUsername = venmoAccountNonce.getUsername();
+                }
+                retrievePayPal(payment_params);
+                // use the result to update your UI and send the payment method nonce to your server
+            } else if (resultCode == RESULT_CANCELED) {
+                // the user canceled
+            } else {
+                // handle errors here, an exception may be available in
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                Log.d("error:", error.toString());
+            }
         }
+    }
+
+    void retrievePayPal(Map<String, String> payment_params){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_PP_ADDRESS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                Commons.g_user.setBt_paypal_account(jsonObject.getString("msg"));
+                                postService();
+                            }else {
+                                showAlertDialog(jsonObject.getString("msg"));
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                return payment_params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void reloadImages(){
@@ -716,6 +812,59 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
 
         imv_videoicon.setImageDrawable(getResources().getDrawable(R.drawable.icon_player));
 
+    }
+
+    void getPaymentToken(){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_BRAINTREE_CLIENT_TOKEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        Log.d("afafa",json);
+                        try{
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                String clicent_token = jsonObject.getJSONObject("msg").getString("client_token");
+                                String clicent_id = jsonObject.getJSONObject("msg").getString("customer_id");
+                                Commons.g_user.setBt_customer_id(clicent_id);
+                                DropInRequest dropInRequest = new DropInRequest()
+                                        .clientToken(clicent_token)
+                                        .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+                                        .collectDeviceData(true)
+                                        .vaultManager(true);
+                                startActivityForResult(dropInRequest.getIntent(NewServiceOfferActivity.this), REQUEST_PAYMENT_CODE);
+                            }else {
+                                showAlertDialog("Server Connection Error!");
+
+                            }
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
 }

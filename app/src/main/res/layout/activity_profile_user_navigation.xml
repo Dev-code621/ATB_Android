@@ -18,9 +18,9 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:layout_gravity="end"
         android:background="@color/main_color"
         android:gravity="center_vertical"
+        android:layout_gravity="end"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -181,6 +181,28 @@
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/lyt_item_sold"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/icon_sold"
+                        android:layout_gravity="center" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/textTheme"
+                        android:text="@string/item_sold"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/txt_color"/>
+                </LinearLayout>
+                <LinearLayout
                     android:id="@+id/lyt_tell_frieds"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -203,28 +225,7 @@
                         android:layout_gravity="center"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/lyt_item_sold"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="30dp">
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/icon_sold"
-                        android:layout_gravity="center" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/textTheme"
-                        android:text="@string/item_sold"
-                        android:layout_marginLeft="10dp"
-                        android:textSize="20sp"
-                        android:layout_gravity="center"
-                        android:textColor="@color/txt_color"/>
-                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/lyt_create_bio"
                     android:layout_width="match_parent"
@@ -263,7 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/textTheme"
-                        android:text="@string/set_post_range"
+                        android:text="Location &amp; Radius"
                         android:layout_marginLeft="10dp"
                         android:textSize="20sp"
                         android:layout_gravity="center"

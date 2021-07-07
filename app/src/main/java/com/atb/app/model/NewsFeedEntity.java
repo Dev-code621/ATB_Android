@@ -24,7 +24,7 @@ public class NewsFeedEntity {
     boolean select = false;
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
     String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason;
-    String price,deposit,delivery_cost,is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
+    String price = "0.00",deposit = "0.00",delivery_cost = "0.00",is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
     int payment_options,delivery_option,is_active,is_sold;
     double lat = 0,lng=0;
     int is_multi,multi_pos,scheduled,likes,comments;
@@ -336,6 +336,8 @@ public class NewsFeedEntity {
 
     public void setPrice(String price) {
         this.price = price;
+        if(this.price.equals("null") || this.price.equals(""))
+            this.price = "0.00";
     }
 
     public String getDeposit() {
@@ -643,7 +645,8 @@ public class NewsFeedEntity {
                 deposit = jsonObject.getString("deposit");
             if(jsonObject.has("deposit_amount"))
                 deposit = jsonObject.getString("deposit_amount");
-            is_deposit_required = jsonObject.getString("is_deposit_required");
+            if(jsonObject.has("is_deposit_required"))
+                 is_deposit_required = jsonObject.getString("is_deposit_required");
             category_title = jsonObject.getString("category_title");
             item_title = jsonObject.getString("item_title");
             size_title = jsonObject.getString("size_title");
@@ -662,9 +665,9 @@ public class NewsFeedEntity {
             if(jsonObject.has("status_reason"))
                 status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
-            if(!jsonObject.getString("lat").equals("null"))
+            if(!jsonObject.getString("lat").equals("null") && ! jsonObject.getString("lat").equals(""))
                 lat = jsonObject.getDouble("lat");
-            if(!jsonObject.getString("lng").equals("null"))
+            if(!jsonObject.getString("lng").equals("null") && jsonObject.getString("lng").equals("null"))
                 lng = jsonObject.getDouble("lng");
             if(jsonObject.has("is_multi"))
                 is_multi = jsonObject.getInt("is_multi");
@@ -778,9 +781,9 @@ public class NewsFeedEntity {
             if(jsonObject.has("status_reason"))
                 status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
-            if(!jsonObject.getString("lat").equals("null"))
+            if(!jsonObject.getString("lat").equals("null") && ! jsonObject.getString("lat").equals(""))
                 lat = jsonObject.getDouble("lat");
-            if(!jsonObject.getString("lng").equals("null"))
+            if(!jsonObject.getString("lng").equals("null") && jsonObject.getString("lng").equals("null"))
                 lng = jsonObject.getDouble("lng");
             if(jsonObject.has("is_multi"))
                  is_multi = jsonObject.getInt("is_multi");

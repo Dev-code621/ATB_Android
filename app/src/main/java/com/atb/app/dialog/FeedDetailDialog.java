@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.atb.app.R;
+import com.atb.app.model.NewsFeedEntity;
 
 
 public class FeedDetailDialog extends DialogFragment {
@@ -24,6 +25,7 @@ public class FeedDetailDialog extends DialogFragment {
     private OnConfirmListener listener;
     boolean type ;
     int follower;
+    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,6 +37,13 @@ public class FeedDetailDialog extends DialogFragment {
         this.listener = listener;
         this.type = type;
         this.follower = follower;
+        return null;
+    }
+    public FeedDetailDialog setOnConfirmListener(OnConfirmListener listener, boolean type, int follower, NewsFeedEntity newsFeedEntity) {
+        this.listener = listener;
+        this.type = type;
+        this.follower = follower;
+        this.newsFeedEntity = newsFeedEntity;
         return null;
     }
     @Override
@@ -53,10 +62,21 @@ public class FeedDetailDialog extends DialogFragment {
         TextView txv_block = view.findViewById(R.id.txv_block);
         TextView txv_canel = view.findViewById(R.id.txv_canel);
         if(!type){
-            lyt_block.setVisibility(View.GONE);
-            txv_report.setText("Delete");
-            imv_report.setImageDrawable(getResources().getDrawable(R.drawable.file_trash));
-            imv_report.setColorFilter(getResources().getColor(R.color.discard_color), PorterDuff.Mode.SRC_IN);
+            if(newsFeedEntity.getPost_type()!=2){
+                lyt_report.setVisibility(View.GONE);
+            }else {
+                if(newsFeedEntity.getIs_sold() ==0){
+                    txv_report.setText("Sold out");
+                }else {
+                    txv_report.setText("Re-list");
+                }
+                imv_report.setImageDrawable(getResources().getDrawable(R.drawable.icon_sales));
+                imv_report.setColorFilter(getResources().getColor(R.color.discard_color), PorterDuff.Mode.SRC_IN);
+            }
+            txv_block.setText("Delete");
+            imv_block.setImageDrawable(getResources().getDrawable(R.drawable.file_trash));
+            imv_block.setColorFilter(getResources().getColor(R.color.discard_color), PorterDuff.Mode.SRC_IN);
+            txv_block.setTextColor(getResources().getColor(R.color.discard_color));
             txv_follow.setText("Edit");
             imv_follow.setImageDrawable(getResources().getDrawable(R.drawable.icon_edit));
         }else {

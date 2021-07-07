@@ -23,10 +23,60 @@
         android:paddingTop="20dp"
         android:background="@drawable/comment_border_round">
         <LinearLayout
+            android:id="@+id/lyt_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your products will display here, add a new one "
+                style="@style/textTheme"
+                android:textSize="14sp"
+                android:textColor="@color/txt_color"
+                android:layout_gravity="center"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="By clicking"
+                    style="@style/textTheme"
+                    android:textSize="14sp"
+
+                    android:textColor="@color/txt_color"
+                    android:layout_gravity="center"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_round_plus"
+                    app:tint="@color/txt_color" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add a Product"
+                    android:textSize="16sp"
+                    style="@style/boldtextTheme"
+                    android:textColor="@color/txt_color"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/lyt_addproduct"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@drawable/edit_rectangle_round"
+            android:background="@drawable/button_rectangle_boder_round"
             android:layout_marginTop="10dp"
             android:gravity="center">
             <ImageView
@@ -36,13 +86,14 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/icon_plus" />
+                android:src="@drawable/ic_round_plus"
+                app:tint="@color/txt_color" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/newproduct"
                 android:layout_centerVertical="true"
-                android:textColor="@color/head_color"
+                android:textColor="@color/txt_color"
                 style="@style/btn_buttonStyle"
                 android:singleLine="true"
                 android:layout_gravity="center" />
@@ -53,6 +104,7 @@
             android:layout_height="60dp"
             android:background="@drawable/button_rectangle_round"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:gravity="center">
             <ImageView
                 android:layout_width="20dp"

@@ -2,6 +2,7 @@ package com.atb.app.activities.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -251,12 +252,19 @@ public class SearchActivity extends CommonActivity implements View.OnClickListen
     }
     @Override
     public void UserProfile(UserModel userModel,int usertype){
-        Gson gson = new Gson();
-        String usermodel = gson.toJson(userModel);
-        Bundle bundle = new Bundle();
-        bundle.putString("userModel",usermodel);
-        bundle.putInt("userType",usertype);
-        goTo(this, OtherUserProfileActivity.class,false,bundle);
+        if(userModel.getId()==Commons.g_user.getId()){
+            if(Commons.g_user.getAccount_type()==1)
+                startActivityForResult(new Intent(this, ProfileBusinessNaviagationActivity.class),1);
+            else
+                goTo(this, ProfileUserNavigationActivity.class,false);
+        }else {
+            Gson gson = new Gson();
+            String usermodel = gson.toJson(userModel);
+            Bundle bundle = new Bundle();
+            bundle.putString("userModel", usermodel);
+            bundle.putInt("userType", usertype);
+            goTo(this, OtherUserProfileActivity.class, false, bundle);
+        }
     }
 
 }

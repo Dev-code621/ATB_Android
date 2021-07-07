@@ -64,7 +64,7 @@ public class PaymentBookingDialog extends DialogFragment {
         LinearLayout lyt_paypal = view.findViewById(R.id.lyt_paypal);
         ImageView imv_paypal = view.findViewById(R.id.imv_paypal);
         TextView txv_paypal = view.findViewById(R.id.txv_paypal);
-
+        TextView txv_paypal_address = view.findViewById(R.id.txv_paypal_address);
         LinearLayout lyt_cash = view.findViewById(R.id.lyt_cash);
         ImageView imv_cash = view.findViewById(R.id.imv_cash);
         TextView txv_cash1 = view.findViewById(R.id.txv_cash1);
@@ -91,7 +91,7 @@ public class PaymentBookingDialog extends DialogFragment {
                 imv_cash2.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 txv_cash1.setTextColor(getResources().getColor(R.color.txt_color));
                 txv_cash2.setTextColor(getResources().getColor(R.color.head_color));
-                txv_pay.setText("Pay £" +total_price );
+                txv_pay.setText("Pay £" +String.format("%.2f",total_price) );
                 payment_type = 0;
 
             }
@@ -118,6 +118,7 @@ public class PaymentBookingDialog extends DialogFragment {
             public void onClick(View v) {
                 if(payment_type>=0) {
                     listener.onConfirm(payment_type,total_price);
+
                     dismiss();
                 }
             }
@@ -125,12 +126,14 @@ public class PaymentBookingDialog extends DialogFragment {
 
         Glide.with(getContext()).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.profile_pic).into(imv_image);
 
-        txv_price.setText("£"+ newsFeedEntity.getPrice());
+
         total_price = Double.parseDouble(newsFeedEntity.getPrice());
-        txv_name.setText(newsFeedEntity.getBrand());
+        txv_price.setText("£"+ String.format("%.2f",total_price));
+        txv_name.setText(newsFeedEntity.getTitle());
         if (selected_Variation.size() > 0) {
             VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
-            txv_price.setText("£"+ variationModel.getPrice());
+            txv_price.setText("£"+ String.format("%.2f",Float.parseFloat(variationModel.getPrice())));
+
             total_price = Double.parseDouble(variationModel.getPrice());
         }
         if(type==1){
@@ -143,10 +146,12 @@ public class PaymentBookingDialog extends DialogFragment {
         }else if(type ==5){
             txv_type.setText("Deliver");
             imv_type.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_postage));
-            txv_delivery_cost.setText("+£" + newsFeedEntity.getDelivery_cost());
+            txv_delivery_cost.setText("+£" + String.format("%.2f",Float.parseFloat(newsFeedEntity.getDelivery_cost())));
             total_price += Double.parseDouble(newsFeedEntity.getDelivery_cost());
         }
-
+        txv_pay.setText("Pay £" +String.format("%.2f",total_price) );
+        txv_paypal_address.setText(Commons.g_user.getBt_paypal_account());
+        if(Commons.g_user.getBt_paypal_account().equals(""))txv_paypal_address.setVisibility(View.GONE);
     }
 
 

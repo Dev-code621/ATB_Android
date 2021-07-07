@@ -92,11 +92,11 @@ public class VotingListAdapter  extends BaseAdapter {
         holder.txv_percentage.setTextColor(_context.getResources().getColor(R.color.txt_color));
         holder.txv_name.setTextColor(_context.getResources().getColor(R.color.txt_color));
         holder.main_progressview.setProgress(percentage);
-        holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.head_color));
+        holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.progress_color));
 
         if(Commons.myVoting(votingModel)){
             holder.card_check.setVisibility(View.VISIBLE);
-            holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.head_color));
+            holder.main_progressview.setProgressColor(_context.getResources().getColor(R.color.progress_color));
             holder.txv_percentage.setTextColor(_context.getResources().getColor(R.color.white));
             holder.txv_name.setTextColor(_context.getResources().getColor(R.color.white));
         }else{

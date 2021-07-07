@@ -90,6 +90,10 @@ public class PurchasesActivity extends CommonActivity {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
                                 JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                if(jsonArray.length()==0){
+                                    showAlertDialog("No any purchase yet!");
+                                    return;
+                                }
                                 transactionEntities.clear();
                                 for(int i =0;i<jsonArray.length();i++){
                                     JSONObject object = jsonArray.getJSONObject(i);
@@ -112,8 +116,10 @@ public class PurchasesActivity extends CommonActivity {
                                     transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
                                     transactionEntities.add(transactionEntity);
                                 }
-                                soldHeaderAdapter = new SoldHeaderAdapter(PurchasesActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,transactionEntities);
-                                recyclerView.setAdapter(soldHeaderAdapter);
+                                if(transactionEntities.size()>0) {
+                                    soldHeaderAdapter = new SoldHeaderAdapter(PurchasesActivity.this, true, false, false, SHOW_ADAPTER_POSITIONS, transactionEntities);
+                                    recyclerView.setAdapter(soldHeaderAdapter);
+                                }
                             }
                         }catch (Exception e){
                             Log.d("exception", e.toString());

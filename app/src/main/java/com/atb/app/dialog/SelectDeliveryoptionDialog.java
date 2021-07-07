@@ -36,6 +36,8 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
     NewsFeedEntity newsFeedEntity =new NewsFeedEntity();
     boolean postage = false,collect = false,deliver =false;
     int selected_type =-1;
+    double total_price;
+    TextView txv_buy_sale;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
         txv_cost =(TextView) view.findViewById(R.id.txv_cost);
         txv_type =(TextView) view.findViewById(R.id.txv_type);
         txv_description =(TextView) view.findViewById(R.id.txv_description);
-        TextView txv_buy_sale =(TextView) view.findViewById(R.id.txv_buy_sale);
+        txv_buy_sale =(TextView) view.findViewById(R.id.txv_buy_sale);
         LinearLayout lyt_location = (LinearLayout) view.findViewById(R.id.lyt_location);
         imv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +125,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             }
         });
         int delivery_cost = newsFeedEntity.getDelivery_option();
+        total_price = Double.parseDouble(newsFeedEntity.getPrice());
         if(delivery_cost-5>=0){
             delivery_cost -=5;
             deliver = true;
@@ -135,10 +138,12 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
 
         txv_deliver.setText("+£" + newsFeedEntity.getDelivery_cost());
 
+        txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price));
 
     }
     void selectItem(int type){
         selected_type = -1;
+        txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price));
         if(type==0){
             if(!postage){
                 ((CommonActivity)getContext()).showAlertDialog("The option was disabled by the seller!");
@@ -148,6 +153,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             txv_type.setText("Free postage");
             txv_description.setText(getContext().getResources().getString(R.string.str_postage) +" " +  newsFeedEntity.getPost_location());
             selected_type = 1;
+
         }else if(type ==1){
             if(!collect){
                 ((CommonActivity)getContext()).showAlertDialog("The option was disabled by the seller!");
@@ -164,9 +170,11 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_deliver));
             txv_type.setText("Deliver");
-            txv_description.setText(getContext().getResources().getString(R.string.str_postage) +" " +  newsFeedEntity.getPost_location());
+            txv_description.setText("This product includes delivery cost £" + String.format("%.2f",Double.parseDouble(newsFeedEntity.getDelivery_cost()) )+ " at your current location:" +" " +  newsFeedEntity.getPost_location());
             txv_cost.setText(newsFeedEntity.getDelivery_cost());
             selected_type = 5;
+
+            txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price+ Double.parseDouble(newsFeedEntity.getDelivery_cost()) ));
         }
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_next);
         if(type ==3){

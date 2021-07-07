@@ -33,7 +33,7 @@ public  class UserModel {
     SettingInfoModel settingInfoModel = new SettingInfoModel();
     ArrayList<FeedInfoModel>feedInfoModels = new ArrayList<>();
     ArrayList<FollowerModel>followerModels = new ArrayList<>();
-    String bt_customer_id,bt_paypal_account;
+    String bt_customer_id,bt_paypal_account= "";
     double distance = 0.0;
 
     public double getDistance() {

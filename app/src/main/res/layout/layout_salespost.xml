@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/media_type"
                     style="@style/boldtextTheme"
@@ -214,25 +214,45 @@
                     </androidx.core.widget.NestedScrollView>
                 </LinearLayout>
             </FrameLayout>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                style="@style/boldtextTheme"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/txt_color"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" />
             <EditText
                 android:id="@+id/edt_title"
                 style="@style/edit_inputtext"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:hint="@string/writtle_title"
+                android:hint="Write a title for your Product"
                 android:inputType="text"
+                android:layout_marginTop="10dp"
                 android:textSize="15sp"
                 android:theme="@style/textTheme"
                 android:singleLine="true" />
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                style="@style/boldtextTheme"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/txt_color"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" />
             <EditText android:id="@+id/edt_description"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:maxLines="5"
                 android:hint="@string/description"
-                android:layout_marginTop="10dp"
                 android:paddingTop="15dp"
+                android:layout_marginTop="10dp"
                 android:textSize="15sp"
                 android:theme="@style/textTheme"
                 style="@style/edit_inputtext"
@@ -243,7 +263,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/brand"
                     style="@style/boldtextTheme"
@@ -270,7 +290,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/price"
                     style="@style/boldtextTheme"
@@ -306,7 +326,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/post_in"
                     style="@style/boldtextTheme"
@@ -332,7 +352,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/condition"
                     style="@style/boldtextTheme"
@@ -356,9 +376,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/tag"
                     style="@style/boldtextTheme"
@@ -381,9 +402,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/item"
                     style="@style/boldtextTheme"
@@ -409,9 +431,9 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/stock"
+                    android:text="Quantity"
                     style="@style/boldtextTheme"
                     android:textColor="@color/txt_color"
                     android:textSize="16sp"
@@ -675,7 +697,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/location"
                     style="@style/boldtextTheme"
@@ -805,7 +827,7 @@
                 android:gravity="center_vertical"
                 android:visibility="gone">
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Cost"
                     style="@style/boldtextTheme"
