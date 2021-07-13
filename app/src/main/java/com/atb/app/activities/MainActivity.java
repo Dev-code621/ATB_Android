@@ -26,15 +26,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
+import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
+import com.atb.app.activities.navigationItems.booking.MyBookingViewActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.ReviewActivity;
 import com.atb.app.activities.profile.boost.BoostActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
+import com.atb.app.activities.profile.boost.PinPointActivity;
+import com.atb.app.activities.profile.boost.ProfilePinActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.adapter.BoostItemAdapter;
 import com.atb.app.api.API;
@@ -48,11 +55,13 @@ import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
+import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.kittinunf.fuel.core.BodyKt;
 import com.google.android.gms.common.internal.service.Common;
 import com.google.gson.Gson;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
@@ -85,9 +94,11 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     BoostItemAdapter boostAdapter ;
     ChatFragment chatFragment;
     ImageView imv_title;
+    int noti_type, related_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Commons.g_mainActivity = this;
         setContentView(R.layout.activity_main);
         imv_search = findViewById(R.id.imv_search);
         imv_profile = findViewById(R.id.imv_profile);
@@ -160,15 +171,135 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         recycler_view_boost.setAdapter(boostAdapter);
         getProfilepines();
 
-        getFirebaseToken();
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                noti_type= Integer.parseInt(bundle.getString("type"));
+                related_id= Integer.parseInt(bundle.getString("related_id"));
+                processNotification();
+            }
+        }
     }
 
-    void getFirebaseToken(){
-        //this.startService(new Intent(this, FcmMessagingService.class));
+    void processNotification(){
+        if(noti_type == 1 || noti_type == 2 || noti_type ==3 ){
+            Bundle bundle = new Bundle();
+            bundle.putInt("postId",related_id);
+            bundle.putBoolean("CommentVisible",true);
+            startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
+        }else if(noti_type ==4){
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("bussiness",(Commons.g_user.getAccount_type()==1)? true : false);
+            goTo(this, ItemSoldActivity.class,false,bundle);
+        }else if(noti_type ==6 || noti_type == 7 || noti_type ==8 || noti_type ==9){
+            getBookingByID();
+        }else if(noti_type ==10 || noti_type ==13){
+            Gson gson = new Gson();
+            String usermodel = gson.toJson(Commons.g_user);
+            Bundle bundle = new Bundle();
+            bundle.putString("userModel",usermodel);
+            goTo(this,ReviewActivity.class,false,bundle);
+        }else if(noti_type == 11 ){
+            Bundle bundle = new Bundle();
+            bundle.putInt("postId",related_id);
+            bundle.putBoolean("CommentVisible",true);
+            startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
+        }else if(noti_type == 12){
+            goTo(this, TransactionHistoryActivity.class,false);
+        }else if(noti_type ==14){
 
+        }else if(noti_type ==15){
+            Bundle bundle = new Bundle();
+            bundle.putString("type", String.valueOf(30));
+            bundle.putString("related_id", String.valueOf(related_id));
+            goTo(this, SplashActivity.class,true,bundle);
+        }else if(noti_type ==16) {
+            goTo(this, ProfileBusinessNaviagationActivity.class, false);
+        }else if(noti_type ==17) {
+            getuserProfile(related_id,0);
+
+        }else if(noti_type == 18 || noti_type == 19 || noti_type == 20  || noti_type == 21 || noti_type == 22){
+            Bundle bundle = new Bundle();
+            bundle.putInt("postId",related_id);
+            bundle.putBoolean("CommentVisible",true);
+            startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
+        } else if(noti_type ==23) {
+            goTo(this, ProfileBusinessNaviagationActivity.class, false);
+        }else if(noti_type ==24) {
+            goTo(this, ProfilePinActivity.class, false);
+        }else if(noti_type ==25) {
+            goTo(this, PinPointActivity.class, false);
+        }else if(noti_type ==26) {
+        }else if(noti_type ==27) {
+            setColor(1);
+        }else if(noti_type ==28) {
+            goTo(this, ProfilePinActivity.class, false);
+        }else if(noti_type ==29) {
+            goTo(this, PinPointActivity.class, false);
+        }else if(noti_type ==30) {
+
+            goTo(this, ProfileBusinessNaviagationActivity.class, false);
+        }
     }
 
 
+
+    void getBookingByID(){
+    showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_INDIVIDUAL_BOOKING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            BookingEntity bookingEntity = new BookingEntity();
+                            JSONArray jsonArray = jsonObject.getJSONArray("extra");
+                            if(jsonArray.length()>0)
+                                bookingEntity.initModel(jsonArray.getJSONObject(0));
+                            Bundle bundle = new Bundle();
+                            Gson gson = new Gson();
+                            String bookingModel = gson.toJson(bookingEntity);
+                            bundle = new Bundle();
+                            bundle.putString("bookModel",bookingModel);
+
+                            if(noti_type ==9){
+                                startActivityForResult(new Intent(MainActivity.this, MyBookingViewActivity.class).putExtra("data", bundle), 1);
+                                overridePendingTransition(0, 0);
+                            }else {
+                                startActivityForResult(new Intent(MainActivity.this, BookingViewActivity.class).putExtra("data", bundle), 1);
+                                overridePendingTransition(0, 0);
+                            }
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("booking_id", String.valueOf(related_id));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

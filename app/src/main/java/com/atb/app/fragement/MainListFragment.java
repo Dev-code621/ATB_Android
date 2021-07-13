@@ -193,6 +193,7 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                 bundle.putInt("postId",Commons.feed_id);
                 bundle.putBoolean("CommentVisible",true);
                 startActivityForResult(new Intent(context, NewsDetailActivity.class).putExtra("data",bundle),1);
+                Commons.feed_id = -1;
             }
 
 

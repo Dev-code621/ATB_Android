@@ -29,6 +29,4 @@ public class Constants {
             "With a business account you won’t\nhave to worry about the Delivery",
             "Use our tool and get better promotions",
             "You post will highlight between the\nregular post, you will have more\nchances to being viewed."};
-
-
 }

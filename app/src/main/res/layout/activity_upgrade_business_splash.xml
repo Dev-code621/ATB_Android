@@ -85,7 +85,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Less than £0.25/day"
+        android:text="Only £4.99 per month"
         style="@style/boldtextTheme"
         android:gravity="center"
         android:textColor="@color/white"
@@ -109,6 +109,7 @@
         android:text="For the first 500 and then £7.99/month\nthereafter"
         style="@style/boldtextTheme"
         android:gravity="center"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:layout_marginTop="10dp"/>

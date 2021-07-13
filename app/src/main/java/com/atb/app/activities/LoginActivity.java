@@ -79,10 +79,14 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
     CallbackManager callbackManager;
     private LoginManager loginManager;
     LoginButton loginButton;
+    Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (getIntent() != null) {
+            bundle = getIntent().getBundleExtra("data");
+        }
         txv_login = findViewById(R.id.txv_login);
         txv_signup = findViewById(R.id.txv_signup);
         lyt_facebook = findViewById(R.id.lyt_facebook);
@@ -436,7 +440,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     loginApplozic(true);
                 else
                     loginApplozic(false);
-                goTo(LoginActivity.this, MainActivity.class,true);
+                goTo(LoginActivity.this, MainActivity.class,true,bundle);
                 //goTo(LoginActivity.this, UpdateBusinessActivity.class,true);
 
             }

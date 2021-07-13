@@ -187,7 +187,7 @@
         app:floatingSearch_dimBackground="false"
         app:floatingSearch_dismissOnOutsideTouch="true"
         app:floatingSearch_leftActionMode="showHamburger"
-        app:floatingSearch_searchHint="Search..."
+        app:floatingSearch_searchHint="Search by Borough e.g. Havering"
         app:floatingSearch_showSearchKey="true"
         android:layout_marginTop="130dp"
         android:layout_marginLeft="20dp"

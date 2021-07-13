@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.transition.ChangeBounds;
@@ -66,6 +67,10 @@ import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 import com.opencsv.CSVReader;
 import com.shockwave.pdfium.PdfDocument;
@@ -91,7 +96,6 @@ import java.util.TimeZone;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
-
 
 public abstract class CommonActivity extends BaseActivity {
 
@@ -691,4 +695,21 @@ public abstract class CommonActivity extends BaseActivity {
         }
         return null;
     }
+
+    public void getFirebaseToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d("Exception", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        Commons.fcmtoken = task.getResult();
+                        Log.d("token====",Commons.fcmtoken);
+                    }
+                });
+    }
+
 }

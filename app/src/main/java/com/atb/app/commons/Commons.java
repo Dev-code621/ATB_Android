@@ -2,11 +2,13 @@ package com.atb.app.commons;
 
 import android.util.DisplayMetrics;
 
+import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
+import com.atb.app.service.BackgroundService;
 import com.google.android.gms.maps.model.LatLng;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
@@ -23,6 +25,7 @@ import java.util.TimeZone;
 public class Commons {
     public static boolean g_isAppRunning=false;
     public static CommonActivity g_commentActivity = null;
+    public static MainActivity g_mainActivity = null;
     public static ProfileUserNavigationActivity profileUserNavigationActivity = null;
     public static boolean traffic = true;
     public static float zoom = 0f;
@@ -52,6 +55,7 @@ public class Commons {
     public static HashMap<String, ArrayList<String>>region = new HashMap<>();
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();
+    public static BackgroundService backgroundService ;
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);
