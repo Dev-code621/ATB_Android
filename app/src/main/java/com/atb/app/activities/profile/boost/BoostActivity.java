@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 public class BoostActivity extends CommonActivity implements View.OnClickListener {
-    ImageView imv_profile,icon_back;
+    ImageView imv_profile,icon_back,imv_profile_pin,imv_pin_point;
     FrameLayout lyt_profile_pin,lyt_pin_point;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +25,14 @@ public class BoostActivity extends CommonActivity implements View.OnClickListene
         icon_back = findViewById(R.id.icon_back);
         lyt_profile_pin = findViewById(R.id.lyt_profile_pin);
         lyt_pin_point = findViewById(R.id.lyt_pin_point);
+        imv_pin_point = findViewById(R.id.imv_pin_point);
+        imv_profile_pin = findViewById(R.id.imv_profile_pin);
 
         lyt_profile_pin.setOnClickListener(this);
         lyt_pin_point.setOnClickListener(this);
         icon_back.setOnClickListener(this);
+        imv_profile_pin.setOnClickListener(this);
+        imv_pin_point.setOnClickListener(this);
         Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.icon_boost_profile).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
     }
@@ -40,9 +44,15 @@ public class BoostActivity extends CommonActivity implements View.OnClickListene
                 finish(this);
                 break;
             case R.id.lyt_profile_pin:
-                goTo(this,ProfilePinAnimationActivity.class,false);
+                goTo(this,ProfilePinActivity.class,false);
                 break;
             case R.id.lyt_pin_point:
+                goTo(this,PinPointActivity.class,false);
+                break;
+            case R.id.imv_profile_pin:
+                goTo(this,ProfilePinAnimationActivity.class,false);
+                break;
+            case R.id.imv_pin_point:
                 goTo(this,PinPointAnimationActivity.class,false);
                 break;
         }

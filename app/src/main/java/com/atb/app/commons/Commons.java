@@ -56,6 +56,9 @@ public class Commons {
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();
     public static BackgroundService backgroundService ;
+    public static int notification_count = 0;
+
+
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

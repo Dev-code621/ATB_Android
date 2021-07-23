@@ -64,7 +64,7 @@ public class PinPointAnimationActivity extends CommonActivity {
         lyt_pin_point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goTo(PinPointAnimationActivity.this,PinPointActivity.class,false);
+                goTo(PinPointAnimationActivity.this,PinPointActivity.class,true);
             }
         });
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);

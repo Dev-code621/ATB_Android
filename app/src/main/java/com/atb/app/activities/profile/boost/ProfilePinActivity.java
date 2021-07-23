@@ -52,6 +52,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
     ImageView imv_back;
     ProfilePinHeaderAdapter soldHeaderAdapter ;
     int county =0,region =0;
+    int k=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,6 +200,9 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
             }
         }
         soldHeaderAdapter.setRoomData(arrayList,county,region);
+        if(k>0)
+        showAlertDialog("Your bid has been placed successfully.");
+        k++;
     }
 
     @Override

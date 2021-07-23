@@ -10,7 +10,7 @@
     android:id="@+id/lyt_container">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:background="@drawable/background_boost2">
     <LinearLayout
         android:id="@+id/lyt_back"
@@ -22,6 +22,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="50dp"
+            android:visibility="gone"
             android:src="@drawable/boost_profileicon"
             android:layout_marginLeft="40dp"/>
 
@@ -29,14 +30,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile\nPin"
+        android:text="Top Spot"
         style="@style/boldtextTheme"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:orientation="vertical"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/lyt_back"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="30dp"/>
         <ImageView
             android:id="@+id/imv_back"
             android:layout_width="30dp"
@@ -58,10 +59,10 @@
             android:layout_height="wrap_content"
             style="@style/boldtextTheme"
             android:textColor="@color/txt_color"
-            android:text="Where would you like to pin your profile?"
+            android:text="Which group would you like to promote this Tag World?"
             android:gravity="center"
             android:layout_marginTop="20dp"
-            android:textSize="17sp"/>
+            android:textSize="15sp"/>
         <org.angmarch.views.NiceSpinner
             android:id="@+id/spiner_category_type"
             android:layout_width="180dp"
@@ -70,7 +71,7 @@
             android:singleLine="true"
             android:layout_height="wrap_content"
             app:entries="@array/category_type"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:popupTextAlignment="center"
             android:textAlignment="center"
             android:layout_gravity="center"
@@ -92,8 +93,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#8BA5C9"
-            android:text="Actuation ends in:"
+            android:text="Auction ends in:"
             android:gravity="center"
+            android:textSize="14sp"
             android:theme="@style/boldtextTheme"
             android:padding="5dp"/>
         <LinearLayout
@@ -106,7 +108,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
                 <LinearLayout
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"
@@ -118,14 +121,14 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/boldtextTheme"
                         android:text="02"
-                        android:textSize="33sp"
+                        android:textSize="30sp"
                         android:textColor="@color/white"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/textTheme"
                         android:text="DAYS"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textColor="@color/white"/>
                 </LinearLayout>
                 <TextView
@@ -133,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/boldtextTheme"
                     android:text=":"
-                    android:textSize="33sp"
+                    android:textSize="30sp"
                     android:layout_gravity="top"
                     android:textColor="@color/boder_color"/>
                 <LinearLayout
@@ -147,14 +150,14 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/boldtextTheme"
                         android:text="23"
-                        android:textSize="33sp"
+                        android:textSize="30sp"
                         android:textColor="@color/white"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/textTheme"
                         android:text="HOURS"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textColor="@color/white"/>
                 </LinearLayout>
                 <TextView
@@ -162,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/boldtextTheme"
                     android:text=":"
-                    android:textSize="33sp"
+                    android:textSize="30sp"
                     android:layout_gravity="top"
                     android:textColor="@color/boder_color"/>
                 <LinearLayout
@@ -176,14 +179,14 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/boldtextTheme"
                         android:text="02"
-                        android:textSize="33sp"
+                        android:textSize="30sp"
                         android:textColor="@color/white"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/textTheme"
                         android:text="MINUTES"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textColor="@color/white"/>
                 </LinearLayout>
                 <TextView
@@ -191,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/boldtextTheme"
                     android:text=":"
-                    android:textSize="33sp"
+                    android:textSize="30sp"
                     android:layout_gravity="top"
                     android:textColor="@color/boder_color"/>
                 <LinearLayout
@@ -205,19 +208,20 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/boldtextTheme"
                         android:text="02"
-                        android:textSize="33sp"
+                        android:textSize="30sp"
                         android:textColor="@color/white"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:theme="@style/textTheme"
                         android:text="SECONDS"
-                        android:textSize="17sp"
+                        android:textSize="15sp"
                         android:textColor="@color/white"/>
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/lyt_save"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"

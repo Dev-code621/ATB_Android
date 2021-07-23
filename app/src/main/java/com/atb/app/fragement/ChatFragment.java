@@ -98,6 +98,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        if(Commons.notification_count>0)
+            card_unread_noti.setVisibility(View.VISIBLE);
+        else
+            card_unread_noti.setVisibility(View.GONE);
     }
 
     public void getLastmessage(){

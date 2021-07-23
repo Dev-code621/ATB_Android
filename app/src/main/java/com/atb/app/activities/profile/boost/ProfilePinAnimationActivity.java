@@ -47,7 +47,7 @@ public class ProfilePinAnimationActivity extends CommonActivity {
         lyt_profile_pin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goTo(ProfilePinAnimationActivity.this,ProfilePinActivity.class,false);
+                goTo(ProfilePinAnimationActivity.this,ProfilePinActivity.class,true);
             }
         });
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);

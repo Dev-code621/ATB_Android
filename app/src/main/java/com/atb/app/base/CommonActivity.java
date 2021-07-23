@@ -708,8 +708,43 @@ public abstract class CommonActivity extends BaseActivity {
                         // Get new FCM registration token
                         Commons.fcmtoken = task.getResult();
                         Log.d("token====",Commons.fcmtoken);
+                        uploadToken();
                     }
                 });
+    }
+
+    void uploadToken(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.UPDATE_NOTIFCATION_TOKEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token",Commons.token);
+                params.put("push_token",Commons.fcmtoken);
+                Log.d("aaaaaaaa====",params.toString());
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
 }

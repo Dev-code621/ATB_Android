@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.diffey.view.progressview:progressview:0.3.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce877255306b64eae6588ab8fd7a7bd5/jetified-progressview-0.3.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce877255306b64eae6588ab8fd7a7bd5/jetified-progressview-0.3.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce877255306b64eae6588ab8fd7a7bd5/jetified-progressview-0.3.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.diffey.view.progressview/progressview/0.3.1/5b3504531e7f550bf166a9d0ba0b83d35f9fe625/progressview-0.3.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.diffey.view.progressview/progressview/0.3.1/a097d861565525a3759232afa51bfefd6e1c7b65/progressview-0.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

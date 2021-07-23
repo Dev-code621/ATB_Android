@@ -69,7 +69,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
         if(subscriptionType>0){
             txv_next.setText("Upgrade Now Only £4.99/Month");
         }
-        for(int i =0;i<9;i++){
+        for(int i =0;i<Constants.slideImage.length;i++){
             SlideModel slideModel = new SlideModel();
             slideModel.setImv_pic(Constants.slideImage[i]);
             slideModel.setTitle(Constants.slideTitle[i]);

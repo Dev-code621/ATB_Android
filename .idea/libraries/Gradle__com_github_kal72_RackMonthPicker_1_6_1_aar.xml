@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.kal72:RackMonthPicker:1.6.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/637b7432dd6c217c2d4c896816496fd5/jetified-RackMonthPicker-1.6.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/637b7432dd6c217c2d4c896816496fd5/jetified-RackMonthPicker-1.6.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/637b7432dd6c217c2d4c896816496fd5/jetified-RackMonthPicker-1.6.1/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.kal72/RackMonthPicker/1.6.1/1c52423ba583d70808efe3203025863fe2748cc5/RackMonthPicker-1.6.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

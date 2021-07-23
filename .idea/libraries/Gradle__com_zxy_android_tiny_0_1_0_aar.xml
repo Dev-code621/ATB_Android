@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: com.zxy.android:tiny:0.1.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/43811be4632ddc5e53571f168170b16c/jetified-tiny-0.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c99b12f1251e30e9bcece1719976168f/jetified-tiny-0.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d355fdc37685cf72b4601faff8138baa/jetified-tiny-0.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6f789b9beba4389dfbd878f969a5118f/jetified-tiny-0.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6f789b9beba4389dfbd878f969a5118f/jetified-tiny-0.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6f789b9beba4389dfbd878f969a5118f/jetified-tiny-0.1.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.zxy.android/tiny/0.1.0/520b64ee64422c5bb35a832c55b93f1e904b0ee5/tiny-0.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.zxy.android/tiny/0.1.0/9d7cbefa35567490c1a4ff4bd1b04c88e5431621/tiny-0.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -49,7 +49,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="40dp"
-                    android:text="ATB Business"
+                    android:text="ATB Directory"
                     android:gravity="center"
                     android:textColor="@color/head_color"
                     style="@style/btn_buttonStyle"

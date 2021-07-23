@@ -52,20 +52,6 @@ public class BackgroundService extends LifecycleService {
     @SuppressLint("MissingSuperCall")
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                       Log.d("aaaaa","okay");
-                    }
-                });
-            }
-        }, 1000, 1000);
-
         return START_STICKY;
     }
 

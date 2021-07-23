@@ -252,7 +252,7 @@
         \n\nBids begin on Monday at <font color='#A6BFDE'><b>00:00</b></font> with each pin starting at <font color='#A6BFDE'><b>£ 5.00</b></font> with the auction process lasting for one week, during this time all businesses can bid to have their profile promoted.
         \n\nOnce the bidding process has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bid will have their Logo pinned to the top of the feed which will be linked to their profile.
         \n\nAdditionally, each business will have a post of their Store Profile posted every X number of posts on the relevant feed and will have a notification sent to all users informing them of their promotion
-        \n\nOnce the auction process for the week has completed,it will be reset back to £ 5.00 giving all businesses equal opportunity to promote their business</string>
+        \n\nOnce the auction process for the week has completed,it will be reset back to £ 5.00 giving all businesses equal opportunity to promote their business\n</string>
     <string name="how_des_work1">
         ATB users can use the search feature to find businesses or posts relevant to the keyword or phrase they are looking for.\n\n
         The user has the option to search through two databases - Either the Post database or the Business Directory database.\n\n
@@ -262,7 +262,7 @@
         Once the search is complete the immediate view will show ten business profiles. The first 5 will be allocated to paid slots, with the top three being pinned. The next 5 will be location based(ie closest to ther users defined location). Excluding the top three which are pinned, the user will be able to view the remaining businesses by scrolling down the page.\n\n
         As with the Profile Pin, Pin Point is also via an auction process. Each week all keywords and phrases become available for businesses to promote themselves via the PinPoint auction process.\n\n
         Bids begin on Monday at <font color='#A6BFDE'><b>00:00</b></font> with each word or phrase starting at <font color='#A6BFDE'><b>£5.00</b></font> with the auction process lasting for one week, during this time all businesses can bid for any word or phrase they deem relevant to their business.\n\n
-        Once bidding processs has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bids will be seen at the top of the search page in the order detailed above.\n\nOnce the auction process for the week has completed, it will be reset back to £5.00 giving all business equal opportunity to promote their business.\n\nAll buninesses will be given access to the top 10 keywords or phrases and associated search stats for each group so they can see the value in each word or phrase and the amount of traffic each one generates.
+        Once bidding processs has completed, <font color='#A6BFDE'><b>the 5 businesses</b></font> with the highest bids will be seen at the top of the search page in the order detailed above.\n\nOnce the auction process for the week has completed, it will be reset back to £5.00 giving all business equal opportunity to promote their business.\n\nAll buninesses will be given access to the top 10 keywords or phrases and associated search stats for each group so they can see the value in each word or phrase and the amount of traffic each one generates.\n
     </string>
 
     <string name="current_bid"><b>CURRENT BID\n\n</b>

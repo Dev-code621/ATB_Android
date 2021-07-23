@@ -66,6 +66,7 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
     ImageView imv_back;
     ProfilePinHeaderAdapter soldHeaderAdapter ;
     EditText edt_tag;
+    int k =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,6 +189,9 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
     @Override
     public void getBideers(ArrayList<BoostModel> boostModels) {
         soldHeaderAdapter.setRoomData(boostModels);
+        if(k>0)
+            showAlertDialog("Your bid has been placed successfully.");
+        k++;
     }
 
     @Override

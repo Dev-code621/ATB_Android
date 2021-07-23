@@ -32,7 +32,7 @@
         android:layout_gravity="bottom|center"
         style="@style/textTheme"
         android:textSize="15sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:textColor="@color/txt_color" />
 </LinearLayout>

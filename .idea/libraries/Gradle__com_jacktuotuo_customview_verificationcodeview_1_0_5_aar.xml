@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: com.jacktuotuo.customview:verificationcodeview:1.0.5@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4b4a57df73f59d6aefb6cb167e00a110/jetified-verificationcodeview-1.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4b4a57df73f59d6aefb6cb167e00a110/jetified-verificationcodeview-1.0.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4b4a57df73f59d6aefb6cb167e00a110/jetified-verificationcodeview-1.0.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0dbc547d68a249d9c56692ce9f4c1b9e/jetified-verificationcodeview-1.0.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0dbc547d68a249d9c56692ce9f4c1b9e/jetified-verificationcodeview-1.0.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0dbc547d68a249d9c56692ce9f4c1b9e/jetified-verificationcodeview-1.0.5/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jacktuotuo.customview/verificationcodeview/1.0.5/9f5035a51c2bdd327a400502e4c18b32057bafb9/verificationcodeview-1.0.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jacktuotuo.customview/verificationcodeview/1.0.5/3a06bfe80ac47482cd251ab21789b7267b89964f/verificationcodeview-1.0.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

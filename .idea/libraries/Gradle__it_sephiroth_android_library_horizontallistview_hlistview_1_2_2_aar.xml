@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="Gradle: it.sephiroth.android.library.horizontallistview:hlistview:1.2.2@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6c669c60e453f39f3edc7610249ecc08/jetified-hlistview-1.2.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6c669c60e453f39f3edc7610249ecc08/jetified-hlistview-1.2.2/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6c669c60e453f39f3edc7610249ecc08/jetified-hlistview-1.2.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56c6e028fce97e883f5552a0f53e4a38/jetified-hlistview-1.2.2/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56c6e028fce97e883f5552a0f53e4a38/jetified-hlistview-1.2.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/56c6e028fce97e883f5552a0f53e4a38/jetified-hlistview-1.2.2/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/it.sephiroth.android.library.horizontallistview/hlistview/1.2.2/879d68123f51027bf1c9b103fec893f0712b5dfa/hlistview-1.2.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/it.sephiroth.android.library.horizontallistview/hlistview/1.2.2/aa7a5d4642f9794c066948d912e72e712e3d54ef/hlistview-1.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

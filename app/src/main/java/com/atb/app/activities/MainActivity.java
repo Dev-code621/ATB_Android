@@ -57,6 +57,7 @@ import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
+import com.atb.app.model.NotiEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
@@ -85,7 +86,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     EditText edt_serach;
     LinearLayout lyt_title,lyt_profile;
     MainListFragment mainListFragment;
-    int selectIcon= 0 ;
+    public int selectIcon= 0 ;
     TextView txv_username;
     FrameLayout frame_noti,frame_chat;
     CardView card_unread_noti,card_unread_chat;
@@ -179,6 +180,54 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 processNotification();
             }
         }
+
+
+
+    }
+    void loadNotification(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_NOTIFICATIONS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try{
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                            if(jsonArray.length()>0){
+                                card_unread_noti.setVisibility(View.VISIBLE);
+                            }else
+                                card_unread_noti.setVisibility(View.GONE);
+
+                            Commons.notification_count = jsonArray.length();
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void processNotification(){
@@ -200,6 +249,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             bundle.putString("userModel",usermodel);
             goTo(this,ReviewActivity.class,false,bundle);
         }else if(noti_type == 11 ){
+            //get service api
             Bundle bundle = new Bundle();
             bundle.putInt("postId",related_id);
             bundle.putBoolean("CommentVisible",true);
@@ -219,6 +269,9 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             getuserProfile(related_id,0);
 
         }else if(noti_type == 18 || noti_type == 19 || noti_type == 20  || noti_type == 21 || noti_type == 22){
+
+            //18,19: product and service id
+
             Bundle bundle = new Bundle();
             bundle.putInt("postId",related_id);
             bundle.putBoolean("CommentVisible",true);
@@ -527,6 +580,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         super.onResume();
         Commons.selected_user = Commons.g_user;
         setColor(selectIcon);
+        getFirebaseToken();
+        loadNotification();
 
     }
     @Override
