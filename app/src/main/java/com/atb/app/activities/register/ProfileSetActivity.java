@@ -296,8 +296,8 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
             params.put("location", txv_location.getText().toString());
             params.put("dob", birthday);
             params.put("gender", "");
-            params.put("lat", String.valueOf(Commons.g_user.getLatitude()));
-            params.put("lng", String.valueOf(Commons.g_user.getLongitude()));
+            params.put("lat", String.valueOf( Commons.lat));
+            params.put("lng", String.valueOf( Commons.lng));
             params.put("range", String.valueOf(Commons.g_user.getRange()));
             params.put("bio",edt_bio.getText().toString());
             params.put("token", Commons.token);

@@ -413,6 +413,7 @@ public abstract class CommonActivity extends BaseActivity {
             api_link = API.ADD_PP_SUB;
         }
         showProgress();
+        String finalApi_link = api_link;
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
                 api_link ,
@@ -423,20 +424,25 @@ public abstract class CommonActivity extends BaseActivity {
                         closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
-                            JSONArray jsonArray = jsonObject.getJSONArray("msg");
+
                             if(!jsonObject.getBoolean("result"))
                                 showAlertDialog(jsonObject.getString("msg"));
                             else {
                                 String id ="";
-                                for(int i=0;i<jsonArray.length();i++){
-                                    JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);
-                                    if(object.getString("transaction_type").equals("Sale")) {
-                                        id = object.getString("id");
-                                        break;
-                                    }
+                                if(finalApi_link.equals(API.ADD_PP_SUB)){
+                                    finishPayment(id);
+                                }else {
+                                    JSONArray jsonArray = jsonObject.getJSONArray("msg");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);
+                                        if (object.getString("transaction_type").equals("Sale")) {
+                                            id = object.getString("id");
+                                            break;
+                                        }
 
+                                    }
+                                    finishPayment(id);
                                 }
-                                finishPayment(id);
                             }
 
                         } catch (JSONException e) {
@@ -653,7 +659,7 @@ public abstract class CommonActivity extends BaseActivity {
 
     }
 
-    public void getAction(int county, int region){
+    public void getAction(int county, int region,int type){
 
     }
 

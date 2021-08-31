@@ -227,6 +227,9 @@ dependencies {
 
     //preference
     implementation 'androidx.preference:preference:1.1.1'
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'
 configurations {

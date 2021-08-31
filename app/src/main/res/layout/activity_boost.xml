@@ -88,7 +88,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Top Spot"
+                    android:text="Spot Light"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/head_color"
@@ -112,7 +112,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Spot Light"
+                    android:text="Top Spot"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/head_color"

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/head_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/edit_rectangle_round"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <ImageView
+            android:id="@+id/imv_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/hand_up"
+        android:paddingBottom="10dp"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thank you for completing\nyour business profile!"
+            style="@style/boldtextTheme"
+            android:gravity="center"
+            android:textColor="@color/txt_color"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You're almost done!"
+            style="@style/textTheme"
+            android:textColor="@color/txt_color"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please read and agree to our"
+            style="@style/textTheme"
+            android:textColor="@color/txt_color"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/txv_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  Terms and Condictions"
+            style="@style/textTheme"
+            android:layout_gravity="center"
+            android:textColor="@color/head_color"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:background="@drawable/under_line2"/>
+        <LinearLayout
+            android:id="@+id/lyt_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:buttonTint="@color/head_color" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T&amp;C's have been read and understand"
+                android:gravity="center"
+                android:textColor="@color/head_color"
+                style="@style/btn_buttonStyle"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/edit_rectangle_round1"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="One last thing"
+                style="@style/boldtextTheme"
+                android:gravity="center"
+                android:textColor="@color/txt_color"
+                android:textSize="18sp"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="We just need your payment details to\nfinalise your account"
+                style="@style/textTheme"
+                android:textColor="@color/txt_color"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:id="@+id/lyt_paypal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/button_rectangle_round"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/txv_paypal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Pay with "
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    style="@style/boldtextTheme" />
+                <ImageView
+                    android:id="@+id/imv_paypal"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/pay_mark"
+                    app:tint="@color/white" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                style="@style/boldtextTheme"
+                android:layout_gravity="center"
+                android:textColor="@color/head_color"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/under_line2"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

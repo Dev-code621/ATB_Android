@@ -91,6 +91,8 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             @Override
             public void onSeeking(SeekParams seekParams) {
                 txv_progress.setText(String.valueOf(seekParams.progress)+"KM");
+                if(seekParams.progress==80)
+                    txv_progress.setText("∞KM");
 //                if(seekParams.progress==80)
 //                    txv_progress.setText("KM");
                 moveCamera();

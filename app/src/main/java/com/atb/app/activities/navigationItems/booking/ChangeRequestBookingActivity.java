@@ -76,6 +76,7 @@ public class ChangeRequestBookingActivity extends CommonActivity implements View
     BookingEntity defaultBookEntity = new BookingEntity();
     BookingEntity selectBooking = new BookingEntity();
     LinearLayout lyt_book;
+    int select_bookingID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -300,7 +301,7 @@ public class ChangeRequestBookingActivity extends CommonActivity implements View
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond == bookingEntities.get(i).getBooking_datetime())
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond< (bookingEntities.get(i).getBooking_datetime()+ 3600* bookingEntities.get(i).getNewsFeedEntity().getDuration()))
                 return i;
         }
 
@@ -345,7 +346,16 @@ public class ChangeRequestBookingActivity extends CommonActivity implements View
                 Helper.getListViewSize(list_booking);
                 break;
             case R.id.lyt_book:
-                editBooking();
+                int k =0;
+                for(int i =select_bookingID;i<bookingSlot.get(day).size();i++){
+                    if(hashMap.get(bookingSlot.get(day).get(i)).getType()!=0)break;
+                    k++;
+                }
+                if(k<defaultBookEntity.getNewsFeedEntity().getDuration()){
+                    showAlertDialog("There are only " + String.valueOf(k)+ " hours free so the booking cannot be updated.");
+                    return;
+                }
+            //    editBooking();
                 break;
         }
     }
@@ -530,6 +540,13 @@ public class ChangeRequestBookingActivity extends CommonActivity implements View
         }else if(bookingEntity.getType()==1) {
             showAlertDialog("The slot has always been booked.");
             return;
+        }
+
+        for(int i =0;i<bookingSlot.get(day).size();i++){
+            if(selected_bookingSlot.get(posstion).equals(bookingSlot.get(day).get(i))) {
+                select_bookingID = i;
+                break;
+            }
         }
         lyt_book.setVisibility(View.VISIBLE);
     }

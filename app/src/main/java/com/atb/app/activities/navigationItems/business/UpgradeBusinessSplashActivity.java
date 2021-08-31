@@ -12,11 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.SliderBusinessSplashAdapter;
 import com.atb.app.adapter.SliderImageAdapter;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
+import com.atb.app.dialog.PaymentSuccessDialog;
+import com.atb.app.dialog.SubscriptionSuccessDialog;
+import com.atb.app.dialog.TermsSuccessDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.SlideModel;
 import com.braintreepayments.api.dropin.DropInActivity;
@@ -95,10 +100,35 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType == 0)
                     goTo(UpgradeBusinessSplashActivity.this, UpdateBusinessActivity.class,true);
                 else {
-                    getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
+//                    TermsSuccessDialog termsSuccessDialog = new TermsSuccessDialog();
+//                    termsSuccessDialog.setOnConfirmListener(new TermsSuccessDialog.OnConfirmListener() {
+//                        @Override
+//                        public void onPurchase() {
+//                            getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
+//
+//                        }
+//                    });
+//                    termsSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+
                 }
             }
         });
+        if(subscriptionType != 0){
+            TermsSuccessDialog termsSuccessDialog = new TermsSuccessDialog();
+            termsSuccessDialog.setOnConfirmListener(new TermsSuccessDialog.OnConfirmListener() {
+                @Override
+                public void onPurchase() {
+                    getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
+
+                }
+
+                @Override
+                public void onCancel() {
+                    finish(UpgradeBusinessSplashActivity.this);
+                }
+            });
+            termsSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+        }
     }
 
 
@@ -148,7 +178,19 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
     public void finishPayment(String transaction_id){
         Commons.g_user.getBusinessModel().setPaid(1);
         setResult(Commons.subscription_code);
-        finish(UpgradeBusinessSplashActivity.this);
+
+        if(subscriptionType==10){
+            SubscriptionSuccessDialog subscriptionSuccessDialog = new SubscriptionSuccessDialog();
+            subscriptionSuccessDialog.setOnConfirmListener(new SubscriptionSuccessDialog.OnConfirmListener() {
+                   @Override
+                   public void onPurchase() {
+                       finish(UpgradeBusinessSplashActivity.this);
+                   }
+            });
+            subscriptionSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+        }else {
+            finish(UpgradeBusinessSplashActivity.this);
+        }
     }
 
 

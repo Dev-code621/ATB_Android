@@ -23,6 +23,7 @@ import com.atb.app.activities.SplashActivity;
 import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
 import com.atb.app.activities.navigationItems.booking.MyBookingViewActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ReviewActivity;
 import com.atb.app.activities.profile.boost.PinPointActivity;
@@ -35,7 +36,9 @@ import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.BookingEntity;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.NotiEntity;
+import com.atb.app.model.UserModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -88,18 +91,18 @@ public class NotificationActivity extends CommonActivity{
                     goTo(NotificationActivity.this, ItemSoldActivity.class,false,bundle);
                 }else if(noti_type ==6 || noti_type == 7 || noti_type ==8 || noti_type ==9){
                     getBookingByID(noti_type,related_id);
-                }else if(noti_type ==10 || noti_type ==13){
+                }else if(noti_type ==10 ){
+                    getuserProfile(related_id,1);
+                }
+                else if( noti_type ==13){
                     Gson gson = new Gson();
                     String usermodel = gson.toJson(Commons.g_user);
                     Bundle bundle = new Bundle();
                     bundle.putString("userModel",usermodel);
-                    goTo(NotificationActivity.this, ReviewActivity.class,false,bundle);
-                }else if(noti_type == 11 ){
+                    goTo(NotificationActivity.this,ReviewActivity.class,false,bundle);
+                }else if(noti_type == 11 || noti_type == 18 || noti_type == 19 ){
                     //get service api
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("postId",related_id);
-                    bundle.putBoolean("CommentVisible",true);
-                    startActivityForResult(new Intent(NotificationActivity.this, NewsDetailActivity.class).putExtra("data",bundle),1);
+                    getProduct(noti_type, related_id);
                 }else if(noti_type == 12){
                     goTo(NotificationActivity.this, TransactionHistoryActivity.class,false);
                 }else if(noti_type ==14){
@@ -114,7 +117,7 @@ public class NotificationActivity extends CommonActivity{
                 }else if(noti_type ==17) {
                     getuserProfile(related_id,0);
 
-                }else if(noti_type == 18 || noti_type == 19 || noti_type == 20  || noti_type == 21 || noti_type == 22){
+                }else if( noti_type == 20  || noti_type == 21 || noti_type == 22){
                     //18,19: product and service id
 
                     Bundle bundle = new Bundle();
@@ -141,7 +144,69 @@ public class NotificationActivity extends CommonActivity{
             }
         });
     }
+    void getProduct(int noti_type,int related_id){
 
+        String api_link =  API.GET_PRODUCT;
+        if(noti_type == 11 || noti_type == 19)
+            api_link =  API.GET_SERVICE;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+                            newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("postId",related_id);
+                            bundle.putBoolean("CommentVisible",false);
+                            Gson gson = new Gson();
+                            String usermodel = gson.toJson(newsFeedEntity);
+                            bundle.putString("newfeedEntity",usermodel);
+                            startActivityForResult(new Intent(NotificationActivity.this, NewsDetailActivity.class).putExtra("data",bundle),1);
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(noti_type==18)
+                    params.put("product_id", String.valueOf(related_id));
+                else
+                    params.put("service_id", String.valueOf(related_id));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        goTo(this,ReviewActivity.class,false,bundle);
+    }
     void getBookingByID(int noti_type,int related_id){
         showProgress();
         StringRequest myRequest = new StringRequest(

@@ -52,7 +52,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
     ImageView imv_back;
     ProfilePinHeaderAdapter soldHeaderAdapter ;
     int county =0,region =0;
-    int k=0;
+    int k =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,11 +130,11 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
        // soldHeaderAdapter.setHasStableIds(false);
         recyclerView.setAdapter(soldHeaderAdapter);
 
-        getAction(county,region);
+        getAction(county,region,0);
         spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                getAction(county,region);
+                getAction(county,region,0);
             }
         });
 
@@ -153,7 +153,8 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
     }
 
     @Override
-    public void getAction(int county, int region) {
+    public void getAction(int county, int region,int count) {
+        k= count;
         this.county = county;
         this.region = region;
         Map<String, String> params = new HashMap<>();
@@ -280,7 +281,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
         super.onResume();
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode== Activity.RESULT_OK){
-            getAction(county,region);
+            getAction(county,region,1);
         }else {
             showAlertDialog("Payment authorization has been cancelled!");
         }

@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import com.atb.app.R;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.SelectOneDialog;
 import com.atb.app.model.BoostModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
@@ -91,13 +92,12 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
     }
 
     public class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder {
-        TextView textView;
-        NiceSpinner spiner;
+        TextView textView,txv_selection;
         LinearLayout lyt_profile_pin,lyt_currentbid,lyt_yourbid,lyt_pin_point;
         public HeaderViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.textView);
-            spiner = (NiceSpinner)itemView.findViewById(R.id.spiner);
+            txv_selection = itemView.findViewById(R.id.txv_selection);
             lyt_profile_pin = (LinearLayout)itemView.findViewById(R.id.lyt_profile_pin);
             lyt_currentbid = (LinearLayout)itemView.findViewById(R.id.lyt_currentbid);
             lyt_yourbid = (LinearLayout)itemView.findViewById(R.id.lyt_yourbid);
@@ -283,13 +283,27 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
                 }
             }
             ivh.txv_number.setText(String.valueOf(boostModel.getTotal_bids()));
-            ivh.txv_price.setText("£" + boostModel.getPrice());
+            double total_price = Double.parseDouble(boostModel.getPrice());
+
+            ivh.txv_price.setText("£" + String.format("%.2f",total_price));
+            if(boostModel.getUser_id()!=-1)
+                ivh.txv_bidprice.setText(String.format("%.2f",total_price+0.5));
             ivh.txv_bidnumber.setText(String.valueOf(boostModel.getPosition()+1));
             Glide.with(context).load(boostModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(ivh.imv_profile);
+            BoostModel finalBoostModel = boostModel;
             ivh.txv_bid.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(finalBoostModel.getUser_id() == -1) {
+                        for (int i = 0; i < room_data.size(); i++) {
+                            if (room_data.get(i).getUser_id() == Commons.g_user.getId()) {
+                                ((CommonActivity) (context)).showAlertDialog("You have already place a bid, you cannot make more than one bid in the same group.");
+                                return;
+                            }
+                        }
+                    }
+
                     ((CommonActivity)(context)).placeBid(itemIndex,ivh.txv_bidprice.getText().toString());
                 }
             });
@@ -303,13 +317,25 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
                   boostModel = room_data.get(sectionIndex * 2 + itemIndex);
             }
             ivh.txv_number.setText(String.valueOf(boostModel.getTotal_bids()));
-            ivh.txv_price.setText("£" + boostModel.getPrice());
+            double total_price = Double.parseDouble(boostModel.getPrice());
+            ivh.txv_price.setText("£" + String.format("%.2f",total_price));
+            if(boostModel.getUser_id()!=-1)
+                ivh.txv_bidprice.setText(String.format("%.2f",total_price+0.5));
             ivh.txv_bidnumber.setText(String.valueOf(boostModel.getPosition()+1));
             Glide.with(context).load(boostModel.getUserModel().getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(ivh.imv_profile);
+            BoostModel finalBoostModel = boostModel;
             ivh.txv_bid.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(finalBoostModel.getUser_id() == -1) {
+                        for (int i = 0; i < room_data.size(); i++) {
+                            if (room_data.get(i).getUser_id() == Commons.g_user.getId()) {
+                                ((CommonActivity) (context)).showAlertDialog("You have already place a bid, you cannot make more than one bid in the same group.");
+                                return;
+                            }
+                        }
+                    }
                     ((CommonActivity)(context)).placeBid(sectionIndex*2+ itemIndex,ivh.txv_bidprice.getText().toString());
                 }
             });
@@ -344,31 +370,44 @@ public class ProfilePinHeaderAdapter extends SectioningAdapter {
         }
 
         if(sectionIndex ==0){
-            hvh.spiner.setText("United Kingdom");
-            List<String> dataset = new LinkedList<>(Arrays.asList("United Kingdom"));
-            hvh.spiner.attachDataSource(dataset);
-          //  Log.d("aaaaaaaaaaa",String.valueOf(dataset));
+            hvh.txv_selection.setText("United Kingdom");
         }
         else if(sectionIndex==1){
-            hvh.spiner.attachDataSource(Commons.county);
-            hvh.spiner.setSelectedIndex(county);
-          //  Log.d("bbbbbbbbb",Commons.county.get(county)  +  "   "  +String.valueOf(Commons.region.get(Commons.county.get(county))));
+            hvh.txv_selection.setText(Commons.county.get(county));
+
 
         }else if(sectionIndex==2) {
-         //   Log.d("bbbbbbbbb",Commons.county.get(county)  +  "   "  +String.valueOf(Commons.region.get(Commons.county.get(county))));
-            hvh.spiner.attachDataSource(Commons.region.get(Commons.county.get(county)));
-            hvh.spiner.setSelectedIndex(region);
+            hvh.txv_selection.setText(Commons.region.get(Commons.county.get(county)).get(0));
+
         }
 
-        hvh.spiner.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+        hvh.txv_selection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+            public void onClick(View v) {
                 if(sectionIndex == 1) {
-                    county = position;
-                    region = 0;
-                    ((CommonActivity)(context)).getAction(county,0);
+                    SelectOneDialog selectOneDialog = new SelectOneDialog(context);
+                    selectOneDialog.setOnActionClick(new SelectOneDialog.OnActionListener() {
+                        @Override
+                        public void OnSelect(int posstion) {
+                            region = 0;
+                            county = posstion;
+                            hvh.txv_selection.setText(Commons.county.get(county));
+                            ((CommonActivity)(context)).getAction(county,0,0);
+                        }
+                    },Commons.county,"Select County");
+                    selectOneDialog.show(((CommonActivity)context).getSupportFragmentManager(), "action picker");
+
                 }else if(sectionIndex ==2){
-                    ((CommonActivity)(context)).getAction(county,position);
+                    SelectOneDialog selectOneDialog = new SelectOneDialog(context);
+                    selectOneDialog.setOnActionClick(new SelectOneDialog.OnActionListener() {
+                        @Override
+                        public void OnSelect(int posstion) {
+                            region = posstion;
+                            hvh.txv_selection.setText(Commons.region.get(Commons.county.get(county)).get(region));
+                            ((CommonActivity)(context)).getAction(county,posstion,0);
+                        }
+                    },Commons.region.get(Commons.county.get(county)),"Select Region");
+                    selectOneDialog.show(((CommonActivity)context).getSupportFragmentManager(), "action picker");
                 }
             }
         });

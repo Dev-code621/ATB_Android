@@ -10,7 +10,7 @@
     android:id="@+id/lyt_container">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:background="@drawable/background_boost2">
     <LinearLayout
         android:id="@+id/lyt_back"
@@ -30,7 +30,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Top Spot"
+        android:text="Spot Light"
         style="@style/boldtextTheme"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -59,10 +59,10 @@
             android:layout_height="wrap_content"
             style="@style/boldtextTheme"
             android:textColor="@color/txt_color"
-            android:text="Which group would you like to promote this Tag World?"
+            android:text="Which group would you like to promote this Tag Word?"
             android:gravity="center"
             android:layout_marginTop="20dp"
-            android:textSize="15sp"/>
+            android:textSize="14sp"/>
         <org.angmarch.views.NiceSpinner
             android:id="@+id/spiner_category_type"
             android:layout_width="180dp"
@@ -71,7 +71,7 @@
             android:singleLine="true"
             android:layout_height="wrap_content"
             app:entries="@array/category_type"
-            android:textSize="20sp"
+            android:textSize="16sp"
             app:popupTextAlignment="center"
             android:textAlignment="center"
             android:layout_gravity="center"
@@ -107,9 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:gravity="center">
                 <LinearLayout
                     android:layout_width="75dp"
                     android:layout_height="wrap_content"

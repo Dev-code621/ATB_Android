@@ -223,6 +223,7 @@ public class StoreFragment extends Fragment {
                     params.put("insurance_id", newsFeedEntity.getInsurance_id());
                     params.put("qualification_id", newsFeedEntity.getQualification_id());
                     params.put("service_id",String.valueOf(newsFeedEntity.getId()));
+                    params.put("duration",String.valueOf(newsFeedEntity.getDuration()));
                 }
                 return params;
             }

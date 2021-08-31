@@ -216,6 +216,8 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
             params.put("last_name", edt_lastname.getText().toString());
             params.put("country", txv_location.getText().toString());
             params.put("birthday", birthday);
+            params.put("lat", String.valueOf( Commons.lat));
+            params.put("lng", String.valueOf( Commons.lng));
             params.put("gender", String.valueOf(gender));
 
 

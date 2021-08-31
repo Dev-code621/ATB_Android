@@ -2,6 +2,8 @@ package com.atb.app.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,24 +11,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.api.API;
+import com.atb.app.application.AppController;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.atb.app.activities.navigationItems.ItemSoldActivity.SHOW_ADAPTER_POSITIONS;
 
 public class SoldHeaderAdapter extends SectioningAdapter {
 
@@ -65,7 +85,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     public class ItemViewHolder extends SectioningAdapter.ItemViewHolder{
         ImageView imv_image,imv_profile;
         TextView txv_name,txv_itemnumber,txv_price,txv_time;
-
+        LinearLayout lyt_item;
         public ItemViewHolder(View itemView) {
             super(itemView);
             imv_image =  itemView.findViewById(R.id.imv_image);
@@ -74,7 +94,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             txv_itemnumber =  itemView.findViewById(R.id.txv_itemnumber);
             txv_price =  itemView.findViewById(R.id.txv_price);
             txv_time =  itemView.findViewById(R.id.txv_time);
-
+            lyt_item = itemView.findViewById(R.id.lyt_item);
         }
     }
 
@@ -238,9 +258,80 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                 holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
                 holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()) +  " ORDER " + transactionEntity.getTransaction_id());
 
+                holder.lyt_item.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(transactionEntity.getPurchase_type().equals("product") || transactionEntity.getPurchase_type().equals("service") ){
+                            int type =0;
+                            if(transactionEntity.getPurchase_type().equals("service"))
+                                type = 1;
+                            getProduct(type,transactionEntity.getNewsFeedEntity().getId());
+                        }else if(transactionEntity.getPurchase_type().equals("booking")){
+
+                        }
+                    }
+                });
             }
             index++;
         }
+    }
+
+    void getProduct(int type,int id){
+        Log.d("bbbbbbb",String.valueOf(id));
+        String api_link =  API.GET_PRODUCT;
+        if(type == 1)
+            api_link =  API.GET_SERVICE;
+        ((CommonActivity)_context).showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        ((CommonActivity)_context).closeProgress();
+                        Log.d("aaaa,",json);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+                            newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));;
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("postId",id);
+                            bundle.putBoolean("CommentVisible",false);
+                            Gson gson = new Gson();
+                            String usermodel = gson.toJson(newsFeedEntity);
+                            bundle.putString("newfeedEntity",usermodel);
+                            ((CommonActivity)_context).startActivityForResult(new Intent(_context, NewsDetailActivity.class).putExtra("data",bundle),1);
+
+                        }catch (Exception e){
+                            Log.d("exception", e.toString());
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ((CommonActivity)_context).closeProgress();
+                        ((CommonActivity)_context).showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(type == 0)
+                    params.put("product_id", String.valueOf(id));
+                else
+                    params.put("service_id", String.valueOf(id));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     @SuppressLint("SetTextI18n")

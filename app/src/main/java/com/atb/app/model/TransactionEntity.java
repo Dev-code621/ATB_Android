@@ -7,6 +7,7 @@ public class TransactionEntity {
     long created_at;
     String imv_url,title ;
 
+    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     public String getTitle() {
         return title;
     }
@@ -125,5 +126,13 @@ public class TransactionEntity {
 
     public void setCreated_at(long created_at) {
         this.created_at = created_at;
+    }
+
+    public NewsFeedEntity getNewsFeedEntity() {
+        return newsFeedEntity;
+    }
+
+    public void setNewsFeedEntity(NewsFeedEntity newsFeedEntity) {
+        this.newsFeedEntity = newsFeedEntity;
     }
 }

@@ -55,6 +55,7 @@ public class CreateABookingActivity extends CommonActivity implements View.OnCli
     ArrayList<NewsFeedEntity>newsFeedEntities = new ArrayList<>();
     ArrayList<NewsFeedEntity>search_newsFeedEntities = new ArrayList<>();
     BookingEntity bookingEntity = new BookingEntity();
+    int count =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +74,10 @@ public class CreateABookingActivity extends CommonActivity implements View.OnCli
         list_booking.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(search_newsFeedEntities.get(position).getDuration()>count){
+                    showAlertDialog("There are only " + String.valueOf(count) + " free so service cannot be booked.");
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 Gson gson = new Gson();
                 String serviceModel = gson.toJson(search_newsFeedEntities.get(position));
@@ -120,8 +125,10 @@ public class CreateABookingActivity extends CommonActivity implements View.OnCli
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 String books= bundle.getString("bookModel");
+                count = bundle.getInt("count");
                 Gson gson = new Gson();
                 bookingEntity = gson.fromJson(books, BookingEntity.class);
+
             }
         }
 

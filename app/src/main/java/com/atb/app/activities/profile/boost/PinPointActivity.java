@@ -150,6 +150,7 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
         spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                k=0;
                 loadDate();
             }
         });

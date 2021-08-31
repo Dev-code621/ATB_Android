@@ -31,6 +31,7 @@ import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newpost.SelectProductCategoryActivity;
+import com.atb.app.activities.profile.boost.BoostActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
@@ -126,6 +127,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         LinearLayout lyt_save_post = findViewById(R.id.lyt_save_post);
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
+        LinearLayout lyt_boost_mybusiness = findViewById(R.id.lyt_boost_mybusiness);
         lyt_on.setVisibility(View.GONE);
         lyt_upgrade_business.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
@@ -139,6 +141,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         lyt_create_bio.setOnClickListener(this);
         lyt_item_sold.setOnClickListener(this);
         lyt_booking.setOnClickListener(this);
+        lyt_boost_mybusiness.setOnClickListener(this);
         imv_back.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
         imv_rating.setOnClickListener(this);
@@ -288,6 +291,10 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
             case R.id.lyt_upgrade_business:
                 drawer.closeDrawer(GravityCompat.END);
                 goTo(this, UpdateBusinessActivity.class,false);
+                break;
+            case R.id.lyt_boost_mybusiness:
+                drawer.closeDrawer(GravityCompat.END);
+                goTo(this, BoostActivity.class,false);
                 break;
             case R.id.lyt_booking:
                 drawer.closeDrawer(GravityCompat.END);

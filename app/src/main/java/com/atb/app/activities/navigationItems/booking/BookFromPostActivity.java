@@ -88,11 +88,12 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     BookingListAdapter bookingListAdapter ;
     HashMap<String,BookingEntity>hashMap = new HashMap<>();
     ArrayList<String> selected_bookingSlot  = new ArrayList<>();
+    int select_bookingID;
     TextView txv_booking;
     CalendarView calendarView;
     UserModel userModel = new UserModel();
     Map<String, String> payment_params = new HashMap<>();
-    BookingEntity bookingEntity = new BookingEntity();
+    BookingEntity select_bookingEntity = new BookingEntity();
     TextView txv_name,txv_title;
     ImageView imv_image;
     long today = 0 ;
@@ -317,7 +318,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond == bookingEntities.get(i).getBooking_datetime())
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond< (bookingEntities.get(i).getBooking_datetime()+ 3600* bookingEntities.get(i).getNewsFeedEntity().getDuration()))
                 return i;
         }
 
@@ -362,6 +363,16 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 Helper.getListViewSize(list_booking);
                 break;
             case R.id.txv_booking:
+                int k =0;
+                for(int i =select_bookingID;i<bookingSlot.get(day).size();i++){
+                    if(hashMap.get(bookingSlot.get(day).get(i)).getType()!=0)break;
+                    k++;
+                }
+                if(k<newsFeedEntity.getDuration()){
+                    showAlertDialog("There are only " + String.valueOf(k)+ " hours free so the booking cannot be updated.");
+                    return;
+                }
+
                 if(newsFeedEntity.getIs_deposit_required().equals("1")){
                     DepositDialog depositDialog = new DepositDialog();
                     depositDialog.setOnConfirmListener(new DepositDialog.OnConfirmListener() {
@@ -488,8 +499,9 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 params.put("token", Commons.token);
                 params.put("business_user_id", String.valueOf(userModel.getId()));
                 params.put("service_id", String.valueOf(newsFeedEntity.getService_id()));
-                params.put("booking_datetime", String.valueOf(bookingEntity.getBooking_datetime()));
+                params.put("booking_datetime", String.valueOf(select_bookingEntity.getBooking_datetime()));
                 params.put("is_reminder_enabled", "0");
+                params.put("createdBy", "0");
                 params.put("total_cost", newsFeedEntity.getPrice());
                 params.put("user_id", String.valueOf(Commons.g_user.getId()));
                 return params;
@@ -649,7 +661,13 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     @Override
     public void selectBooking(int posstion) {
         txv_booking.setVisibility(View.VISIBLE);
-        bookingEntity = hashMap.get(selected_bookingSlot.get(posstion));
+        select_bookingEntity = hashMap.get(selected_bookingSlot.get(posstion));
+        for(int i =0;i<bookingSlot.get(day).size();i++){
+            if(selected_bookingSlot.get(posstion).equals(bookingSlot.get(day).get(i))) {
+                select_bookingID = i;
+                break;
+            }
+        }
         txv_booking.setText("Book for " + String.valueOf(day+1) + "th at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
     }
 }

@@ -27,20 +27,19 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:textSize="20sp"/>
-        <org.angmarch.views.NiceSpinner
-            android:id="@+id/spiner"
+        <TextView
+            android:id="@+id/txv_selection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            app:popupTextAlignment="center"
-            android:textColor="@color/head_color"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            app:textTint="@color/txt_color"
-            app:arrowTint="@color/txt_color"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:text="United Kingdom"
+            style="@style/boldtextTheme"
+            android:textColor="@color/white"
             android:gravity="center"
-            android:background="@color/txt_color"
-            android:backgroundTint="@color/head_color"/>
+            android:textSize="15sp"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/lyt_pin_point"

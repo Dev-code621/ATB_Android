@@ -85,12 +85,19 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookingEntity bookingEntity = hashMap.get(selected_bookingSlot.get(position));
+
                 if(bookingEntity.getType()  == 0) {
+                    int k=0;
+                    for(int i =position;i<selected_bookingSlot.size();i++){
+                        if(hashMap.get(selected_bookingSlot.get(i)).getType()!=0)break;
+                        k++;
+                    }
                     Bundle bundle = new Bundle();
                     Gson gson = new Gson();
                     String bookingModel = gson.toJson(bookingEntity);
                     bundle = new Bundle();
                     bundle.putString("bookModel",bookingModel);
+                    bundle.putInt("count",k);
                     startActivityForResult(new Intent(BookingActivity.this, CreateABookingActivity.class).putExtra("data",bundle),1);
                     overridePendingTransition(0, 0);
                 }else if(bookingEntity.getType()==1) {
@@ -287,7 +294,8 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond == bookingEntities.get(i).getBooking_datetime())
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond< (bookingEntities.get(i).getBooking_datetime()+ 3600* bookingEntities.get(i).getNewsFeedEntity().getDuration()))
+
                 return i;
         }
 
@@ -319,8 +327,12 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                 imv_selector.setEnabled(!imv_selector.isEnabled());
                 selected_bookingSlot.clear();
                 if(imv_selector.isEnabled()){
+                    BookingEntity bookingEntity = new BookingEntity();
                     for(int i =0;i<bookingSlot.get(day).size();i++){
                         if(hashMap.get(bookingSlot.get(day).get(i)).getType()==1) {
+                            if(hashMap.get(bookingSlot.get(day).get(i)).equals(bookingEntity))
+                                continue;
+                            bookingEntity = hashMap.get(bookingSlot.get(day).get(i));
                             selected_bookingSlot.add(bookingSlot.get(day).get(i));
                         }
                     }

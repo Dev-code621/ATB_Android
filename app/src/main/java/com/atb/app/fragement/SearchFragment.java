@@ -27,6 +27,9 @@ import com.atb.app.base.CommonActivity;
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class SearchFragment extends Fragment {
     Context context;
     View view;
@@ -58,12 +61,23 @@ public class SearchFragment extends Fragment {
                 txv_atb_business.setTextColor(context.getResources().getColor(R.color.head_color));
                 txv_atb_post.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round1));
                 txv_atb_post.setTextColor(context.getResources().getColor(R.color.txt_color));
+                String[] testArray = getResources().getStringArray(R.array.category_type);
+                List<String> dataset= new LinkedList<>();
+                for(int i =0;i<testArray.length;i++)
+                    dataset.add(testArray[i]);
+                spiner_category_type.attachDataSource(dataset);
                 type = 0;
             }
         });
         txv_atb_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String[] testArray = getResources().getStringArray(R.array.category_type1);
+                List<String> dataset= new LinkedList<>();
+                for(int i =0;i<testArray.length;i++)
+                    dataset.add(testArray[i]);
+                spiner_category_type.attachDataSource(dataset);
+
                 txv_atb_post.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round));
                 txv_atb_post.setTextColor(context.getResources().getColor(R.color.head_color));
                 txv_atb_business.setBackground(context.getResources().getDrawable(R.drawable.edit_rectangle_round1));

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/head_color">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/subscription_completed_bg"
+        android:scaleType="centerCrop"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/star_in"
+            android:paddingBottom="10dp"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hooray! Thats all we\nneed for now."
+            style="@style/boldtextTheme"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="ATB admin will review your business to ensure it meets our guidelines for business advertising on ATB and will be approved within the next 3-5 working days. In the meantime; begin uploading products &amp; services to your store which will go live onto the app once approved."
+            style="@style/textTheme"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/txv_store"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Build your Business Store"
+            android:gravity="center"
+            android:textColor="@color/white"
+            style="@style/btn_buttonStyle"
+            android:layout_marginTop="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/white_rectangle_round"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
+</FrameLayout>

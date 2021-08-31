@@ -5,7 +5,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 public class BoostModel {
-    int id,user_id,type,position,bidon;
+    int id,user_id=-1,type,position,bidon;
     String category,tags,paid,price,country,county,region;
     UserModel userModel = new UserModel();
     boolean emptyModel = false;

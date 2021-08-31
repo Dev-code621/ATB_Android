@@ -28,13 +28,15 @@ public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.View
     private final Context context;
     private HashMap<String,  ArrayList<BoostModel>> roomData = new HashMap<>();
     private OnSelectListener listener;
+    String main_category;
     public BoostItemAdapter(Context context,  OnSelectListener listener) {
         this.listener = listener;
         this.context = context;
     }
-    public void setRoomData(  HashMap<String,  ArrayList<BoostModel>> boostModels) {
+    public void setRoomData(  HashMap<String,  ArrayList<BoostModel>> boostModels,String main_category) {
         roomData.clear();
         roomData.putAll(boostModels);
+        this.main_category = main_category;
         notifyDataSetChanged();
     }
 
@@ -49,9 +51,11 @@ public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        int key_number = position/6;
+        if(roomData.size()==0)return;
+
+        //int key_number = position/6;
         int index = position %6;
-        BoostModel boostModel = roomData.get(Constants.category_word[key_number]).get(index);
+        BoostModel boostModel = roomData.get(main_category).get(index);
         if(!boostModel.isEmptyModel() ){
             holder.imv_profile.setVisibility(View.GONE);
             holder.imv_add.setVisibility(View.VISIBLE);
@@ -85,10 +89,6 @@ public class BoostItemAdapter extends RecyclerView.Adapter<BoostItemAdapter.View
     }
     @Override
     public int getItemCount() {
-        if(roomData.size()==0)return 0;
-        if(Commons.main_category.equals(context.getResources().getString(R.string.my_atb)))
-            return 60;
-        else
             return 6;
     }
 

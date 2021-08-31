@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="vertical"
+    android:id="@+id/lyt_item">
+
+    <TextView
+        android:id="@+id/txt_username"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
+        style="@style/textTheme"
+        android:layout_marginRight="5dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:text="one"
+        android:singleLine="true"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/main_color1"/>
+</LinearLayout>
