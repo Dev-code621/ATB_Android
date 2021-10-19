@@ -38,14 +38,13 @@
                       android:layout_width="match_parent"
                       android:layout_height="match_parent"
                       app:actualImageScaleType="centerCrop"
-                      app:placeholderImage="@drawable/logo"/>
+                      app:placeholderImage="@drawable/images"/>
               </androidx.cardview.widget.CardView>
               <androidx.cardview.widget.CardView
                   android:layout_width="20dp"
                   android:layout_height="20dp"
                   app:cardCornerRadius="10dp"
                   app:cardElevation="0dp"
-                  android:visibility="gone"
                   android:layout_gravity="bottom|right"
                   app:cardUseCompatPadding="false"
                   app:cardBackgroundColor="@color/green">

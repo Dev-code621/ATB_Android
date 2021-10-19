@@ -159,6 +159,5 @@ public class API {
     public static final String GETTAGS = API_BASE_URL + "profile/get_tags";
     public static final String ADDTAG = API_BASE_URL + "profile/add_tag";
     public static final String REMOVETAG = API_BASE_URL + "profile/delete_tag";
-    public static final String  GET_PRODUCT = API_BASE_URL + "profile/get_product";
-    public static final String  GET_SERVICE = API_BASE_URL + "profile/get_service";
+
 }

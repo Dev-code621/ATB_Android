@@ -22,13 +22,13 @@ public class Constants {
     public static String[] slideTitle = {"Insurance & Qualification\nVerification."
             ,"Deposit Scheme",
             "Featured Posts",
-            "Unlimited Sales/Service Posts*",
+            "Upload Unlimited Products & Services to your Store",
             "Multi-Post Services and Items",
            "Priority Admin\nSupport"};
     public static String[] slideDescription = {"(Gaining ATB approved business status)",
             "Covers your business against cancelled or no-show appointments",
             "All your posts will be highlighted and show the ATB approved logo",
-            "Upload Unlimited Products & Services to your Store",
+            "Post your entire list of services or products and really promote your business",
             "Post all your services and items at the same time making it easier for users to shop",
             "Dedicated helpline and email support"};
 }

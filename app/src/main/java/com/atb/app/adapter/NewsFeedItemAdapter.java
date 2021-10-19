@@ -45,7 +45,6 @@ import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -222,12 +221,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                          return;
                      }
                  }
-                 Calendar now = Calendar.getInstance();
-                 int current_second = (int) ((now.getTimeInMillis())/1000);
-                 if(newsFeedEntity.getPoll_expiry()<current_second){
-                     ((CommonActivity) context).showAlertDialog("The poll has already been closed!");
-                     return;
-                 }
+
                  /// change poll event
                  addVoting(votingModel.getPost_id(),votingModel.getPoll_value(),position,newsFeedEntity);
 

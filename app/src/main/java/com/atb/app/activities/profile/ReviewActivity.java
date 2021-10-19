@@ -108,6 +108,9 @@ public class ReviewActivity extends CommonActivity {
 
     }
     void initLayout(){
+        if(Commons.g_user.getId() == userModel.getId())
+            txv_rate.setVisibility(View.GONE);
+
         txv_name.setText(userModel.getBusinessModel().getBusiness_name());
         txv_id.setText(userModel.getBusinessModel().getBusiness_website());
         Glide.with(this).load(userModel.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
@@ -132,12 +135,7 @@ public class ReviewActivity extends CommonActivity {
         }
 
         imv_star.setRating(rate/5.0f);
-        if(Commons.g_user.getId() == userModel.getId())
-            txv_rate.setVisibility(View.GONE);
-        else{
-            canRateBusiness();
-        }
-
+        canRateBusiness();
     }
 
     void canRateBusiness(){
@@ -153,8 +151,7 @@ public class ReviewActivity extends CommonActivity {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getJSONObject("extra").getInt("can_rate") == 1){
                                 txv_rate.setVisibility(View.VISIBLE);
-                            }else
-                                txv_rate.setVisibility(View.GONE);
+                            }
 
                         }catch (Exception e){
                             Log.d("aaaaaa",e.toString());

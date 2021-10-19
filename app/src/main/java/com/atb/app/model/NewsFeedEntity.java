@@ -25,11 +25,11 @@ public class NewsFeedEntity {
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
     String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason;
     String price = "0.00",deposit = "0.00",delivery_cost = "0.00",is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
-    int payment_options,delivery_option,is_active,is_sold,poll_expiry;
+    int payment_options,delivery_option,is_active,is_sold;
     double lat = 0,lng=0;
     int is_multi,multi_pos,scheduled,likes,comments;
     String read_created,profile_name,profile_image,post_postage ;
-    int duration=0;
+
     long updated_at,created_at;
     String multi_group,service_id,product_id,insurance_id,qualification_id,cancellations;
 
@@ -55,25 +55,8 @@ public class NewsFeedEntity {
     String videovalue ="";
 
 
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public ArrayList<InsuranceModel> getInsuranceModels() {
         return insuranceModels;
-    }
-
-
-    public int getPoll_expiry() {
-        return poll_expiry;
-    }
-
-    public void setPoll_expiry(int poll_expiry) {
-        this.poll_expiry = poll_expiry;
     }
 
     public void setInsuranceModels(ArrayList<InsuranceModel> insuranceModels) {
@@ -679,11 +662,6 @@ public class NewsFeedEntity {
             post_location = jsonObject.getString("post_location");
             delivery_cost = jsonObject.getString("delivery_cost");
             is_active = jsonObject.getInt("is_active");
-            if(jsonObject.has("duration")){
-                if(!jsonObject.getString("duration").equals("null") && jsonObject.getString("duration").length()>0)
-                duration = jsonObject.getInt("duration");
-            }
-
             if(jsonObject.has("status_reason"))
                 status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
@@ -718,10 +696,6 @@ public class NewsFeedEntity {
                 setStock_level(jsonObject.getInt("stock_level"));
 
             created_at = jsonObject.getLong("created_at");
-            if(jsonObject.has("poll_expiry")){
-                if(!jsonObject.getString("poll_expiry").equals("null") && jsonObject.getString("poll_expiry").length()>0)
-                setPoll_expiry(jsonObject.getInt("poll_expiry"));
-            }
 
             JSONArray arrayList = jsonObject.getJSONArray("post_imgs");
             postImageModels.clear();
@@ -804,10 +778,6 @@ public class NewsFeedEntity {
             post_location = jsonObject.getString("post_location");
             setDelivery_cost(jsonObject.getString("delivery_cost"));
             is_active = jsonObject.getInt("is_active");
-            if(jsonObject.has("duration")){
-                if(!jsonObject.getString("duration").equals("null") && jsonObject.getString("duration").length()>0)
-                    duration = jsonObject.getInt("duration");
-            }
             if(jsonObject.has("status_reason"))
                 status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");
@@ -838,10 +808,7 @@ public class NewsFeedEntity {
             if(jsonObject.has("updated_at"))
                 updated_at = jsonObject.getLong("updated_at");
             created_at = jsonObject.getLong("created_at");
-            if(jsonObject.has("poll_expiry")){
-                if(!jsonObject.getString("poll_expiry").equals("null") && jsonObject.getString("poll_expiry").length()>0)
-                    setPoll_expiry(jsonObject.getInt("poll_expiry"));
-            }
+
 
 
             JSONArray arrayList = jsonObject.getJSONArray("post_imgs");

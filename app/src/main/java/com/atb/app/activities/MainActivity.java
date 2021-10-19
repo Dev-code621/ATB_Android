@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -59,7 +57,6 @@ import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
-import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.NotiEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -78,8 +75,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
@@ -101,8 +96,6 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     ChatFragment chatFragment;
     ImageView imv_title;
     int noti_type, related_id;
-    Timer timer;
-    boolean flag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,15 +195,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                         try{
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray = jsonObject.getJSONArray("msg");
-                            int count = 0;
-                            for(int i=0;i<jsonArray.length();i++){
-                                if(jsonArray.getJSONObject(i).getInt("read_status")==0)count++;
-                            }
-                            if(count>0){
+                            if(jsonArray.length()>0){
                                 card_unread_noti.setVisibility(View.VISIBLE);
                             }else
                                 card_unread_noti.setVisibility(View.GONE);
-                            Commons.notification_count = count;
+
+                            Commons.notification_count = jsonArray.length();
 
                         }catch (Exception e){
 
@@ -252,19 +242,18 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             goTo(this, ItemSoldActivity.class,false,bundle);
         }else if(noti_type ==6 || noti_type == 7 || noti_type ==8 || noti_type ==9){
             getBookingByID();
-        }else if(noti_type ==10 ){
-            flag = true;
-            getuserProfile(related_id,1);
-        }
-        else if( noti_type ==13){
+        }else if(noti_type ==10 || noti_type ==13){
             Gson gson = new Gson();
             String usermodel = gson.toJson(Commons.g_user);
             Bundle bundle = new Bundle();
             bundle.putString("userModel",usermodel);
             goTo(this,ReviewActivity.class,false,bundle);
-        }else if(noti_type == 11 || noti_type == 18 || noti_type == 19 ){
+        }else if(noti_type == 11 ){
             //get service api
-            getProduct();
+            Bundle bundle = new Bundle();
+            bundle.putInt("postId",related_id);
+            bundle.putBoolean("CommentVisible",true);
+            startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
         }else if(noti_type == 12){
             goTo(this, TransactionHistoryActivity.class,false);
         }else if(noti_type ==14){
@@ -279,7 +268,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }else if(noti_type ==17) {
             getuserProfile(related_id,0);
 
-        }else if( noti_type == 20  || noti_type == 21 || noti_type == 22){
+        }else if(noti_type == 18 || noti_type == 19 || noti_type == 20  || noti_type == 21 || noti_type == 22){
 
             //18,19: product and service id
 
@@ -306,61 +295,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }
     }
 
-    void getProduct(){
 
-        String api_link =  API.GET_PRODUCT;
-        if(noti_type == 11 || noti_type == 19)
-            api_link =  API.GET_SERVICE;
-        showProgress();
-        StringRequest myRequest = new StringRequest(
-                Request.Method.POST,
-                api_link,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String json) {
-                        closeProgress();
-                        try {
-                            JSONObject jsonObject = new JSONObject(json);
-                            NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
-                            newsFeedEntity.initDetailModel(jsonObject.getJSONObject("extra"));
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("postId",related_id);
-                            bundle.putBoolean("CommentVisible",false);
-                            Gson gson = new Gson();
-                            String usermodel = gson.toJson(newsFeedEntity);
-                            bundle.putString("newfeedEntity",usermodel);
-                            startActivityForResult(new Intent(MainActivity.this, NewsDetailActivity.class).putExtra("data",bundle),1);
 
-                        }catch (Exception e){
-
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        closeProgress();
-                        showToast(error.getMessage());
-
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("token", Commons.token);
-                if(noti_type==18)
-                  params.put("product_id", String.valueOf(related_id));
-                else
-                    params.put("service_id", String.valueOf(related_id));
-                return params;
-            }
-        };
-        myRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        AppController.getInstance().addToRequestQueue(myRequest, "tag");
-    }
     void getBookingByID(){
     showProgress();
         StringRequest myRequest = new StringRequest(
@@ -524,38 +460,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                                 }
 
                             }
-
-
-                            if(Commons.main_category.equals(getResources().getString(R.string.my_atb))){
-                                final int[] finalI = {0};
-                                if(timer==null)
-                                    timer= new Timer();
-                                timer.scheduleAtFixedRate(new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                boostAdapter.setRoomData(boostModels,Constants.category_word[finalI[0]]);
-                                                finalI[0] +=1;
-                                                if(finalI[0]==10)
-                                                    finalI[0]=0;
-
-                                                Log.d("aaaaa,fin" ,String.valueOf(finalI[0]));
-                                            }
-                                        });
-                                    }
-                                }, 1000, 30000);
-
-
-                            }else {
-                                if(timer!=null) {
-                                    timer.cancel();
-                                    timer = null;
-                                }
-                                boostAdapter.setRoomData(boostModels,Commons.main_category);
-                            }
-
+                            boostAdapter.setRoomData(boostModels);
                         }catch (Exception e){
                             Log.d("aaaaaa",e.toString());
                         }
@@ -681,21 +586,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     }
     @Override
     public void UserProfile(UserModel userModel,int usertype){
-        if(!flag) {
-            Gson gson = new Gson();
-            String usermodel = gson.toJson(userModel);
-            Bundle bundle = new Bundle();
-            bundle.putString("userModel", usermodel);
-            bundle.putInt("userType", usertype);
-            goTo(this, OtherUserProfileActivity.class, false, bundle);
-        }else {
-            Gson gson = new Gson();
-            String usermodel = gson.toJson(userModel);
-            Bundle bundle = new Bundle();
-            bundle.putString("userModel",usermodel);
-            goTo(this,ReviewActivity.class,false,bundle);
-            flag =false;
-        }
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
     }
 
     @Override

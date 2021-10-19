@@ -44,12 +44,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.applozic.mobicommons.file.FileUtils;
 import com.atb.app.R;
-import com.atb.app.activities.MainActivity;
-import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.SetOperatingActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
-import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
-import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.adapter.InsuranceAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -265,13 +261,17 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     setTag();
                 }else {
                     String chips[] =edt_tag.getText().toString().trim().split(" ");
-                    int n = s.length();
-                    if(n>0) {
-                        if (s.charAt(n - 1) == ' ' && chips.length < tagModels.size())
-                            changeTag("", tagModels.get(chips.length).getId());
-                        //showAlertDialog(String.valueOf(tagModels.get(tagModels.size()-1).getId()));
-                    }else {
-                        changeTag("", tagModels.get(0).getId());
+                    for(int i =0;i<tagModels.size();i++){
+                        int flag = -1;
+                        for(int j =0;j<chips.length;j++){
+                            if(tagModels.get(i).getName().equals(chips[j])){
+                                flag =j;
+                                break;
+                            }
+                        }
+                        if(flag==-1){
+                            changeTag(tagModels.get(i).getName(),i);
+                        }
                     }
                 }
             }
@@ -331,8 +331,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                        Commons.g_user.setBusinessModel(businessModel);
                        Commons.g_user.setAccount_type(1);
                        Bundle bundle = new Bundle();
-                       bundle.putInt("subScriptionType",10);
-                       startActivityForResult(new Intent(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                       bundle.putInt("subScriptionType",2);
+                       goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
                    }
                },getString(R.string.subscription_alert));
                confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
@@ -817,8 +817,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                                 Commons.g_user.setBusinessModel(businessModel);
                                 Commons.g_user.setAccount_type(1);
                                 Bundle bundle = new Bundle();
-                                bundle.putInt("subScriptionType",10);
-                                startActivityForResult(new Intent(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                                bundle.putInt("subScriptionType",1);
+                                goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
                             }
                         }
                     }catch (Exception e){
@@ -1118,9 +1118,6 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     addInsuranceDialog.setFileName();
                 }
             }
-        }else if(resultCode == Commons.subscription_code){
-            setResult(1);
-            finish(this);
         }
     }
 
@@ -1153,21 +1150,10 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                         }
                         isEdit = true ;
                         edt_tag.setText(str);
-                        edt_tag.setSelection(str.length());
+                        edt_tag.setSelection(edt_tag.getText().length());
                         return;
                     }
                 }
-            }
-            if(chips.length>5){
-                String str ="";
-                for(int i =0;i<5;i++){
-                    str += chips[i] + " ";
-                }
-                isEdit = true ;
-                edt_tag.setText(str);
-                edt_tag.setSelection(str.length());
-                showAlertDialog("You can only have 5 tags");
-                return;
             }
             int x = 0;
             for (String c : chips) {
@@ -1211,19 +1197,15 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                         break;
                     }
                 }
-//                if(flag==-1){
-//                    changeTag(chips[i],-1);
-//                }
+                if(flag==-1){
+                    changeTag(chips[i],-1);
+                }
             }
             // set chips span
             isEdit = false ;
             edt_tag.setText(ssb);
             // move cursor to last
             edt_tag.setSelection(edt_tag.getText().length());
-            if(chips.length>tagModels.size())
-                changeTag(chips[chips.length-1],-1);
-
-
         }
 
     }
@@ -1235,6 +1217,16 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     }
 
     void changeTag(String str,int id){
+        if(tagModels.size()==5 && id==-1){
+
+            String text = "";
+            for(int i =0;i<tagModels.size();i++){
+                text += tagModels.get(i).getName()+ " ";
+            }
+            edt_tag.setText(text);
+            showAlertDialog("You can input only 5 tags");
+            return;
+        }
         String api_link = API.ADDTAG;
         if(id!=-1)api_link = API.REMOVETAG;
         StringRequest myRequest = new StringRequest(
@@ -1278,7 +1270,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                 if(id==-1)
                     params.put("tag_name", str);
                 else
-                    params.put("tag_id", String.valueOf(id));
+                    params.put("tag_id", String.valueOf(tagModels.get(id).getId()));
                 return params;
             }
         };

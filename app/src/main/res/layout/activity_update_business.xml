@@ -535,7 +535,6 @@
                 android:paddingTop="15dp"
                 style="@style/edit_inputtext"
                 android:gravity="start"/>
-
             <LinearLayout
                 android:id="@+id/lyt_save"
                 android:layout_width="match_parent"

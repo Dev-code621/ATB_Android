@@ -61,7 +61,6 @@ import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.ConfirmVariationDialog;
 import com.atb.app.dialog.DepositDialog;
 import com.atb.app.dialog.FeedDetailDialog;
-import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.InsuranceViewDialog;
 import com.atb.app.dialog.PaymentBookingDialog;
 import com.atb.app.dialog.PaymentSuccessDialog;
@@ -105,7 +104,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -465,7 +463,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 }
                 txv_postage_cost.setText("£" + newsFeedEntity.getDelivery_cost());
                 String[] location = newsFeedEntity.getPost_location().split(",");
-                txv_location.setText(location[0]);
+                txv_location.setText(location[location.length-1]);
                 for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
                     final int finaI = i;
 
@@ -532,12 +530,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                                 return;
                             }
                         }
-                        Calendar now = Calendar.getInstance();
-                        int current_second = (int) ((now.getTimeInMillis())/1000);
-                        if(newsFeedEntity.getPoll_expiry()<current_second){
-                            showAlertDialog("The poll has already been closed!");
-                            return;
-                        }
+
                         /// change poll event
                         addVoting(votingModel.getPost_id(),votingModel.getPoll_value(),position);
                     }
@@ -813,14 +806,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             @Override
             public void onConfirm(int payment_type,double price) {
                 if(payment_type ==1){
-                    GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
-                    confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
-                        @Override
-                        public void onConfirm() {
-                            gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
-                        }
-                    },"ATB", "The item you have purchased is reserved for you. Please message the seller to finalise collection/delivery details and complete the transaction.","Contact Now", "No, later");
-                    confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                    gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
                 }else {
                     getPaymentToken(String.valueOf(price),newsFeedEntity,deliveryOption,selected_Variation);
                 }

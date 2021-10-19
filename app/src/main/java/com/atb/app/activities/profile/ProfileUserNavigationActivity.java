@@ -1,6 +1,5 @@
 package com.atb.app.activities.profile;
 
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -271,7 +270,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 break;
             case R.id.lyt_upgrade_business:
                 drawer.closeDrawer(GravityCompat.END);
-                startActivityForResult(new Intent(this, UpdateBusinessActivity.class),1);
+                goTo(this, UpdateBusinessActivity.class,false);
                 break;
             case R.id.lyt_booking:
                 drawer.closeDrawer(GravityCompat.END);
@@ -439,12 +438,6 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         }else if(id ==3){
             imv_chat.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        goTo(this, ProfileBusinessNaviagationActivity.class, true);
     }
 
     @Override

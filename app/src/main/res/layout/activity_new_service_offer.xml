@@ -341,57 +341,6 @@
                         android:gravity="right|center"/>
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="Duration\nIn hours"
-                    style="@style/boldtextTheme"
-                    android:textColor="@color/txt_color"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:id="@+id/txv_duration_minus"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/button_rectangle_round"
-                        android:text="-"
-                        android:textColor="@color/white"
-                        android:gravity="center"
-                        android:textSize="22sp"/>
-                    <TextView
-                        android:id="@+id/txt_duration_day"
-                        style="@style/edit_inputtext"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="50dp"
-                        android:text="1"
-                        android:textSize="15sp"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:singleLine="true" />
-                    <TextView
-                        android:id="@+id/txv_duration_plus"
-                        android:layout_width="50dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/button_rectangle_round"
-                        android:text="+"
-                        android:textColor="@color/white"
-                        android:gravity="center"
-                        android:textSize="22sp"/>
-                </LinearLayout>
-            </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

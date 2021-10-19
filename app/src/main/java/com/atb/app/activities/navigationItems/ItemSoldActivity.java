@@ -25,7 +25,6 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
-import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
@@ -149,9 +148,6 @@ public class ItemSoldActivity extends CommonActivity {
                                     transactionEntity.setCreated_at(object.getLong("created_at"));
                                     transactionEntity.setImv_url(object.getJSONArray("product").getJSONObject(0).getJSONArray("post_imgs").getJSONObject(0).getString("path"));
                                     transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
-                                    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
-                                    newsFeedEntity.initModel(object.getJSONArray("product").getJSONObject(0));
-                                        transactionEntity.setNewsFeedEntity(newsFeedEntity);
                                     transactionEntities.add(transactionEntity);
                                 }
                                 if(transactionEntities.size()>0){
