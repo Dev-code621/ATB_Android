@@ -750,16 +750,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
+
                 <TextView
+                    style="@style/boldtextTheme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/free_postage"
-                    style="@style/boldtextTheme"
-                    android:textColor="@color/txt_color"
-                    android:textSize="16sp"
                     android:gravity="center_vertical"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:text="@string/free_postage"
+                    android:textColor="@color/txt_color"
+                    android:textSize="16sp" />
                 <com.zcw.togglebutton.ToggleButton
                     android:id="@+id/toggle_free_postage"
                     android:layout_width="60dp"

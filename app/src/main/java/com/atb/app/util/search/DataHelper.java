@@ -17,6 +17,7 @@ package com.atb.app.util.search;
  */
 
 import android.content.Context;
+import android.os.Build;
 import android.widget.Filter;
 
 import com.atb.app.commons.Commons;
@@ -41,11 +42,16 @@ public class DataHelper {
             new ArrayList<>();
 
     public static  void init(){
-        for(int i =0;i< Commons.county.size();i++){
-            for(int j =0;j<Commons.region.get(Commons.county.get(i)).size();j++){
-                sColorSuggestions.add(new ColorSuggestion(Commons.region.get(Commons.county.get(i)).get(j) +", " + Commons.county.get(i) +", United Kingdom" ));
-            }
+//        for(int i =0;i< Commons.county.size();i++){
+//            for(int j =0;j<Commons.region.get(Commons.county.get(i)).size();j++){
+//                sColorSuggestions.add(new ColorSuggestion(Commons.region.get(Commons.county.get(i)).get(j) +", " + Commons.county.get(i) +", United Kingdom" ));
+//            }
+//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Commons.postalCode.forEach((key, value) -> sColorSuggestions.add(new ColorSuggestion(key+"\n" + value) ));
         }
+
+
     }
 
 

@@ -154,6 +154,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     int REQUEST_EDITFEED =23232;
     Map<String, String> payment_params = new HashMap<>();
     int deliveryOption = 0;
+    TextView txv_buy_mesasge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +163,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         lyt_location = findViewById(R.id.lyt_location);
         txv_brand = findViewById(R.id.txv_brand);
         txv_price = findViewById(R.id.txv_price);
+        txv_buy_mesasge = findViewById(R.id.txv_buy_mesasge);
         txv_postage_cost = findViewById(R.id.txv_postage_cost);
         txv_location = findViewById(R.id.txv_location);
         txv_buy_sale = findViewById(R.id.txv_buy_sale);
@@ -234,6 +236,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         txv_buy_sale.setOnClickListener(this);
         lyt_like.setOnClickListener(this);
         lyt_location.setOnClickListener(this);
+        txv_buy_mesasge.setOnClickListener(this);
         imv_bookmark.setOnClickListener(this);
         setSliderAdapter = new SliderImageAdapter(this);
         imageSlider.setSliderAdapter(setSliderAdapter);
@@ -616,6 +619,10 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 break;
             case R.id.imv_bookmark:
                savePost();
+                break;
+            case R.id.txv_buy_mesasge:
+                gotochat(this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
+
                 break;
             case R.id.txv_buy_sale:
 

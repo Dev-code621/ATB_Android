@@ -44,6 +44,8 @@
                 android:textSize="14sp"
                 android:textColor="@color/txt_color"
                 android:padding="10dp"
+                android:autoLink="web"
+
                 android:background="@drawable/comment_text_round"/>
             <ImageView
                 android:id="@+id/imv_image1"

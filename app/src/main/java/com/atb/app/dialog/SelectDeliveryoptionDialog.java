@@ -74,30 +74,71 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
         txv_description =(TextView) view.findViewById(R.id.txv_description);
         txv_buy_sale =(TextView) view.findViewById(R.id.txv_buy_sale);
         LinearLayout lyt_location = (LinearLayout) view.findViewById(R.id.lyt_location);
+
+        TextView txv_postage_description= view.findViewById(R.id.txv_postage_description);
+        TextView txv_collect_description= view.findViewById(R.id.txv_collect_description);
+        TextView txv_deliver_description= view.findViewById(R.id.txv_deliver_description);
         imv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
-        imv_postage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectItem(0);
-            }
-        });
-        imv_collect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectItem(1);
-            }
-        });
-        imv_deliver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectItem(2);
-            }
-        });
+        int delivery_cost = newsFeedEntity.getDelivery_option();
+        total_price = Double.parseDouble(newsFeedEntity.getPrice());
+        if(delivery_cost-5>=0){
+            delivery_cost -=5;
+            deliver = true;
+        }
+        if(delivery_cost-3>0){
+            collect = true;
+        }if(delivery_cost -1>=0){
+            postage = true;
+        }
+
+        txv_deliver.setText("+£" + newsFeedEntity.getDelivery_cost());
+
+        txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price));
+
+        if(!postage){
+            imv_postage.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
+        }else{
+            imv_postage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectItem(0);
+                }
+            });
+        }
+
+        if(!collect){
+            imv_collect.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
+            imv_collect.setPadding(70,70,70,70);
+            txv_collect.setTextColor(getResources().getColor(R.color.line_color));
+            txv_collect_description.setTextColor(getResources().getColor(R.color.line_color));
+        }else{
+            imv_collect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectItem(1);
+                }
+            });
+        }
+        if(!deliver){
+            imv_deliver.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
+            imv_deliver.setPadding(70,70,70,70);
+            txv_deliver.setTextColor(getResources().getColor(R.color.line_color));
+            txv_deliver_description.setTextColor(getResources().getColor(R.color.line_color));
+        }else{
+            imv_deliver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectItem(2);
+                }
+            });
+        }
+
+
 
         lyt_select.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,21 +165,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
                 }
             }
         });
-        int delivery_cost = newsFeedEntity.getDelivery_option();
-        total_price = Double.parseDouble(newsFeedEntity.getPrice());
-        if(delivery_cost-5>=0){
-            delivery_cost -=5;
-            deliver = true;
-        }
-        if(delivery_cost-3>0){
-            collect = true;
-        }if(delivery_cost -1>=0){
-            postage = true;
-        }
 
-        txv_deliver.setText("+£" + newsFeedEntity.getDelivery_cost());
-
-        txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price));
 
     }
     void selectItem(int type){
@@ -160,7 +187,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
                 return;
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_collect));
-            txv_type.setText("I'll Collect");
+            txv_type.setText("Buyer Collects");
             txv_description.setText(getContext().getResources().getString(R.string.str_collect));
             selected_type = 3;
         }else if(type ==2){
@@ -169,7 +196,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
                 return;
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_deliver));
-            txv_type.setText("Deliver");
+            txv_type.setText("Deliver by Post");
             txv_description.setText("This product includes delivery cost £" + String.format("%.2f",Double.parseDouble(newsFeedEntity.getDelivery_cost()) )+ " at your current location:" +" " +  newsFeedEntity.getPost_location());
             txv_cost.setText(newsFeedEntity.getDelivery_cost());
             selected_type = 5;

@@ -81,6 +81,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         lyt_send.setOnClickListener(this);
         mSearchView = findViewById(R.id.floating_search_view);
         mapFragment.getMapAsync(this);
+
         setupSearchBar();
         if(!Commons.g_user.getLocation().equals("null")){
             txv_progress.setText(50 + "KM");
@@ -144,7 +145,6 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                                     //this will swap the data and
                                     //render the collapse/expand animations as necessary
                                     mSearchView.swapSuggestions(results);
-
                                     //let the users know that the background
                                     //process has completed
                                     mSearchView.hideProgress();
@@ -158,9 +158,10 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
                 mLastQuery = searchSuggestion.getBody();
-                mSearchView.setSearchBarTitle(mLastQuery);
-                myCordianite = Commons.LatLang.get(mLastQuery);
-                edt_serach.setText(mLastQuery);
+                String postalCode =mLastQuery.split("\n")[0];
+                mSearchView.setSearchBarTitle(postalCode);
+                myCordianite = Commons.LatLang.get(Commons.postalCode.get(postalCode));
+                edt_serach.setText(Commons.postalCode.get(postalCode) + "||" + postalCode);
                 mSearchView.clearSuggestions();
                 moveCamera();
             }
@@ -176,7 +177,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             public void onFocus() {
 
                 //show suggestions when search bar gains focus (typically history suggestions)
-                mSearchView.swapSuggestions(DataHelper.getHistory(SetPostRangeActivity.this, 3));
+                mSearchView.swapSuggestions(DataHelper.getHistory(SetPostRangeActivity.this, 1));
 
             }
 
@@ -184,13 +185,16 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             public void onFocusCleared() {
 
                 //set the title of the bar so that when focus is returned a new query begins
-                mSearchView.setSearchBarTitle(mLastQuery);
+                String postalCode =mLastQuery.split("\n")[0];
+                mSearchView.setSearchBarTitle(postalCode);
 
                 //you can also set setSearchText(...) to make keep the query there when not focused and when focus returns
                 //mSearchView.setSearchText(searchSuggestion.getBody());
             }
         });
     }
+
+
     private void setUpMap() {
 
         GpsInfo gpsInfo = new GpsInfo(this);

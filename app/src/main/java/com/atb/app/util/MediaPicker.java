@@ -51,7 +51,7 @@ public class MediaPicker {
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media._ID, MediaStore.Images.Thumbnails.DATA};
 
         final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
-        cursor = context.getContentResolver().query(uri, projection, null, null, orderBy + " ASC");
+        cursor = context.getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
 
         assert cursor != null;
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);

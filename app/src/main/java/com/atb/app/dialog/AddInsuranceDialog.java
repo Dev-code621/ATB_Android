@@ -124,7 +124,7 @@ public class AddInsuranceDialog extends DialogFragment {
         lyt_add_insurance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edt_company.getText().toString().length()==0 || edt_number.getText().toString().length()==0 || txv_time.getText().toString().length()==0){
+                if(edt_company.getText().toString().length()==0 || txv_time.getText().toString().length()==0){
                     ((CommonActivity)getContext()).showAlertDialog("Please enter the fields");
                     return;
                 }

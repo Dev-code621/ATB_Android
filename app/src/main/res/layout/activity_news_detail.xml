@@ -753,12 +753,23 @@
                         android:layout_marginTop="5dp"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/txv_buy_mesasge"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Message Buyer/Seller"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    style="@style/btn_buttonStyle"
+                    android:textSize="18sp"
+                    android:background="@drawable/button_rectangle_round"/>
                 <LinearLayout
                     android:id="@+id/lyt_sale_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="10dp">
                     <TextView
                         android:id="@+id/txv_buy_sale"
                         android:layout_width="0dp"

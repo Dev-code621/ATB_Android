@@ -558,7 +558,7 @@
                     android:src="@drawable/icon_checked1"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    app:tint="@color/white"/>
+                    app:tint="@color/green"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

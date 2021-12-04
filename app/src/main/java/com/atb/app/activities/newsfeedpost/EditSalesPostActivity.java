@@ -150,6 +150,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                     for (int i = 0; i < array.length; i++){
                         if (array[i].equals(newsFeedEntity.getCategory_title())) {
                             spiner_category_type.setSelectedIndex(i);
+                            txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
                             break;
                         }
                     }
@@ -280,7 +281,6 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 }
             }
         });
-        txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
         spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {

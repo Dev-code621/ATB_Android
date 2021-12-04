@@ -3,9 +3,27 @@ package com.atb.app.model;
 public class TransactionEntity {
     int id,user_id,is_business,quantity,delivery_option;
     String transaction_id,transaction_type,target_id,payment_method,payment_source,purchase_type;
+    int poster_profile_type = 0;
     double amount;
     long created_at;
     String imv_url,title ;
+    UserModel userModel = new UserModel();
+
+    public int getPoster_profile_type() {
+        return poster_profile_type;
+    }
+
+    public void setPoster_profile_type(int poster_profile_type) {
+        this.poster_profile_type = poster_profile_type;
+    }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
 
     public String getTitle() {
         return title;

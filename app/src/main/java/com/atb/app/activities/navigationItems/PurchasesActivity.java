@@ -23,6 +23,7 @@ import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.TransactionEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -113,11 +114,19 @@ public class PurchasesActivity extends CommonActivity {
                                         transactionEntity.setDelivery_option(object.getInt("delivery_option"));
                                     transactionEntity.setCreated_at(object.getLong("created_at"));
                                     transactionEntity.setImv_url(object.getJSONArray("product").getJSONObject(0).getJSONArray("post_imgs").getJSONObject(0).getString("path"));
+                                    transactionEntity.setPoster_profile_type(object.getJSONArray("product").getJSONObject(0).getInt("poster_profile_type"));
                                     transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
+
+                                    if(object.has("user")){
+                                        UserModel userModel = new UserModel();
+                                        userModel.initModel(object.getJSONObject("user"));
+                                        transactionEntity.setUserModel(userModel);
+                                    }
+
                                     transactionEntities.add(transactionEntity);
                                 }
                                 if(transactionEntities.size()>0) {
-                                    soldHeaderAdapter = new SoldHeaderAdapter(PurchasesActivity.this, true, false, false, SHOW_ADAPTER_POSITIONS, transactionEntities);
+                                    soldHeaderAdapter = new SoldHeaderAdapter(PurchasesActivity.this, true, false, false, SHOW_ADAPTER_POSITIONS, transactionEntities,"purchase");
                                     recyclerView.setAdapter(soldHeaderAdapter);
                                 }
                             }

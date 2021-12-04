@@ -66,5 +66,16 @@
                 android:textColor="@color/head_color"
                 android:ellipsize="end"/>
         </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_unread_noti"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            app:cardCornerRadius="6dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="false"
+            app:cardBackgroundColor="#E3677F"/>
     </LinearLayout>
 </LinearLayout>

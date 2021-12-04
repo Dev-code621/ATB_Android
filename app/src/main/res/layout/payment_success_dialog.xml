@@ -87,6 +87,30 @@
                 android:tint="@color/white"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/lyt_contact_seller"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/background_rectangle_round1"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Contact the seller"
+                android:gravity="center"
+                android:textColor="@color/head_color"
+                android:layout_marginLeft="10dp"
+                android:textSize="16sp"
+                style="@style/boldtextTheme" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_message"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/head_color"/>
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/lyt_keep_buying"
             android:layout_width="match_parent"
             android:layout_height="50dp"

@@ -89,8 +89,9 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
     EditText edt_firstname,edt_lastname,edt_email;
     TextView txv_update,txv_male,txv_female,txv_location,edt_birthday;
     String photoPath = "",birthday = "";
-    int gender = 1 ;
+    int gender = 0 ;
     private ImageUtils imageUtils;
+    String locationText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,15 +129,16 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
         edt_firstname.setText(Commons.g_user.getFirstname());
         edt_lastname.setText(Commons.g_user.getLastname());
         edt_email.setText(Commons.g_user.getEmail());
-        txv_location.setText(Commons.g_user.getLocation());
-        if(Commons.g_user.getSex()=="0"){
+        txv_location.setText(Commons.getPostalCode(Commons.g_user.getLocation()));
+        locationText = Commons.g_user.getLocation();
+        if(Commons.g_user.getSex().equals("0")){
             imv_selector1.setVisibility(View.GONE);
             imv_selector2.setVisibility(View.VISIBLE);
-            gender = 1;
+            gender = 0;
         }else {
             imv_selector1.setVisibility(View.VISIBLE);
             imv_selector2.setVisibility(View.GONE);
-            gender = 0;
+            gender = 1;
         }
         birthday = Commons.g_user.getBirhtday();
         edt_birthday.setText(getDisplayDate(Commons.g_user.getBirhtday()));
@@ -214,7 +216,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
             params.put("user_email", edt_email.getText().toString());
             params.put("first_name", edt_firstname.getText().toString());
             params.put("last_name", edt_lastname.getText().toString());
-            params.put("country", txv_location.getText().toString());
+            params.put("country", locationText);
             params.put("birthday", birthday);
             params.put("gender", String.valueOf(gender));
 
@@ -239,7 +241,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
                             Commons.g_user.setFirstname(edt_firstname.getText().toString());
                             Commons.g_user.setLastname(edt_lastname.getText().toString());
                             Commons.g_user.setEmail(edt_email.getText().toString());
-                            Commons.g_user.setLocation(txv_location.getText().toString());
+                            Commons.g_user.setLocation(locationText);
                             Commons.g_user.setSex(String.valueOf(gender));
                             Commons.g_user.setBirhtday(birthday);
                             finish(ProfileActivity.this);
@@ -274,7 +276,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
                 month = month + 1;
                 Log.d( "onDateSet" , month + "/" + day + "/" + year );
                 edt_birthday.setText(String.valueOf(day)+ " " + Commons.Months[month-1]+ " " + year);
-                cal.set(year,month,day);
+                cal.set(year,month-1,day);
                 SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
                 birthday = format.format(cal.getTime());
 
@@ -388,10 +390,15 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
                 Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.location);
+
+            txv_location.setText(Commons.getPostalCode(Commons.location));
+            locationText = Commons.location;
+
         }
 
     }
+
+
 
     @Override
     public void image_attachment(int from, String filename, Bitmap file, Uri uri) {

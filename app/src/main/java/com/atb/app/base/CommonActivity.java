@@ -582,6 +582,7 @@ public abstract class CommonActivity extends BaseActivity {
                 LatLng latLng = new LatLng(Double.parseDouble(line.split(",")[2]),Double.parseDouble(line.split(",")[3]));
                 Commons.LatLang.put(region + ", " + county +", United Kingdom" ,latLng);
                 Commons.region.get(county).add(region);
+                Commons.postalCode.put(line.split(",")[4],region + ", " + county +", United Kingdom");
                 if(duplicateCounty(county))
                     continue;
                 Commons.county.add(county);

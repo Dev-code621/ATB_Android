@@ -7,6 +7,12 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16f95913c5729dfae9af34d9cbc7eb45/jetified-android-simple-tooltip-0.2.3/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16f95913c5729dfae9af34d9cbc7eb45/jetified-android-simple-tooltip-0.2.3/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/16f95913c5729dfae9af34d9cbc7eb45/jetified-android-simple-tooltip-0.2.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/822263c13950ed93f5c1a24636738231/jetified-android-simple-tooltip-0.2.3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/822263c13950ed93f5c1a24636738231/jetified-android-simple-tooltip-0.2.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/822263c13950ed93f5c1a24636738231/jetified-android-simple-tooltip-0.2.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/03feccc46c1ec8d0169fbe5fce98cfd8/jetified-android-simple-tooltip-0.2.3/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/03feccc46c1ec8d0169fbe5fce98cfd8/jetified-android-simple-tooltip-0.2.3/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/03feccc46c1ec8d0169fbe5fce98cfd8/jetified-android-simple-tooltip-0.2.3/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.douglasjunior/android-simple-tooltip/0.2.3/ecec0c314f495cb2e2f12d690331a4735b57e2cb/android-simple-tooltip-0.2.3-javadoc.jar!/" />

@@ -64,6 +64,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.kittinunf.fuel.core.BodyKt;
 import com.google.android.gms.common.internal.service.Common;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
@@ -180,8 +185,6 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 processNotification();
             }
         }
-
-
 
     }
     void loadNotification(){
@@ -575,9 +578,33 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     }
 
 
+    void getChangeState(){
+        String channel  = "ATB/Admin/business/" + Commons.g_user.getId();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(channel).child("approved");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue().toString();
+                Log.d("TAG", "Value is: " + value);
+                if(value!=null)
+                    Commons.g_user.setStatus(Integer.parseInt(value));;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
+        });
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
+        getChangeState();
         Commons.selected_user = Commons.g_user;
         setColor(selectIcon);
         getFirebaseToken();

@@ -61,14 +61,14 @@ public class BusinessModel {
             int start = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getStart()));
             int end = Commons.getMilionSecond(Commons.getLocaltime(openingTimeModels.get(i).getEnd()));
             if(end<start)start-=24*3600;
-            int count = (end-start)/3600;
+            int count = (end-start)/1800;
             for(int k=0;k<count;k++){
                 if(start%(24*3600)<= Commons.getMilionSecond("11:00 PM")) {
                     slots.get(i).add(Commons.gettimeFromMilionSecond(start));
                 }else {
                     slots.get(next_day).add(Commons.gettimeFromMilionSecond(start));
                 }
-                start+=3600;
+                start+=1800;
             }
         }
 

@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.atb.app.R;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.VariationModel;
 import com.bumptech.glide.Glide;
@@ -47,7 +48,7 @@ public class PaymentSuccessDialog extends DialogFragment {
 
         LinearLayout lyt_mypurchase = view.findViewById(R.id.lyt_mypurchase);
         LinearLayout lyt_keep_buying = view.findViewById(R.id.lyt_keep_buying);
-
+        LinearLayout lyt_contact_seller = view.findViewById(R.id.lyt_contact_seller);
 
         lyt_mypurchase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +62,14 @@ public class PaymentSuccessDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+
+        lyt_contact_seller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)getContext()).gotochat(getContext(),newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
+
             }
         });
         Glide.with(getContext()).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.profile_pic).into(imv_image);

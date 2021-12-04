@@ -2,6 +2,7 @@ package com.atb.app.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.Response;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -63,8 +66,8 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     }
 
     public class ItemViewHolder extends SectioningAdapter.ItemViewHolder{
-        ImageView imv_image,imv_profile;
-        TextView txv_name,txv_itemnumber,txv_price,txv_time;
+        ImageView imv_image,imv_profile,imv_btn_arrow;
+        TextView txv_name,txv_itemnumber,txv_price,txv_time,txv_other_name;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -74,7 +77,8 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             txv_itemnumber =  itemView.findViewById(R.id.txv_itemnumber);
             txv_price =  itemView.findViewById(R.id.txv_price);
             txv_time =  itemView.findViewById(R.id.txv_time);
-
+            imv_btn_arrow = itemView.findViewById(R.id.imv_btn_arrow);
+            txv_other_name = itemView.findViewById(R.id.txv_other_name);
         }
     }
 
@@ -110,8 +114,10 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     boolean hasFooters;
     ArrayList<TransactionEntity> _roomDatas = new ArrayList<>();
     HashMap<String, ArrayList<TransactionEntity> > hashMap = new HashMap();
-    public SoldHeaderAdapter(Context context,boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions,ArrayList<TransactionEntity> data) {
+    String type ="";
+    public SoldHeaderAdapter(Context context,boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions,ArrayList<TransactionEntity> data,String type) {
         this._context = context;
+        this.type = type;
         this.showModificationControls = showModificationControls;
         this.showCollapsingSectionControls = showCollapsingSectionControls;
         this.showAdapterPositions = showAdapterPositions;
@@ -237,7 +243,29 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                 holder.txv_name.setText(transactionEntity.getTitle());
                 holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
                 holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()) +  " ORDER " + transactionEntity.getTransaction_id());
+                if(transactionEntity.getPoster_profile_type() == 1){
+                    holder.txv_other_name.setText(transactionEntity.getUserModel().getBusinessModel().getBusiness_name());
 
+                }else {
+                    holder.txv_other_name.setText(transactionEntity.getUserModel().getUserName());
+                }
+                if(type.equals("purchase")){
+                    holder.imv_btn_arrow.setImageDrawable(_context.getDrawable(R.drawable.icon_message1));
+                    holder.imv_btn_arrow.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+                    holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((CommonActivity)_context).gotochat(_context,transactionEntity.getPoster_profile_type(),transactionEntity.getUserModel());
+                        }
+                    });
+                }else{
+                    holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((CommonActivity)_context).gotochat(_context,0,transactionEntity.getUserModel());
+                        }
+                    });
+                }
             }
             index++;
         }

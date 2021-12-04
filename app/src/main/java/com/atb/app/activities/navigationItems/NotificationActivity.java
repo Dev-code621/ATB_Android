@@ -72,6 +72,7 @@ public class NotificationActivity extends CommonActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NotiEntity notiEntity = notiEntities.get(position);
+
                 if(notiEntity.getRead_status()==0)
                     readNotification(notiEntity);
 

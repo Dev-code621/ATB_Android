@@ -55,6 +55,8 @@ public class Commons {
     public static HashMap<String, ArrayList<String>>region = new HashMap<>();
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();
+    public static HashMap<String,String> postalCode = new HashMap<>();
+
     public static BackgroundService backgroundService ;
     public static int notification_count = 0;
 
@@ -101,6 +103,13 @@ public class Commons {
             e.printStackTrace();
         }
         return  dayName;
+    }
+   public static String getPostalCode(String str){
+        String[] array = str.split("\\|");
+        if(array.length>2){
+            return array[2];
+        }
+        return "";
     }
 
     public static boolean myVoting(VotingModel votingModel){

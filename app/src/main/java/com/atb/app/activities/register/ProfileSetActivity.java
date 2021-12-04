@@ -293,7 +293,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
             params.put("user_name", edt_username.getText().toString());
             params.put("first_name", edt_firstname.getText().toString());
             params.put("last_name", edt_lastname.getText().toString());
-            params.put("location", txv_location.getText().toString());
+            params.put("location", Commons.location);
             params.put("dob", birthday);
             params.put("gender", "");
             params.put("lat", String.valueOf(Commons.g_user.getLatitude()));
@@ -538,7 +538,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
                 Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.location);
+            txv_location.setText(Commons.getPostalCode(Commons.location));
         }
 
     }

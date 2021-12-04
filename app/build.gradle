@@ -224,6 +224,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging-directboot:22.0.0'
     implementation 'com.google.android.gms:play-services-analytics:17.0.0'
+    implementation 'com.google.firebase:firebase-database'
+
 
     //preference
     implementation 'androidx.preference:preference:1.1.1'

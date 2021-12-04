@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.applikeysolutions.cosmocalendar.listeners.OnMonthChangeListener;
 import com.applikeysolutions.cosmocalendar.model.Month;
 import com.applikeysolutions.cosmocalendar.selection.OnDaySelectedListener;
 import com.applikeysolutions.cosmocalendar.selection.SingleSelectionManager;
+import com.applikeysolutions.cosmocalendar.settings.appearance.ConnectedDayIconPosition;
+import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDays;
 import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.atb.app.R;
@@ -178,7 +181,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(holidayModel.getDay_off()*1000);
             long start = holidayModel.getDay_off();
-            for(int j =0;j<24*3600;j+=3600){
+            for(int j =0;j<24*3600;j+=1800){
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis((holidayModel.getDay_off()+j)*1000);
@@ -223,7 +226,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
 
                             }
                             if(day>=0)loadBookingByday(day);
-
+                            setConnectDay();
                         }catch (Exception e){
 
                         }
@@ -254,6 +257,18 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
+    void setConnectDay(){
+        Set<Long> connectDay = new HashSet<>();
+        int textColor = Color.parseColor("#FF03DAC5");
+        for(int i =0;i<bookingEntities.size();i++){
+            Calendar c = Calendar.getInstance();
+            connectDay.add(bookingEntities.get(i).getBooking_datetime()*1000l);
+        }
+
+        ConnectedDays connectedDays = new ConnectedDays(connectDay, textColor);
+        calendarView.setConnectedDayIconPosition(ConnectedDayIconPosition.BOTTOM);
+        calendarView.addConnectedDays(connectedDays);
+    }
     void loadBookingByday(int day){
         hashMap.clear();
         this.day = day;
