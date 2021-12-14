@@ -5,30 +5,49 @@
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable-hdpi/edit_rectangle_round1.xml" value="0.16875" />
+        <entry key="app/src/main/res/drawable-mdpi/chats_divider.xml" value="0.17413127413127413" />
+        <entry key="app/src/main/res/drawable-mdpi/message_composer_bg.xml" value="0.1326388888888889" />
+        <entry key="app/src/main/res/drawable-mdpi/message_received_bubble.xml" value="0.17413127413127413" />
         <entry key="app/src/main/res/drawable-xxxhdpi/button_rectangle_round.xml" value="0.30972222222222223" />
         <entry key="app/src/main/res/drawable-xxxhdpi/edit_rectangle_round.xml" value="0.30972222222222223" />
         <entry key="app/src/main/res/drawable-xxxhdpi/login_button_rectangle_round.xml" value="0.30972222222222223" />
+        <entry key="app/src/main/res/drawable/bg_balloon_g.xml" value="0.164453125" />
         <entry key="app/src/main/res/drawable/under_line.xml" value="0.1909722222222222" />
         <entry key="app/src/main/res/layout/activity_book_from_post.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_exist_sales_post.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.14824024483550116" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.12083333333333333" />
         <entry key="app/src/main/res/layout/activity_new_sale_post.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_news_detail.xml" value="0.14824024483550116" />
+        <entry key="app/src/main/res/layout/activity_news_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_profile_naviagation.xml" value="0.11180555555555556" />
         <entry key="app/src/main/res/layout/activity_purchases.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_set_operating.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_post_range.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_update_business.xml" value="0.11180555555555556" />
         <entry key="app/src/main/res/layout/comment_item.xml" value="0.10520275439938791" />
         <entry key="app/src/main/res/layout/dialog_confirm.xml" value="0.1396327467482785" />
         <entry key="app/src/main/res/layout/futurebooking_item.xml" value="0.10864575363427698" />
+        <entry key="app/src/main/res/layout/insurance_view_dialog.xml" value="0.1396327467482785" />
+        <entry key="app/src/main/res/layout/item_chat.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_date.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_message_received.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/item_message_received_end.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_message_received_middle.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_message_sent.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_message_sent_end.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_message_sent_middle.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_salespost.xml" value="0.1" />
         <entry key="app/src/main/res/layout/list_item_simple_header.xml" value="0.11944444444444445" />
         <entry key="app/src/main/res/layout/list_item_simple_item.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/message_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/noti_item.xml" value="0.17" />
         <entry key="app/src/main/res/layout/payment_success_dialog.xml" value="0.15" />
         <entry key="app/src/main/res/layout/select_delivery_option.xml" value="0.17" />
+        <entry key="app/src/main/res/layout/view_empty.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_message_composer.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/view_progress.xml" value="0.1" />
       </map>
     </option>
   </component>

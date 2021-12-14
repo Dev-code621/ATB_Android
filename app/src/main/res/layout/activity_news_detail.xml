@@ -688,6 +688,71 @@
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/edit_rectangle_round1"
+                        android:padding="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/textTheme"
+                            android:layout_marginLeft="5dp"
+                            android:text="Condition"
+                            android:textSize="14sp"
+                            android:textColor="@color/txt_color"/>
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/txv_condition"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/boldtextTheme"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/txt_color"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/edit_rectangle_round1"
+                        android:padding="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/textTheme"
+                            android:layout_marginLeft="5dp"
+                            android:text="Quantity"
+                            android:textSize="14sp"
+                            android:textColor="@color/txt_color"/>
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/txv_quantity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/boldtextTheme"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/txt_color"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:id="@+id/lyt_attribute1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

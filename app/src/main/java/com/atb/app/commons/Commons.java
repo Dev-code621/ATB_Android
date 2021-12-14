@@ -10,6 +10,7 @@ import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
 import com.atb.app.service.BackgroundService;
 import com.google.android.gms.maps.model.LatLng;
+import com.pubnub.api.PubNub;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 
@@ -59,7 +60,11 @@ public class Commons {
 
     public static BackgroundService backgroundService ;
     public static int notification_count = 0;
-
+    public static PubNub mPubNub;
+    public static String senderID;
+    public static String senderImage;
+    public static String senderName;
+    public static  boolean profile_flag = false;
 
     public static String fileNameWithoutExtFromPath(String path) {
 

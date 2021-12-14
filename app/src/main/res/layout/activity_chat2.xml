@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/head_color">
+
+        <ImageView
+            android:id="@+id/imv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="20dp"
+            android:src="@drawable/icon_back" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_user_info_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                app:cardCornerRadius="25dp"
+                android:layout_gravity="center"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/imv_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:actualImageScaleType="centerCrop"
+                    app:placeholderImage="@drawable/profile_pic"/>
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/txv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Operating Hours"
+                style="@style/boldtextTheme"
+                android:textSize="25sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_marginTop="120dp"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/chat_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/chats_message_composer"
+            android:background="?android:windowBackground"
+            tools:targetApi="lollipop">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.atb.app.activities.chat.view.EmptyView
+            android:id="@+id/chat_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:evMessage="@string/no_messages"
+            tools:targetApi="lollipop" />
+
+        <com.atb.app.activities.chat.view.MessageComposer
+            android:id="@+id/chats_message_composer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

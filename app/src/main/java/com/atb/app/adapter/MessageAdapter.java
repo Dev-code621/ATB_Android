@@ -19,6 +19,7 @@ import com.applozic.mobicommons.people.contact.Contact;
 import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.RoomModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,7 +37,7 @@ public class MessageAdapter extends BaseAdapter {
 
     private Context _context;
 
-    public List<Message> _roomDatas = new ArrayList<>();
+    public List<RoomModel> _roomDatas = new ArrayList<>();
     private MessageDatabaseService messageDatabaseService;
 
     public MessageAdapter(Context context) {
@@ -47,7 +48,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
 
-    public void setRoomData(List<Message> messageList) {
+    public void setRoomData(List<RoomModel> messageList) {
         _roomDatas = messageList;
         notifyDataSetChanged();
     }
@@ -87,26 +88,27 @@ public class MessageAdapter extends BaseAdapter {
         } else {
             holder = (CustomHolder) convertView.getTag();
         }
-        final Message message = _roomDatas.get(position);
-        final Contact contact = new AppContactService(_context).getContactById(message.getContactIds());
-        holder.txv_name.setText(contact.getDisplayName());
-        holder.txv_lastmessage.setText(message.getMessage());
+        final RoomModel roomModel = _roomDatas.get(position);
+        holder.txv_name.setText(roomModel.getName());
+        holder.txv_lastmessage.setText(roomModel.getLast_message());
+
         holder.txv_time.setText(getFormattedDateAndTime(_context,
-                message.getCreatedAtTime(),
+                roomModel.getLastMessageTime()/10000,
                 R.string.JUST_NOW,
                 R.plurals.MINUTES,
                 R.plurals.HOURS));
-        Glide.with(_context).load(contact.getImageURL()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+        holder.unreadSmsCount.setVisibility(View.GONE);
+
+        if(roomModel.getUnReadCount()>0){
+            holder.unreadSmsCount.setVisibility(View.VISIBLE);
+            holder.unreadSmsCount.setText(String.valueOf(roomModel.getUnReadCount()));
+        }
+        Glide.with(_context).load(roomModel.getImage()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
-        if(contact.isOnline()){
+        if(roomModel.isOnline()){
             holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.online_circle));
         }else {
             holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.offline_circle));
-        }
-        if(messageDatabaseService.getUnreadMessageCountForContact(message.getContactIds()) != 0){
-            holder.unreadSmsCount.setText(String.valueOf(messageDatabaseService.getUnreadMessageCountForContact(message.getContactIds())));
-        }else {
-            holder.unreadSmsCount.setVisibility(View.GONE);
         }
 
         return convertView;

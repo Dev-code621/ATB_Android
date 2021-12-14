@@ -142,33 +142,34 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         boostAdapter = new BoostItemAdapter(this,  new BoostItemAdapter.OnSelectListener() {
             @Override
             public void onSelectItem(BoostModel boostModel) {
-                if(Commons.g_user.getAccount_type() == 0){
-                    SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
-                    selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
-                        @Override
-                        public void OnCamera() {
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("subScriptionType",0);
-                            goTo(MainActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
-                        }
 
-                        @Override
-                        public void OnAlbum() {
-
-                        }
-                    },getResources().getString(R.string.upgrade_account),getResources().getString(R.string.yes),getResources().getString(R.string.no));
-                    selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
-                }else {
-                    if (!boostModel.isEmptyModel())
-                        goTo(MainActivity.this, BoostActivity.class, false);
-                    else {
-                        if (boostModel.getUserModel().getId() == Commons.g_user.getId())
-                            startActivityForResult(new Intent(MainActivity.this, ProfileBusinessNaviagationActivity.class), 1);
-                        else
-                            getuserProfile(boostModel.getUserModel().getId(), 1);
-
-                    }
-                }
+//                if(Commons.g_user.getAccount_type() == 0){
+//                    SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
+//                    selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
+//                        @Override
+//                        public void OnCamera() {
+//                            Bundle bundle = new Bundle();
+//                            bundle.putInt("subScriptionType",0);
+//                            goTo(MainActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
+//                        }
+//
+//                        @Override
+//                        public void OnAlbum() {
+//
+//                        }
+//                    },getResources().getString(R.string.upgrade_account),getResources().getString(R.string.yes),getResources().getString(R.string.no));
+//                    selectMediaActionDialog.show(getSupportFragmentManager(), "action picker");
+//                }else {
+//                    if (!boostModel.isEmptyModel())
+//                        goTo(MainActivity.this, BoostActivity.class, false);
+//                    else {
+//                        if (boostModel.getUserModel().getId() == Commons.g_user.getId())
+//                            startActivityForResult(new Intent(MainActivity.this, ProfileBusinessNaviagationActivity.class), 1);
+//                        else
+//                            getuserProfile(boostModel.getUserModel().getId(), 1);
+//
+//                    }
+//                }
             }
 
         });
@@ -519,10 +520,11 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         else if(id ==3){
             selectIcon = 3;
             main_flag = false;
-            lyt_title.setVisibility(View.GONE);
             chatFragment = new ChatFragment();
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.lyt_fragement,chatFragment).commit();
+            lyt_title.setVisibility(View.GONE);
+
         }
         else if( id ==4){
             MainListFragment mFragment = new MainListFragment();
@@ -587,10 +589,16 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue().toString();
-                Log.d("TAG", "Value is: " + value);
-                if(value!=null)
-                    Commons.g_user.setStatus(Integer.parseInt(value));;
+                try {
+                    String value = dataSnapshot.getValue().toString();
+                    Log.d("TAG", "Value is: " + value);
+                    if (value != null)
+                        Commons.g_user.setStatus(Integer.parseInt(value));
+                    ;
+                }catch (Exception e){
+
+
+                }
             }
 
             @Override
@@ -633,11 +641,5 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         if(chatFragment!=null)
             chatFragment.setProfile(flag);
         return  flag;
-    }
-
-    @Override
-    public void login() {
-        if(chatFragment!=null)
-            chatFragment.getLastmessage();
     }
 }

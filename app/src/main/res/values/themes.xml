@@ -130,5 +130,12 @@
         <item name="android:background">@drawable/alert_rectangle_round</item>
 
     </style>
-
+    <style name="MessageBubble">
+        <item name="android:paddingLeft">@dimen/default_spacing</item>
+        <item name="android:paddingRight">@dimen/default_spacing</item>
+        <item name="android:paddingStart">@dimen/default_spacing</item>
+        <item name="android:paddingEnd">@dimen/default_spacing</item>
+        <item name="android:paddingTop">@dimen/half_spacing</item>
+        <item name="android:paddingBottom">@dimen/half_spacing</item>
+    </style>
 </resources>

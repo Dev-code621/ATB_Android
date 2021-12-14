@@ -33,6 +33,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
+import com.watermark.androidwm.WatermarkBuilder;
+import com.watermark.androidwm.bean.WatermarkText;
+import com.watermark.androidwm_light.bean.WatermarkImage;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -52,7 +55,7 @@ public class InsuranceViewDialog extends DialogFragment {
     private InsuranceViewDialog.OnConfirmListener listener;
     ArrayList<InsuranceModel> qualifications = new ArrayList<>();
     PDFView pdfView;
-    ImageView imv_content;
+    ImageView imv_content,imageView;
     int type ;
     @Nullable
     @Override
@@ -77,6 +80,7 @@ public class InsuranceViewDialog extends DialogFragment {
         TextView txv_download = view.findViewById(R.id.txv_download);
         TextView txv_ok = view.findViewById(R.id.txv_ok);
         pdfView = view.findViewById(R.id.pdfView);
+        imageView = view.findViewById(R.id.imageView);
         if(type ==0) {
             txv_title.setText("Electrical Insurance");
             txv_time.setText("Insurance Until " + Commons.getDisplayDate1(qualifications.get(0).getExpiry()));
@@ -92,6 +96,7 @@ public class InsuranceViewDialog extends DialogFragment {
         }
         else {
             Glide.with(getActivity()).load(file_name).placeholder(R.drawable.image_thumnail).into(imv_content);
+
         }
         txv_download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +112,22 @@ public class InsuranceViewDialog extends DialogFragment {
                 dismiss();
             }
         });
+        imageView.setAlpha(127);
+        com.watermark.androidwm.bean.WatermarkText watermarkText = new WatermarkText("ATB Approved")
+                .setPositionX(0.5)
+                .setPositionY(0.5)
+                .setTextAlpha(255)
+                .setRotation(30)
+                .setTextSize(15)
+                .setTextColor(Color.WHITE)
+                .setTextShadow(0.1f, 5, 5, getContext().getColor(R.color.grey));
+
+        WatermarkBuilder.create(getContext(), imageView)
+                .setTileMode(true)
+                .loadWatermarkText(watermarkText)
+                .getWatermark()
+                .setToImageView(imageView);
+
     }
 
 

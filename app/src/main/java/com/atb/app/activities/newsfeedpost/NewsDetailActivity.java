@@ -154,7 +154,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     int REQUEST_EDITFEED =23232;
     Map<String, String> payment_params = new HashMap<>();
     int deliveryOption = 0;
-    TextView txv_buy_mesasge;
+    TextView txv_buy_mesasge,txv_quantity,txv_condition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,6 +230,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         imv_qualitfied = findViewById(R.id.imv_qualitfied);
         txv_insure = findViewById(R.id.txv_insure);
         txv_qualitfied = findViewById(R.id.txv_qualitfied);
+        txv_quantity = findViewById(R.id.txv_quantity);
+        txv_condition = findViewById(R.id.txv_condition);
         txv_book_service.setOnClickListener(this);
         lyt_book_service.setOnClickListener(this);
         imv_bubble.setOnClickListener(this);
@@ -465,6 +467,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     txv_price.setTextColor(getResources().getColor(R.color.txt_color));
                 }
                 txv_postage_cost.setText("£" + newsFeedEntity.getDelivery_cost());
+                txv_condition.setText(newsFeedEntity.getPost_condition());
+
                 String[] location = newsFeedEntity.getPost_location().split(",");
                 txv_location.setText(location[location.length-1]);
                 for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
@@ -479,6 +483,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                             if(selected_Variation.size()==finaI)
                                 selected_Variation.add("");
                             selected_Variation.set(finaI,path);
+                            if(selected_Variation.size()==newsFeedEntity.getAttribute_map().size()) {
+                                VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+                                txv_quantity.setText(String.valueOf(variationModel.getStock_level()));
+                            }
+
                         }
                     }));
                 }

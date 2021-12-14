@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.transition.ChangeBounds;
@@ -44,9 +45,11 @@ import com.applozic.mobicomkit.listners.AlLogoutHandler;
 import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
+import com.atb.app.BuildConfig;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.MainActivity;
+import com.atb.app.activities.chat.ChatActivity;
 import com.atb.app.activities.newsfeedpost.NewAdviceActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.api.API;
@@ -57,6 +60,7 @@ import com.atb.app.dialog.SelectProfileDialog;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.FollowerModel;
 import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.RoomModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
@@ -69,10 +73,24 @@ import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 import com.lky.toucheffectsmodule.factory.TouchEffectsFactory;
 import com.opencsv.CSVReader;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.enums.PNLogVerbosity;
+import com.pubnub.api.enums.PNReconnectionPolicy;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNGetChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResult;
+import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
+import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 
@@ -89,6 +107,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -475,89 +494,147 @@ public abstract class CommonActivity extends BaseActivity {
 
     }
 
+    public void loginPubNub(boolean flag){
 
-    public void loginApplozic(boolean flag){
-        //showProgress();
-        Applozic.logoutUser(this, new AlLogoutHandler(){
-            @Override
-            public void onSuccess(Context context) {
-                loginChatsever(flag);
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                loginChatsever(flag);
-            }
-        });
-    }
-    void loginChatsever(boolean flag){
-        User user = new User();
-        if(flag){
-            user.setUserId(String.valueOf(Commons.g_user.getBusinessModel().getId()) +"_"+ String.valueOf(Commons.g_user.getId()));
-            user.setImageLink(Commons.g_user.getBusinessModel().getBusiness_logo());
-            user.setDisplayName(Commons.g_user.getBusinessModel().getBusiness_name());
-            user.setPassword(String.valueOf(Commons.g_user.getBusinessModel().getId()) +"_"+ String.valueOf(Commons.g_user.getId()));
-        }else {
-            user.setUserId( String.valueOf(Commons.g_user.getId()));
-            user.setImageLink(Commons.g_user.getImvUrl());
-            user.setDisplayName(Commons.g_user.getUserName());
-            user.setPassword(String.valueOf(Commons.g_user.getId()));
+        PNConfiguration pnConfiguration = new PNConfiguration();
+        String pubKey = BuildConfig.PUB_KEY;
+        String subKey = BuildConfig.SUB_KEY;
+        Log.d("aaaaaa",pubKey + "     "+ subKey);
+        pnConfiguration.setPublishKey(pubKey);
+        pnConfiguration.setSubscribeKey(subKey);
+        if(!flag) {
+            pnConfiguration.setUuid("user_" + String.valueOf(Commons.g_user.getId()));
+            Commons.senderID = "user_" + String.valueOf(Commons.g_user.getId());
+            Commons.senderImage = Commons.g_user.getImvUrl();
+            Commons.senderName = Commons.g_user.getFirstname() + " " + Commons.g_user.getLastname();
+        }else{
+            pnConfiguration.setUuid("business_"+String.valueOf(Commons.g_user.getBusinessModel().getId()));
+            Commons.senderID = "business_"+String.valueOf(Commons.g_user.getBusinessModel().getId());
+            Commons.senderImage = Commons.g_user.getBusinessModel().getBusiness_logo();
+            Commons.senderName = Commons.g_user.getBusinessModel().getBusiness_name();
         }
-        user.setEmail(Commons.g_user.getEmail());
-        Applozic.loginUser(this, user, new AlLoginHandler() {
-            @Override
-            public void onSuccess(RegistrationResponse registrationResponse, Context context) {
-                Applozic.registerForPushNotification(CommonActivity.this, new AlPushNotificationHandler() {
+        pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
+        pnConfiguration.setReconnectionPolicy(PNReconnectionPolicy.LINEAR);
+        pnConfiguration.setMaximumReconnectionRetries(20);
+
+        Commons.mPubNub = new PubNub(pnConfiguration);
+//        Commons.mPubNub.whereNow()
+////                .uuid("some-other-uuid") // uuid of the user we want to spy on.
+//                .async(new PNCallback<PNWhereNowResult>() {
+//                    @Override
+//                    public void onResponse(PNWhereNowResult result, PNStatus status) {
+//                        // returns a pojo with channels // channel groups which "some-other-uuid" part of.
+//
+//                        Log.d("aaaaaaaa",result.toString());
+//                    }
+//                });
+
+    }
+    public void setChannelMetadata(String channelName , String title, String description,  Map<String, Object> custom){
+
+        Commons.mPubNub.setChannelMetadata()
+                .channel(channelName)
+                .name(title)
+                .description(description) /// this is description, but i am using image
+                .custom(custom)
+                .includeCustom(true)
+                .async(new PNCallback<PNSetChannelMetadataResult>() {
                     @Override
-                    public void onSuccess(RegistrationResponse registrationResponse) {
+                    public void onResponse(@Nullable final PNSetChannelMetadataResult result, @NotNull final PNStatus status) {
+                        if (status.isError()) {
+                            Log.d("aaaaaaaaaaa",status.toString());
 
+                        } else {
+                            Log.d("bbbbbbb",result.toString());
+
+                        }
                     }
-
-                    @Override
-                    public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
-
-                    }
-
                 });
-                login();
-            }
-
-            @Override
-            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
-                AlertDialog alertDialog = new AlertDialog.Builder(CommonActivity.this).create();
-                alertDialog.setTitle("Alert");
-                alertDialog.setMessage(exception.toString());
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Alert",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                if (!isFinishing()) {
-                    alertDialog.show();
-                }
-            }
-        });
     }
 
-    public void login(){
 
-    }
+
 
     public void gotochat(Context context, int userType,UserModel userModel){
-        Intent intent = new Intent(this, ConversationActivity.class);
-        String user_id = String.valueOf(userModel.getId());
-        String display_name = userModel.getUserName();
+        String channel = "", image = "",name = "";
+        Map<String, Object> custom = new HashMap<>();
+        int id = Commons.g_user.getId(),receiver_id = userModel.getId();
+        boolean swap = false;
+        if(id>userModel.getId()) {
+            id = userModel.getId();
+            receiver_id = Commons.g_user.getId();
+            swap = true;
+        }
         if(userType==1){
-            user_id = String.valueOf(userModel.getBusinessModel().getId())+"_" + String.valueOf(userModel.getId());
-            display_name = userModel.getBusinessModel().getBusiness_name();
+            String str = String.valueOf(receiver_id)+"#" + String.valueOf(userModel.getBusinessModel().getId());
+
+            if(swap){
+                str = String.valueOf(id)+"#" + String.valueOf(userModel.getBusinessModel().getId());
+                channel = str +"_"+ String.valueOf(Commons.g_user.getId());
+            }else{
+                channel =  String.valueOf(Commons.g_user.getId()) + "_" + str;
+
+            }
+            image =  userModel.getBusinessModel().getBusiness_logo();
+            name = userModel.getBusinessModel().getBusiness_name();
+        }else{
+
+            channel = String.valueOf(id) +"_"+ String.valueOf(receiver_id);
+            image =  userModel.getImvUrl();
+            name = userModel.getFirstname() + " " + userModel.getLastname();
+        }
+        custom.put("owner_id",Commons.g_user.getId());
+        custom.put("owner_image", Commons.g_user.getImvUrl());
+        custom.put("owner_name",Commons.g_user.getFirstname()+ " " + Commons.g_user.getLastname());
+        custom.put("other_image", image);
+        custom.put("other_name",name);
+        custom.put("lastReadTimetoken",0);
+        Commons.mPubNub.subscribe().channels(Arrays.asList(channel));
+
+        setChannelMetadata(channel,name,"0",custom);
+        createMembership(channel,userModel,userType);
+
+        RoomModel roomModel = new RoomModel();
+        roomModel.setChannelId(channel);
+        roomModel.setImage(image);
+        roomModel.setName(name);
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(roomModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("roomModel",usermodel);
+        ((CommonActivity)context).goTo(context, ChatActivity.class,false,bundle);
+
+    }
+    void createMembership(String channnel, UserModel userModel , int userType){
+        String member = "user_" + String.valueOf(userModel.getId());
+        Map<String, Object> custom = new HashMap<>();
+        if(userType == 1){
+            member = "business_" + String.valueOf(userModel.getId());
+            custom.put("user_Name", userModel.getBusinessModel().getBusiness_name());
+            custom.put("user_profile",userModel.getBusinessModel().getBusiness_logo());
+        }else{
+            custom.put("user_Name", userModel.getFirstname()+ " " + userModel.getLastname());
+            custom.put("user_profile",userModel.getImvUrl());
+
         }
 
-        intent.putExtra(ConversationUIService.USER_ID, user_id);
-        intent.putExtra(ConversationUIService.DISPLAY_NAME, display_name); //put it for displaying the title.
-        intent.putExtra(ConversationUIService.TAKE_ORDER,true); //Skip chat list for showing on back press
-        startActivity(intent);
+
+        Commons.mPubNub.setChannelMembers()
+                .channel(channnel)
+                .uuids(Arrays.asList(PNUUID.uuidWithCustom(member, custom)))
+                .async(new PNCallback<PNSetChannelMembersResult>() {
+                    @Override
+                    public void onResponse(@Nullable final PNSetChannelMembersResult result, @NotNull final PNStatus status) {
+                        if (status.isError()) {
+                            //handle error
+                        } else {
+                            //handle result
+                        }
+                    }
+                });
     }
+
+
 
     public void disableSlot(int time,boolean flag){
 

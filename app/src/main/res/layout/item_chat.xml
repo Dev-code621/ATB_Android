@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
+    android:id="@+id/relat_chatitem">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <!--    <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--        android:id="@+id/imv_friendPhoto"-->
+        <!--        android:layout_width="50dp"-->
+        <!--        android:layout_height="50dp"-->
+        <!--        android:layout_marginLeft="12dp"-->
+        <!--        android:layout_marginTop="12dp"-->
+        <!--        android:scaleType="centerCrop"-->
+        <!--        app:civ_border_width="0dp"-->
+        <!--        app:civ_border_color="#00000000"/>-->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_friendphoto"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:scaleType="centerCrop"
+            app:civ_border_width="0dp"
+            app:civ_border_color="#00000000"
+            app:cardCornerRadius="15dp"
+            app:cardUseCompatPadding="false">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/imv_friendPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:actualImageScaleType="centerCrop"
+                app:failureImage="@drawable/ic_profile"
+                app:failureImageScaleType="centerCrop"
+                app:placeholderImage="@drawable/ic_profile"
+                app:placeholderImageScaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+
+
+        <!--  other's message -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/card_friendphoto"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp">
+            <LinearLayout
+                android:id="@+id/lyt_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_balloon_g">
+                <TextView
+                    android:id="@+id/txv_friendName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="This is text"
+                    android:textColor="@color/black"
+                    />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txv_message1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="3dp"
+                        android:clickable="true"
+                        android:text="@string/continueText"
+                        android:autoLink="web"
+                        android:paddingBottom="8dp"
+                        android:textColor="#333"/>
+                    <com.atb.app.view.zoom.ImageZoomButton
+                        android:id="@+id/imv_imgmsg1"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"/>
+                    <TextView
+                        android:id="@+id/txv_time1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#888c8f"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="20dp"
+                        android:paddingTop="20dp"
+                        android:textSize="10sp"
+                        android:layout_gravity="bottom|right"/>
+                </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!--    <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--        android:id="@+id/imv_myPhoto"-->
+        <!--        android:layout_width="50dp"-->
+        <!--        android:layout_height="50dp"-->
+        <!--        android:layout_alignParentRight="true"-->
+        <!--        android:layout_marginRight="12dp"-->
+        <!--        android:scaleType="centerCrop"-->
+        <!--        app:civ_border_width="0dp"-->
+        <!--        app:civ_border_color="#00000000"/>-->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_myphoto"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:scaleType="centerCrop"
+            app:civ_border_width="0dp"
+            app:civ_border_color="#00000000"
+            app:cardCornerRadius="15dp"
+            app:cardUseCompatPadding="false"
+            android:layout_marginTop="10dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/imv_myPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:actualImageScaleType="centerCrop"
+                app:failureImage="@drawable/ic_profile"
+                app:failureImageScaleType="centerCrop"
+                app:placeholderImage="@drawable/ic_profile"
+                app:placeholderImageScaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <!--  my message -->
+        <LinearLayout
+            android:id="@+id/lyt_mymessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/card_myphoto"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/bg_balloon_b">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/txv_message2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:clickable="true"
+                    android:autoLink="web"
+                    android:gravity="center_vertical"
+                    android:textColor="#fff"/>
+
+                <FrameLayout
+                    android:id="@+id/flt_imgmsg2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.atb.app.view.zoom.ImageZoomButton
+                        android:id="@+id/imv_imgmsg2"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"/>
+                </FrameLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="20dp"
+                    android:layout_gravity="bottom|right">
+
+                    <TextView
+                        android:id="@+id/txv_time2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="15dp"
+                        android:textSize="10sp"
+                        android:textColor="@color/white"
+                        />
+                    <ImageView
+                        android:id="@+id/message_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+        <!--  status (ex. leave message) -->
+        <TextView
+            android:id="@+id/txv_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray"
+            android:gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:textColor="@color/black_grey" />
+    </RelativeLayout>
+</LinearLayout>

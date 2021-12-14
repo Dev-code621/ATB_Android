@@ -438,9 +438,10 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 }
 
                 if(Commons.g_user.getAccount_type() ==1)
-                    loginApplozic(true);
+                    loginPubNub(true);
                 else
-                    loginApplozic(false);
+                    loginPubNub(false);
+
                 goTo(LoginActivity.this, MainActivity.class,true,bundle);
                 //goTo(LoginActivity.this, UpdateBusinessActivity.class,true);
 

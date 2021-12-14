@@ -3,18 +3,20 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.atb.app"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 24
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "PUB_KEY", '"pub-c-56276161-dfe0-4551-a730-8ac8b6ba0f1e"'
+        buildConfigField "String", "SUB_KEY", '"sub-c-488c32e2-5a87-11ec-96e9-32997ff5e1b9"'
     }
 
     buildTypes {
@@ -66,6 +68,8 @@ android {
         useLibrary 'org.apache.http.legacy'
     }
 
+
+
 }
 repositories {
     maven {
@@ -76,6 +80,8 @@ repositories {
         }
     }
 }
+
+
 
 dependencies {
 
@@ -229,7 +235,25 @@ dependencies {
 
     //preference
     implementation 'androidx.preference:preference:1.1.1'
+
+
+    // add PubNub Android-Java SDK here at that bottom
+    implementation 'com.pubnub:pubnub-gson:5.2.3'
+    implementation "com.squareup.okhttp3:okhttp"
+    implementation "com.squareup.okhttp3:okhttp-bom:4.4.1"
+    api 'com.google.guava:guava:27.1-android'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
+    //waterMark
+    implementation 'com.huangyz0918:androidwm-light:0.1.2'
+    implementation 'com.huangyz0918:androidwm:0.2.3'
+
+
 }
+
+
 apply plugin: 'com.google.gms.google-services'
 configurations {
     all*.exclude group: 'xpp3', module: 'xpp3'
