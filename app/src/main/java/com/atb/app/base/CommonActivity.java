@@ -814,7 +814,6 @@ public abstract class CommonActivity extends BaseActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("token",Commons.token);
                 params.put("push_token",Commons.fcmtoken);
-                Log.d("aaaaaaaa====",params.toString());
                 return params;
             }
         };

@@ -20,12 +20,14 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.12083333333333333" />
         <entry key="app/src/main/res/layout/activity_new_sale_post.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_news_detail.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_notification.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_profile_naviagation.xml" value="0.11180555555555556" />
         <entry key="app/src/main/res/layout/activity_purchases.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_operating.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_post_range.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_update_business.xml" value="0.11180555555555556" />
+        <entry key="app/src/main/res/layout/chat_user_item.xml" value="0.15" />
         <entry key="app/src/main/res/layout/comment_item.xml" value="0.10520275439938791" />
         <entry key="app/src/main/res/layout/dialog_confirm.xml" value="0.1396327467482785" />
         <entry key="app/src/main/res/layout/futurebooking_item.xml" value="0.10864575363427698" />

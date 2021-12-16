@@ -6,16 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -25,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +43,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.arlib.floatingsearchview.util.adapter.TextWatcherAdapter;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
@@ -47,9 +56,11 @@ import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.adapter.CommentAdapter;
+import com.atb.app.adapter.CommentUserListAdapter;
 import com.atb.app.adapter.PollEmageAdapter;
 import com.atb.app.adapter.SelectOneItemAdapter;
 import com.atb.app.adapter.SliderImageAdapter;
+import com.atb.app.adapter.UserPresenter;
 import com.atb.app.adapter.VotingListAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -84,12 +95,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.google.gson.Gson;
+import com.otaliastudios.autocomplete.Autocomplete;
+import com.otaliastudios.autocomplete.AutocompleteCallback;
+import com.otaliastudios.autocomplete.AutocompletePolicy;
+import com.otaliastudios.autocomplete.AutocompletePresenter;
+import com.otaliastudios.autocomplete.CharPolicy;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -155,6 +172,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     Map<String, String> payment_params = new HashMap<>();
     int deliveryOption = 0;
     TextView txv_buy_mesasge,txv_quantity,txv_condition;
+    ListView list_user;
+    CommentUserListAdapter commentUserListAdapter;
+    ArrayList<UserModel>commentUser = new ArrayList<>();
+    private Autocomplete mentionsAutocomplete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +187,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         txv_price = findViewById(R.id.txv_price);
         txv_buy_mesasge = findViewById(R.id.txv_buy_mesasge);
         txv_postage_cost = findViewById(R.id.txv_postage_cost);
+        list_user = findViewById(R.id.list_user);
         txv_location = findViewById(R.id.txv_location);
         txv_buy_sale = findViewById(R.id.txv_buy_sale);
         recycler_view_attribue.add( findViewById(R.id.recycler_view_color));
@@ -314,8 +337,46 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         commentAdapter = new CommentAdapter(this);
         list_comment.setAdapter(commentAdapter);
         Keyboard();
-
+        commentUser = Commons.AllUsers;
+        commentUserListAdapter = new CommentUserListAdapter(this);
+        list_user.setAdapter(commentUserListAdapter);
+        setupMentionsAutocomplete();
     }
+
+    private void setupMentionsAutocomplete() {
+        float elevation = 6f;
+        Drawable backgroundDrawable = new ColorDrawable(Color.WHITE);
+        AutocompletePolicy policy = new CharPolicy('@'); // Look for @mentions
+        AutocompletePresenter<UserModel> presenter = new UserPresenter(this);
+        AutocompleteCallback<UserModel> callback = new AutocompleteCallback<UserModel>() {
+            @Override
+            public boolean onPopupItemClicked(@NonNull Editable editable, @NonNull UserModel item) {
+                // Replace query text with the full name.
+                int[] range = CharPolicy.getQueryRange(editable);
+                if (range == null) return false;
+                int start = range[0];
+                int end = range[1];
+                String replacement = item.getUserName();
+                editable.replace(start, end, replacement);
+                // This is better done with regexes and a TextWatcher, due to what happens when
+                // the user clears some parts of the text. Up to you.
+                editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+replacement.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                return true;
+            }
+            public void onPopupVisibilityChanged(boolean shown) {}
+        };
+
+        mentionsAutocomplete = Autocomplete.<UserModel>on(edt_comment)
+                .with(elevation)
+                .with(backgroundDrawable)
+                .with(policy)
+                .with(presenter)
+                .with(callback)
+                .build();
+    }
+
     void loadLayout(){
         showProgress();
         StringRequest myRequest = new StringRequest(
@@ -583,6 +644,15 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     }
 
+    int findUserID(String userName){
+        for(UserModel userModel : Commons.AllUsers){
+
+            if(userModel.getUserName().equals(userName)){
+                return  userModel.getId();
+            }
+        }
+        return  -1;
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -616,8 +686,53 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 selectImage();
                 break;
             case R.id.imv_send:
-                if(completedValue.size()>0|| edt_comment.getText().toString().length()>0)
-                    sendComment();
+               if(completedValue.size()>0|| edt_comment.getText().toString().length()>0){
+                   try {
+                       JSONArray jsonArray = new JSONArray();
+                       String[] strArry = edt_comment.getText().toString().split(" ");
+                       for(String str:strArry){
+                           String commentText = str;
+
+                           if(str.contains("@") && str.length()>1){
+                               String[] subArray = str.split("\n");
+                               for(String subStr: subArray){
+                                   JSONObject jsonObject = new JSONObject();
+
+                                   if(subStr.length()==0){
+                                       jsonObject.put("comment","\n");
+                                       jsonArray.put(jsonObject);
+                                       continue;
+                                   }
+                                   if(subStr.charAt(0) == '@' && subStr.length()>1){
+                                      int id =  findUserID(subStr.substring(1,subStr.length()));
+                                      if(id!=-1){
+                                          jsonObject.put("comment",subStr);
+                                          jsonObject.put("user_id",String.valueOf(id));
+                                          jsonArray.put(jsonObject);
+                                      }
+                                   }else{
+                                       jsonObject.put("comment","\n"+ subStr);
+                                       jsonArray.put(jsonObject);
+                                   }
+                               }
+
+                           }else{
+                               JSONObject jsonObject = new JSONObject();
+                               jsonObject.put("comment"," "+ commentText);
+                               jsonArray.put(jsonObject);
+
+
+                           }
+                     }
+                       Log.d("aaaaaa",jsonArray.toString());
+                       sendComment(jsonArray);
+                   } catch (JSONException e) {
+                     e.printStackTrace();
+                   }
+
+
+               }
+
                 break;
             case R.id.lyt_like:
                 if(newsFeedEntity.getUser_id() == Commons.g_user.getId()){
@@ -1317,7 +1432,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     }
 
-    void sendComment(){
+    void sendComment( JSONArray jsonArray){
         showProgress();
         try {
             Map<String, String> params = new HashMap<>();
@@ -1333,15 +1448,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 API_LINK =  API.REPLY_COMMENT_API;
                 params.put("comment_id", String.valueOf(parentModel.getId()));
                 params.put("reply_user_id", String.valueOf(Commons.g_user.getId()));
-                params.put("reply", StringEscapeUtils.escapeJava(edt_comment.getText().toString()));
+                params.put("reply", jsonArray.toString());
                 imageTitle = "reply_imgs";
             }
             else {
                 API_LINK =  API.WRITE_COMMENT_API;
                 params.put("post_id", String.valueOf(postId));
                 params.put("user_id", String.valueOf(Commons.g_user.getId()));
-                params.put("comment", StringEscapeUtils.escapeJava(edt_comment.getText().toString()));
+                params.put("comment", jsonArray.toString());
                 imageTitle = "comment_imgs";
+
             }
 
             Map<String, String> mHeaderPart= new HashMap<>();
@@ -1354,7 +1470,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     closeProgress();
                     try {
                         CommentModel commentModel = new CommentModel();
-                        commentModel.setComment(edt_comment.getText().toString());
+                        commentModel.setComment(jsonObject.getJSONObject("extra").getString("comment"));
                         commentModel.setLevel(comment_level);
                         commentModel.setUserName(Commons.g_user.getUserName());
                         commentModel.setUserImage(Commons.g_user.getImvUrl());

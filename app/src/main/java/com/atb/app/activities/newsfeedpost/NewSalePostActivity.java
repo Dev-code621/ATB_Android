@@ -302,7 +302,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
                 String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
-                SpannableString ss = new SpannableString(text);
+                SpannableString ss = new SpannableString(text) ;
                 StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
                 ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 txv_post.setText(ss);

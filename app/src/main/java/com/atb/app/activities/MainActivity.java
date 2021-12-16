@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -44,6 +46,7 @@ import com.atb.app.activities.profile.boost.PinPointActivity;
 import com.atb.app.activities.profile.boost.ProfilePinActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.adapter.BoostItemAdapter;
+import com.atb.app.adapter.BusinessItemAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -58,6 +61,7 @@ import com.atb.app.fragement.SearchFragment;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.NotiEntity;
+import com.atb.app.model.RoomModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
@@ -69,7 +73,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
+import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
@@ -79,7 +91,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends CommonActivity implements View.OnClickListener {
@@ -98,9 +113,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     RecyclerView recycler_view_boost;
     HashMap<String,  ArrayList<BoostModel>>boostModels = new HashMap<>();
     BoostItemAdapter boostAdapter ;
+    BusinessItemAdapter businessItemAdapter ;
     ChatFragment chatFragment;
     ImageView imv_title;
     int noti_type, related_id;
+    int busines_pager = 1;
+    ArrayList<UserModel>businessUsers = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +149,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         mainListFragment = new MainListFragment();
         frame_chat.setOnClickListener(this);
         frame_noti.setOnClickListener(this);
+        setPubnubToken();
         Commons.mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
             @Override
             public void onPlayerItemChanged(MetaData metaData) {
@@ -139,10 +158,10 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         });
 
         recycler_view_boost.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        boostAdapter = new BoostItemAdapter(this,  new BoostItemAdapter.OnSelectListener() {
-            @Override
-            public void onSelectItem(BoostModel boostModel) {
-
+//        boostAdapter = new BoostItemAdapter(this,  new BoostItemAdapter.OnSelectListener() {
+//            @Override
+//            public void onSelectItem(BoostModel boostModel) {
+//
 //                if(Commons.g_user.getAccount_type() == 0){
 //                    SelectMediaDialog selectMediaActionDialog = new SelectMediaDialog();
 //                    selectMediaActionDialog.setOnActionClick(new SelectMediaDialog.OnActionListener() {
@@ -170,13 +189,39 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
 //
 //                    }
 //                }
-            }
-
-        });
+//            }
+//
+//        });
        // boostAdapter.setHasStableIds(true);
         recycler_view_boost.setItemAnimator(null);
-        recycler_view_boost.setAdapter(boostAdapter);
-        getProfilepines();
+        //recycler_view_boost.setAdapter(boostAdapter);
+        //getProfilepines();
+        businessItemAdapter = new BusinessItemAdapter(this, new BusinessItemAdapter.OnSelectListener() {
+            @Override
+            public void onSelectItem(UserModel boostModel) {
+                if(boostModel.getId() != Commons.g_user.getId())
+                    getuserProfile(boostModel.getId(), 1);
+
+                else {
+                    startActivityForResult(new Intent(MainActivity.this, ProfileBusinessNaviagationActivity.class),1);
+
+                }
+            }
+        });
+        recycler_view_boost.setAdapter(businessItemAdapter);
+
+        Timer timer= new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getAllbusiness();
+                    }
+                });
+            }
+        }, 1000, 30000);
 
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
@@ -186,6 +231,67 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 processNotification();
             }
         }
+
+    }
+
+    void  setPubnubToken(){
+
+        List<String> channels = new ArrayList<>();
+        Commons.mPubNub.getAllChannelsMetadata()
+                .includeCustom(true)
+                .async(new PNCallback<PNGetAllChannelsMetadataResult>() {
+                    @Override
+                    public void onResponse(@Nullable final PNGetAllChannelsMetadataResult result, @NotNull final PNStatus status) {
+
+                        if (status.isError()) {
+
+                        } else {
+                            List<PNChannelMetadata> channelMetadata = new ArrayList<>();
+                            channelMetadata.clear();
+                            channelMetadata = result.getData();
+                            for(int i = 0 ;i<channelMetadata.size();i++){
+
+                                PNChannelMetadata channel = channelMetadata.get(i);
+                                try {
+                                    JsonObject custom = (JsonObject) channel.getCustom();
+                                    RoomModel roomModel = new RoomModel();
+                                    String str = channel.getId();
+                                    String[] array = str.split("_");
+                                    if(array.length<1)continue;
+                                    if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
+                                        channels.add(channel.getId());
+                                    }else if(array[1].equals(String.valueOf(Commons.g_user.getId()))){
+                                        channels.add(channel.getId());
+                                    }else{
+                                        if(Commons.g_user.getAccount_type() == 1){
+                                            String business_account = String.valueOf(Commons.g_user.getId())+"#"+ String.valueOf(Commons.g_user.getBusinessModel().getId());
+                                            if(str.contains(business_account)){
+                                                channels.add(channel.getId());
+
+                                            }
+                                        }
+                                    }
+                                }catch (Exception e){
+
+                                    Log.d("Exception==" ,e.toString());
+                                }
+
+                            }
+
+                            Commons.mPubNub.addPushNotificationsOnChannels()
+                                    .pushType(PNPushType.FCM)
+                                    .channels(channels)
+                                    .deviceId(Commons.fcmtoken)
+                                    .async(new PNCallback<PNPushAddChannelResult>() {
+                                        @Override
+                                        public void onResponse(PNPushAddChannelResult result, PNStatus status) {
+
+                                        }
+                                    });
+
+                        }
+                    }
+                });
 
     }
     void loadNotification(){
@@ -407,10 +513,64 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             txv_category.setText(Constants.category_word[posstion]);
             Commons.main_category = Constants.category_word[posstion];
         }
-        getProfilepines();
+        //getProfilepines();
         mainListFragment.getList();
 
 
+    }
+    public void getAllbusiness(){
+        //  showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GETBUSINESS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        // closeProgress();
+
+                        try {
+                            businessUsers.clear();
+                            JSONObject jsonObject = new JSONObject(json);
+                            jsonObject = jsonObject.getJSONObject("extra");
+                            JSONArray jsonArray =jsonObject.getJSONArray("spotlight");
+                            for(int i =0;i<jsonArray.length();i++){
+                                UserModel userModel = new UserModel();
+                                userModel.initModel(jsonArray.getJSONObject(i));
+                                businessUsers.add(userModel);
+                            }
+                            businessItemAdapter.setRoomData(businessUsers);
+                            if(busines_pager*6>=jsonObject.getInt("total_rows"))
+                                busines_pager = 1;
+                            else
+                                busines_pager++;
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("category", txv_category.getText().toString());
+                params.put("page", String.valueOf(busines_pager));
+                params.put("per_page", "6");
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     public void getProfilepines(){
@@ -609,6 +769,52 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         });
 
     }
+    void getAllusers(){
+        //  showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GETALLUSER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        // closeProgress();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            Commons.AllUsers.clear();
+                            JSONArray jsonArray = jsonObject.getJSONArray("extra");
+                            for(int i =0;i<jsonArray.length();i++){
+                                UserModel userModel = new UserModel();
+                                userModel.initModel(jsonArray.getJSONObject(i));
+                                Commons.AllUsers.add(userModel);
+                            }
+
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -617,6 +823,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         setColor(selectIcon);
         getFirebaseToken();
         loadNotification();
+        getAllusers();
 
     }
     @Override

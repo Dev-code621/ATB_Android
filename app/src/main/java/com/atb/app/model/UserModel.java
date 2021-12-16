@@ -382,9 +382,12 @@ public  class UserModel {
             setPush_tokenm(userObject.getString("push_token"));
             setInvitecode(userObject.getString("invite_code"));
             setInvited_by(userObject.getString("invited_by"));
-            setPost_count(userObject.getInt("post_count"));
-            setFollow_count(userObject.getInt("follow_count"));
-            setFollowers_count(userObject.getInt("followers_count"));
+            if(userObject.has("post_count"))
+                 setPost_count(userObject.getInt("post_count"));
+            if(userObject.has("follow_count"))
+              setFollow_count(userObject.getInt("follow_count"));
+            if(userObject.has("followers_count"))
+                setFollowers_count(userObject.getInt("followers_count"));
             if(userObject.has("business_info"))
                 if(!userObject.getString("business_info").equals("null")){
                     JSONObject business_info = userObject.getJSONObject("business_info");

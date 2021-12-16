@@ -57,7 +57,7 @@ public class Commons {
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();
     public static HashMap<String,String> postalCode = new HashMap<>();
-
+    public static ArrayList<UserModel> AllUsers = new ArrayList<>();
     public static BackgroundService backgroundService ;
     public static int notification_count = 0;
     public static PubNub mPubNub;

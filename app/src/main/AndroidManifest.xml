@@ -304,8 +304,10 @@
         <activity
             android:name=".activities.SplashActivity"
             android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="false"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.FullScreen">
+            android:theme="@style/AppTheme.FullScreen"
+            tools:ignore="IntentFilterExportedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -137,7 +137,6 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("aaaaaaa",message.toString());
                             JsonObject jsonObject = (JsonObject)message.getMessage();
                             MessageModel messageModel  = new MessageModel();
                             messageModel.setSenderId(jsonObject.get("senderId").getAsString());

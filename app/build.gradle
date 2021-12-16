@@ -250,6 +250,9 @@ dependencies {
     implementation 'com.huangyz0918:androidwm-light:0.1.2'
     implementation 'com.huangyz0918:androidwm:0.2.3'
 
+    //autocomplete edit view
+    implementation("com.otaliastudios:autocomplete:1.1.0")
+
 
 }
 

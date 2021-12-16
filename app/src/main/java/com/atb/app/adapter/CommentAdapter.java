@@ -3,9 +3,13 @@ package com.atb.app.adapter;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,15 +23,25 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.TransactionEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class CommentAdapter extends BaseAdapter {
 
@@ -93,7 +107,30 @@ public class CommentAdapter extends BaseAdapter {
             holder = (CustomHolder) convertView.getTag();
         }
         final CommentModel commentModel = _roomDatas.get(position);
-        String comment = commentModel.getComment();
+
+        String comment = Commons.g_user.getUserName()+" ";
+
+        HashMap<Integer,Integer> mapStart = new HashMap<>();
+        HashMap<Integer,Integer> mapEnd = new HashMap<>();
+        ArrayList<Integer> indexArray = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(commentModel.getComment());
+
+            for(int i =0;i<jsonArray.length();i++){
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String str = jsonObject.getString("comment");
+                if(jsonObject.has("user_id")){
+                    mapStart.put(jsonObject.getInt("user_id"), comment.length());
+                    mapEnd.put(jsonObject.getInt("user_id"), comment.length() + str.length());
+                    indexArray.add(jsonObject.getInt("user_id"));
+                }
+                comment = comment +  str;
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         holder.view_reply.setVisibility(View.GONE);
         holder.txv_comment.setVisibility(View.GONE);
         for(int i =0;i<3;i++){
@@ -108,16 +145,41 @@ public class CommentAdapter extends BaseAdapter {
         }
         if(commentModel.getLevel()==1)
             holder.view_reply.setVisibility(View.VISIBLE);
+
         if(comment.length()>0) {
-//            comment = comment.replace("\n", "<br/>");
-//            comment = comment.replace(" ", "&nbsp;");
-//            String username = "<font color='black'>" + "<b>" + commentModel.getUserName() + "</b>" + "</font>" + "  " + comment;
-//            holder.txv_comment.setText(Html.fromHtml(username));
-            String text = commentModel.getUserName()+" " + commentModel.getComment();
-            SpannableString ss = new SpannableString(text);
-            StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-            ss.setSpan(boldSpan, 0, commentModel.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableString ss = new SpannableString(comment);
+            for(int i =0;i<indexArray.size() ;i++){
+                int index =  indexArray.get(i);
+                ss.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View textView) {
+                        for(UserModel userModel: Commons.AllUsers){
+                            if(userModel.getId() == index){
+                                Bundle bundle = new Bundle();
+                                Gson gson = new Gson();
+                                String usermodel = gson.toJson(userModel);
+                                bundle.putString("userModel",usermodel);
+                                bundle.putInt("userType",userModel.getAccount_type());
+                                ((CommonActivity)_context).goTo(_context, OtherUserProfileActivity.class,false,bundle);
+                                return;
+                            }
+                        }
+
+                    }
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setColor(_context.getResources().getColor(R.color.black));
+                        ds.setUnderlineText(false);
+                    }
+                }, mapStart.get(indexArray.get(i)), mapEnd.get(indexArray.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            }
+            ss.setSpan(new StyleSpan(Typeface.BOLD), 0, Commons.g_user.getUserName().length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.txv_comment.setText(ss);
+            holder.txv_comment.setMovementMethod(LinkMovementMethod.getInstance());
+
             holder.txv_comment.setVisibility(View.VISIBLE);
         }
         for(int i =0;i<commentModel.getImage_url().size();i++){
