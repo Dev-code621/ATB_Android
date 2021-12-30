@@ -49,6 +49,10 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -58,6 +62,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import java.util.Arrays;
 
 public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 
@@ -419,15 +425,31 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
             @Override
             public void onConfirm() {
-                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
-                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USERPWD, "");
+                pubnubTokenLogout();
 
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
             }
         },getString(R.string.logout_description));
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+    }
+
+    void pubnubTokenLogout(){
+
+        Commons.mPubNub.removePushNotificationsFromChannels()
+                .channels(Commons.pubnub_channels)
+                .pushType(PNPushType.FCM)
+                .deviceId(Commons.fcmtoken)
+                .async(new PNCallback<PNPushRemoveChannelResult>() {
+                    @Override
+                    public void onResponse(PNPushRemoveChannelResult result, PNStatus status) {
+                        // Handle status, response
+                        Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
+                        Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USERPWD, "");
+
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
     }
 
 @SuppressLint("ResourceAsColor")

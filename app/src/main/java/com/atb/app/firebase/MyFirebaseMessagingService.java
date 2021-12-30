@@ -53,6 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		Bundle bundle = new Bundle();
 		bundle.putString("type", data.get("type"));
 		bundle.putString("related_id", data.get("related_id"));
+		if(data.get("senderId")!= null && data.get("senderId").equals(Commons.senderID))return;
 		Intent intent;
 		if(Commons.g_mainActivity == null) {
 			intent = new Intent(this, SplashActivity.class);

@@ -534,7 +534,7 @@ public abstract class CommonActivity extends BaseActivity {
 
         Commons.mPubNub.setChannelMetadata()
                 .channel(channelName)
-                .name(title)
+                .name(channelName)
                 .description(description) /// this is description, but i am using image
                 .custom(custom)
                 .includeCustom(true)
@@ -785,7 +785,6 @@ public abstract class CommonActivity extends BaseActivity {
                         }
                         // Get new FCM registration token
                         Commons.fcmtoken = task.getResult();
-                        Log.d("token====",Commons.fcmtoken);
                         uploadToken();
                     }
                 });

@@ -313,6 +313,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                 showAlertDialog(jsonObject.getString("msg"));
             else {
                 Commons.token = jsonObject.getString("msg");
+                Log.d("aaaaaaa===",  Commons.token);
                 JSONObject userObject = jsonObject.getJSONObject("extra").getJSONObject("profile");
                 UserModel userModel = new UserModel();
                 userModel.setId(userObject.getInt("id"));

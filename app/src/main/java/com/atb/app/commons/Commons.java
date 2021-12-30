@@ -65,7 +65,7 @@ public class Commons {
     public static String senderImage;
     public static String senderName;
     public static  boolean profile_flag = false;
-
+    public static  List<String> pubnub_channels = new ArrayList<>();
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

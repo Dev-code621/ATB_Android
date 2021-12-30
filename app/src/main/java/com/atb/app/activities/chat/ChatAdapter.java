@@ -26,6 +26,7 @@ import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.zoom.ImageZoomButton;
+import com.atb.app.view.zoom.ZoomAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
@@ -75,12 +76,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             Glide.with(context).load(message.getSenderImage()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_myPhoto);
             holder.txv_message2.setText(message.getMessage());
+            holder.txv_message2.setVisibility(View.VISIBLE);
+            holder.imv_imgmsg2.setVisibility(View.GONE);
             holder.txv_time2.setText(getFormattedDateAndTime(context,
                     message.getCreateAt()/10000,
                     R.string.JUST_NOW,
                     R.plurals.MINUTES,
                     R.plurals.HOURS));
 
+            if(message.getMessageType().equals("Image")){
+                holder.txv_message2.setVisibility(View.GONE);
+                holder.imv_imgmsg2.setVisibility(View.VISIBLE);
+                Glide.with(context).load(message.getMessage()).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imv_imgmsg2);
+            }
+            holder.imv_imgmsg2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.showPicture(v, message.getMessage());
+                }
+            });
 
         }else {
             holder.card_friendphoto.setVisibility(View.VISIBLE);
@@ -91,11 +105,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_friendPhoto);
             holder.txv_message1.setText(message.getMessage());
             holder.txv_friendName.setText(message.getSenderName());
+            holder.txv_message1.setVisibility(View.VISIBLE);
+            holder.imv_imgmsg1.setVisibility(View.GONE);
             holder.txv_time1.setText(getFormattedDateAndTime(context,
                     message.getCreateAt()/10000,
                     R.string.JUST_NOW,
                     R.plurals.MINUTES,
                     R.plurals.HOURS));
+            holder.lyt_friend.setBackground(context.getResources().getDrawable(R.drawable.bg_balloon_g));
+            if(message.getMessageType().equals("Image")){
+                holder.txv_message1.setVisibility(View.GONE);
+                holder.imv_imgmsg1.setVisibility(View.VISIBLE);
+                Glide.with(context).load(message.getMessage()).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imv_imgmsg1);
+                holder.lyt_friend.setBackground(null);
+            }
+            holder.imv_imgmsg1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.showPicture(v, message.getMessage());
+                }
+            });
         }
 
 

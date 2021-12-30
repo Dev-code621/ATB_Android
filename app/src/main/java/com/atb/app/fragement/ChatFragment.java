@@ -125,6 +125,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         for(int i = 0 ;i<channelMetadata.size();i++){
 
             PNChannelMetadata channel = channelMetadata.get(i);
+            Log.d("bbbbbbb",channel.toString());
             try {
                 JsonObject custom = (JsonObject) channel.getCustom();
                 RoomModel roomModel = new RoomModel();
@@ -135,7 +136,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     String business_account = String.valueOf(Commons.g_user.getId())+"#"+ String.valueOf(Commons.g_user.getBusinessModel().getId());
                     if(!str.contains(business_account))continue;
                     if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
-                        roomModel.setName(channel.getName());
+                        roomModel.setName(custom.get("other_name").getAsString());
                         roomModel.setChannelId(channel.getId());
                         roomModel.setImage(custom.get("other_image").getAsString());
                     }else{
@@ -145,7 +146,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     }
                 }else {
                     if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
-                        roomModel.setName(channel.getName());
+                        roomModel.setName(custom.get("other_name").getAsString());
                         roomModel.setChannelId(channel.getId());
                         roomModel.setImage(custom.get("other_image").getAsString());
                     }else{
@@ -164,7 +165,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             }
 
         }
-
+        Commons.pubnub_channels = channels;
         Commons.mPubNub.fetchMessages()
                 .channels(channels)
                 .maximumPerChannel(1)
@@ -172,24 +173,32 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(@Nullable final PNFetchMessagesResult result, @NotNull final PNStatus status) {
                         ((CommonActivity)(context)).closeProgress();
+                        try {
+                            if (!status.isError()) {
+                                final Map<String, List<PNFetchMessageItem>> channelToMessageItemsMap = result.getChannels();
+                                for (RoomModel roomModel : roomModels) {
+                                    List<PNFetchMessageItem> pnFetchMessageItems = channelToMessageItemsMap.get(URLEncoder.encode(roomModel.getChannelId()));
 
-                        if (!status.isError()) {
-                            final Map<String, List<PNFetchMessageItem>> channelToMessageItemsMap = result.getChannels();
-                            for (RoomModel roomModel : roomModels) {
-                                List<PNFetchMessageItem> pnFetchMessageItems = channelToMessageItemsMap.get(URLEncoder.encode(roomModel.getChannelId()));
-
-                                for (final PNFetchMessageItem fetchMessageItem: pnFetchMessageItems) {
+                                    for (final PNFetchMessageItem fetchMessageItem: pnFetchMessageItems) {
 //                                    System.out.println(fetchMessageItem.getMessage());
 //                                    System.out.println(fetchMessageItem.getMeta());
 //                                    System.out.println(fetchMessageItem.getTimetoken());
-                                    roomModel.setLast_message(fetchMessageItem.getMessage().getAsJsonObject().get("text").getAsString());
-                                    roomModel.setLastMessageTime(fetchMessageItem.getTimetoken());
+                                        if(fetchMessageItem.getMessage().getAsJsonObject().has("messageType") && fetchMessageItem.getMessage().getAsJsonObject().get("messageType").getAsString().equals("Image")){
+                                            roomModel.setLast_message("Image sent");
+
+                                        }else
+                                            roomModel.setLast_message(fetchMessageItem.getMessage().getAsJsonObject().get("text").getAsString());
+                                        roomModel.setLastMessageTime(fetchMessageItem.getTimetoken());
+                                    }
                                 }
                             }
+                            else {
+                                System.err.println("Handling error");
+                            }
+                        }catch (Exception e){
+
                         }
-                        else {
-                            System.err.println("Handling error");
-                        }
+
                         messageAdapter.setRoomData(roomModels);
 
                     }
@@ -219,9 +228,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 //
 //                    }
 //                });
-
-
-       // messageAdapter.setRoomData(roomModels);
+//
+//
+//        messageAdapter.setRoomData(roomModels);
 
     }
 

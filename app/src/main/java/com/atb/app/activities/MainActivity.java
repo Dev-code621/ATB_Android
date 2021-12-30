@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.chat.ChatActivity;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
@@ -79,6 +80,7 @@ import com.google.gson.JsonObject;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
@@ -90,6 +92,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +119,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     BusinessItemAdapter businessItemAdapter ;
     ChatFragment chatFragment;
     ImageView imv_title;
-    int noti_type, related_id;
+    int noti_type;
+    String related_id;
     int busines_pager = 1;
     ArrayList<UserModel>businessUsers = new ArrayList<>();
     @Override
@@ -227,7 +231,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 noti_type= Integer.parseInt(bundle.getString("type"));
-                related_id= Integer.parseInt(bundle.getString("related_id"));
+                related_id= bundle.getString("related_id");
                 processNotification();
             }
         }
@@ -246,7 +250,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                         if (status.isError()) {
 
                         } else {
-                            List<PNChannelMetadata> channelMetadata = new ArrayList<>();
+                                                       List<PNChannelMetadata> channelMetadata = new ArrayList<>();
                             channelMetadata.clear();
                             channelMetadata = result.getData();
                             for(int i = 0 ;i<channelMetadata.size();i++){
@@ -277,7 +281,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                                 }
 
                             }
-
+                            Commons.pubnub_channels = channels;
                             Commons.mPubNub.addPushNotificationsOnChannels()
                                     .pushType(PNPushType.FCM)
                                     .channels(channels)
@@ -292,6 +296,21 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                         }
                     }
                 });
+
+//        Commons.mPubNub.grant()
+//                .channels(Commons.pubnub_channels)
+//                .uuids(Arrays.asList(Commons.senderID))
+//                .authKeys(Arrays.asList(Commons.senderID))
+//                .write(true)
+//                .read(true)
+//                .ttl(1440)
+//                .async(new PNCallback<PNAccessManagerGrantResult>() {
+//                    @Override
+//                    public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
+//                        System.out.println(result);
+//                        System.out.println(status);
+//                    }
+//                });
 
     }
     void loadNotification(){
@@ -343,7 +362,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     void processNotification(){
         if(noti_type == 1 || noti_type == 2 || noti_type ==3 ){
             Bundle bundle = new Bundle();
-            bundle.putInt("postId",related_id);
+            bundle.putInt("postId",Integer.parseInt(related_id));
             bundle.putBoolean("CommentVisible",true);
             startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
         }else if(noti_type ==4){
@@ -361,7 +380,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }else if(noti_type == 11 ){
             //get service api
             Bundle bundle = new Bundle();
-            bundle.putInt("postId",related_id);
+            bundle.putInt("postId",Integer.parseInt(related_id));
             bundle.putBoolean("CommentVisible",true);
             startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
         }else if(noti_type == 12){
@@ -371,19 +390,19 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }else if(noti_type ==15){
             Bundle bundle = new Bundle();
             bundle.putString("type", String.valueOf(30));
-            bundle.putString("related_id", String.valueOf(related_id));
+            bundle.putString("related_id", related_id);
             goTo(this, SplashActivity.class,true,bundle);
         }else if(noti_type ==16) {
             goTo(this, ProfileBusinessNaviagationActivity.class, false);
         }else if(noti_type ==17) {
-            getuserProfile(related_id,0);
+            getuserProfile(Integer.parseInt(related_id),0);
 
         }else if(noti_type == 18 || noti_type == 19 || noti_type == 20  || noti_type == 21 || noti_type == 22){
 
             //18,19: product and service id
 
             Bundle bundle = new Bundle();
-            bundle.putInt("postId",related_id);
+            bundle.putInt("postId",Integer.parseInt(related_id));
             bundle.putBoolean("CommentVisible",true);
             startActivityForResult(new Intent(this, NewsDetailActivity.class).putExtra("data",bundle),1);
         } else if(noti_type ==23) {
@@ -402,11 +421,12 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }else if(noti_type ==30) {
 
             goTo(this, ProfileBusinessNaviagationActivity.class, false);
+        }else if (noti_type == 100){
+            Bundle bundle = new Bundle();
+            bundle.putString("roomModel",related_id);
+            goTo(this, ChatActivity.class,false,bundle);
         }
     }
-
-
-
     void getBookingByID(){
     showProgress();
         StringRequest myRequest = new StringRequest(

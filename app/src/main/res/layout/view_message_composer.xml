@@ -38,6 +38,7 @@
             android:contentDescription="@string/attach"
             android:focusable="true"
             android:scaleType="centerInside"
+            android:tint="@color/head_color"
             app:srcCompat="@drawable/attach" />
 
         <ImageView

@@ -161,5 +161,6 @@ public class API {
     public static final String REMOVETAG = API_BASE_URL + "profile/delete_tag";
     public static final String GETBUSINESS = API_BASE_URL + "search/spotlight";
     public static final String GETALLUSER = API_BASE_URL + "search/users";
+    public static final String UPLOADIMAGES = API_BASE_URL + "post/send_files";
 
 }

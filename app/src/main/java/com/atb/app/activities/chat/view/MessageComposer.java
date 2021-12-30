@@ -40,6 +40,10 @@ public class MessageComposer extends RelativeLayout {
             mListener.onSentClick(mInput.getText().toString().trim());
             mInput.setText("");
         });
+        mAttachment.setOnClickListener(v -> {
+            mListener.onSentImage(mInput.getText().toString().trim());
+            mInput.setText("");
+        });
     }
 
     public void setListener(Listener listener) {
@@ -49,6 +53,8 @@ public class MessageComposer extends RelativeLayout {
     public interface Listener {
 
         void onSentClick(String message);
+
+        void onSentImage(String message);
     }
 
 }
