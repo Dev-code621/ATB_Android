@@ -1,12 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.kittinunf.fuel:fuel-android:2.1.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cad2a9bdc9a462247153ad630f5b0c65/jetified-fuel-android-2.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/823d57acda6af8bf194aa2bae1c7bd52/jetified-fuel-android-2.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fdc8045e8dbd6ea87981656800044293/jetified-fuel-android-2.1.0/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/013c18e52794cf5127e711dd8b053f03/jetified-fuel-android-2.1.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/013c18e52794cf5127e711dd8b053f03/jetified-fuel-android-2.1.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/013c18e52794cf5127e711dd8b053f03/jetified-fuel-android-2.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/013c18e52794cf5127e711dd8b053f03/jetified-fuel-android-2.1.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.kittinunf.fuel/fuel-android/2.1.0/a37acbac54629d566aa3e73792663ed35ee4a8bd/fuel-android-2.1.0-javadoc.jar!/" />

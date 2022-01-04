@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.atb.app"
         minSdkVersion 24
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -73,18 +73,34 @@ android {
 }
 repositories {
     maven {
-        url  "https://cardinalcommerce.bintray.com/android"
+        url "https://cardinalcommerceprod.jfrog.io/artifactory/android"
         credentials {
-            username 'braintree-team-sdk@cardinalcommerce'
-            password '220cc9476025679c4e5c843666c27d97cfb0f951'
+            username 'braintree_team_sdk'
+            password 'AKCp8jQcoDy2hxSWhDAUQKXLDPDx6NYRkqrgFLRc3qDrayg6rrCbJpsKKyMwaykVL8FWusJpp'
         }
     }
+
 }
 
 
 
-dependencies {
 
+
+dependencies {
+    components.all {
+        allVariants {
+            withDependencies { deps ->
+                deps.each { dep ->
+                    if (dep.group == 'net.minidev' && dep.name =='json-smart') {
+                        dep.version {
+                            prefer "2.3"
+                        }
+                        dep.because "resolving dependencies issue"
+                    }
+                }
+            }
+        }
+    }
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -188,8 +204,9 @@ dependencies {
     implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.3'
 
     //paypal(brantree)
+
     implementation 'com.braintreepayments.api:braintree:3.12.0'
-    implementation 'com.braintreepayments.api:drop-in:4.6.0'
+    implementation 'com.braintreepayments.api:drop-in:5.3.0'
     implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2'
 
     //applozic chat sdk

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "790302185980",
+    "firebase_url": "https://trim-bot-310607-default-rtdb.firebaseio.com",
     "project_id": "trim-bot-310607",
     "storage_bucket": "trim-bot-310607.appspot.com"
   },
@@ -22,6 +23,14 @@
           }
         },
         {
+          "client_id": "790302185980-6g0fqdkkb7voqo9508shsjsh2atfvsdf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.atb.app",
+            "certificate_hash": "756bf823c763c9cef14185ab12a14310ee92e617"
+          }
+        },
+        {
           "client_id": "790302185980-ju7isaei685bud4rnvfnpm0ks6hrpadu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +46,13 @@
             {
               "client_id": "790302185980-ju7isaei685bud4rnvfnpm0ks6hrpadu.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "790302185980-pgqlgr5v7q16h30ss2qi08nujnk41la0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.atb.app"
+              }
             }
           ]
         }

@@ -1,27 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.fresco:imagepipeline-base:1.11.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6bd2d24871b7cc9bc9bec5bfc660e8ed/jetified-imagepipeline-base-1.11.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aefca60e3b5705936b2f0ac2b9b7bec/jetified-imagepipeline-base-1.11.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f06d6c6a366fe4c1843f2a068864bee/jetified-imagepipeline-base-1.11.0/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed345594fe732ebc94abcd7ec25f6e4f/jetified-imagepipeline-base-1.11.0/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/57fadb429072053a7dc678edea671565/jetified-imagepipeline-base-1.11.0/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8680ffd516cb0ca4cfab9ab7c678012f/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6bd2d24871b7cc9bc9bec5bfc660e8ed/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/485b6518447d6fdc4e08b556f3b1cf06/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6bd2d24871b7cc9bc9bec5bfc660e8ed/jetified-imagepipeline-base-1.11.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6bd2d24871b7cc9bc9bec5bfc660e8ed/jetified-imagepipeline-base-1.11.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/54259d854a0c37ee54baf4950663a231/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aefca60e3b5705936b2f0ac2b9b7bec/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aefca60e3b5705936b2f0ac2b9b7bec/jetified-imagepipeline-base-1.11.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aefca60e3b5705936b2f0ac2b9b7bec/jetified-imagepipeline-base-1.11.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f06d6c6a366fe4c1843f2a068864bee/jetified-imagepipeline-base-1.11.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f06d6c6a366fe4c1843f2a068864bee/jetified-imagepipeline-base-1.11.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f06d6c6a366fe4c1843f2a068864bee/jetified-imagepipeline-base-1.11.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed345594fe732ebc94abcd7ec25f6e4f/jetified-imagepipeline-base-1.11.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed345594fe732ebc94abcd7ec25f6e4f/jetified-imagepipeline-base-1.11.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed345594fe732ebc94abcd7ec25f6e4f/jetified-imagepipeline-base-1.11.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/57fadb429072053a7dc678edea671565/jetified-imagepipeline-base-1.11.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/57fadb429072053a7dc678edea671565/jetified-imagepipeline-base-1.11.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/57fadb429072053a7dc678edea671565/jetified-imagepipeline-base-1.11.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.fresco/imagepipeline-base/1.11.0/e0d5517a179d895cde6014b59a8758b2a54ae4b8/imagepipeline-base-1.11.0-javadoc.jar!/" />

@@ -2,8 +2,8 @@
   <library name="Gradle: org.zakariya.stickyheaders:stickyheaders:0.7.10@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4101fed89e8fef91eb402bfaa875e7a/jetified-stickyheaders-0.7.10/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4101fed89e8fef91eb402bfaa875e7a/jetified-stickyheaders-0.7.10/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4101fed89e8fef91eb402bfaa875e7a/jetified-stickyheaders-0.7.10/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4101fed89e8fef91eb402bfaa875e7a/jetified-stickyheaders-0.7.10/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.zakariya.stickyheaders/stickyheaders/0.7.10/ad2ffdddd310856acf9d58c5b90c0d5dd29a9a98/stickyheaders-0.7.10-javadoc.jar!/" />

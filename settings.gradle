@@ -5,3 +5,4 @@ include ':app', ':cropper'
 project(':video-player-manager').projectDir = new File(rootDir, 'videoplayer/video-player-manager/')
 project(':list-visibility-utils').projectDir = new File(rootDir, 'videoplayer/list-visibility-utils/')
 rootProject.name = "ATB"
+startParameter.offline=false

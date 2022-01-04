@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.30925925925925923" />
         <entry key="../../../../../layout/custom_preview.xml" value="0.13240740740740742" />
         <entry key="app/src/main/res/drawable-hdpi/edit_rectangle_round1.xml" value="0.16875" />
         <entry key="app/src/main/res/drawable-mdpi/chats_divider.xml" value="0.17413127413127413" />

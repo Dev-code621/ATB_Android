@@ -784,6 +784,7 @@ public abstract class CommonActivity extends BaseActivity {
                             return;
                         }
                         // Get new FCM registration token
+                        Log.d("Token=====",task.getResult());
                         Commons.fcmtoken = task.getResult();
                         uploadToken();
                     }

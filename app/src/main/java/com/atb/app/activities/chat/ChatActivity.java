@@ -294,7 +294,8 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                                             messageModel.setSenderId(jsonObject.get("senderId").getAsString());
                                             messageModel.setSenderImage(jsonObject.get("senderImage").getAsString());
                                             messageModel.setSenderName(jsonObject.get("senderName").getAsString());
-                                            messageModel.setMessage(jsonObject.get("text").getAsString());
+                                            if(jsonObject.has("text"))
+                                                messageModel.setMessage(jsonObject.get("text").getAsString());
                                             messageModel.setCreateAt(message.getTimetoken());
                                             arrayList.add(messageModel);
                                         }
@@ -343,7 +344,7 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
             showToast("Please input message");
             return;
         }
-
+        Log.d("aaaaaaa",MessageBuilder.newBuilder().text(message,roomModel,"Text").build().toString());
         Commons.mPubNub
                 .publish()
                 .channel(roomModel.getChannelId())

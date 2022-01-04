@@ -2,8 +2,8 @@
   <library name="Gradle: com.applozic.mobiframework:mobicommons:5.98@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d56ac5534bde94b8859871d6390184cc/jetified-mobicommons-5.98/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d56ac5534bde94b8859871d6390184cc/jetified-mobicommons-5.98/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d56ac5534bde94b8859871d6390184cc/jetified-mobicommons-5.98/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d56ac5534bde94b8859871d6390184cc/jetified-mobicommons-5.98/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.applozic.mobiframework/mobicommons/5.98/7f0459affca02a6907f415e7461421f84b2fd59d/mobicommons-5.98-javadoc.jar!/" />
