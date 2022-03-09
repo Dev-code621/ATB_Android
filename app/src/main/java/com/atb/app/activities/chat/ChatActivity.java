@@ -178,9 +178,10 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                         public void run() {
                             JsonObject jsonObject = (JsonObject)message.getMessage();
                             MessageModel messageModel  = new MessageModel();
-                            messageModel.setSenderId(jsonObject.get("senderId").getAsString());
-                            messageModel.setSenderImage(jsonObject.get("senderImage").getAsString());
-                            messageModel.setSenderName(jsonObject.get("senderName").getAsString());
+                            JsonObject sender = jsonObject.get("sender").getAsJsonObject();
+                            messageModel.setSenderId(sender.get("id").getAsString());
+                            messageModel.setSenderImage(sender.get("imageUrl").getAsString());
+                            messageModel.setSenderName(sender.get("name").getAsString());
                             messageModel.setMessage(jsonObject.get("text").getAsString());
                             messageModel.setCreateAt(message.getTimetoken());
                             if(jsonObject.has("messageType")){
@@ -283,21 +284,24 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                                             PNHistoryItemResult message = result.getMessages().get(i);
                                             JsonObject jsonObject = (JsonObject)message.getEntry();
                                             MessageModel messageModel  = new MessageModel();
-                                            if(jsonObject.has("file")){
-                                                String str  = jsonObject.get("message").getAsString();
-                                                jsonObject = new JsonParser().parse(str).getAsJsonObject();
+                                            try {
+                                                JsonObject sender = jsonObject.get("sender").getAsJsonObject();
+                                                messageModel.setSenderId(sender.get("id").getAsString());
+                                                messageModel.setSenderImage(sender.get("imageUrl").getAsString());
+                                                messageModel.setSenderName(sender.get("name").getAsString());
+                                                messageModel.setMessage(jsonObject.get("text").getAsString());
+                                                messageModel.setCreateAt(message.getTimetoken());
+                                                if(jsonObject.has("messageType")){
+                                                    messageModel.setMessageType(jsonObject.get("messageType").getAsString());
+                                                }
+
+                                                messageModel.setCreateAt(message.getTimetoken());
+                                                arrayList.add(messageModel);
+                                            }catch (Exception e){
+
                                             }
 
-                                            if(jsonObject.has("messageType")){
-                                                messageModel.setMessageType(jsonObject.get("messageType").getAsString());
-                                            }
-                                            messageModel.setSenderId(jsonObject.get("senderId").getAsString());
-                                            messageModel.setSenderImage(jsonObject.get("senderImage").getAsString());
-                                            messageModel.setSenderName(jsonObject.get("senderName").getAsString());
-                                            if(jsonObject.has("text"))
-                                                messageModel.setMessage(jsonObject.get("text").getAsString());
-                                            messageModel.setCreateAt(message.getTimetoken());
-                                            arrayList.add(messageModel);
+
                                         }
                                         messageModels.addAll(0,arrayList);
                                         chatAdapter.setData(messageModels);
@@ -344,12 +348,12 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
             showToast("Please input message");
             return;
         }
-        Log.d("aaaaaaa",MessageBuilder.newBuilder().text(message,roomModel,"Text").build().toString());
+        Log.d("aaaaaaa",MessageBuilder.newBuilder().text(message,"Text").build().toString());
         Commons.mPubNub
                 .publish()
                 .channel(roomModel.getChannelId())
                 .shouldStore(true)
-                .message(MessageBuilder.newBuilder().text(message,roomModel,"Text").build())
+                .message(MessageBuilder.newBuilder().text(message,"Text").build())
                 .async(new PNCallback<PNPublishResult>() {
                     @Override
                     public void onResponse(PNPublishResult result, PNStatus status) {
@@ -429,7 +433,7 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                                     .publish()
                                     .channel(roomModel.getChannelId())
                                     .shouldStore(true)
-                                    .message(MessageBuilder.newBuilder().text(dummy,roomModel,"Image").build())
+                                    .message(MessageBuilder.newBuilder().text(dummy,"Image").build())
                                     .async(new PNCallback<PNPublishResult>() {
                                         @Override
                                         public void onResponse(PNPublishResult result, PNStatus status) {
@@ -502,16 +506,16 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         Commons.mPubNub.removeListener(mPubNubListener);
-
-        Map<String, Object> custom = new HashMap<>();
-        JsonObject jsonObject = (JsonObject) metadata.getCustom();
-        custom.put("owner_id",jsonObject.get("owner_id").getAsInt());
-        custom.put("owner_image", jsonObject.get("owner_image").getAsString());
-        custom.put("owner_name",jsonObject.get("owner_name").getAsString());
-        custom.put("other_image", jsonObject.get("other_image").getAsString());
-        custom.put("other_name",jsonObject.get("other_name").getAsString());
-        custom.put("lastReadTimetoken",newMessageTimetoken);
-        setChannelMetadata(metadata.getId(),metadata.getName(),String.valueOf(newMessageTimetoken),custom);
+//
+//        Map<String, Object> custom = new HashMap<>();
+//        JsonObject jsonObject = (JsonObject) metadata.getCustom();
+//        custom.put("owner_id",jsonObject.get("owner_id").getAsInt());
+//        custom.put("owner_image", jsonObject.get("owner_image").getAsString());
+//        custom.put("owner_name",jsonObject.get("owner_name").getAsString());
+//        custom.put("other_image", jsonObject.get("other_image").getAsString());
+//        custom.put("other_name",jsonObject.get("other_name").getAsString());
+//        custom.put("lastReadTimetoken",newMessageTimetoken);
+//        setChannelMetadata(metadata.getId(),metadata.getName(),String.valueOf(newMessageTimetoken),custom);
         super.onDestroy();
     }
 }

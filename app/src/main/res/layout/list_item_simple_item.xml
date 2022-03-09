@@ -114,7 +114,6 @@
                         android:text="Ricard Guard"
                         style="@style/boldtextTheme"
                         android:textColor="@color/head_color"
-                        android:background="@drawable/under_line2"
                         android:textSize="13sp" />
                     <ImageView
                         android:layout_width="15dp"

@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/chat_user_item.xml" value="0.15" />
         <entry key="app/src/main/res/layout/comment_item.xml" value="0.10520275439938791" />
         <entry key="app/src/main/res/layout/dialog_confirm.xml" value="0.1396327467482785" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/futurebooking_item.xml" value="0.10864575363427698" />
         <entry key="app/src/main/res/layout/insurance_view_dialog.xml" value="0.1396327467482785" />
         <entry key="app/src/main/res/layout/item_chat.xml" value="0.22" />

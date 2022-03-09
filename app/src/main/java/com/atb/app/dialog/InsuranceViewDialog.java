@@ -34,8 +34,8 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
 import com.watermark.androidwm.WatermarkBuilder;
+import com.watermark.androidwm.bean.WatermarkImage;
 import com.watermark.androidwm.bean.WatermarkText;
-import com.watermark.androidwm_light.bean.WatermarkImage;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -47,6 +47,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import static com.atb.app.base.BaseActivity._context;
 import static com.atb.app.base.BaseActivity.closeProgress;
 import static com.atb.app.base.BaseActivity.showProgress;
 
@@ -119,12 +120,14 @@ public class InsuranceViewDialog extends DialogFragment {
                 .setTextAlpha(255)
                 .setRotation(30)
                 .setTextSize(15)
-                .setTextColor(Color.WHITE)
+                .setTextColor(getResources().getColor(R.color.app_theme_color))
                 .setTextShadow(0.1f, 5, 5, getContext().getColor(R.color.grey));
+//        WatermarkImage watermarkImage = new WatermarkImage(getContext(),R.drawable.atb_approved); // for an image from Resource.
 
         WatermarkBuilder.create(getContext(), imageView)
                 .setTileMode(true)
-                .loadWatermarkText(watermarkText)
+                 .loadWatermarkText(watermarkText)
+//                .loadWatermarkImage(watermarkImage)
                 .getWatermark()
                 .setToImageView(imageView);
 

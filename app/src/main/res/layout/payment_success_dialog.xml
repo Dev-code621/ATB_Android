@@ -47,10 +47,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You have purchased"
+            android:text="This item has been reserved pending payment and collection"
             style="@style/boldtextTheme"
             android:textColor="@color/txt_color"
             android:textSize="20sp"
+            android:gravity="center"
             android:layout_marginTop="20dp"/>
         <TextView
             android:id="@+id/txt_email"
@@ -60,6 +61,7 @@
             style="@style/textTheme"
             android:textColor="@color/txt_color"
             android:gravity="center"
+            android:visibility="gone"
             android:textSize="15sp"
             android:layout_marginTop="10dp"/>
         <LinearLayout

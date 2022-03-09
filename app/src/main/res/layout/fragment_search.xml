@@ -83,7 +83,7 @@
                 android:layout_marginRight="50dp"
                 android:singleLine="true"
                 android:layout_height="wrap_content"
-                app:entries="@array/category_type"
+                app:entries="@array/search_type"
                 android:textSize="18sp"
                 app:popupTextAlignment="center"
                 android:textAlignment="center"

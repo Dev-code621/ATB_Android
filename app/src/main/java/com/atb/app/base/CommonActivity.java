@@ -494,25 +494,16 @@ public abstract class CommonActivity extends BaseActivity {
 
     }
 
-    public void loginPubNub(boolean flag){
+    public void loginPubNub(){
 
         PNConfiguration pnConfiguration = new PNConfiguration();
         String pubKey = BuildConfig.PUB_KEY;
         String subKey = BuildConfig.SUB_KEY;
-        Log.d("aaaaaa",pubKey + "     "+ subKey);
         pnConfiguration.setPublishKey(pubKey);
         pnConfiguration.setSubscribeKey(subKey);
-        if(!flag) {
-            pnConfiguration.setUuid("user_" + String.valueOf(Commons.g_user.getId()));
-            Commons.senderID = "user_" + String.valueOf(Commons.g_user.getId());
-            Commons.senderImage = Commons.g_user.getImvUrl();
-            Commons.senderName = Commons.g_user.getFirstname() + " " + Commons.g_user.getLastname();
-        }else{
-            pnConfiguration.setUuid("business_"+String.valueOf(Commons.g_user.getBusinessModel().getId()));
-            Commons.senderID = "business_"+String.valueOf(Commons.g_user.getBusinessModel().getId());
-            Commons.senderImage = Commons.g_user.getBusinessModel().getBusiness_logo();
-            Commons.senderName = Commons.g_user.getBusinessModel().getBusiness_name();
-        }
+
+        pnConfiguration.setUuid("user_" + String.valueOf(Commons.g_user.getId()));
+
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
         pnConfiguration.setReconnectionPolicy(PNReconnectionPolicy.LINEAR);
         pnConfiguration.setMaximumReconnectionRetries(20);

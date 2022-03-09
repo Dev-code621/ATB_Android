@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
@@ -48,6 +49,9 @@ import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetada
 
 import com.google.gson.JsonObject;
 
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -125,36 +129,60 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         for(int i = 0 ;i<channelMetadata.size();i++){
 
             PNChannelMetadata channel = channelMetadata.get(i);
-            Log.d("bbbbbbb",channel.toString());
             try {
                 JsonObject custom = (JsonObject) channel.getCustom();
                 RoomModel roomModel = new RoomModel();
                 String str = channel.getId();
                 String[] array = str.split("_");
                 if(array.length<1)continue;
+                String memberStr = custom.get("members").getAsString();
+                JSONArray members = new JSONArray(memberStr);
+
                 if(flag){
                     String business_account = String.valueOf(Commons.g_user.getId())+"#"+ String.valueOf(Commons.g_user.getBusinessModel().getId());
                     if(!str.contains(business_account))continue;
-                    if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
-                        roomModel.setName(custom.get("other_name").getAsString());
-                        roomModel.setChannelId(channel.getId());
-                        roomModel.setImage(custom.get("other_image").getAsString());
-                    }else{
-                        roomModel.setName(custom.get("owner_name").getAsString());
-                        roomModel.setChannelId(channel.getId());
-                        roomModel.setImage(custom.get("owner_image").getAsString());
+                    for(int j = 0 ;j<members.length();j++){
+                        JSONObject member = members.getJSONObject(j);
+                        if(!member.get("id").equals(Commons.senderID)){
+                            roomModel.setName(member.getString("name"));
+                            roomModel.setChannelId(channel.getId());
+                            roomModel.setImage(member.getString("imageUrl"));
+                            break;
+                        }
                     }
+
                 }else {
-                    if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
-                        roomModel.setName(custom.get("other_name").getAsString());
-                        roomModel.setChannelId(channel.getId());
-                        roomModel.setImage(custom.get("other_image").getAsString());
-                    }else{
-                       continue;
+                    String arr[] = str.split("_");
+                    boolean existFlag = false;
+                    boolean adminChat = false;
+                    for(int j = 0;j<arr.length;j++){
+                        if(arr[j].equals(String.valueOf(Commons.g_user.getId()))){
+                            existFlag =true;
+                        }
+                        if(arr[j].contains("ADMIN")){
+                            adminChat = true;
+                        }
                     }
+                    if(existFlag){
+                        for(int j = 0 ;j<members.length();j++){
+                            JSONObject member = members.getJSONObject(j);
+                            if(!member.get("id").equals(Commons.senderID)){
+                                roomModel.setName(member.getString("name"));
+                                if(adminChat){
+                                    roomModel.setName(member.getString("name")+"(Admin)");
+                                }
+                                roomModel.setChannelId(channel.getId());
+                                roomModel.setImage(member.getString("imageUrl"));
+                                break;
+                            }
+                        }
+                    }else{
+                        continue;
+                    }
+
                 }
 
-                roomModel.setLastReadTimetoken(custom.get("lastReadTimetoken").getAsLong());
+//                roomModel.setLastReadTimetoken(custom.get("lastReadTimetoken").getAsLong());
                 roomModels.add(roomModel);
                 channels_LastReadTime.add(roomModel.getLastReadTimetoken());
                 channels.add(roomModel.getChannelId());
@@ -174,22 +202,25 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     public void onResponse(@Nullable final PNFetchMessagesResult result, @NotNull final PNStatus status) {
                         ((CommonActivity)(context)).closeProgress();
                         try {
+
                             if (!status.isError()) {
+
                                 final Map<String, List<PNFetchMessageItem>> channelToMessageItemsMap = result.getChannels();
                                 for (RoomModel roomModel : roomModels) {
                                     List<PNFetchMessageItem> pnFetchMessageItems = channelToMessageItemsMap.get(URLEncoder.encode(roomModel.getChannelId()));
+                                    try{
+                                        for (final PNFetchMessageItem fetchMessageItem: pnFetchMessageItems) {
+                                            if(fetchMessageItem.getMessage().getAsJsonObject().has("messageType") && fetchMessageItem.getMessage().getAsJsonObject().get("messageType").getAsString().equals("Image")){
+                                                roomModel.setLast_message("Image sent");
 
-                                    for (final PNFetchMessageItem fetchMessageItem: pnFetchMessageItems) {
-//                                    System.out.println(fetchMessageItem.getMessage());
-//                                    System.out.println(fetchMessageItem.getMeta());
-//                                    System.out.println(fetchMessageItem.getTimetoken());
-                                        if(fetchMessageItem.getMessage().getAsJsonObject().has("messageType") && fetchMessageItem.getMessage().getAsJsonObject().get("messageType").getAsString().equals("Image")){
-                                            roomModel.setLast_message("Image sent");
+                                            }else
+                                                roomModel.setLast_message(fetchMessageItem.getMessage().getAsJsonObject().get("text").getAsString());
+                                            roomModel.setLastMessageTime(fetchMessageItem.getTimetoken());
+                                        }
+                                    }catch (Exception e){
 
-                                        }else
-                                            roomModel.setLast_message(fetchMessageItem.getMessage().getAsJsonObject().get("text").getAsString());
-                                        roomModel.setLastMessageTime(fetchMessageItem.getTimetoken());
                                     }
+
                                 }
                             }
                             else {
@@ -262,21 +293,36 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     public void setProfile(boolean flag){
         Commons.profile_flag = flag;
-        ((CommonActivity)context).loginPubNub(flag);
+//        ((CommonActivity)context).loginPubNub(flag);
+
+
         if(flag ){
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_chat);
             txv_name.setText(Commons.g_user.getBusinessModel().getBusiness_name());
+            Commons.senderImage = Commons.g_user.getBusinessModel().getBusiness_logo();
+            Commons.senderName = Commons.g_user.getBusinessModel().getBusiness_name();
+            Commons.senderID = "business_" + String.valueOf(Commons.g_user.getBusinessModel().getId());
+
 
         }else {
             Glide.with(this).load(Commons.g_user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_chat);
             txv_name.setText(Commons.g_user.getUserName());
+            Commons.senderID = "user_" + String.valueOf(Commons.g_user.getId());
+
+            Commons.senderImage = Commons.g_user.getImvUrl();
+            Commons.senderName = Commons.g_user.getFirstname() + " " + Commons.g_user.getLastname();
         }
 
         ((CommonActivity)(context)).showProgress();
+        String filter = "name LIKE " + "'" +  Commons.g_user.getId() + "_*'" + "||" +  "name LIKE " + "'*_" + Commons.g_user.getId() + "'";
+        if(flag){
+            filter = "name LIKE " + "'" +  Commons.g_user.getId() + "#" + Commons.g_user.getBusinessModel().getId() + "_*'" + "||" +  "name LIKE " + "'*_" + Commons.g_user.getId() +  "#" + Commons.g_user.getBusinessModel().getId() +"'";
+        }
         Commons.mPubNub.getAllChannelsMetadata()
                 .includeCustom(true)
+                .filter(filter)
                 .async(new PNCallback<PNGetAllChannelsMetadataResult>() {
                     @Override
                     public void onResponse(@Nullable final PNGetAllChannelsMetadataResult result, @NotNull final PNStatus status) {
@@ -287,8 +333,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                         } else {
                             channelMetadata.clear();
                             channelMetadata = result.getData();
-
-                            setMessages(flag);
+                           setMessages(flag);
 
                         }
                     }

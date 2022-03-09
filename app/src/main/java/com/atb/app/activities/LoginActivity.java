@@ -449,10 +449,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     Preference.getInstance().put(this, PrefConst.PREFKEY_FBTOKEN, Commons.fbtoken);
                 }
 
-                if(Commons.g_user.getAccount_type() ==1)
-                    loginPubNub(true);
-                else
-                    loginPubNub(false);
+                loginPubNub();
 
                 goTo(LoginActivity.this, MainActivity.class,true,bundle);
                 //goTo(LoginActivity.this, UpdateBusinessActivity.class,true);
