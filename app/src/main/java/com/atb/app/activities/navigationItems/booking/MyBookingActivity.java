@@ -108,7 +108,7 @@ public class MyBookingActivity extends CommonActivity implements View.OnClickLis
                                 bookingEntities.add(bookingEntity);
 
                             }
-                            myBookingHeaderAdapter = new MyBookingHeaderAdapter(MyBookingActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,bookingEntities);
+                            myBookingHeaderAdapter = new MyBookingHeaderAdapter(MyBookingActivity.this,true, false, false, SHOW_ADAPTER_POSITIONS,bookingEntities,0);
                             recyclerView.setAdapter(myBookingHeaderAdapter);
                             myBookingHeaderAdapter.setHasStableIds(true);
 

@@ -90,7 +90,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             delivery_cost -=5;
             deliver = true;
         }
-        if(delivery_cost-3>0){
+        if(delivery_cost-3>=0){
             collect = true;
         }if(delivery_cost -1>=0){
             postage = true;

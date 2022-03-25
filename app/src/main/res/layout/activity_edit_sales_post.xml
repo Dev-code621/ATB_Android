@@ -386,6 +386,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
                 <TextView
                     android:layout_width="120dp"
@@ -411,6 +412,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
                 <TextView
                     android:layout_width="120dp"
@@ -688,15 +690,15 @@
                     android:textSize="16sp"
                     android:gravity="center_vertical"
                     android:orientation="vertical" />
+
                 <com.zcw.togglebutton.ToggleButton
                     android:id="@+id/toggle_paypal"
                     android:layout_width="60dp"
-                    app:tbOnColor="@color/head_color"
-                    app:tbOffColor="@color/boder_color"
-                    toggle:tbBorderWidth="2dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentRight="true">
-                </com.zcw.togglebutton.ToggleButton>
+                    android:layout_alignParentRight="true"
+                    app:tbOffColor="@color/boder_color"
+                    app:tbOnColor="@color/head_color"
+                    toggle:tbBorderWidth="2dp"></com.zcw.togglebutton.ToggleButton>
             </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -758,6 +760,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:layout_marginTop="10dp">
                 <TextView
                     android:layout_width="wrap_content"

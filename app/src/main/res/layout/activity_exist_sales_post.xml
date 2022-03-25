@@ -161,7 +161,7 @@
                 android:background="@drawable/edit_rectangle_round"
                 android:layout_marginLeft="10dp"
                 android:padding="12dp"
-                android:visibility="gone"/>
+                />
         </LinearLayout>
 
     </LinearLayout>

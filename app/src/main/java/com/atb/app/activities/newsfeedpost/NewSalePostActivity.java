@@ -35,6 +35,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
+import com.atb.app.activities.navigationItems.business.BusinessProfilePaymentActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.adapter.MultiPostFeedAdapter;
@@ -465,7 +466,9 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 postVerification();
                 break;
             case R.id.txv_location:
-                startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("flag", true);
+                startActivityForResult(new Intent(this, SetPostRangeActivity.class).putExtra("data",bundle),1);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.lyt_selectall:
@@ -562,8 +565,8 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         }else if(txv_location.getText().toString().length()==0){
             showAlertDialog("Please input the location");
             return;
-        }else if(!postage && !collect && !!deliver){
-            showAlertDialog("Please select a delivery option.");
+        }else if(!collect ){
+            showAlertDialog("Please select buyer collects option.");
             return;
         }else  if(deliver){
             if(edt_deliver_cost.getText().toString().length()==0){
@@ -1009,7 +1012,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 public void onConfirm() {
                     Bundle bundle = new Bundle();
                     bundle.putInt("subScriptionType",2);
-                    startActivityForResult(new Intent(NewSalePostActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    startActivityForResult(new Intent(NewSalePostActivity.this, BusinessProfilePaymentActivity.class).putExtra("data",bundle),1);
                     overridePendingTransition(0, 0);
                 }
             },getString(R.string.subscription_alert));

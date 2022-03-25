@@ -78,8 +78,19 @@ public class NotificationAdapter extends BaseAdapter {
         holder.txv_time.setText(secToTime(noti_item.getCreated_at()));
         Glide.with(_context).load(noti_item.getProfile_image()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
-        if(noti_item.getRead_status() ==0) holder.card_unread_noti.setVisibility(View.VISIBLE);
-        else holder.card_unread_noti.setVisibility(View.GONE);
+        if(noti_item.getRead_status() ==0) {
+
+            holder.card_unread_noti.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.card_unread_noti.setVisibility(View.GONE);
+        }
+        if(noti_item.getName().length() ==0){
+            holder.txv_title.setText("ATB");
+            Glide.with(_context).load(noti_item.getProfile_image()).placeholder(R.drawable.logo).dontAnimate().apply(RequestOptions.bitmapTransform(
+                    new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
+        }
+
         return convertView;
     }
 

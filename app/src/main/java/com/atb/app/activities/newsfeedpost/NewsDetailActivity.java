@@ -2,6 +2,8 @@ package com.atb.app.activities.newsfeedpost;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -77,6 +79,7 @@ import com.atb.app.dialog.PaymentBookingDialog;
 import com.atb.app.dialog.PaymentSuccessDialog;
 import com.atb.app.dialog.ProductVariationSelectDialog;
 import com.atb.app.dialog.SelectDeliveryoptionDialog;
+import com.atb.app.model.AutoCompleteModel;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
@@ -95,6 +98,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.google.gson.Gson;
+
+
 import com.otaliastudios.autocomplete.Autocomplete;
 import com.otaliastudios.autocomplete.AutocompleteCallback;
 import com.otaliastudios.autocomplete.AutocompletePolicy;
@@ -105,6 +110,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,9 +127,17 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeMap;
 
 import io.branch.indexing.BranchUniversalObject;
 import io.branch.referral.Branch;
@@ -152,8 +166,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     CommentModel parentModel = new CommentModel();
 
-    TextView txv_advicename1,txv_advicename1_description,txv_title,txv_title_description,txv_category,txv_startprice,txv_depist_price,txv_cancelday,txv_areacovered;
-    LinearLayout lyt_advice_image,lyt_text,lyt_offered,lyt_deposit,lyt_cancel,lyt_area,lyt_insured,lyt_qualitfied,lyt_sale_button;
+    TextView txv_advicename1,txv_advicename1_description,txv_title,txv_title_description,txv_category,txv_startprice,txv_depist_price,txv_cancelday,txv_areacovered,txv_duration;
+    LinearLayout lyt_advice_image,lyt_text,lyt_offered,lyt_deposit,lyt_cancel,lyt_area,lyt_insured,lyt_qualitfied,lyt_sale_button,lyt_duration;
     ImageView imv_txv_type,imv_qualitfied,imv_insure;
     ListView lyt_votelist;
     VotingListAdapter votingListAdapter;
@@ -174,7 +188,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     TextView txv_buy_mesasge,txv_quantity,txv_condition;
     ListView list_user;
     CommentUserListAdapter commentUserListAdapter;
-    ArrayList<UserModel>commentUser = new ArrayList<>();
+    ArrayList<AutoCompleteModel>commentUser = new ArrayList<>();
+   HashMap<int[], AutoCompleteModel>hashMap = new HashMap<>();
+
     private Autocomplete mentionsAutocomplete;
 
     @Override
@@ -189,6 +205,10 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         txv_postage_cost = findViewById(R.id.txv_postage_cost);
         list_user = findViewById(R.id.list_user);
         txv_location = findViewById(R.id.txv_location);
+
+        txv_duration = findViewById(R.id.txv_duration);
+        lyt_duration = findViewById(R.id.lyt_duration);
+
         txv_buy_sale = findViewById(R.id.txv_buy_sale);
         recycler_view_attribue.add( findViewById(R.id.recycler_view_color));
         recycler_view_attribue.add(findViewById(R.id.recycler_view_size));
@@ -347,34 +367,39 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         float elevation = 6f;
         Drawable backgroundDrawable = new ColorDrawable(Color.WHITE);
         AutocompletePolicy policy = new CharPolicy('@'); // Look for @mentions
-        AutocompletePresenter<UserModel> presenter = new UserPresenter(this);
-        AutocompleteCallback<UserModel> callback = new AutocompleteCallback<UserModel>() {
+        AutocompletePresenter<AutoCompleteModel> presenter = new UserPresenter(this);
+        AutocompleteCallback<AutoCompleteModel> callback = new AutocompleteCallback<AutoCompleteModel>() {
             @Override
-            public boolean onPopupItemClicked(@NonNull Editable editable, @NonNull UserModel item) {
+            public boolean onPopupItemClicked(@NonNull Editable editable, @NonNull AutoCompleteModel item) {
                 // Replace query text with the full name.
                 int[] range = CharPolicy.getQueryRange(editable);
                 if (range == null) return false;
                 int start = range[0];
                 int end = range[1];
-                String replacement = item.getUserName();
+                String replacement = item.getName();
                 editable.replace(start, end, replacement);
                 // This is better done with regexes and a TextWatcher, due to what happens when
                 // the user clears some parts of the text. Up to you.
                 editable.setSpan(new StyleSpan(Typeface.BOLD), start, start+replacement.length(),
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                hashMap.put(new int[]{start,start+replacement.length()}, item);
                 return true;
             }
-            public void onPopupVisibilityChanged(boolean shown) {}
+            public void onPopupVisibilityChanged(boolean shown) {
+                Log.d("aaaa" ,"bbbbbb");
+            }
+
         };
 
-        mentionsAutocomplete = Autocomplete.<UserModel>on(edt_comment)
+        mentionsAutocomplete = Autocomplete.<AutoCompleteModel>on(edt_comment)
                 .with(elevation)
                 .with(backgroundDrawable)
                 .with(policy)
                 .with(presenter)
                 .with(callback)
                 .build();
+
+
     }
 
     void loadLayout(){
@@ -531,7 +556,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_condition.setText(newsFeedEntity.getPost_condition());
 
                 String[] location = newsFeedEntity.getPost_location().split(",");
-                txv_location.setText(location[location.length-1]);
+                Log.d("aaaa", location[location.length-1] + "    "+ String.valueOf(location.length) +"  " + newsFeedEntity.getPost_location());
+                txv_location.setText(location[0]);
                 for(int i=0;i<newsFeedEntity.getAttribute_map().size();i++){
                     final int finaI = i;
 
@@ -561,6 +587,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_depist_price.setText("£"+newsFeedEntity.getDeposit());
                 txv_cancelday.setText(newsFeedEntity.getCancellations()+" days");
                 txv_areacovered.setText(newsFeedEntity.getPost_location());
+                txv_duration.setText(newsFeedEntity.getDuration() + "hr");
                 if(newsFeedEntity.getInsuranceModels().size()==0){
                     txv_insure.setText("No");
                     imv_insure.setVisibility(View.GONE);
@@ -634,6 +661,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             imv_bookmark.setVisibility(View.GONE);
             lyt_sale_button.setVisibility(View.GONE);
             lyt_book_service.setVisibility(View.GONE);
+            txv_buy_mesasge.setVisibility(View.GONE);
             for(int i =0;i<lyt_attribute.size();i++)
                 lyt_attribute.get(i).setVisibility(View.GONE);
         }
@@ -644,15 +672,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
 
     }
 
-    int findUserID(String userName){
-        for(UserModel userModel : Commons.AllUsers){
+    AutoCompleteModel findUserModel(String userName){
+        for(AutoCompleteModel userModel : Commons.AllUsers){
 
-            if(userModel.getUserName().equals(userName)){
-                return  userModel.getId();
+            if(userModel.getName().equals(userName)){
+                return  userModel;
             }
         }
-        return  -1;
+        return  null;
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -686,46 +715,52 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 selectImage();
                 break;
             case R.id.imv_send:
+
                if(completedValue.size()>0|| edt_comment.getText().toString().length()>0){
+                   HashMap<Integer, AutoCompleteModel>resultHashMap = new HashMap<>();
+
+                   String[] strArray ;
+                   String comment_text = edt_comment.getText().toString();
+                   for (Map.Entry me : hashMap.entrySet()) {
+                       int[] length = (int[]) me.getKey();
+                       AutoCompleteModel autoCompleteModel = (AutoCompleteModel) me.getValue();
+                       if(comment_text.length()<length[1])continue;
+                        String subString  = comment_text.substring(length[0],length[1]);
+                        String searchString = autoCompleteModel.getName();
+                       if(subString.equals(searchString)){
+                           String repeat = StringUtils.repeat(" ", length[1] - length[0]);
+                           comment_text =  comment_text.replaceFirst(searchString,repeat );
+                           resultHashMap.put(length[0],autoCompleteModel);
+                       }
+                   }
+                   List<Integer> mapKeys = new ArrayList<>(resultHashMap.keySet());
+                   Collections.sort(mapKeys);
+
                    try {
                        JSONArray jsonArray = new JSONArray();
-                       String[] strArry = edt_comment.getText().toString().split(" ");
+                       String[] strArry = comment_text.split(" ");
+                       int k = 0 ;
                        for(String str:strArry){
                            String commentText = str;
-
-                           if(str.contains("@") && str.length()>1){
-                               String[] subArray = str.split("\n");
-                               for(String subStr: subArray){
-                                   JSONObject jsonObject = new JSONObject();
-
-                                   if(subStr.length()==0){
-                                       jsonObject.put("comment","\n");
-                                       jsonArray.put(jsonObject);
-                                       continue;
-                                   }
-                                   if(subStr.charAt(0) == '@' && subStr.length()>1){
-                                      int id =  findUserID(subStr.substring(1,subStr.length()));
-                                      if(id!=-1){
-                                          jsonObject.put("comment",subStr);
-                                          jsonObject.put("user_id",String.valueOf(id));
-                                          jsonArray.put(jsonObject);
-                                      }
-                                   }else{
-                                       jsonObject.put("comment","\n"+ subStr);
-                                       jsonArray.put(jsonObject);
-                                   }
-                               }
+                            if(str.length() ==0)continue;
+                           if(str.equals("@") ){
+                               AutoCompleteModel autoCompleteModel = resultHashMap.get(mapKeys.get(k));
+                               JSONObject jsonObject = new JSONObject();
+                               jsonObject.put("comment","@"+ autoCompleteModel.getName());
+                               jsonObject.put("user_id",String.valueOf(autoCompleteModel.getId()));
+                               jsonObject.put("is_business",String.valueOf(autoCompleteModel.getIs_business()));
+                               jsonArray.put(jsonObject);
+                               k++;
 
                            }else{
                                JSONObject jsonObject = new JSONObject();
                                jsonObject.put("comment"," "+ commentText);
                                jsonArray.put(jsonObject);
-
-
                            }
                      }
                        Log.d("aaaaaa",jsonArray.toString());
                        sendComment(jsonArray);
+                       hashMap.clear();
                    } catch (JSONException e) {
                      e.printStackTrace();
                    }
@@ -1114,7 +1149,9 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 if(finalType) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("postId", postId);
-                    goTo(NewsDetailActivity.this, ReportPostActivity.class, false);
+                    bundle.putString("reportType" ,"Post");
+
+                    goTo(NewsDetailActivity.this, ReportPostActivity.class, false,bundle);
                 }else
                     stockOut();
             }
@@ -1457,8 +1494,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 params.put("user_id", String.valueOf(Commons.g_user.getId()));
                 params.put("comment", jsonArray.toString());
                 imageTitle = "comment_imgs";
-
             }
+
+            params.put("is_business", String.valueOf(Commons.userType));
+
+
+            Log.d("Comment Models ==" ,params.toString());
 
             Map<String, String> mHeaderPart= new HashMap<>();
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
@@ -1469,11 +1510,22 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 public void onResponse(JSONObject jsonObject) {
                     closeProgress();
                     try {
+                        Log.d("bbbbb", jsonObject.toString());
                         CommentModel commentModel = new CommentModel();
-                        commentModel.setComment(jsonObject.getJSONObject("extra").getString("comment"));
+                        if(comment_level ==0)
+                            commentModel.setComment(jsonObject.getJSONObject("extra").getString("comment"));
+                        else{
+                            commentModel.setComment(jsonObject.getJSONObject("extra").getString("reply"));
+                        }
                         commentModel.setLevel(comment_level);
-                        commentModel.setUserName(Commons.g_user.getUserName());
-                        commentModel.setUserImage(Commons.g_user.getImvUrl());
+                        if(Commons.userType == 0){
+                            commentModel.setUserName(Commons.g_user.getUserName());
+                            commentModel.setUserImage(Commons.g_user.getImvUrl());
+                        }else{
+                            commentModel.setUserName(Commons.g_user.getBusinessModel().getBusiness_name());
+                            commentModel.setUserImage(Commons.g_user.getBusinessModel().getBusiness_logo());
+                        }
+
                         commentModel.setImage_url(completedValue);
                         if(comment_level==1)
                             commentModel.setParentPosstion(parentPosstion);
@@ -1539,6 +1591,132 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         parentModel = commentModel;
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInputFromInputMethod(edt_comment.getWindowToken(), 0);
+    }
+
+    public void reportComment(int posstion,CommentModel commentModel){
+        Bundle bundle = new Bundle();
+        bundle.putInt("postId", commentModel.getId());
+        bundle.putString("reportType" ,"Comment");
+
+        goTo(NewsDetailActivity.this, ReportPostActivity.class, false,bundle);
+
+    }
+    public void copyComment(int posstion,CommentModel commentModel){
+        try {
+            JSONArray jsonArray = new JSONArray(commentModel.getComment());
+
+            for(int i =0;i<jsonArray.length();i++){
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String str = jsonObject.getString("comment");
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("copy", str);
+                clipboard.setPrimaryClip(clip);
+                showToast("Comment copied in clipboard");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void hideComment(int posstion,CommentModel commentModel){
+        String api_link = API.POST_HIDE_COMMENT;
+        if(commentModel.getLevel()==1)
+            api_link = API.POST_HIDE_REPLYCOMMENT;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                commentModel.setHidden(true);
+                                commentAdapter.notifyDataSetChanged();
+                            }
+
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(commentModel.getLevel()==1)
+                    params.put("reply_id", String.valueOf(commentModel.getId()));
+                else
+                    params.put("comment_id", String.valueOf(commentModel.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+
+    }
+    public void deleteComment(int posstion,CommentModel commentModel){
+        String api_link = API.POST_DELETE_COMMENT;
+        if(commentModel.getLevel()==1)
+            api_link = API.POST_DELETE_REPLY;
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                api_link,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                newsFeedEntity.getCommentModels().remove(posstion);
+                                commentAdapter.setRoomData(newsFeedEntity.getCommentModels());
+                            }
+
+                        }catch (Exception e){
+                            Log.d("Exception ",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                if(commentModel.getLevel()==1)
+                    params.put("reply_id", String.valueOf(commentModel.getId()));
+                else
+                    params.put("comment_id", String.valueOf(commentModel.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     public void likeComment(int posstion,CommentModel commentModel){

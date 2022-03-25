@@ -59,6 +59,7 @@ import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.SearchFragment;
+import com.atb.app.model.AutoCompleteModel;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.NotiEntity;
@@ -120,7 +121,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     ChatFragment chatFragment;
     ImageView imv_title;
     int noti_type;
-    String related_id;
+    String related_id = "-1";
     int busines_pager = 1;
     ArrayList<UserModel>businessUsers = new ArrayList<>();
     @Override
@@ -225,7 +226,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     }
                 });
             }
-        }, 1000, 30000);
+        }, 1000, 10000);
 
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
@@ -324,7 +325,14 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                         try{
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray = jsonObject.getJSONArray("msg");
-                            if(jsonArray.length()>0){
+                           boolean flag =false; ;
+                            for(int i =0;i<jsonArray.length();i++){
+                               if(jsonArray.getJSONObject(i).getInt("read_status") == 0  ){
+                                   flag = true;
+                                   break;
+                               }
+                            }
+                            if(flag){
                                 card_unread_noti.setVisibility(View.VISIBLE);
                             }else
                                 card_unread_noti.setVisibility(View.GONE);
@@ -371,11 +379,16 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             goTo(this, ItemSoldActivity.class,false,bundle);
         }else if(noti_type ==6 || noti_type == 7 || noti_type ==8 || noti_type ==9){
             getBookingByID();
-        }else if(noti_type ==10 || noti_type ==13){
+        }
+        else if(noti_type ==10) {
+            getuserProfile(Integer.parseInt(related_id),1);
+        }
+        else if( noti_type ==13){
             Gson gson = new Gson();
             String usermodel = gson.toJson(Commons.g_user);
             Bundle bundle = new Bundle();
             bundle.putString("userModel",usermodel);
+            bundle.putBoolean("editable",false);
             goTo(this,ReviewActivity.class,false,bundle);
         }else if(noti_type == 11 ){
             //get service api
@@ -388,10 +401,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         }else if(noti_type ==14){
 
         }else if(noti_type ==15){
-            Bundle bundle = new Bundle();
-            bundle.putString("type", String.valueOf(30));
-            bundle.putString("related_id", related_id);
-            goTo(this, SplashActivity.class,true,bundle);
+            reLogin();
         }else if(noti_type ==16) {
             goTo(this, ProfileBusinessNaviagationActivity.class, false);
         }else if(noti_type ==17) {
@@ -418,8 +428,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             goTo(this, ProfilePinActivity.class, false);
         }else if(noti_type ==29) {
             goTo(this, PinPointActivity.class, false);
-        }else if(noti_type ==30) {
-
+        }else if(noti_type ==30 || noti_type ==31 || noti_type == 32) {
             goTo(this, ProfileBusinessNaviagationActivity.class, false);
         }else if (noti_type == 100){
             Bundle bundle = new Bundle();
@@ -490,7 +499,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                 setColor(1);
                 break;
             case R.id.lyt_profile:
-                if(Commons.g_user.getAccount_type()==1)
+                if(Commons.userType==1)
                     startActivityForResult(new Intent(this, ProfileBusinessNaviagationActivity.class),1);
                 else
                     goTo(this, ProfileUserNavigationActivity.class,false);
@@ -675,7 +684,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){
         lyt_title.setVisibility(View.VISIBLE);
-        if(Commons.g_user.getAccount_type() ==1 ){
+        if(Commons.userType ==1 ){
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(this, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         }else {
@@ -802,11 +811,26 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             Commons.AllUsers.clear();
+                            Commons.Appusers.clear();
                             JSONArray jsonArray = jsonObject.getJSONArray("extra");
                             for(int i =0;i<jsonArray.length();i++){
                                 UserModel userModel = new UserModel();
                                 userModel.initModel(jsonArray.getJSONObject(i));
-                                Commons.AllUsers.add(userModel);
+                                AutoCompleteModel autoCompleteModel = new AutoCompleteModel();
+                                autoCompleteModel.setId(userModel.getId());
+                                autoCompleteModel.setName(userModel.getUserName());
+                                autoCompleteModel.setPic_url(userModel.getImvUrl());
+                                Commons.AllUsers.add(autoCompleteModel);
+
+                                if(userModel.getAccount_type() == 1){
+                                    autoCompleteModel = new AutoCompleteModel();
+                                    autoCompleteModel.setId(userModel.getId());
+                                    autoCompleteModel.setName(userModel.getBusinessModel().getBusiness_name());
+                                    autoCompleteModel.setPic_url(userModel.getBusinessModel().getBusiness_logo());
+                                    autoCompleteModel.setIs_business(1);
+                                    Commons.AllUsers.add(autoCompleteModel);
+                                }
+                                Commons.Appusers.add(userModel);
                             }
 
                         }catch (Exception e){
@@ -848,6 +872,17 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     }
     @Override
     public void UserProfile(UserModel userModel,int usertype){
+        if(Integer.parseInt(related_id) == 10){
+            if( noti_type == 10){
+                Gson gson = new Gson();
+                String usermodel = gson.toJson(userModel);
+                Bundle bundle = new Bundle();
+                bundle.putString("userModel",usermodel);
+                bundle.putBoolean("editable",true);
+                goTo(this,ReviewActivity.class,false,bundle);
+                return;
+            }
+        }
         Gson gson = new Gson();
         String usermodel = gson.toJson(userModel);
         Bundle bundle = new Bundle();
@@ -868,5 +903,10 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         if(chatFragment!=null)
             chatFragment.setProfile(flag);
         return  flag;
+    }
+    @Override
+    public void successRelogin(){
+        startActivityForResult(new Intent(MainActivity.this, ProfileBusinessNaviagationActivity.class),1);
+
     }
 }

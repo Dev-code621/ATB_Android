@@ -34,6 +34,7 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
@@ -97,10 +98,17 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
      ImageView imv_back;
     boolean editable =false;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+
+    TextView txt_duration,txv_duration_plus,txv_duration_minus;
+    int duration = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_service_offer);
+        txt_duration = findViewById(R.id.txt_duration);
+        txv_duration_plus = findViewById(R.id.txv_duration_plus);
+        txv_duration_minus = findViewById(R.id.txv_duration_minus);
         lyt_product = findViewById(R.id.lyt_product);
         lyt_post = findViewById(R.id.lyt_post);
         imv_back = findViewById(R.id.imv_back);
@@ -162,6 +170,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         txv_minus.setOnClickListener(this);
         txv_plus.setOnClickListener(this);
         imv_back.setOnClickListener(this);
+        txv_duration_minus.setOnClickListener(this);
+        txv_duration_plus.setOnClickListener(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -190,7 +200,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             }
         });
 
-        String str = "Post in ";
+        String str = "Submit for Approval in ";
         if(editable) str = "Update in ";
         txv_post.setText(str +  spiner_category_type.getSelectedItem().toString());
         String finalStr = str;
@@ -307,6 +317,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             txv_insurance_time.setText("Expires\n" + insuranceModels.get(insurance_id).getExpiry());
         }
         txt_cancelday.setText(String.valueOf(candellation));
+        txt_duration.setText(String.valueOf(duration));
     }
 
 
@@ -358,6 +369,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             edt_deposit.setText(newsFeedEntity.getDeposit());
             candellation = Integer.parseInt(newsFeedEntity.getCancellations());
             txv_location.setText(newsFeedEntity.getPost_location());
+            txt_duration.setText(newsFeedEntity.getDuration());
             if(Double.parseDouble(newsFeedEntity.getDeposit())>0)
                 toggle_deposit.setToggleOn();
             if(newsFeedEntity.getQualifications().size()>0){
@@ -471,7 +483,9 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 selectVideo();
                 break;
             case R.id.txv_location:
-                startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("flag", true);
+                startActivityForResult(new Intent(this, SetPostRangeActivity.class).putExtra("data",bundle),1);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.lyt_insurance_plus:
@@ -498,6 +512,16 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             case R.id.txv_plus:
                 if(candellation==30)break;
                 candellation++;
+                initLayout();
+                break;
+            case R.id.txv_duration_minus:
+                if(duration ==1) break;
+                duration--;
+                initLayout();
+                break;
+            case R.id.txv_duration_plus:
+                if(candellation==15)break;
+                duration++;
                 initLayout();
                 break;
         }
@@ -566,6 +590,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             params.put("location_id", txv_location.getText().toString());
             params.put("lat", String.valueOf(Commons.lat));
             params.put("lng", String.valueOf(Commons.lng));
+            params.put("duration", String.valueOf(duration));
             if(insurance_id ==-1)
                 params.put("insurance_id", "");
             else
@@ -619,14 +644,24 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             mHeaderPart.put("Content-type", "multipart/form-data; boundary=<calculated when request is sent>");
             mHeaderPart.put("Accept", "application/json");
 
+            Log.d("bbbbbbbbb", params.toString());
+
             CustomMultipartRequest mCustomRequest = new CustomMultipartRequest(Request.Method.POST, this, API_LINK, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     closeProgress();
                     try {
                         if(jsonObject.getBoolean("result")) {
-                            setResult(RESULT_OK);
-                            finish(NewServiceOfferActivity.this);
+                            ConfirmDialog confirmDialog = new ConfirmDialog();
+                            confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                                @Override
+                                public void onConfirm() {
+                                    setResult(RESULT_OK);
+                                    finish(NewServiceOfferActivity.this);
+                                }
+                            },"ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.","Thanks");
+                            confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+
                         }else {
                             showAlertDialog(jsonObject.getString("msg"));
                         }

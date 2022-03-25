@@ -98,7 +98,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         lyt_profile.setOnClickListener(this);
         lyt_chatprofile.setOnClickListener(this);
 
-        if(Commons.g_user.getAccount_type() ==1 ){
+        if(Commons.userType ==1 ){
             Glide.with(this).load(Commons.g_user.getBusinessModel().getBusiness_logo()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(imv_profile);
         }else {

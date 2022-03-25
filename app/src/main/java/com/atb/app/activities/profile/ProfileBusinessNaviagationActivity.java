@@ -28,6 +28,7 @@ import com.atb.app.activities.navigationItems.ProfileActivity;
 import com.atb.app.activities.navigationItems.SavePostActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
+import com.atb.app.activities.navigationItems.booking.BookingSplashActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newpost.SelectProductCategoryActivity;
@@ -296,8 +297,9 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 goTo(this, UpdateBusinessActivity.class,false);
                 break;
             case R.id.lyt_booking:
+
                 drawer.closeDrawer(GravityCompat.END);
-                goTo(this, BookingActivity.class,false);
+              goTo(this, BookingSplashActivity.class,false);
                 break;
             case R.id.lyt_item_sold:
                 drawer.closeDrawer(GravityCompat.END);
@@ -345,6 +347,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 String usermodel = gson.toJson(Commons.g_user);
                 bundle = new Bundle();
                 bundle.putString("userModel",usermodel);
+                bundle.putBoolean("editable",false);
                 goTo(this,ReviewActivity.class,false,bundle);
                 break;
 

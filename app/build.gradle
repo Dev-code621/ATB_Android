@@ -15,8 +15,8 @@ android {
         multiDexEnabled true
         useLibrary 'org.apache.http.legacy'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "PUB_KEY", '"pub-c-56276161-dfe0-4551-a730-8ac8b6ba0f1e"'
-        buildConfigField "String", "SUB_KEY", '"sub-c-488c32e2-5a87-11ec-96e9-32997ff5e1b9"'
+        buildConfigField "String", "PUB_KEY", '"pub-c-1c14d041-f93e-4e3b-ad85-d6dc2e9b4097"'
+        buildConfigField "String", "SUB_KEY", '"sub-c-45b4ccf4-a05b-11ec-a074-1a3740267833"'
     }
 
     buildTypes {

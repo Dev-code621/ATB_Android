@@ -9,16 +9,28 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.atb.app.R;
+import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.search.ColorSuggestion;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Constants;
@@ -42,17 +54,24 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.gson.Gson;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SetPostRangeActivity extends CommonActivity implements View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     ImageView imv_back;
-    TextView edt_serach;
+    AutoCompleteTextView edt_serach;
     LinearLayout lyt_send;
     IndicatorSeekBar seekbarProgress;
     TextView txv_progress,txv_update;
@@ -62,7 +81,10 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
     FloatingSearchView mSearchView ;
     public static final long FIND_SUGGESTION_SIMULATED_DELAY = 250;
     private String mLastQuery = "";
-
+    String[] postalCodeArray = new String[100];
+    LinearLayout lyt_description;
+    boolean flag = false;
+    boolean selectLocation = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +95,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         seekbarProgress = findViewById(R.id.seekbarProgress);
         txv_update = findViewById(R.id.txv_update);
         txv_progress = findViewById(R.id.txv_progress);
+        lyt_description = findViewById(R.id.lyt_description);
         edt_serach.setOnClickListener(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -82,6 +105,13 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         mSearchView = findViewById(R.id.floating_search_view);
         mapFragment.getMapAsync(this);
 
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                flag= bundle.getBoolean("flag");
+                if(flag)lyt_description.setVisibility(View.GONE);
+            }
+        }
         setupSearchBar();
         if(!Commons.g_user.getLocation().equals("null")){
             txv_progress.setText(50 + "KM");
@@ -118,38 +148,95 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setTrafficEnabled(Commons.traffic);
         googleMap.setOnMarkerClickListener(this);
-        googleMap.setMyLocationEnabled(true);
+//        googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        //setUpMap();
-        moveCamera();
+        setUpMap();
+        //moveCamera();
     }
 
 
     void setupSearchBar(){
-        DataHelper.init();
         mSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, final String newQuery) {
-
+                if(selectLocation){
+                    selectLocation = false;
+                    return;
+                }
                 if (!oldQuery.equals("") && newQuery.equals("")) {
                     mSearchView.clearSuggestions();
                 } else {
-
-                    mSearchView.showProgress();
-                    DataHelper.findSuggestions(SetPostRangeActivity.this, newQuery, 5,
-                            FIND_SUGGESTION_SIMULATED_DELAY, new DataHelper.OnFindSuggestionsListener() {
-
+                    String url = "https://api.postcodes.io/postcodes?q=" + newQuery;
+                    StringRequest myRequest = new StringRequest(
+                            Request.Method.GET,
+                            url,
+                            new Response.Listener<String>() {
                                 @Override
-                                public void onResults(List<ColorSuggestion> results) {
+                                public void onResponse(String json) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(json);
+                                        JSONArray jsonArray =  jsonObject.getJSONArray("result");
 
-                                    //this will swap the data and
-                                    //render the collapse/expand animations as necessary
-                                    mSearchView.swapSuggestions(results);
-                                    //let the users know that the background
-                                    //process has completed
-                                    mSearchView.hideProgress();
+                                        for(int i =0;i<jsonArray.length();i++){
+                                            JSONObject Object = jsonArray.getJSONObject(i);
+                                           String postalCode =Object.getString("postcode");
+                                            LatLng latLng = new LatLng(Object.getDouble("latitude"),Object.getDouble("longitude"));
+                                            String region = Object.getString("admin_district");
+                                            String county = Object.getString("admin_county");
+                                            if(county.equals("null") || county == null){
+                                                county = Object.getString("admin_ward");
+                                            }
+
+                                            Commons.LatLang.put(region + ", " + county +", United Kingdom" ,latLng);
+                                            ArrayList<String> Regions = new ArrayList<>();
+                                            Regions.add(region);
+                                            Commons.region.put(county,Regions);
+                                            Commons.postalCode.put(postalCode ,region + ", " + county +", United Kingdom");
+                                            Commons.county.add(county);
+
+                                            mSearchView.showProgress();
+                                            DataHelper.findSuggestions(SetPostRangeActivity.this, newQuery, jsonArray.length(),
+                                                    FIND_SUGGESTION_SIMULATED_DELAY, new DataHelper.OnFindSuggestionsListener() {
+
+                                                        @Override
+                                                        public void onResults(List<ColorSuggestion> results) {
+
+                                                            //this will swap the data and
+                                                            //render the collapse/expand animations as necessary
+                                                            mSearchView.swapSuggestions(results);
+                                                            //let the users know that the background
+                                                            //process has completed
+                                                            mSearchView.hideProgress();
+                                                        }
+                                                    });
+                                        }
+                                        DataHelper.init();
+                                    }catch (Exception e){
+
+                                    }
                                 }
-                            });
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    closeProgress();
+                                    showToast(error.getMessage());
+
+                                }
+                            }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<>();
+//                params.put("q",search);
+                            return params;
+                        }
+                    };
+                    myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                            10000,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    AppController.getInstance().addToRequestQueue(myRequest, "tag");
+
                 }
             }
         });
@@ -157,12 +244,14 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+                selectLocation = true;
                 mLastQuery = searchSuggestion.getBody();
                 String postalCode =mLastQuery.split("\n")[0];
                 mSearchView.setSearchBarTitle(postalCode);
                 myCordianite = Commons.LatLang.get(Commons.postalCode.get(postalCode));
                 edt_serach.setText(Commons.postalCode.get(postalCode) + "||" + postalCode);
                 mSearchView.clearSuggestions();
+
                 moveCamera();
             }
 
@@ -207,12 +296,12 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
             //create LatLng object
             myCordianite = new LatLng(latitude, longitude);
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
+//
+//            // zoom the map
+//            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
 
-            // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
-
-            drawMyLocation();
+            moveCamera();
 
         }
         else{
@@ -221,11 +310,11 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
 
             //create LatLng object
             myCordianite = new LatLng(latitude, longitude);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
-
-            // zoom the map
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
-            drawMyLocation();
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myCordianite));
+//
+//            // zoom the map
+//            googleMap.animateCamera(CameraUpdateFactory.zoomTo(18f));
+            moveCamera();
         }
       //  moveCamera();
         // mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
@@ -270,13 +359,13 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                 finish(this);
                 break;
             case R.id.edt_serach:
-                List<Place.Field> fields = Arrays.asList(Place.Field.values());
-
-                Intent intent = new Autocomplete.IntentBuilder(
-                        AutocompleteActivityMode.OVERLAY, fields)
-                        .setTypeFilter(TypeFilter.ADDRESS)
-                        .build(this);
-                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
+//                List<Place.Field> fields = Arrays.asList(Place.Field.values());
+//
+//                Intent intent = new Autocomplete.IntentBuilder(
+//                        AutocompleteActivityMode.OVERLAY, fields)
+//                        .setTypeFilter(TypeFilter.ADDRESS)
+//                        .build(this);
+//                startActivityForResult(intent, Constants.AUTOCOMPLETE_REQUEST_CODE);
                 break;
             case R.id.txv_update:
                 setResult(Commons.location_code);

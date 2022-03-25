@@ -42,6 +42,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,12 +101,12 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                 postFeedAdapter.setData(newsFeedEntities);
             }
         });
-        getUserPosts();
         initLayout();
 
     }
 
     void initLayout(){
+        getUserPosts();
 
         if(type == 3){
             txv_title.setText(getResources().getString(R.string.post_a_service));
@@ -128,13 +129,16 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
     }
     @Override
     public void onTimeSet(com.wdullaer.materialdatetimepicker.time.TimePickerDialog view, int hourOfDay, int minute, int second) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
-        String pattern = "MM/dd/yyyy HH:mm:ss";
-        DateFormat df = new SimpleDateFormat(pattern);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy hh:mm a");
         Calendar now = Calendar.getInstance();
         now.set(year,month,day,hourOfDay,minute,second);
+        Date d = new Date(now.getTimeInMillis());
+        String str = formatter.format(d);
+        txv_post.setText("Schedule Post On:\n" + str );
         scheduledOn = now.getTimeInMillis()/1000L;
     }
+
+
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = "You picked the following date: "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
@@ -148,6 +152,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
         );
         time.setTitle("Please choice time");
         time.show(this.getSupportFragmentManager(), "Timepickerdialog");
+
     }
 
     void addCalender(){

@@ -36,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.navigationItems.business.BusinessProfilePaymentActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.adapter.MultiPostFeedAdapter;
@@ -150,7 +151,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                     for (int i = 0; i < array.length; i++){
                         if (array[i].equals(newsFeedEntity.getCategory_title())) {
                             spiner_category_type.setSelectedIndex(i);
-                            txv_post.setText("Post in " +  spiner_category_type.getSelectedItem().toString());
+                            txv_post.setText("Edit in " +  spiner_category_type.getSelectedItem().toString());
                             break;
                         }
                     }
@@ -284,10 +285,10 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
         spiner_category_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-                String text ="Post in " +  spiner_category_type.getSelectedItem().toString();
+                String text ="Edit in " +  spiner_category_type.getSelectedItem().toString();
                 SpannableString ss = new SpannableString(text);
                 StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
-                ss.setSpan(boldSpan, 0, "Post in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(boldSpan, 0, "Edit in ".length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 txv_post.setText(ss);
             }
         });
@@ -402,6 +403,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
         variationAdapter.setRoomData(hashMap);
         Helper.getListViewSize(list_variation);
         stockMap.clear();
+
         for(int i =0;i<stock_name.size();i++){
             VariationModel variationModel = new VariationModel();
             int index = 0;
@@ -413,11 +415,26 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 attributeModels.add(attributeModel);
                 index++;
             }
+
+            for(int j = 0;j<newsFeedEntity.getVariationModels().size();j++){
+                if(newsFeedEntity.getVariationModels().get(j).getAttributeModels().size() != attributeModels.size())break;
+                int count = 0;
+                for(int k = 0;k<attributeModels.size();k++){
+                    if(newsFeedEntity.getVariationModels().get(j).getAttributeModels().get(k).getAttribute_title().equals(attributeModels.get(k).getAttribute_title())){
+                        count ++;
+                    }
+                }
+                if(count == attributeModels.size()){
+                    variationModel.setPrice(newsFeedEntity.getVariationModels().get(j).getPrice());
+                    variationModel.setStock_level(newsFeedEntity.getVariationModels().get(j).getStock_level());
+                }
+
+            }
             variationModel.setAttributeModels(attributeModels);
             stockMap.put(stock_name.get(i),variationModel);
         }
         list_stock.setAdapter(stockAdapter);
-        stockAdapter.setRoomData(stockMap);
+        stockAdapter.setEditRoomData(stockMap);
         Helper.getListViewSize(list_stock);
     }
     void Keyboard(){
@@ -469,7 +486,9 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 updateSale();
                 break;
             case R.id.txv_location:
-                startActivityForResult(new Intent(this, SetPostRangeActivity.class),1);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("flag", true);
+                startActivityForResult(new Intent(this, SetPostRangeActivity.class).putExtra("data",bundle),1);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.lyt_selectall:
@@ -511,19 +530,19 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
         }else if(edt_price.getText().toString().length() ==0){
             showAlertDialog("Please input price.");
             return;
-        }else if(edt_tag.getText().toString().length()==0){
-            showAlertDialog("Please input tags.");
-            return;
-        }else if(edt_item.getText().toString().length()==0){
-            showAlertDialog("Please input the item.");
-            return;
+//        }else if(edt_tag.getText().toString().length()==0){
+//            showAlertDialog("Please input tags.");
+//            return;
+//        }else if(edt_item.getText().toString().length()==0){
+//            showAlertDialog("Please input the item.");
+//            return;
         }else if(!cash && !paypal){
             showAlertDialog("Please input payment option.");
             return;
         }else if(txv_location.getText().toString().length()==0){
             showAlertDialog("Please input the location");
             return;
-        }else if(!postage && !collect && !!deliver){
+        }else if( !collect){
             showAlertDialog("Please select a delivery option.");
             return;
         }else  if(deliver){
@@ -882,7 +901,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 public void onConfirm() {
                     Bundle bundle = new Bundle();
                     bundle.putInt("subScriptionType",2);
-                    startActivityForResult(new Intent(EditSalesPostActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    startActivityForResult(new Intent(EditSalesPostActivity.this, BusinessProfilePaymentActivity.class).putExtra("data",bundle),1);
                     overridePendingTransition(0, 0);
                 }
             },getString(R.string.subscription_alert));

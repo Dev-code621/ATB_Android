@@ -17,16 +17,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.adapter.SoldHeaderAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -116,6 +119,14 @@ public class PurchasesActivity extends CommonActivity {
                                     transactionEntity.setImv_url(object.getJSONArray("product").getJSONObject(0).getJSONArray("post_imgs").getJSONObject(0).getString("path"));
                                     transactionEntity.setPoster_profile_type(object.getJSONArray("product").getJSONObject(0).getInt("poster_profile_type"));
                                     transactionEntity.setTitle(object.getJSONArray("product").getJSONObject(0).getString("title"));
+                                    NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+                                    newsFeedEntity.initDetailModel(object.getJSONArray("product").getJSONObject(0));
+                                    UserModel user = new UserModel();
+                                    user.initModel(object.getJSONObject("user"));
+                                    newsFeedEntity.setUserModel(user);
+                                    newsFeedEntity.setPost_type(2);
+
+                                    transactionEntity.setNewsFeedEntity(newsFeedEntity);
 
                                     if(object.has("user")){
                                         UserModel userModel = new UserModel();
@@ -157,5 +168,15 @@ public class PurchasesActivity extends CommonActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
     }
 }

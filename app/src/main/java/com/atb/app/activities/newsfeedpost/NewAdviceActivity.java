@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
 import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
+import com.atb.app.activities.navigationItems.business.BusinessProfilePaymentActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
@@ -71,7 +72,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     ArrayList<ImageView>imageViews = new ArrayList<>();
     LinearLayout lyt_image;
     EditText edt_title,edt_description;
-    TextView txv_post;
+    TextView txv_post,txv_advice;
     ArrayList<String>returnValue = new ArrayList<>();
     ArrayList<String>completedValue = new ArrayList<>();
     String videovalue ="";
@@ -81,6 +82,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     int media_type =0;
     boolean editable =false;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +105,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         imageViews.add(findViewById(R.id.imv_image6));
         imageViews.add(findViewById(R.id.imv_image7));
         imageViews.add(findViewById(R.id.imv_image8));
-
+        txv_advice = findViewById(R.id.txv_advice);
         lyt_image = findViewById(R.id.lyt_image);
         edt_title = findViewById(R.id.edt_title);
         edt_description = findViewById(R.id.edt_description);
@@ -115,6 +117,16 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         txv_post.setOnClickListener(this);
         imv_videothumnail.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getBundleExtra("data");
+            if (bundle != null) {
+                editable= bundle.getBoolean("edit");
+                String string = bundle.getString("newsFeedEntity");
+                Gson gson = new Gson();
+                newsFeedEntity = gson.fromJson(string, NewsFeedEntity.class);
+                loadEdit();
+            }
+        }
         spiner_media_type.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
             @Override
             public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
@@ -156,6 +168,36 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         Keyboard();
     }
 
+    void loadEdit(){
+        txv_advice.setText("Edit Advice");
+        media_type = newsFeedEntity.getMedia_type();
+        spiner_media_type.setSelectedIndex(media_type);
+        if (newsFeedEntity.getPoster_profile_type() == 1) business_user = true;
+
+        edt_title.setText(newsFeedEntity.getTitle());
+        edt_description.setText(newsFeedEntity.getDescription());
+        String[] array = getResources().getStringArray(R.array.category_type);
+        for (int i = 0; i < array.length; i++){
+            if (array[i].equals(newsFeedEntity.getCategory_title())) {
+                spiner_category_type.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        for (int i = 0; i < newsFeedEntity.getPostImageModels().size(); i++) {
+            if (Commons.mediaVideoType(newsFeedEntity.getPostImageModels().get(i).getPath())) {
+                videovalue = newsFeedEntity.getPostImageModels().get(i).getPath();
+            } else {
+                completedValue.add(newsFeedEntity.getPostImageModels().get(i).getPath());
+            }
+        }
+        if (media_type == 1)
+            reloadImages();
+        else if (media_type == 2)
+            reloadVideo();
+
+    }
+
     void initLayout(){
         for (int i = 0; i < imageViews.size(); i++) {
             imageViews.get(i).setVisibility(View.VISIBLE);
@@ -176,11 +218,12 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
             lyt_image.setVisibility(View.VISIBLE);
             lyt_video.setVisibility(View.GONE);
 
-        }else{
+        }else {
             lyt_image_video.setVisibility(View.VISIBLE);
             lyt_image.setVisibility(View.GONE);
             lyt_video.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -192,7 +235,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 public void onConfirm() {
                     Bundle bundle = new Bundle();
                     bundle.putInt("subScriptionType",2);
-                    startActivityForResult(new Intent(NewAdviceActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    startActivityForResult(new Intent(NewAdviceActivity.this, BusinessProfilePaymentActivity.class).putExtra("data",bundle),1);
                     overridePendingTransition(0, 0);
                 }
             },getString(R.string.subscription_alert));

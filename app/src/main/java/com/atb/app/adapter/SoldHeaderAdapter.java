@@ -2,7 +2,9 @@ package com.atb.app.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
@@ -18,13 +21,17 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.Response;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
@@ -68,7 +75,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     public class ItemViewHolder extends SectioningAdapter.ItemViewHolder{
         ImageView imv_image,imv_profile,imv_btn_arrow;
         TextView txv_name,txv_itemnumber,txv_price,txv_time,txv_other_name;
-
+        LinearLayout lyt_layout;
         public ItemViewHolder(View itemView) {
             super(itemView);
             imv_image =  itemView.findViewById(R.id.imv_image);
@@ -79,6 +86,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             txv_time =  itemView.findViewById(R.id.txv_time);
             imv_btn_arrow = itemView.findViewById(R.id.imv_btn_arrow);
             txv_other_name = itemView.findViewById(R.id.txv_other_name);
+            lyt_layout = itemView.findViewById(R.id.lyt_layout);
         }
     }
 
@@ -245,12 +253,32 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                 holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()) +  " ORDER " + transactionEntity.getTransaction_id());
                 if(transactionEntity.getPoster_profile_type() == 1){
                     holder.txv_other_name.setText(transactionEntity.getUserModel().getBusinessModel().getBusiness_name());
+                    holder.txv_other_name.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((CommonActivity)_context).getuserProfile(transactionEntity.getUserModel().getId(),1);
+
+
+                        }
+                    });
 
                 }else {
                     holder.txv_other_name.setText(transactionEntity.getUserModel().getUserName());
                 }
+                holder.lyt_layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("postId",transactionEntity.getNewsFeedEntity().getId());
+                        bundle.putBoolean("CommentVisible",false);
+                        Gson gson = new Gson();
+                        String usermodel = gson.toJson(transactionEntity.getNewsFeedEntity());
+                        bundle.putString("newfeedEntity",usermodel);
+                        ((CommonActivity) _context).startActivityForResult(new Intent(_context, NewsDetailActivity.class).putExtra("data",bundle),1);
+                    }
+                });
                 if(type.equals("purchase")){
-                    holder.imv_btn_arrow.setImageDrawable(_context.getDrawable(R.drawable.icon_message1));
+//                    holder.imv_btn_arrow.setImageDrawable(_context.getDrawable(R.drawable.icon_message1));
                     holder.imv_btn_arrow.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                     holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
                         @Override

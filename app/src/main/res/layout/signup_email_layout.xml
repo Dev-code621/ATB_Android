@@ -21,7 +21,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_rectangle_round"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
@@ -49,6 +50,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:visibility="gone"
         android:layout_marginTop="10dp">
         <View
             android:layout_width="0dp"
@@ -76,7 +78,7 @@
         android:text="@string/use_email"
         android:gravity="center"
         android:textColor="@color/white"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         style="@style/btn_buttonStyle"
         android:background="@drawable/button_rectangle_round"/>
 

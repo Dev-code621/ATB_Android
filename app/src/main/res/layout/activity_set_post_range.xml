@@ -42,7 +42,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="  Location &amp; Rdius"
+                        android:text="  Location &amp; Radius"
                         style="@style/boldtextTheme"
                         android:textSize="25sp"/>
                 </LinearLayout>
@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:id="@+id/lyt_description"
                 android:layout_marginBottom="20dp">
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,9 +77,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-                    <TextView android:id="@+id/edt_serach"
+                    android:visibility="gone"
+                    android:orientation="horizontal"                    >
+                    <AutoCompleteTextView android:id="@+id/edt_serach"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:singleLine="true"
@@ -135,7 +136,7 @@
                         android:layout_weight="1"
                         android:layout_height="50dp"
                         android:id="@+id/seekbarProgress"
-                        app:isb_max="80"
+                        app:isb_max="180"
                         app:isb_min="1"
                         app:isb_progress="1"
                         app:isb_seek_smoothly="true"

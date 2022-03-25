@@ -52,6 +52,15 @@ public class StockAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
+    public void setEditRoomData(  HashMap<String, VariationModel>stockMap) {
+        this._roomDatas = stockMap;
+        for ( String key : _roomDatas.keySet() ) {
+            final VariationModel variationModel = _roomDatas.get(key);
+            prices.add(variationModel.getPrice());
+            stock_levels.add(String.valueOf(variationModel.getStock_level()));
+            booleans.add(true);
+        }
+    }
 
     public void setSelect(boolean flag){
         for(int i =0;i<_roomDatas.size();i++)booleans.set(i,flag);

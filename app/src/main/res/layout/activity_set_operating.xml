@@ -475,12 +475,13 @@
                 android:src="@drawable/icon_minus1"
                 android:tint="@color/discard_color"/>
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/discard_color"
                 android:theme="@style/boldtextTheme"
                 android:textSize="18sp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
                 android:text="The Following days will be closed for any reservation"/>
         </LinearLayout>
         <ListView

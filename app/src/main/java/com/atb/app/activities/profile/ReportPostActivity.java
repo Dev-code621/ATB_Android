@@ -33,9 +33,10 @@ import java.util.Map;
 
 public class ReportPostActivity extends CommonActivity {
     ImageView imv_back;
-    TextView txv_post;
+    TextView txv_post,txv_title;
     EditText edt_description,edt_question;
     int postId ;
+    String reportType = "Post";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class ReportPostActivity extends CommonActivity {
         txv_post = findViewById(R.id.txv_post);
         edt_description = findViewById(R.id.edt_description);
         edt_question = findViewById(R.id.edt_question);
-
+        txv_title = findViewById(R.id.txv_title);
         imv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +62,9 @@ public class ReportPostActivity extends CommonActivity {
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
+                reportType = bundle.getString("reportType");
                 postId= bundle.getInt("postId");
+                txv_title.setText("Report " + reportType);
             }
         }
         Keyboard();
@@ -123,7 +126,12 @@ public class ReportPostActivity extends CommonActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
-                params.put("post_id", String.valueOf(postId));
+                if(reportType == "Comment"){
+                    params.put("comment_id", String.valueOf(postId));
+                }else{
+                    params.put("post_id", String.valueOf(postId));
+
+                }
                 params.put("user_id", String.valueOf(Commons.g_user.getId()));
                 params.put("reason", edt_question.getText().toString());
                 params.put("content", edt_description.getText().toString());

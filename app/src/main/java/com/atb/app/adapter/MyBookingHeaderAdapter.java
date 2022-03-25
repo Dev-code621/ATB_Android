@@ -119,12 +119,14 @@ public class MyBookingHeaderAdapter extends SectioningAdapter {
     ArrayList<BookingEntity> _roomDatas = new ArrayList<>();
     ArrayList<ArrayList<BookingEntity>> _bookings = new ArrayList<>();
     String[] header_text = {"Coming up","Next week", "Past Bookings"};
-    public MyBookingHeaderAdapter(Context context, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions, ArrayList<BookingEntity> data) {
+    int type = 0;
+    public MyBookingHeaderAdapter(Context context, boolean hasFooters, boolean showModificationControls, boolean showCollapsingSectionControls, boolean showAdapterPositions, ArrayList<BookingEntity> data,int type) {
         this._context = context;
         this.showModificationControls = showModificationControls;
         this.showCollapsingSectionControls = showCollapsingSectionControls;
         this.showAdapterPositions = showAdapterPositions;
         this.hasFooters = hasFooters;
+        this.type = type;
         _roomDatas = data;
         Collections.sort(_roomDatas, new Comparator<BookingEntity>() {
             @Override
@@ -269,7 +271,10 @@ public class MyBookingHeaderAdapter extends SectioningAdapter {
         Glide.with(_context).load(bookingEntity.getNewsFeedEntity().getPostImageModels().get(0).getPath()).placeholder(R.drawable.image_thumnail).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, 20, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_image);
         holder.txv_name.setText(bookingEntity.getNewsFeedEntity().getTitle());
-        holder.txv_price.setText(bookingEntity.getUserModel().getBusinessModel().getBusiness_name());
+        if(type == 1)
+            holder.txv_price.setText(bookingEntity.getUserModel().getUserName());
+        else
+            holder.txv_price.setText(bookingEntity.getBusinessModel().getBusiness_name());
         holder.txv_time.setText(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()));
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeInMillis(bookingEntity.getBooking_datetime()*1000l);

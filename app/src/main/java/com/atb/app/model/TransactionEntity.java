@@ -8,6 +8,17 @@ public class TransactionEntity {
     long created_at;
     String imv_url,title ;
     UserModel userModel = new UserModel();
+    NewsFeedEntity newsFeedEntity= new NewsFeedEntity();
+
+    public NewsFeedEntity getNewsFeedEntity() {
+        return newsFeedEntity;
+    }
+
+    public void setNewsFeedEntity(NewsFeedEntity newsFeedEntity) {
+        this.newsFeedEntity = newsFeedEntity;
+    }
+
+
 
     public int getPoster_profile_type() {
         return poster_profile_type;

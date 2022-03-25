@@ -102,8 +102,10 @@ public class DataHelper {
                 if (!(constraint == null || constraint.length() == 0)) {
 
                     for (ColorSuggestion suggestion : sColorSuggestions) {
-                        if (suggestion.getBody().toUpperCase()
-                                .startsWith(constraint.toString().toUpperCase())) {
+                        String initial = suggestion.getBody().toUpperCase().replaceAll(" ","");
+                        String reQuery = constraint.toString().toUpperCase().replaceAll(" ","");
+                        if (initial
+                                .startsWith(reQuery)) {
 
                             suggestionList.add(suggestion);
                             if (limit != -1 && suggestionList.size() == limit) {

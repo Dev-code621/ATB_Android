@@ -5,6 +5,7 @@ import android.util.DisplayMetrics;
 import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
+import com.atb.app.model.AutoCompleteModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.preference.Preference;
@@ -57,7 +58,9 @@ public class Commons {
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();
     public static HashMap<String,String> postalCode = new HashMap<>();
-    public static ArrayList<UserModel> AllUsers = new ArrayList<>();
+    public static ArrayList<AutoCompleteModel> AllUsers = new ArrayList<>();
+    public static ArrayList<UserModel> Appusers = new ArrayList<>();
+
     public static BackgroundService backgroundService ;
     public static int notification_count = 0;
     public static PubNub mPubNub;
@@ -66,6 +69,7 @@ public class Commons {
     public static String senderName;
     public static  boolean profile_flag = false;
     public static  List<String> pubnub_channels = new ArrayList<>();
+    public  static  int userType = 0;
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

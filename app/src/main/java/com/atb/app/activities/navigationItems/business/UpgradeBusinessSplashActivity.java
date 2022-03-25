@@ -148,6 +148,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
     public void finishPayment(String transaction_id){
         Commons.g_user.getBusinessModel().setPaid(1);
         setResult(Commons.subscription_code);
+
         finish(UpgradeBusinessSplashActivity.this);
     }
 

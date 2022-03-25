@@ -145,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginLeft="10dp"
                 android:gravity="center">
                 <TextView
                     android:id="@+id/txv_paypal"
@@ -152,9 +153,9 @@
                     android:layout_height="match_parent"
                     android:text="Use your PayPal account"
                     android:gravity="center"
+                    android:paddingRight="8dp"
                     android:textColor="@color/txt_color"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     style="@style/boldtextTheme" />
                 <TextView
                     android:id="@+id/txv_paypal_address"
@@ -163,7 +164,6 @@
                     android:text="richard@gmail.com"
                     android:gravity="center"
                     android:textColor="@color/txt_color"
-                    android:layout_marginLeft="10dp"
                     android:textSize="14sp"
                     style="@style/textTheme" />
             </LinearLayout>

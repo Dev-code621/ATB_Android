@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.util.Log;
@@ -38,6 +39,8 @@ import com.atb.app.model.BookingEntity;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.VariationModel;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
@@ -53,13 +56,19 @@ import com.zcw.togglebutton.ToggleButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static com.atb.app.commons.Commons.REQUEST_PAYMENT_CODE;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MyBookingViewActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_add_calendar,lyt_message,lyt_request_change,lyt_cancel_booking,lyt_request_paypal;
@@ -369,8 +378,29 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
         date = formatter.format(d);
         return date;
     }
-    public void addEvent() {
 
+    public boolean getEvent(){
+        String str  = Preference.getInstance().getValue(this, PrefConst.PREFKEY_CALENDERLIST, "[]");
+        Long start_time = bookingEntity.getBooking_datetime()*1000l;
+
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            for(int i = 0 ; i <jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(jsonObject.getString("Title").equals(bookingEntity.getNewsFeedEntity().getTitle()) && jsonObject.getLong("Start_time") == start_time){
+                    showAlertDialog("This booking has already been added to your Calendar");
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+
+    }
+    public void addEvent() {
+        if(getEvent()) return;
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
         intent.putExtra(CalendarContract.Events.TITLE, bookingEntity.getNewsFeedEntity().getTitle());
@@ -391,5 +421,18 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
         intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
         startActivity(intent);
+
+        String str  = Preference.getInstance().getValue(this, PrefConst.PREFKEY_CALENDERLIST, "[]");
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Title" , bookingEntity.getNewsFeedEntity().getTitle());
+            jsonObject.put("Start_time" , start_time);
+            jsonArray.put(jsonObject);
+            Preference.getInstance().put(this, PrefConst.PREFKEY_CALENDERLIST, jsonArray.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

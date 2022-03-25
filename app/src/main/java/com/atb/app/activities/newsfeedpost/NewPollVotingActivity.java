@@ -31,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.atb.app.R;
+import com.atb.app.activities.navigationItems.business.BusinessProfilePaymentActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.adapter.PollEmageAdapter;
 import com.atb.app.api.API;
@@ -219,7 +220,7 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
                 public void onConfirm() {
                     Bundle bundle = new Bundle();
                     bundle.putInt("subScriptionType",2);
-                    startActivityForResult(new Intent(NewPollVotingActivity.this, UpgradeBusinessSplashActivity.class).putExtra("data",bundle),1);
+                    startActivityForResult(new Intent(NewPollVotingActivity.this, BusinessProfilePaymentActivity.class).putExtra("data",bundle),1);
                     overridePendingTransition(0, 0);
                 }
             },getString(R.string.subscription_alert));

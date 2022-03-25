@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.navigationItems.business.BuildBusinessStoreActivity"
+    android:background="@color/head_color"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center">
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/star_cicle" />
+    <TextView
+        android:id="@+id/txv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test! Thats all we need\nfor now "
+        style="@style/boldtextTheme"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="27sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ATB admin will review your business to ensure it meets our guidelines for business advertising on ATB and will be approved within the next 3-5 working days.In the meantime begin uploading product &amp; services to your store which will go live onto the app once approved."
+        style="@style/textTheme"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="vertical" />
+    <TextView
+        android:id="@+id/txv_businessstore"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Build your business store"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:background="@drawable/comment_border_round"
+        android:padding="10dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white" />
+</LinearLayout>

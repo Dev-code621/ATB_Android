@@ -23,6 +23,8 @@ public class ConfirmDialog extends DialogFragment {
     TextView tv_cancel;
     TextView tv_title;
     String txt_title;
+    String okay_text = "Ok";
+    boolean cancel = false;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +42,15 @@ public class ConfirmDialog extends DialogFragment {
         return null;
     }
 
+    public ConfirmDialog setOnConfirmListener(OnConfirmListener listener, String title,String okay_text) {
+        this.listener = listener;
+        this.txt_title = title;
+        this.okay_text = okay_text;
+        cancel = true;
+        return null;
+    }
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
@@ -47,6 +58,8 @@ public class ConfirmDialog extends DialogFragment {
         tv_cancel = view.findViewById(R.id.tv_cancel);
         tv_title = view.findViewById(R.id.tv_title);
         tv_title.setText(txt_title);
+        tv_delete.setText(okay_text);
+        if(cancel)tv_cancel.setVisibility(View.GONE);
         tv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

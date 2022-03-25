@@ -23,6 +23,7 @@ import com.atb.app.activities.SplashActivity;
 import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
 import com.atb.app.activities.navigationItems.booking.MyBookingViewActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
 import com.atb.app.activities.profile.ReviewActivity;
 import com.atb.app.activities.profile.boost.PinPointActivity;
@@ -36,6 +37,7 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.BookingEntity;
 import com.atb.app.model.NotiEntity;
+import com.atb.app.model.UserModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -51,6 +53,7 @@ public class NotificationActivity extends CommonActivity{
     ListView list_notification;
     NotificationAdapter notificationAdapter ;
     ArrayList<NotiEntity>notiEntities = new ArrayList<>();
+    int noti_type =0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,11 +75,12 @@ public class NotificationActivity extends CommonActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NotiEntity notiEntity = notiEntities.get(position);
-
                 if(notiEntity.getRead_status()==0)
-                    readNotification(notiEntity);
+                    readNotification(notiEntity,position);
 
-                int noti_type = notiEntity.getType();
+                noti_type = notiEntity.getType();
+                Log.d("Notification Type", String.valueOf(noti_type));
+
                 int related_id = notiEntity.getRelated_id();
                 if(noti_type == 1 || noti_type == 2 || noti_type ==3 ){
                     Bundle bundle = new Bundle();
@@ -89,11 +93,14 @@ public class NotificationActivity extends CommonActivity{
                     goTo(NotificationActivity.this, ItemSoldActivity.class,false,bundle);
                 }else if(noti_type ==6 || noti_type == 7 || noti_type ==8 || noti_type ==9){
                     getBookingByID(noti_type,related_id);
-                }else if(noti_type ==10 || noti_type ==13){
+                }else if(noti_type ==10) {
+                    getuserProfile(related_id,1);
+                } else if( noti_type ==13){
                     Gson gson = new Gson();
                     String usermodel = gson.toJson(Commons.g_user);
                     Bundle bundle = new Bundle();
                     bundle.putString("userModel",usermodel);
+                    bundle.putBoolean("editable",false);
                     goTo(NotificationActivity.this, ReviewActivity.class,false,bundle);
                 }else if(noti_type == 11 ){
                     //get service api
@@ -106,10 +113,7 @@ public class NotificationActivity extends CommonActivity{
                 }else if(noti_type ==14){
 
                 }else if(noti_type ==15){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("type", String.valueOf(30));
-                    bundle.putString("related_id", String.valueOf(related_id));
-                    goTo(NotificationActivity.this, SplashActivity.class,true,bundle);
+                    reLogin();
                 }else if(noti_type ==16) {
                     goTo(NotificationActivity.this, ProfileBusinessNaviagationActivity.class, false);
                 }else if(noti_type ==17) {
@@ -136,8 +140,13 @@ public class NotificationActivity extends CommonActivity{
                     goTo(NotificationActivity.this, ProfilePinActivity.class, false);
                 }else if(noti_type ==29) {
                     goTo(NotificationActivity.this, PinPointActivity.class, false);
-                }else if(noti_type ==30) {
+                }else if(noti_type ==31 || noti_type == 32) {
                     goTo(NotificationActivity.this, ProfileBusinessNaviagationActivity.class, false);
+                }else if(noti_type ==30){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("postId",related_id);
+                    bundle.putBoolean("CommentVisible",true);
+                    startActivityForResult(new Intent(NotificationActivity.this, NewsDetailActivity.class).putExtra("data",bundle),1);
                 }
             }
         });
@@ -247,7 +256,7 @@ public class NotificationActivity extends CommonActivity{
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
-    void readNotification(NotiEntity notiEntity){
+    void readNotification(NotiEntity notiEntity, int posstion){
         showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,
@@ -258,7 +267,9 @@ public class NotificationActivity extends CommonActivity{
                         closeProgress();
                         Log.d("aaaa",json);
                         try{
-
+                            notiEntity.setRead_status(1);
+                            notiEntities.set(posstion,notiEntity);
+                            notificationAdapter.setRoomData(notiEntities);
 
                         }catch (Exception e){
 
@@ -286,5 +297,30 @@ public class NotificationActivity extends CommonActivity{
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+        if( noti_type == 10){
+            Gson gson = new Gson();
+            String usermodel = gson.toJson(userModel);
+            Bundle bundle = new Bundle();
+            bundle.putString("userModel",usermodel);
+            bundle.putBoolean("editable",true);
+            goTo(NotificationActivity.this,ReviewActivity.class,false,bundle);
+            return;
+        }
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
+    }
+
+    @Override
+    public void successRelogin(){
+        startActivityForResult(new Intent(this, ProfileBusinessNaviagationActivity.class),1);
+
     }
 }

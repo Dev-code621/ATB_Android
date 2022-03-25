@@ -17,7 +17,7 @@ public class BusinessModel {
     //approved 0 - pending, 1 - approved, other - rejected
     // 0 - not paid, 1 - paid
     int id,user_id;
-    String business_logo,business_name,business_website,business_bio,business_profile_name,approval_reason;
+    String business_logo,business_name,business_website,business_bio,business_profile_name,approval_reason,group_title;
     int paid ,approved,post_count,followers_count,follow_count;
     Long updated_at,created_at;
     ArrayList<OpeningTimeModel> openingTimeModels = new ArrayList<>();
@@ -31,6 +31,13 @@ public class BusinessModel {
     }
     ArrayList<ArrayList<String>> slots = new ArrayList<>();
 
+    public String getGroup_title() {
+        return group_title;
+    }
+
+    public void setGroup_title(String group_title) {
+        this.group_title = group_title;
+    }
 
     public int getReviews() {
         return reviews;

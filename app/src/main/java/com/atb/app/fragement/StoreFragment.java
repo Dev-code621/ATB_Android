@@ -23,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.booking.BookFromPostActivity;
+import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.newsfeedpost.EditSalesPostActivity;
 import com.atb.app.activities.newsfeedpost.NewServiceOfferActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
@@ -31,6 +33,7 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.PaymentBookingDialog;
 import com.atb.app.dialog.ProductVariationSelectDialog;
 import com.atb.app.dialog.SelectDeliveryoptionDialog;
@@ -157,10 +160,23 @@ public class StoreFragment extends Fragment {
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
-
                                 closeProgress();
-                                ((CommonActivity)context).setResult(RESULT_OK);
-                                ((CommonActivity)context).finish(context);
+                                if(newsFeedEntity.getPost_type() == 3){
+                                    ConfirmDialog confirmDialog = new ConfirmDialog();
+                                    confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            ((CommonActivity)context).setResult(RESULT_OK);
+                                            ((CommonActivity)context).finish(context);
+                                        }
+                                    },"ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.","Thanks");
+                                    confirmDialog.show(getChildFragmentManager(), "DeleteMessage");
+
+                                }else{
+                                    ((CommonActivity)context).setResult(RESULT_OK);
+                                    ((CommonActivity)context).finish(context);
+                                }
+
 
                             }else {
                                 closeProgress();

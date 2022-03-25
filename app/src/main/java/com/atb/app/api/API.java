@@ -52,7 +52,7 @@ public class API {
     public static final String UPDATE_BUSINESS_BIO = API_BASE_URL + "profile/update_business_bio";
 
     public static final String CREATE_POST_API = API_BASE_URL + "post/publish";
-    public static final String GET_SELECTED_FEED_API = API_BASE_URL + "post/get_feed";
+    public static final String GET_SELECTED_FEED_API = API_BASE_URL + "post/search";
     public static final String GET_ALL_FEED_API = API_BASE_URL + "post/get_home_feed";
     public static final String GET_POST_DETAIL_API = API_BASE_URL + "post/get_post_detail";
     public static final String GET_MULTI_GROUP_ID = API_BASE_URL + "post/get_multi_group_id";
@@ -66,6 +66,12 @@ public class API {
     public static final String POST_LIKE_API = API_BASE_URL + "post/add_like_post";
     public static final String POST_COMMENT_LIKE_API = API_BASE_URL + "post/add_like_comment";
     public static final String POST_COMMENT_REPLY_LIKE_API = API_BASE_URL + "post/add_like_reply";
+    public static final String POST_HIDE_COMMENT = API_BASE_URL + "post/add_hide_comment";
+    public static final String POST_HIDE_REPLYCOMMENT = API_BASE_URL + "post/add_hide_reply";
+
+    public static final String POST_DELETE_COMMENT = API_BASE_URL + "post/delete_comment";
+    public static final String POST_DELETE_REPLY = API_BASE_URL + "post/delete_reply";
+
 
     public static final String WRITE_COMMENT_API = API_BASE_URL + "post/add_comment_post";
     public static final String REPLY_COMMENT_API = API_BASE_URL + "post/add_comment_reply";

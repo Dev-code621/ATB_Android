@@ -51,6 +51,7 @@ public class ReviewActivity extends CommonActivity {
     UserModel userModel = new UserModel();
     ArrayList<ReviewModel>reviewModels = new ArrayList<>();
     ReviewAdapter reviewAdapter;
+    Boolean editable = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class ReviewActivity extends CommonActivity {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
                 String user= bundle.getString("userModel");
+                editable= bundle.getBoolean("editable");
                 Gson gson = new Gson();
                 userModel = gson.fromJson(user, UserModel.class);
             }
@@ -136,6 +138,7 @@ public class ReviewActivity extends CommonActivity {
 
         imv_star.setRating(rate/5.0f);
         canRateBusiness();
+//        if(!editable) txv_rate.setVisibility(View.GONE);
     }
 
     void canRateBusiness(){
@@ -191,6 +194,7 @@ public class ReviewActivity extends CommonActivity {
                     public void onResponse(String json) {
 
                         closeProgress();
+                        reviewModels.clear();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             JSONArray jsonArray = jsonObject.getJSONArray("msg");

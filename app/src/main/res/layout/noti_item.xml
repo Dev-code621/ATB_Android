@@ -73,7 +73,6 @@
             app:cardCornerRadius="6dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="center"
-            android:visibility="gone"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="false"
             app:cardBackgroundColor="#E3677F"/>

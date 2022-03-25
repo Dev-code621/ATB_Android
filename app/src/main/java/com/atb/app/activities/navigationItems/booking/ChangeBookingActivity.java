@@ -276,7 +276,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
         for(int i =0;i<bookingSlot.get(day).size();i++){
             BookingEntity bookingEntity = new BookingEntity();
             bookingEntity.setBooking_datetime(getMilonSecond(bookingSlot.get(day).get(i)));
-            bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+3600));
+            bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+1800));
             int bookslot_id = slotBooked(bookingSlot.get(day).get(i));
             if(bookslot_id>=0)
                 hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
@@ -324,7 +324,8 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond == bookingEntities.get(i).getBooking_datetime())
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration())) )
+
                 return i;
         }
 

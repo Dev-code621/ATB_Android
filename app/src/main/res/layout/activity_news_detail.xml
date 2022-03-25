@@ -409,7 +409,41 @@
                         android:textSize="14sp"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
-
+                <LinearLayout
+                    android:id="@+id/lyt_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_rectangle_round1"
+                    android:padding="8dp"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/textTheme"
+                        android:layout_marginLeft="5dp"
+                        android:text="Duration of Service"
+                        android:textSize="14sp"
+                        android:textColor="@color/txt_color"/>
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/ic_report"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/txv_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/boldtextTheme"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/txt_color"/>
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/lyt_area"
                     android:layout_width="match_parent"

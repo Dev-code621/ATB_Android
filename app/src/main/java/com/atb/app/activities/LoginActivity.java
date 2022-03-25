@@ -216,6 +216,8 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
     void loadLayout(){
         edt_email.setText(Preference.getInstance().getValue(this, PrefConst.PREFKEY_USEREMAIL, ""));
         edt_password.setText(Preference.getInstance().getValue(this, PrefConst.PREFKEY_USERPWD, ""));
+        Commons.userType = Preference.getInstance().getValue(this, PrefConst.PREFKEY_SELECTED_USERTYPE, 0);
+
         int type = Preference.getInstance().getValue(this, PrefConst.PREFKEY_TYPE, 1);
         if(type == 1) {
             if (edt_email.getText().toString().length() > 0 && edt_password.getText().toString().length() > 0)
@@ -358,6 +360,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     businessModel.setId(business_info.getInt("id"));
                     businessModel.setUser_id(business_info.getInt("user_id"));
                     businessModel.setBusiness_logo(business_info.getString("business_logo"));
+                    businessModel.setGroup_title(business_info.getString("group_title"));
                     businessModel.setBusiness_name(business_info.getString("business_name"));
                     businessModel.setBusiness_website(business_info.getString("business_website"));
                     businessModel.setBusiness_bio(business_info.getString("business_bio"));

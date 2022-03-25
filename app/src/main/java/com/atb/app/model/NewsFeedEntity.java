@@ -23,7 +23,7 @@ public class NewsFeedEntity {
     boolean type;
     boolean select = false;
     ArrayList<NewsFeedEntity>  postEntities = new ArrayList();
-    String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason;
+    String title,description,brand,post_tags = "",post_condition,post_size,post_location,status_reason,duration;
     String price = "0.00",deposit = "0.00",delivery_cost = "0.00",is_deposit_required,category_title,item_title,size_title,location_id,post_brand,post_item;
     int payment_options,delivery_option,is_active,is_sold;
     double lat = 0,lng=0;
@@ -57,6 +57,15 @@ public class NewsFeedEntity {
 
     public ArrayList<InsuranceModel> getInsuranceModels() {
         return insuranceModels;
+    }
+
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public void setInsuranceModels(ArrayList<InsuranceModel> insuranceModels) {
@@ -688,6 +697,8 @@ public class NewsFeedEntity {
                 qualification_id = jsonObject.getString("qualification_id");
             if(jsonObject.has("cancellations"))
                 cancellations = jsonObject.getString("cancellations");
+            if(jsonObject.has("duration"))
+                duration = jsonObject.getString("duration");
             if(jsonObject.has("scheduled"))
                 scheduled = jsonObject.getInt("scheduled");
             if(jsonObject.has("updated_at"))
@@ -803,6 +814,8 @@ public class NewsFeedEntity {
                 qualification_id = jsonObject.getString("qualification_id");
             if(jsonObject.has("cancellations"))
                 cancellations = jsonObject.getString("cancellations");
+            if(jsonObject.has("duration"))
+                duration = jsonObject.getString("duration");
             if(jsonObject.has("scheduled"))
                  scheduled = jsonObject.getInt("scheduled");
             if(jsonObject.has("updated_at"))

@@ -284,6 +284,7 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
                 String usermodel = gson.toJson(userModel);
                 Bundle bundle = new Bundle();
                 bundle.putString("userModel",usermodel);
+                bundle.putBoolean("editable",false);
                 goTo(this,ReviewActivity.class,false,bundle);
                 break;
             case R.id.imv_facebook:

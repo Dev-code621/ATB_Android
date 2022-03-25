@@ -67,9 +67,9 @@ public class ProductVariationSelectDialog extends DialogFragment {
         niceSpinners.add(view.findViewById(R.id.spiner_variation3));
         TextView txv_buy = view.findViewById(R.id.txv_buy);
         Glide.with(getContext()).load(newsFeedEntity.getPostImageModels().get(0).getPath()).placeholder(R.drawable.profile_pic).into(imv_image);
-        txv_name.setText(newsFeedEntity.getBrand());
+        txv_name.setText(newsFeedEntity.getTitle());
         txv_description.setText(newsFeedEntity.getDescription());
-        txv_description.setText(newsFeedEntity.getPost_item());
+//        txv_description.setText(newsFeedEntity.getPost_item());
         for(int i =0;i<newsFeedEntity.getAttribute_map().size();i++){
             linearLayouts.get(i).setVisibility(View.VISIBLE);
             textViews.get(i).setText(newsFeedEntity.getAttribute_titles().get(i));
@@ -79,6 +79,7 @@ public class ProductVariationSelectDialog extends DialogFragment {
                 stringList.add(list.get(j).getVariant_attirbute_value());
             }
             niceSpinners.get(i).attachDataSource(stringList);
+            niceSpinners.get(i).setSelectedIndex(0);
         }
         txv_buy.setOnClickListener(new View.OnClickListener() {
             @Override

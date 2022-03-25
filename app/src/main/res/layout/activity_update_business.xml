@@ -93,6 +93,16 @@
                         android:text="@string/business_description2"/>
                 </LinearLayout>
             </LinearLayout>
+            <org.angmarch.views.NiceSpinner
+                android:id="@+id/spiner_category_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:entries="@array/category_type"
+                style="@style/textTheme"
+                android:textSize="15sp"
+                app:popupTextAlignment="start"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_rectangle_round1"/>
             <EditText
                 android:id="@+id/edt_business_name"
                 style="@style/edit_inputtext"

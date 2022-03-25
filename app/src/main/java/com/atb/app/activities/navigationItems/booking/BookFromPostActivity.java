@@ -205,16 +205,17 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 }
             }
         }
+//        Set<Long> days = new HashSet<>();
         for(int i =1;i<=EndDate;i++){
             Calendar c = Calendar.getInstance();
             c.set(year,month,i);
             if(bookingSlot.get(i-1).size()==0) {
                 disabledDaysSet.add(c.getTimeInMillis());
 
+
             }
         }
 
-        calendarView.setDisabledDays(disabledDaysSet);
         getBooking();
     }
 
@@ -272,15 +273,20 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
 
     void setConnectDay(){
         Set<Long> connectDay = new HashSet<>();
-        int textColor = Color.parseColor("#FF03DAC5");
+        int textColor = Color.parseColor("#C4000E");
         for(int i =0;i<bookingEntities.size();i++){
             Calendar c = Calendar.getInstance();
             connectDay.add(bookingEntities.get(i).getBooking_datetime()*1000l);
         }
 
-        ConnectedDays connectedDays = new ConnectedDays(connectDay, textColor);
-        calendarView.setConnectedDayIconPosition(ConnectedDayIconPosition.BOTTOM);
+        int selectedTextColor = Color.parseColor("#ffffff");
+        int disabledTextColor = Color.parseColor("#ff8000");
+        ConnectedDays connectedDays = new ConnectedDays(connectDay, textColor, selectedTextColor, disabledTextColor);
         calendarView.addConnectedDays(connectedDays);
+//        calendarView.setConnectedDayIconRes(R.drawable.dot_icon);   // Drawable
+        calendarView.setConnectedDayIconPosition(ConnectedDayIconPosition.BOTTOM);
+        calendarView.update();
+
     }
 
     void loadBookingByday(int day){
@@ -290,7 +296,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         for(int i =0;i<bookingSlot.get(day).size();i++){
             BookingEntity bookingEntity = new BookingEntity();
             bookingEntity.setBooking_datetime(getMilonSecond(bookingSlot.get(day).get(i)));
-            bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+3600));
+            bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+1800));
             int bookslot_id = slotBooked(bookingSlot.get(day).get(i));
             if(bookslot_id>=0)
                 hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
@@ -338,7 +344,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond == bookingEntities.get(i).getBooking_datetime())
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration())) )
                 return i;
         }
 
@@ -383,7 +389,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 Helper.getListViewSize(list_booking);
                 break;
             case R.id.txv_booking:
-                if(newsFeedEntity.getIs_deposit_required().equals("1")){
+                if(Float.parseFloat(newsFeedEntity.getDeposit())>0){
                     DepositDialog depositDialog = new DepositDialog();
                     depositDialog.setOnConfirmListener(new DepositDialog.OnConfirmListener() {
                         @Override
@@ -671,6 +677,6 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
     public void selectBooking(int posstion) {
         txv_booking.setVisibility(View.VISIBLE);
         bookingEntity = hashMap.get(selected_bookingSlot.get(posstion));
-        txv_booking.setText("Book for " + String.valueOf(day+1) + "th at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
+        txv_booking.setText("Book for " + String.valueOf(day+1) + "st at " + Commons.monthNames[month] + " "+  selected_bookingSlot.get(posstion));
     }
 }

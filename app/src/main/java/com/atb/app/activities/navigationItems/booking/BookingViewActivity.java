@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -33,17 +34,25 @@ import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.RequestPaypalDialog;
 import com.atb.app.dialog.RequestRatingDialog;
 import com.atb.app.model.BookingEntity;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.zcw.togglebutton.ToggleButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BookingViewActivity extends CommonActivity implements View.OnClickListener {
@@ -129,7 +138,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         txv_booking_price.setText("£" + bookingEntity.getNewsFeedEntity().getPrice());
         txv_deposit.setText("£" + bookingEntity.getNewsFeedEntity().getDeposit());
         txv_pending_funds.setText("£" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - Double.parseDouble(bookingEntity.getNewsFeedEntity().getDeposit())));
-
+        getEvent();
     }
 
     @Override
@@ -296,6 +305,27 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         return date;
     }
 
+    public void getEvent(){
+        String str  = Preference.getInstance().getValue(this, PrefConst.PREFKEY_CALENDERLIST, "[]");
+        Long start_time = bookingEntity.getBooking_datetime()*1000l;
+
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            for(int i = 0 ; i <jsonArray.length();i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(jsonObject.getString("Title").equals(bookingEntity.getNewsFeedEntity().getTitle()) && jsonObject.getLong("Start_time") == start_time){
+                    lyt_add_calendar.setClickable(false);
+                    showAlertDialog("This booking has been ");
+                    return;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        lyt_add_calendar.setClickable(true);
+
+
+    }
     public void addEvent() {
 
         Intent intent = new Intent(Intent.ACTION_INSERT);
@@ -318,6 +348,20 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
 
         startActivity(intent);
+
+        String str  = Preference.getInstance().getValue(this, PrefConst.PREFKEY_CALENDERLIST, "[]");
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Title" , bookingEntity.getNewsFeedEntity().getTitle());
+            jsonObject.put("Start_time" , start_time);
+            jsonArray.put(jsonObject);
+            Preference.getInstance().put(this, PrefConst.PREFKEY_CALENDERLIST, jsonArray.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getEvent();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -168,7 +168,9 @@
     <string name="set_operation_hour_description">This will populate your booking system based upon the availability you have provided</string>
     <string name="not_set_yet">Not Set Yet</string>
     <string name="add_insurance_quality">Add Insurances and Qualifications</string>
-    <string name="add_insurance_quality_description">If your Business requires Insurance or Certification then please provide details of them here. You can leave these blank if your Business does not require them. If you fail to provide the required documentation your application may be refused.</string>
+    <string name="add_insurance_quality_description">Add your qualifications here in case some of your services requires insurances or certificates. You can do this later.
+        \nThe documents provided can be seen by potential clients when viewing a service. The image will be protected by an “ATB Approved“ watermark.
+    </string>
     <string name="add_certification">Add Certification</string>
     <string name="add_insurance">Add Insurance</string>
     <string name="link_social_media">Link your social media</string>
@@ -192,7 +194,7 @@
     <string name="send_enquiry">Send Enquiry</string>
     <string name="logout_description">Do you want to log out?</string>
     <string name="title_activity_map">Map</string>
-    <string name="search_description">Search by town/city</string>
+    <string name="search_description">Search By POSTCODE</string>
     <string name="save_setting">Save Settings</string>
     <string name="future_bookings">Future Bookings</string>
     <string name="what_time">What time?</string>

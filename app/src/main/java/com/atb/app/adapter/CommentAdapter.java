@@ -1,6 +1,8 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,19 +24,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.atb.app.R;
+import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.activities.profile.OtherUserProfileActivity;
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.dialog.CommentActionDialog;
+import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.model.AutoCompleteModel;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.TransactionEntity;
 import com.atb.app.model.UserModel;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
+import org.androidannotations.annotations.LongClick;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,17 +113,20 @@ public class CommentAdapter extends BaseAdapter {
             holder.lyt_like = (LinearLayout) convertView.findViewById(R.id.lyt_like);
             holder.lyt_reply = (LinearLayout) convertView.findViewById(R.id.lyt_reply);
             holder.view_reply = (View) convertView.findViewById(R.id.view_reply);
+            holder.lyt_iem = convertView.findViewById(R.id.lyt_iem);
             convertView.setTag(holder);
         } else {
             holder = (CustomHolder) convertView.getTag();
         }
         final CommentModel commentModel = _roomDatas.get(position);
 
-        String comment = Commons.g_user.getUserName()+" ";
-
+        if(commentModel.isHidden())holder.lyt_iem.setVisibility(View.GONE);
+        String comment = commentModel.getUserName()+" ";
         HashMap<Integer,Integer> mapStart = new HashMap<>();
         HashMap<Integer,Integer> mapEnd = new HashMap<>();
         ArrayList<Integer> indexArray = new ArrayList<>();
+        ArrayList<Integer> isBusiness = new ArrayList<>();
+
         try {
             JSONArray jsonArray = new JSONArray(commentModel.getComment());
 
@@ -124,6 +138,11 @@ public class CommentAdapter extends BaseAdapter {
                     mapStart.put(jsonObject.getInt("user_id"), comment.length());
                     mapEnd.put(jsonObject.getInt("user_id"), comment.length() + str.length());
                     indexArray.add(jsonObject.getInt("user_id"));
+                    if(jsonObject.has("is_business")) {
+                        isBusiness.add(jsonObject.getInt("is_business"));
+                    }else{
+                        isBusiness.add(0);
+                    }
                 }
                 comment = comment +  str;
 
@@ -150,16 +169,17 @@ public class CommentAdapter extends BaseAdapter {
             SpannableString ss = new SpannableString(comment);
             for(int i =0;i<indexArray.size() ;i++){
                 int index =  indexArray.get(i);
+                int finalI = i;
                 ss.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View textView) {
-                        for(UserModel userModel: Commons.AllUsers){
+                        for(UserModel userModel: Commons.Appusers){
                             if(userModel.getId() == index){
                                 Bundle bundle = new Bundle();
                                 Gson gson = new Gson();
                                 String usermodel = gson.toJson(userModel);
                                 bundle.putString("userModel",usermodel);
-                                bundle.putInt("userType",userModel.getAccount_type());
+                                bundle.putInt("userType",isBusiness.get(finalI));
                                 ((CommonActivity)_context).goTo(_context, OtherUserProfileActivity.class,false,bundle);
                                 return;
                             }
@@ -173,14 +193,64 @@ public class CommentAdapter extends BaseAdapter {
                         ds.setUnderlineText(false);
                     }
                 }, mapStart.get(indexArray.get(i)), mapEnd.get(indexArray.get(i)), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                ss.setSpan(new ForegroundColorSpan(Color.parseColor("#A6BFDE")),  mapStart.get(indexArray.get(i)), mapEnd.get(indexArray.get(i)),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(new StyleSpan(Typeface.BOLD), mapStart.get(indexArray.get(i)), mapEnd.get(indexArray.get(i)),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            ss.setSpan(new StyleSpan(Typeface.BOLD), 0, Commons.g_user.getUserName().length(),
+
+            ss.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    Log.d("aaaaaaaa", "clicked");
+
+                    CommentActionDialog commentActionDialog = new CommentActionDialog();
+                    commentActionDialog.setOnConfirmListener(new CommentActionDialog.OnConfirmListener() {
+                        @Override
+                        public void onReply() {
+                            _context.replyComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+                        }
+
+                        @Override
+                        public void onReport() {
+                            _context.reportComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+
+                        }
+
+                        @Override
+                        public void onCopy() {
+                            _context.copyComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+
+                        }
+
+                        @Override
+                        public void onHide() {
+                            _context.hideComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+
+                        }
+
+                        @Override
+                        public void onDelete() {
+                            _context.deleteComment(commentModel.getParentPosstion(),_roomDatas.get(position));
+
+                        }
+                    }, "Please choice action",commentModel);
+                    commentActionDialog.show(_context.getSupportFragmentManager(), "DeleteMessage");
+                }
+                @Override
+                public void updateDrawState(TextPaint ds) {
+//                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            }, 0, ss.toString().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+            ss.setSpan(new StyleSpan(Typeface.BOLD), 0, commentModel.getUserName().length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.txv_comment.setText(ss);
             holder.txv_comment.setMovementMethod(LinkMovementMethod.getInstance());
-
             holder.txv_comment.setVisibility(View.VISIBLE);
+
+
         }
         for(int i =0;i<commentModel.getImage_url().size();i++){
             Glide.with(_context).load(commentModel.getImage_url().get(i)).placeholder(R.drawable.image_thumnail).dontAnimate().into(holder.imageViews.get(i));
@@ -221,7 +291,7 @@ public class CommentAdapter extends BaseAdapter {
         ImageView imv_profile,imv_like;
         ArrayList<ImageView>imageViews = new ArrayList<>();
         TextView txv_comment,txv_time,txv_like;
-        LinearLayout lyt_like,lyt_reply;
+        LinearLayout lyt_like,lyt_reply,lyt_iem;
         View view_reply;
     }
 

@@ -206,6 +206,7 @@ public class SearchActivity extends CommonActivity implements View.OnClickListen
                     params.put("category_title", category);
                     params.put("search_key", search);
                 }
+                Log.d("aaaaa", params.toString());
                 return params;
             }
         };

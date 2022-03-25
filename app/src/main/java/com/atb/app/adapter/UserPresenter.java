@@ -17,16 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.atb.app.R;
 import com.atb.app.commons.Commons;
+import com.atb.app.model.AutoCompleteModel;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.otaliastudios.autocomplete.AutocompletePresenter;
 import com.otaliastudios.autocomplete.RecyclerViewPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPresenter extends RecyclerViewPresenter<UserModel> {
+public class UserPresenter extends RecyclerViewPresenter<AutoCompleteModel> {
 
     @SuppressWarnings("WeakerAccess")
     protected Adapter adapter;
@@ -56,14 +58,14 @@ public class UserPresenter extends RecyclerViewPresenter<UserModel> {
 
     @Override
     protected void onQuery(@Nullable CharSequence query) {
-        List<UserModel> all = Commons.AllUsers;
+        List<AutoCompleteModel> all = Commons.AllUsers;
         if (TextUtils.isEmpty(query)) {
             adapter.setData(all);
         } else {
             query = query.toString().toLowerCase();
-            List<UserModel> list = new ArrayList<>();
-            for (UserModel u : all) {
-                if (u.getUserName().toLowerCase().contains(query)) {
+            List<AutoCompleteModel> list = new ArrayList<>();
+            for (AutoCompleteModel u : all) {
+                if (u.getName().toLowerCase().contains(query)) {
                     list.add(u);
                 }
             }
@@ -75,7 +77,7 @@ public class UserPresenter extends RecyclerViewPresenter<UserModel> {
 
     protected class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
 
-        private List<UserModel> data;
+        private List<AutoCompleteModel> data;
 
         @SuppressWarnings("WeakerAccess")
         protected class Holder extends RecyclerView.ViewHolder {
@@ -91,7 +93,7 @@ public class UserPresenter extends RecyclerViewPresenter<UserModel> {
         }
 
         @SuppressWarnings("WeakerAccess")
-        protected void setData(@Nullable List<UserModel> data) {
+        protected void setData(@Nullable List<AutoCompleteModel> data) {
             this.data = data;
         }
 
@@ -118,9 +120,9 @@ public class UserPresenter extends RecyclerViewPresenter<UserModel> {
 //                holder.root.setOnClickListener(null);
                 return;
             }
-            final UserModel user = data.get(position);
-            holder.username.setText("@" + user.getUserName());
-            Glide.with(_context).load(user.getImvUrl()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
+            final AutoCompleteModel user = data.get(position);
+            holder.username.setText("@" + user.getName());
+            Glide.with(_context).load(user.getPic_url()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                     new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override

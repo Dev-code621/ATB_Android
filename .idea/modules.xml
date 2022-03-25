@@ -4,9 +4,21 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ATB.iml" filepath="$PROJECT_DIR$/.idea/modules/ATB.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ATB.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ATB.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ATB.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ATB.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ATB.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ATB.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ATB.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ATB.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.iml" filepath="$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/cropper/ATB.cropper.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.main.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/list-visibility-utils/ATB.list-visibility-utils.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.main.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/videoplayer/video-player-manager/ATB.video-player-manager.unitTest.iml" />
     </modules>
   </component>
 </project>

@@ -10,4 +10,6 @@ public class PrefConst {
     public static final String PREFKEY_USERPWD = "password";
     public static final String PREFKEY_TYPE = "type";
     public static final String PREFKEY_FBTOKEN = "fb_userid";
+    public static final String PREFKEY_SELECTED_USERTYPE = "selected_usertype";
+    public static final String PREFKEY_CALENDERLIST = "calender_list";
 }

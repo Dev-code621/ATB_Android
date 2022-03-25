@@ -95,6 +95,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zxy.tiny.Tiny;
 
+import org.angmarch.views.NiceSpinner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +141,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     CallbackManager callbackManager;
     private LoginManager loginManager;
     LoginButton loginButton;
+    NiceSpinner spiner_category_type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,6 +172,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
         list_certification = findViewById(R.id.list_certification);
         list_insurance = findViewById(R.id.list_insurance);
         imv_tag_detail = findViewById(R.id.imv_tag_detail);
+        spiner_category_type = findViewById(R.id.spiner_category_type);
+
         imv_tag_detail.setOnClickListener(this);
         imv_back.setOnClickListener(this);
         imv_profile.setOnClickListener(this);
@@ -323,6 +327,13 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             loadingQalification_Insurance();
            initSocialPart();
             getUserTags();
+            String[] array = getResources().getStringArray(R.array.category_type);
+            for (int i = 0; i < array.length; i++){
+                if (array[i].equals(businessModel.getGroup_title())) {
+                    spiner_category_type.setSelectedIndex(i);
+                    break;
+                }
+            }
            if(Commons.g_user.getBusinessModel().getPaid()==0){
                ConfirmDialog confirmDialog = new ConfirmDialog();
                confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
@@ -332,7 +343,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                        Commons.g_user.setAccount_type(1);
                        Bundle bundle = new Bundle();
                        bundle.putInt("subScriptionType",2);
-                       goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
+                       goTo(UpdateBusinessActivity.this, BusinessProfilePaymentActivity.class,false,bundle);
                    }
                },getString(R.string.subscription_alert));
                confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
@@ -792,6 +803,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             params.put("business_profile_name",edt_business_name.getText().toString());
             params.put("business_bio",edt_tell_us.getText().toString());
             params.put("timezone","0");
+            params.put("group_title",spiner_category_type.getSelectedItem().toString());
             if(Commons.g_user.getAccount_type() == 1)
                 params.put("id",String.valueOf(businessModel.getId()));
             MultiPartRequest reqMultiPart = new MultiPartRequest(api_link, new Response.ErrorListener() {
@@ -811,14 +823,17 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                             businessModel.initModel(jsonObject.getJSONObject("extra"));
                             Commons.g_user.setBusinessModel(businessModel);
 
-                            if(Commons.g_user.getAccount_type() == 1)
-                                finish(UpdateBusinessActivity.this);
+                            if(Commons.g_user.getAccount_type() == 1){
+
+                                 finish(UpdateBusinessActivity.this);
+                            }
+
                             else {
                                 Commons.g_user.setBusinessModel(businessModel);
                                 Commons.g_user.setAccount_type(1);
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("subScriptionType",1);
-                                goTo(UpdateBusinessActivity.this, UpgradeBusinessSplashActivity.class,false,bundle);
+                                goTo(UpdateBusinessActivity.this, BusinessProfilePaymentActivity.class,true,bundle);
                             }
                         }
                     }catch (Exception e){
