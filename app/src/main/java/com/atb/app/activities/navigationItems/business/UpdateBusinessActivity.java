@@ -942,6 +942,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     }
                 })
                 .check();
+
     }
     void selectProfilePicture(){
         Dexter.withActivity(this)
@@ -1014,20 +1015,25 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
 //                intent.addCategory(Intent.CATEGORY_OPENABLE);
 //                intent.setType("*/*");
 //                startActivityForResult(intent, 2000);
-                Intent intent = new Intent(UpdateBusinessActivity.this, FilePickerActivity.class);
-                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setSuffixes("pdf")
-                        .setSingleChoiceMode(true)
-                        .enableImageCapture(true)
-                        .setShowImages(true)
-                        .setShowVideos(false)
-                        .enableImageCapture(true)
-                        .setShowFiles(true)
-                        .setMaxSelection(1)
-                        .setSkipZeroSizeFiles(true)
-                        .build());
-                startActivityForResult(intent, 2000);
+//                Intent intent = new Intent(UpdateBusinessActivity.this, FilePickerActivity.class);
+//                intent.putExtra(FilePickerActivity.TAG, new Configurations.Builder()
+//                        .setCheckPermission(true)
+//                        .setSuffixes("pdf")
+//                        .setSingleChoiceMode(true)
+//                        .enableImageCapture(true)
+//                        .setShowImages(true)
+//                        .setShowVideos(false)
+//                        .enableImageCapture(true)
+//                        .setShowFiles(true)
+//                        .setMaxSelection(1)
+//                        .setSkipZeroSizeFiles(true)
+//                        .build());
+//                startActivityForResult(intent, 2000);
+                final String type="*/*";
+
+                Intent i=new Intent(Intent.ACTION_GET_CONTENT);
+                i.setType(type);
+                startActivityForResult(Intent.createChooser(i,"select file"), 2000);
 
             }
 
@@ -1116,22 +1122,22 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             }
         }else if(requestCode ==2000){
             if(data!=null) {
-//                final Uri resultUri = data.getData();
-//                File file = new File(RealPathUtil.getRealPath(UpdateBusinessActivity.this, resultUri));
-//                insuranceFile_path = file.getPath();
-//                if(insuranceFile_path.contains("documents")){
-//                    insuranceFile_path = resultUri.getPath();
-//                }
-//                Log.d("file===", insuranceFile_path);
-//                Log.d("file===", String.valueOf(resultUri));
-//                addInsuranceDialog.setFileName();
+                    if (resultCode == RESULT_OK) {
+                        // Get the Uri of the selected file
+                        Uri uri = data.getData();
 
-                ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                if(files.size()>0) {
-                    Log.d("file===", String.valueOf(files.get(0).getPath()));
-                    insuranceFile_path = String.valueOf(files.get(0).getPath());
-                    addInsuranceDialog.setFileName();
-                }
+                        String filePath = FileUtils.getPath(this, uri);
+                        insuranceFile_path = filePath;
+                        addInsuranceDialog.setFileName();
+                        Log.d("file===", filePath + "      " + uri.toString()) ;
+                    }
+
+//                ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+//                if(files.size()>0) {
+//                    Log.d("file===", String.valueOf(files.get(0).getPath()));
+//                    insuranceFile_path = String.valueOf(files.get(0).getPath());
+//                    addInsuranceDialog.setFileName();
+//                }
             }
         }
     }

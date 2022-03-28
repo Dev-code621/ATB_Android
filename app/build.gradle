@@ -269,6 +269,8 @@ dependencies {
 
     //autocomplete edit view
     implementation("com.otaliastudios:autocomplete:1.1.0")
+    // image picker
+//    implementation 'com.github.braver-tool:Android11FilePicker:1.0.0'
 
 
 }
