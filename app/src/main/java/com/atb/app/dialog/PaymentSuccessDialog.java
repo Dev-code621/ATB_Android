@@ -29,6 +29,7 @@ public class PaymentSuccessDialog extends DialogFragment {
 
     private OnConfirmListener listener;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+    int deliveryOption;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,9 +37,10 @@ public class PaymentSuccessDialog extends DialogFragment {
         return inflater.inflate(R.layout.payment_success_dialog, container, false);
     }
 
-    public ConfirmDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity) {
+    public ConfirmDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity,int deliveryOption) {
         this.listener = listener;
         this.newsFeedEntity = newsFeedEntity;
+        this.deliveryOption = deliveryOption;
         return null;
     }
 
@@ -49,7 +51,13 @@ public class PaymentSuccessDialog extends DialogFragment {
         LinearLayout lyt_mypurchase = view.findViewById(R.id.lyt_mypurchase);
         LinearLayout lyt_keep_buying = view.findViewById(R.id.lyt_keep_buying);
         LinearLayout lyt_contact_seller = view.findViewById(R.id.lyt_contact_seller);
+        TextView txv_title = view.findViewById(R.id.txv_title);
+        if(deliveryOption == 3){
+            txv_title.setText("Thank you for your purchase, please contact the Seller to arrange collection of your item");
+        }else if(deliveryOption ==5){
+            txv_title.setText("Thank you for your purchase, please contact the Seller to arrange delivery of your item");
 
+        }
         lyt_mypurchase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

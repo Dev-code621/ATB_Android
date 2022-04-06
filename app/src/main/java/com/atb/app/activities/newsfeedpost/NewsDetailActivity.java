@@ -1014,7 +1014,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             public void onPurchase() {
                 goTo(NewsDetailActivity.this, PurchasesActivity.class,false);
             }
-        },newsFeedEntity);
+        },newsFeedEntity,deliveryOption);
         paymentSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
     }
 

@@ -226,7 +226,7 @@
     <string name="request_payment">You are about to request a Payment</string>
     <string name="request_payment_description">Please confirm the payment request below, the user will have to pay the remaining balance</string>
     <string name="sent_notification">We have sent a notification</string>
-    <string name="sent_notification_description">The user will be notified, and will be requests for providing a rating</string>
+    <string name="sent_notification_description">The user will be notified, and will be requested to provide a rating for your business</string>
     <string name="cancel_booking1">Are you sure you want to\ncancel this booking?</string>
     <string name="cancel_booking2">We will let the user know that this is going to finished the booking and in case he wants to book again he have to select a different option</string>
     <string name="modification_booking">[Send a modification request to the\nbooking instead]</string>

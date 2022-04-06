@@ -430,6 +430,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginLeft="10dp"
+                        android:visibility="gone"
                         android:src="@drawable/ic_report"/>
                     <View
                         android:layout_width="0dp"

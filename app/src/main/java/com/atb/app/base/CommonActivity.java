@@ -50,7 +50,10 @@ import com.atb.app.model.submodel.OpeningTimeModel;
 import com.atb.app.model.submodel.SocialModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
+import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.zoom.ZoomAnimation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -587,10 +590,24 @@ public abstract class CommonActivity extends BaseActivity {
         roomModel.setChannelId(channel);
         roomModel.setImage(image);
         roomModel.setName(name);
+        roomModel.setType(userType);
+        roomModel.setAnotherUserID(userModel.getId());
         Gson gson = new Gson();
         String usermodel = gson.toJson(roomModel);
         Bundle bundle = new Bundle();
         bundle.putString("roomModel",usermodel);
+        if(Commons.userType == 1 ){
+            Commons.senderImage = Commons.g_user.getBusinessModel().getBusiness_logo();
+            Commons.senderName = Commons.g_user.getBusinessModel().getBusiness_name();
+            Commons.senderID = "business_" + String.valueOf(Commons.g_user.getBusinessModel().getId());
+
+
+        }else {
+            Commons.senderID = "user_" + String.valueOf(Commons.g_user.getId());
+
+            Commons.senderImage = Commons.g_user.getImvUrl();
+            Commons.senderName = Commons.g_user.getFirstname() + " " + Commons.g_user.getLastname();
+        }
         ((CommonActivity)context).goTo(context, ChatActivity.class,false,bundle);
 
     }
@@ -995,5 +1012,17 @@ public abstract class CommonActivity extends BaseActivity {
     }
     public void successRelogin(){
 
+    }
+
+    public String getDaystr(int day){
+        if(day == 1 || day ==21 || day == 31){
+            return String.valueOf(day)+"st";
+        }else if(day == 2 || day == 22 ){
+            return String.valueOf(day)+"nd";
+        }else if(day ==3 || day == 23){
+            return String.valueOf(day)+"rd";
+        }else{
+            return String.valueOf(day)+"th";
+        }
     }
 }

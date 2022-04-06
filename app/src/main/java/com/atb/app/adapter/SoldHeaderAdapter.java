@@ -250,7 +250,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                         new RoundedCornersTransformation(_context, 20, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_image);
                 holder.txv_name.setText(transactionEntity.getTitle());
                 holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
-                holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()) +  " ORDER " + transactionEntity.getTransaction_id());
+                holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()));// +  " ORDER " + transactionEntity.getTransaction_id());
                 if(transactionEntity.getPoster_profile_type() == 1){
                     holder.txv_other_name.setText(transactionEntity.getUserModel().getBusinessModel().getBusiness_name());
                     holder.txv_other_name.setOnClickListener(new View.OnClickListener() {

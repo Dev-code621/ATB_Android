@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -24,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -34,6 +36,7 @@ import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.RequestPaypalDialog;
 import com.atb.app.dialog.RequestRatingDialog;
 import com.atb.app.model.BookingEntity;
+import com.atb.app.model.UserModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -62,6 +65,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
     TextView txv_request_paypal,txv_finish;
     ToggleButton toggle_cash;
     BookingEntity bookingEntity = new BookingEntity();
+    CardView card_user_info_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +77,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         lyt_request_rating = findViewById(R.id.lyt_request_rating);
         lyt_cancel_booking = findViewById(R.id.lyt_cancel_booking);
         imv_profile = findViewById(R.id.imv_profile);
+        card_user_info_image = findViewById(R.id.card_user_info_image);
         txv_username = findViewById(R.id.txv_username);
         txv_useremail = findViewById(R.id.txv_useremail);
         txv_booking_name = findViewById(R.id.txv_booking_name);
@@ -94,6 +99,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         lyt_request_change.setOnClickListener(this);
         lyt_request_rating.setOnClickListener(this);
         lyt_cancel_booking.setOnClickListener(this);
+        card_user_info_image.setOnClickListener(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -195,11 +201,22 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
             case R.id.txv_finish:
                 finishBooking();
                 break;
+            case R.id.card_user_info_image:
+                getuserProfile(bookingEntity.getId(),1);
 
+                break;
 
         }
     }
-
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
+    }
     void finishBooking(){
         showProgress();
         StringRequest myRequest = new StringRequest(

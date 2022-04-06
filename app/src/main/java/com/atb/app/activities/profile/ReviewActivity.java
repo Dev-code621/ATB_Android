@@ -106,7 +106,7 @@ public class ReviewActivity extends CommonActivity {
 
         reviewAdapter = new ReviewAdapter(this);
         list_review.setAdapter(reviewAdapter);
-
+        Commons.rated = 0 ;
 
     }
     void initLayout(){
@@ -154,6 +154,9 @@ public class ReviewActivity extends CommonActivity {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getJSONObject("extra").getInt("can_rate") == 1){
                                 txv_rate.setVisibility(View.VISIBLE);
+                            }
+                            if(Commons.rated == 1){
+                                txv_rate.setVisibility(View.GONE);
                             }
 
                         }catch (Exception e){
@@ -238,5 +241,6 @@ public class ReviewActivity extends CommonActivity {
     protected void onResume() {
         super.onResume();
         getRatings();
+
     }
 }

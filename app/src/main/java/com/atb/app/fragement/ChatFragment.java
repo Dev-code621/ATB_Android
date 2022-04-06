@@ -147,6 +147,18 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                             roomModel.setName(member.getString("name"));
                             roomModel.setChannelId(channel.getId());
                             roomModel.setImage(member.getString("imageUrl"));
+                            String arr[] = str.split("_");
+                            for(int k=0;k<arr.length;k++){
+                                if(arr[k].equals(business_account))continue;
+                                String spilt[] = arr[k].split("#");
+                                roomModel.setAnotherUserID(Integer.parseInt(spilt[0]));
+                                if(spilt.length ==1){
+                                    roomModel.setType(0);
+                                }else{
+                                    roomModel.setType(1);
+                                }
+
+                            }
                             break;
                         }
                     }
@@ -173,6 +185,17 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                                 }
                                 roomModel.setChannelId(channel.getId());
                                 roomModel.setImage(member.getString("imageUrl"));
+                                for(int k=0;k<arr.length;k++){
+                                    if(arr[k].equals(String.valueOf(Commons.g_user.getId())))continue;
+                                    String spilt[] = arr[k].split("#");
+                                    roomModel.setAnotherUserID(Integer.parseInt(spilt[0]));
+                                    if(spilt.length ==1){
+                                        roomModel.setType(0);
+                                    }else{
+                                        roomModel.setType(1);
+                                    }
+
+                                }
                                 break;
                             }
                         }

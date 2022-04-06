@@ -85,6 +85,7 @@ public class ProfileRatingActivity extends CommonActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String json) {
+                        Commons.rated = 1;
                         closeProgress();
                         finish(ProfileRatingActivity.this);
                     }

@@ -518,14 +518,14 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
 
     @Override
     public void finishPayment(String transaction_id) {
-        PaymentSuccessDialog paymentSuccessDialog = new PaymentSuccessDialog();
-        paymentSuccessDialog.setOnConfirmListener(new PaymentSuccessDialog.OnConfirmListener() {
-            @Override
-            public void onPurchase() {
-                goTo(OtherUserProfileActivity.this, PurchasesActivity.class,false);
-            }
-        },newsFeedEntity);
-        paymentSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+//        PaymentSuccessDialog paymentSuccessDialog = new PaymentSuccessDialog();
+//        paymentSuccessDialog.setOnConfirmListener(new PaymentSuccessDialog.OnConfirmListener() {
+//            @Override
+//            public void onPurchase() {
+//                goTo(OtherUserProfileActivity.this, PurchasesActivity.class,false);
+//            }
+//        },newsFeedEntity);
+//        paymentSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
     }
 
 }

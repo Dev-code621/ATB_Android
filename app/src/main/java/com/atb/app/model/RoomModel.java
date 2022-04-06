@@ -5,6 +5,7 @@ public class RoomModel {
     boolean isOnline = false;
     Long lastReadTimetoken;
     Long unReadCount = 0l,lastMessageTime = 0l;
+    int type, anotherUserID;
     public boolean isOnline() {
         return isOnline;
     }
@@ -67,5 +68,21 @@ public class RoomModel {
 
     public void setLastMessageTime(Long lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getAnotherUserID() {
+        return anotherUserID;
+    }
+
+    public void setAnotherUserID(int anotherUserID) {
+        this.anotherUserID = anotherUserID;
     }
 }

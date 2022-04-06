@@ -70,6 +70,7 @@ public class Commons {
     public static  boolean profile_flag = false;
     public static  List<String> pubnub_channels = new ArrayList<>();
     public  static  int userType = 0;
+    public static  int rated = 0;
     public static String fileNameWithoutExtFromPath(String path) {
 
         String fullname = fileNameWithExtFromPath(path);

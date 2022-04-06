@@ -31,12 +31,14 @@ import com.atb.app.activities.chat.view.MessageBuilder;
 import com.atb.app.activities.chat.view.MessageComposer;
 import com.atb.app.activities.navigationItems.ProfileActivity;
 import com.atb.app.activities.newsfeedpost.NewSalePostActivity;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.CommentModel;
 import com.atb.app.model.RoomModel;
+import com.atb.app.model.UserModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.MultiPartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
@@ -122,6 +124,7 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
         mMessageComposer = findViewById(R.id.chats_message_composer);
         mMessageComposer.setListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        imv_profile.setOnClickListener(this);
         mChatsRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -499,9 +502,20 @@ public class ChatActivity extends CommonActivity implements View.OnClickListener
                 mMessageComposer.hideKeyboard();
 
                 break;
+            case R.id.imv_profile:
+                getuserProfile(roomModel.getAnotherUserID(),roomModel.getType());
+                break;
         }
     }
-
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
+    }
 
     @Override
     protected void onDestroy() {

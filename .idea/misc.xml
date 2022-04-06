@@ -31,6 +31,7 @@
         <entry key="app/src/main/res/layout/activity_build_business_store.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_business_product_post.xml" value="0.25905797101449274" />
         <entry key="app/src/main/res/layout/activity_business_profile_payment.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_change_booking.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/activity_chat2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_contact_admin.xml" value="0.24739583333333334" />
         <entry key="app/src/main/res/layout/activity_edit_sales_post.xml" value="0.12487335359675786" />
@@ -51,6 +52,7 @@
         <entry key="app/src/main/res/layout/activity_profile_naviagation.xml" value="0.11180555555555556" />
         <entry key="app/src/main/res/layout/activity_purchases.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_report_post.xml" value="0.1828774062816616" />
+        <entry key="app/src/main/res/layout/activity_review.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/activity_select_product_category.xml" value="0.1474164133738602" />
         <entry key="app/src/main/res/layout/activity_set_operating.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_set_post_range.xml" value="0.22" />
@@ -90,6 +92,7 @@
         <entry key="app/src/main/res/layout/payment_booking_dialog.xml" value="0.5" />
         <entry key="app/src/main/res/layout/payment_success_dialog.xml" value="0.15" />
         <entry key="app/src/main/res/layout/request_paypal_dialog.xml" value="0.1503623188405797" />
+        <entry key="app/src/main/res/layout/request_rating_dialog.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/select_delivery_option.xml" value="0.17" />
         <entry key="app/src/main/res/layout/signup_email_layout.xml" value="0.20471014492753623" />
         <entry key="app/src/main/res/layout/stock_item.xml" value="0.18" />
