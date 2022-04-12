@@ -40,6 +40,7 @@ public class API {
     public static final String GET_PP_ADDRESS = API_BASE_URL + "profile/get_pp_add";
     public static final String MAKE_PP_PAYMENT = API_BASE_URL + "profile/make_pp_pay";
     public static final String GET_PP_TRANSACTIONS = API_BASE_URL + "profile/get_pp_transactions";
+    public static final String MAKE_CASH_PAYMENT = API_BASE_URL + "profile/make_cash_payment";
 
     public static final String ADD_SERVICE_API = API_BASE_URL + "profile/add_service";
     public static final String REMOVE_SERVICE_API = API_BASE_URL + "profile/remove_service";

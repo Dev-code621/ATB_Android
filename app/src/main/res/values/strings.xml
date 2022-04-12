@@ -217,7 +217,7 @@
     <string name="total_per_booking">Total Per Booking</string>
     <string name="deposit">Deposit</string>
     <string name="payment_pending">Payment Pending</string>
-    <string name="have_user_cash">Have the user paid by cash</string>
+    <string name="have_user_cash">Has the user paid by cash</string>
     <string name="request_paypal">Request Payment by Paypal</string>
     <string name="request_payment1">Request Payment</string>
     <string name="request_change">Request a Change</string>

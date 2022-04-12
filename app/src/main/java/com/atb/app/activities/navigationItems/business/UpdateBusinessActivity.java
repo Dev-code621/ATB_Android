@@ -1041,7 +1041,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             public void OnAlbum() {
                 imageUtils.camera_call();
             }
-        },"Select File","Explore Files","Take a Picture");
+        },"Select File","Explore Files & Pictures","Take a Picture");
         selectMediaDialog.show(getSupportFragmentManager(), "action picker");
     }
 

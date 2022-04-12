@@ -23,6 +23,7 @@ import com.applikeysolutions.cosmocalendar.listeners.OnMonthChangeListener;
 import com.applikeysolutions.cosmocalendar.model.Month;
 import com.applikeysolutions.cosmocalendar.selection.OnDaySelectedListener;
 import com.applikeysolutions.cosmocalendar.selection.SingleSelectionManager;
+import com.applikeysolutions.cosmocalendar.settings.SettingsManager;
 import com.applikeysolutions.cosmocalendar.settings.appearance.ConnectedDayIconPosition;
 import com.applikeysolutions.cosmocalendar.settings.lists.connected_days.ConnectedDays;
 import com.applikeysolutions.cosmocalendar.utils.SelectionType;
@@ -70,6 +71,8 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
     ArrayList<String> selected_bookingSlot  = new ArrayList<>();
     long today = 0 ;
     CalendarView calendarView;
+    ArrayList<BookingEntity>AllbookingEntities = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +125,7 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         });
         calendarView.setSelectionManager(new SingleSelectionManager(this));
         loadLayout();
+        getAllBookings();
     }
 
 
@@ -174,14 +178,6 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                 }
             }
         }
-        for(int i =1;i<=EndDate;i++){
-            Calendar c = Calendar.getInstance();
-            c.set(year,month,i);
-            if(bookingSlot.get(i-1).size()==0)
-                disabledDaysSet.add(c.getTimeInMillis());
-        }
-
-        calendarView.setDisabledDays(disabledDaysSet);
         getBooking();
     }
 
@@ -205,7 +201,6 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
 
                             }
                             if(day>=0)loadBookingByday(day);
-                            setConnectDay();
                         }catch (Exception e){
 
                         }
@@ -237,15 +232,69 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
     }
     void setConnectDay(){
         Set<Long> connectDay = new HashSet<>();
-        int textColor = Color.parseColor("#FF03DAC5");
-        for(int i =0;i<bookingEntities.size();i++){
-            Calendar c = Calendar.getInstance();
-            connectDay.add(bookingEntities.get(i).getBooking_datetime()*1000l);
+        int textColor = Color.parseColor("#C4000E");
+        for(int i =0;i<AllbookingEntities.size();i++){
+            connectDay.add(AllbookingEntities.get(i).getBooking_datetime()*1000l);
         }
 
-        ConnectedDays connectedDays = new ConnectedDays(connectDay, textColor);
-        calendarView.setConnectedDayIconPosition(ConnectedDayIconPosition.BOTTOM);
+        int selectedTextColor = Color.parseColor("#ffffff");
+        int disabledTextColor = Color.parseColor("#ff8000");
+        ConnectedDays connectedDays = new ConnectedDays(connectDay, textColor, selectedTextColor, disabledTextColor);
+        SettingsManager settingsManager = calendarView.getSettingsManager();
         calendarView.addConnectedDays(connectedDays);
+//        calendarView.setConnectedDayIconRes(R.drawable.dot_icon);   // Drawable
+//        calendarView.setConnectedDayIconPosition(ConnectedDayIconPosition.BOTTOM);
+        calendarView.update();
+    }
+
+    void getAllBookings(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.GET_BOOKING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            JSONArray arrayList = jsonObject.getJSONArray("extra");
+                            AllbookingEntities.clear();
+                            for(int i =0;i<arrayList.length();i++){
+                                BookingEntity bookingEntity = new BookingEntity();
+                                bookingEntity.initModel(arrayList.getJSONObject(i));
+                                AllbookingEntities.add(bookingEntity);
+
+                            }
+                            setConnectDay();
+
+                        }catch (Exception e){
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                params.put("is_business", "1");
+//                params.put("month", String.valueOf(year) +" " + String.valueOf(month+1));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
 

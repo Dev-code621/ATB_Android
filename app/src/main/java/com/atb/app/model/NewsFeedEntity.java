@@ -789,6 +789,9 @@ public class NewsFeedEntity {
             post_location = jsonObject.getString("post_location");
             setDelivery_cost(jsonObject.getString("delivery_cost"));
             is_active = jsonObject.getInt("is_active");
+            if(jsonObject.has("stock_level"))
+                setStock_level(jsonObject.getInt("stock_level"));
+
             if(jsonObject.has("status_reason"))
                 status_reason = jsonObject.getString("status_reason");
             is_sold = jsonObject.getInt("is_sold");

@@ -108,7 +108,7 @@ public class PaymentBookingDialog extends DialogFragment {
                 lyt_paypal.setBackground(getContext().getResources().getDrawable(R.drawable.rectangle_border_round));
                 imv_paypal.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 txv_paypal.setTextColor(getResources().getColor(R.color.txt_color));
-                txv_pay.setText("Be in touch with the seller");
+//                txv_pay.setText("Be in touch with the seller");
                 payment_type = 1;
 
             }

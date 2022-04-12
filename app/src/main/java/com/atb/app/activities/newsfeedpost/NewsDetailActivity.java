@@ -495,6 +495,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
+    @SuppressLint("SuspiciousIndentation")
     void initialLayout(){
         selected_Variation.clear();
         setSliderAdapter.renewItems(newsFeedEntity.getPostImageModels());
@@ -541,6 +542,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 }
                 break;
             case 2:
+                txv_quantity.setText(String.valueOf(newsFeedEntity.getStock_level()));
+
                 lyt_advice_image.setVisibility(View.VISIBLE);
                 txv_category.setVisibility(View.VISIBLE);
                 lyt_sale_post.setVisibility(View.VISIBLE);
@@ -573,6 +576,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                             if(selected_Variation.size()==newsFeedEntity.getAttribute_map().size()) {
                                 VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
                                 txv_quantity.setText(String.valueOf(variationModel.getStock_level()));
+                                txv_price.setText("£"+ String.format("%.2f",Float.parseFloat(variationModel.getPrice())));
                             }
 
                         }
@@ -963,7 +967,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 confirmPaymentDialog(type);
                 deliveryOption = type;
             }
-        },newsFeedEntity);
+        },newsFeedEntity,selected_Variation);
         deliveryoptionDialog.show(getSupportFragmentManager(), "DeleteMessage");
     }
     void confirmPaymentDialog(int type){
@@ -972,7 +976,22 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             @Override
             public void onConfirm(int payment_type,double price) {
                 if(payment_type ==1){
-                    gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
+                   // gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
+                    payment_params.clear();
+                    payment_params.put("token",Commons.token);
+                    payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
+                    payment_params.put("is_business",String.valueOf(newsFeedEntity.getPoster_profile_type() ));
+                    payment_params.put("quantity","1");
+                    payment_params.put("delivery_option",String.valueOf(deliveryOption));
+                    if(selected_Variation.size()>0){
+                        VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+                        payment_params.put("variation_id",String.valueOf(variationModel.getId()));
+                        // payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
+                    }else {
+                        payment_params.put("product_id",String.valueOf(newsFeedEntity.getProduct_id()));
+                    }
+                    paymentProcessing(payment_params,2);
+
                 }else {
                     getPaymentToken(String.valueOf(price),newsFeedEntity,deliveryOption,selected_Variation);
                 }

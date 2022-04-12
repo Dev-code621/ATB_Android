@@ -412,9 +412,11 @@ public abstract class CommonActivity extends BaseActivity {
     }
 
     public void paymentProcessing( Map<String, String> payment_params ,int type){
-        String api_link = API.MAKE_PP_PAYMENT;
+        String api_link = API.MAKE_CASH_PAYMENT;
         if(type == 1){
             api_link = API.ADD_PP_SUB;
+        }else if(type == 0){
+            api_link = API.MAKE_PP_PAYMENT;
         }
         showProgress();
         StringRequest myRequest = new StringRequest(
@@ -430,7 +432,7 @@ public abstract class CommonActivity extends BaseActivity {
                                 showAlertDialog(jsonObject.getString("msg"));
                             else {
                                 String id ="";
-                                if(type !=1 ) {
+                                if(type ==0 ) {
                                     JSONArray jsonArray = jsonObject.getJSONArray("msg");
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);

@@ -309,7 +309,7 @@ public class StoreFragment extends Fragment {
                 confirmPaymentDialog(type,posstion);
                 deliveryOption = type;
             }
-        },newsFeedEntities.get(posstion));
+        },newsFeedEntities.get(posstion),selected_Variation);
         deliveryoptionDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
     }
 

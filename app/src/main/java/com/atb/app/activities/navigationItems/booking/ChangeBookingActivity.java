@@ -195,14 +195,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
                 }
             }
         }
-        for(int i =1;i<=EndDate;i++){
-            Calendar c = Calendar.getInstance();
-            c.set(year,month,i);
-            if(bookingSlot.get(i-1).size()==0)
-                disabledDaysSet.add(c.getTimeInMillis());
-        }
 
-        calendarView.setDisabledDays(disabledDaysSet);
         getBooking();
     }
 

@@ -21,6 +21,7 @@ import com.atb.app.R;
 import com.atb.app.activities.navigationItems.other.LocationMapActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.model.NewsFeedEntity;
+import com.atb.app.model.VariationModel;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
     boolean postage = false,collect = false,deliver =false;
     int selected_type =-1;
     double total_price;
+    ArrayList<String> selected_Variation;
     TextView txv_buy_sale;
     @Nullable
     @Override
@@ -50,7 +52,8 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
         this.listener = listener;
         return null;
     }
-    public SelectDeliveryoptionDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity) {
+    public SelectDeliveryoptionDialog setOnConfirmListener(OnConfirmListener listener, NewsFeedEntity newsFeedEntity,ArrayList<String> selected_Variation) {
+        this.selected_Variation = selected_Variation;
         this.listener = listener;
         this.newsFeedEntity = newsFeedEntity;
 
@@ -99,7 +102,12 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
         txv_deliver.setText("+£" + newsFeedEntity.getDelivery_cost());
 
         txv_buy_sale.setText("Buy Now £" + String.format("%.2f",total_price));
+        if (selected_Variation.size() > 0) {
+            VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+            txv_buy_sale.setText("Buy Now £"+ String.format("%.2f",Float.parseFloat(variationModel.getPrice())));
 
+            total_price = Double.parseDouble(variationModel.getPrice());
+        }
         if(!postage){
             imv_postage.setBackground(getResources().getDrawable(R.drawable.edit_rectangle_round1));
         }else{

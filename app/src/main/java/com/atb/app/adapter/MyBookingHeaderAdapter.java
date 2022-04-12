@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
+import com.atb.app.activities.navigationItems.booking.BookingViewActivity;
 import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
 import com.atb.app.activities.navigationItems.booking.MyBookingViewActivity;
 import com.atb.app.base.CommonActivity;
@@ -290,7 +291,14 @@ public class MyBookingHeaderAdapter extends SectioningAdapter {
                 String bookingModel = gson.toJson(bookingEntity);
                 bundle = new Bundle();
                 bundle.putString("bookModel",bookingModel);
-                ((CommonActivity)(_context)).startActivityForResult(new Intent(_context, MyBookingViewActivity.class).putExtra("data",bundle),1);
+                if (type == 0) {
+
+                    ((CommonActivity)(_context)).startActivityForResult(new Intent(_context, MyBookingViewActivity.class).putExtra("data",bundle),1);
+
+                }else{
+                    ((CommonActivity)(_context)).startActivityForResult(new Intent(_context, BookingViewActivity.class).putExtra("data",bundle),1);
+
+                }
                 ((CommonActivity)(_context)).overridePendingTransition(0, 0);
             }
         });
