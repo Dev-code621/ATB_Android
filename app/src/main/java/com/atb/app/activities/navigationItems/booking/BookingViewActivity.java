@@ -59,13 +59,14 @@ import java.util.List;
 import java.util.Map;
 
 public class BookingViewActivity extends CommonActivity implements View.OnClickListener {
-    LinearLayout lyt_back,lyt_add_calendar,lyt_message,lyt_request_change,lyt_request_rating,lyt_cancel_booking;
+    LinearLayout lyt_back,lyt_add_calendar,lyt_message,lyt_request_change,lyt_request_rating,lyt_cancel_booking,lyt_profile;
     ImageView imv_profile;
     TextView txv_username,txv_useremail,txv_booking_name,txv_date,txv_time,txv_booking_description,txv_booking_price,txv_deposit,txv_pending_funds;
     TextView txv_request_paypal,txv_finish;
     ToggleButton toggle_cash;
     BookingEntity bookingEntity = new BookingEntity();
     CardView card_user_info_image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +77,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         lyt_request_change = findViewById(R.id.lyt_request_change);
         lyt_request_rating = findViewById(R.id.lyt_request_rating);
         lyt_cancel_booking = findViewById(R.id.lyt_cancel_booking);
+        lyt_profile = findViewById(R.id.lyt_profile);
         imv_profile = findViewById(R.id.imv_profile);
         card_user_info_image = findViewById(R.id.card_user_info_image);
         txv_username = findViewById(R.id.txv_username);
@@ -92,6 +94,7 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
         txv_finish.setOnClickListener(this);
         toggle_cash = findViewById(R.id.toggle_cash);
 
+        lyt_profile.setOnClickListener(this);
         lyt_back.setOnClickListener(this);
         lyt_add_calendar.setOnClickListener(this);
         lyt_message.setOnClickListener(this);
@@ -202,7 +205,11 @@ public class BookingViewActivity extends CommonActivity implements View.OnClickL
                 finishBooking();
                 break;
             case R.id.card_user_info_image:
-                getuserProfile(bookingEntity.getId(),1);
+                getuserProfile(bookingEntity.getUserModel().getId(),0);
+
+                break;
+            case R.id.lyt_profile:
+                getuserProfile(bookingEntity.getUser_id(),0);
 
                 break;
 

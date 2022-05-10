@@ -592,6 +592,8 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 txv_cancelday.setText(newsFeedEntity.getCancellations()+" days");
                 txv_areacovered.setText(newsFeedEntity.getPost_location());
                 txv_duration.setText(newsFeedEntity.getDuration() + "hr");
+                if(newsFeedEntity.getDuration().equals("99"))
+                    txv_duration.setText("All Day");
                 if(newsFeedEntity.getInsuranceModels().size()==0){
                     txv_insure.setText("No");
                     imv_insure.setVisibility(View.GONE);
@@ -807,6 +809,10 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 gotochat(this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
                 break;
             case R.id.lyt_book_service:
+                if(newsFeedEntity.getIs_active() !=1){
+                    showAlertDialog("The service is currently pending for admin approval, please wait until it's get approved");
+                    return;
+                }
                 Bundle bundle = new Bundle();
 
                 Gson gson = new Gson();
@@ -1032,6 +1038,15 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
             @Override
             public void onPurchase() {
                 goTo(NewsDetailActivity.this, PurchasesActivity.class,false);
+            }
+
+            @Override
+            public void onKeepBy() {
+                newsFeedEntity.setStock_level(newsFeedEntity.getStock_level());
+                if(newsFeedEntity.getStock_level() == 0){
+                    newsFeedEntity.setIs_sold(1);
+                    initialLayout();
+                }
             }
         },newsFeedEntity,deliveryOption);
         paymentSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
@@ -1514,8 +1529,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 params.put("comment", jsonArray.toString());
                 imageTitle = "comment_imgs";
             }
-
             params.put("is_business", String.valueOf(Commons.userType));
+
+            if(newsFeedEntity.getUser_id() == Commons.g_user.getId()){
+                params.put("is_business", String.valueOf(newsFeedEntity.getPoster_profile_type()));
+
+            }
 
 
             Log.d("Comment Models ==" ,params.toString());
@@ -1544,6 +1563,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                             commentModel.setUserName(Commons.g_user.getBusinessModel().getBusiness_name());
                             commentModel.setUserImage(Commons.g_user.getBusinessModel().getBusiness_logo());
                         }
+                        if(newsFeedEntity.getUser_id() == Commons.g_user.getId()){
+                            if(newsFeedEntity.getPoster_profile_type() == 0){
+                                commentModel.setUserName(Commons.g_user.getUserName());
+                                commentModel.setUserImage(Commons.g_user.getImvUrl());
+                            }else{
+                                commentModel.setUserName(Commons.g_user.getBusinessModel().getBusiness_name());
+                                commentModel.setUserImage(Commons.g_user.getBusinessModel().getBusiness_logo());
+                            }
+                        }
+
 
                         commentModel.setImage_url(completedValue);
                         if(comment_level==1)

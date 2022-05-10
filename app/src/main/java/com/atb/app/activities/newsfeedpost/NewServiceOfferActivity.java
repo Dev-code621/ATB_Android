@@ -100,12 +100,16 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
 
     TextView txt_duration,txv_duration_plus,txv_duration_minus;
-    int duration = 1;
-
+    Double duration = 0.5;
+    LinearLayout lyt_duration;
+    ToggleButton toggle_duration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_service_offer);
+
+        lyt_duration = findViewById(R.id.lyt_duration);
+        toggle_duration = findViewById(R.id.toggle_duration);
         txt_duration = findViewById(R.id.txt_duration);
         txv_duration_plus = findViewById(R.id.txv_duration_plus);
         txv_duration_minus = findViewById(R.id.txv_duration_minus);
@@ -240,6 +244,23 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 paypal = on;
             }
         });
+        toggle_duration.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+
+                if(on) {
+                    lyt_duration.setVisibility(View.GONE);
+                    duration = Double.valueOf(99);
+                    initLayout();
+                }
+                else {
+                    lyt_duration.setVisibility(View.VISIBLE);
+                    duration = Double.valueOf(0.5);
+                    initLayout();
+                }
+            }
+        });
+
         toggle_quality.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
@@ -400,6 +421,11 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 cash = true;
                 toggle_cash.setToggleOn();
             }
+            if(newsFeedEntity.getDuration().equals("99")){
+                toggle_duration.setToggleOn();
+                lyt_duration.setVisibility(View.GONE);
+                duration = Double.valueOf(99);
+            }
             initLayout();
         }
     }
@@ -515,13 +541,13 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 initLayout();
                 break;
             case R.id.txv_duration_minus:
-                if(duration ==1) break;
-                duration--;
+                if(duration ==0.5) break;
+                duration =  duration- 0.5;
                 initLayout();
                 break;
             case R.id.txv_duration_plus:
-                if(candellation==15)break;
-                duration++;
+                if(candellation==8)break;
+                duration+= 0.5;
                 initLayout();
                 break;
         }
@@ -563,6 +589,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }else
             postService();
     }
+    @SuppressLint("SuspiciousIndentation")
     void postService(){
 
         showProgress();

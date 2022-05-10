@@ -342,7 +342,32 @@
                         android:gravity="right|center"/>
                 </LinearLayout>
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All Day Required NO/YES"
+                    style="@style/boldtextTheme"
+                    android:textColor="@color/txt_color"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+                <com.zcw.togglebutton.ToggleButton
+                    android:id="@+id/toggle_duration"
+                    android:layout_width="60dp"
+                    app:tbOnColor="@color/head_color"
+                    app:tbOffColor="@color/boder_color"
+                    toggle:tbBorderWidth="2dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true">
+                </com.zcw.togglebutton.ToggleButton>
+            </RelativeLayout>
             <LinearLayout
+                android:id="@+id/lyt_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -393,6 +418,7 @@
                         android:textSize="22sp"/>
                 </LinearLayout>
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -546,12 +572,12 @@
                     android:hint="@string/area_covered"
                     android:textSize="15sp"
                     style="@style/edit_inputtext" />
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/icon_location"
-                    android:layout_gravity="right|center"
-                    android:layout_marginRight="10dp" />
+<!--                <ImageView-->
+<!--                    android:layout_width="20dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:src="@drawable/icon_location"-->
+<!--                    android:layout_gravity="right|center"-->
+<!--                    android:layout_marginRight="10dp" />-->
             </FrameLayout>
 
             <View

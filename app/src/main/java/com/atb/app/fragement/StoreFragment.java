@@ -119,6 +119,10 @@ public class StoreFragment extends Fragment {
 
             @Override
             public void OnPostSelect(int posstion) {
+                if(newsFeedEntities.get(posstion).getIs_active() !=1){
+                    ((CommonActivity)(context)).showAlertDialog("The service is currently pending for admin approval, please wait until it's get approved");
+                    return;
+                }
                 if(Commons.selected_user.getId() == Commons.g_user.getId())
                     makePost(newsFeedEntities.get(posstion));
                 else {
@@ -133,8 +137,11 @@ public class StoreFragment extends Fragment {
                         }, newsFeedEntities.get(posstion), selected_Variation);
                         productVariationSelectDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
                     }else if(newsFeedEntities.get(posstion).getPost_type()==3){
+                        if(newsFeedEntities.get(posstion).getIs_active() !=1){
+                            ((CommonActivity)context).showAlertDialog("The service is currently pending for admin approval, please wait until it's get approved");
+                            return;
+                        }
                         Bundle bundle = new Bundle();
-
                         Gson gson = new Gson();
                         String newfeedentity = gson.toJson(newsFeedEntities.get(posstion));
                         bundle.putString("newsFeedEntity",newfeedentity);
@@ -239,6 +246,8 @@ public class StoreFragment extends Fragment {
                     params.put("insurance_id", newsFeedEntity.getInsurance_id());
                     params.put("qualification_id", newsFeedEntity.getQualification_id());
                     params.put("service_id",String.valueOf(newsFeedEntity.getId()));
+                    params.put("duration", String.valueOf(newsFeedEntity.getDuration()));
+
                 }
                 return params;
             }
@@ -268,7 +277,7 @@ public class StoreFragment extends Fragment {
                                 newsFeedEntity.initDetailModel(jsonArray.getJSONObject(i));
                                 newsFeedEntity.setUserModel(Commons.selected_user);
                                 newsFeedEntity.setService_id(String.valueOf(newsFeedEntity.getId()));
-                                if(newsFeedEntity.getIs_active()==1)
+//                                if(newsFeedEntity.getIs_active()==1)
                                     newsFeedEntities.add(newsFeedEntity);
                             }
                             addAdapter();

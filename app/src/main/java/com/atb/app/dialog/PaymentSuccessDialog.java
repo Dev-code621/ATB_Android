@@ -69,7 +69,9 @@ public class PaymentSuccessDialog extends DialogFragment {
         lyt_keep_buying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onKeepBy();
                 dismiss();
+
             }
         });
 
@@ -99,6 +101,7 @@ public class PaymentSuccessDialog extends DialogFragment {
 
     public interface OnConfirmListener {
         void onPurchase();
+        void onKeepBy();
     }
 }
 

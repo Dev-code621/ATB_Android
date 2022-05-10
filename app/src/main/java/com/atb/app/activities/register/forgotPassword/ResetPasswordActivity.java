@@ -141,7 +141,8 @@ public class ResetPasswordActivity extends CommonActivity implements View.OnClic
                             Commons.token = jsonObject.getString("msg");
                             if (jsonObject.getBoolean("result")) {
                                 finishAffinity();
-                                goTo(ResetPasswordActivity.this, LoginActivity.class, true);
+//                                goTo(ResetPasswordActivity.this, LoginActivity.class, true);
+                                finish();
                             } else {
                                 showAlertDialog(Commons.token);
                             }

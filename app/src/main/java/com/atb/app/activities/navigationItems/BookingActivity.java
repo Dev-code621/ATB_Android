@@ -352,7 +352,14 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration())) )
+            int end_time = ( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration()));
+            if(bookingEntities.get(i).getNewsFeedEntity().getDuration().equals("99")){
+                Date curDate = new Date( bookingEntities.get(i).getBooking_datetime()*1000l);
+                curDate.setHours(24);
+                end_time = (int) (curDate.getTime()/1000l);
+            }
+
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<end_time)
                 return i;
         }
 

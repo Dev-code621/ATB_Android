@@ -157,6 +157,8 @@
     <string name="transaction">Transactions</string>
     <string name="contact_admin">Contact Admin</string>
     <string name="saved_post">Saved Posts</string>
+    <string name="draft_post">Saved Drafts</string>
+
     <string name="logout">Log out</string>
     <string name="business_description">Upgrade to a Business Account</string>
     <string name="business_description1">Upload Business Logo</string>

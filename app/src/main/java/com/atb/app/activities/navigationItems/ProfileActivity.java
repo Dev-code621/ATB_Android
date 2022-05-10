@@ -38,6 +38,7 @@ import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.activities.register.Signup1Activity;
+import com.atb.app.activities.register.forgotPassword.ForgotPasswordActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -87,7 +88,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
     ImageView imv_profile,imv_selector2,imv_selector1;
     FrameLayout lyt_addpicture;
     EditText edt_firstname,edt_lastname,edt_email;
-    TextView txv_update,txv_male,txv_female,txv_location,edt_birthday;
+    TextView txv_update,txv_male,txv_female,txv_location,edt_birthday,txv_resetPassword;
     String photoPath = "",birthday = "";
     int gender = 0 ;
     private ImageUtils imageUtils;
@@ -109,7 +110,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
         txv_female = findViewById(R.id.txv_female);
         edt_birthday = findViewById(R.id.edt_birthday);
         txv_update = findViewById(R.id.txv_update);
-
+        txv_resetPassword = findViewById(R.id.txv_resetPassword);
         lyt_back.setOnClickListener(this);
         txv_female.setOnClickListener(this);
         txv_male.setOnClickListener(this);
@@ -117,6 +118,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
         txv_location.setOnClickListener(this);
         edt_birthday.setOnClickListener(this);
         imv_profile.setOnClickListener(this);
+        txv_resetPassword.setOnClickListener(this);
         Keyboard();
         imageUtils = new ImageUtils(this);
         initLayout();
@@ -202,6 +204,10 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
             case R.id.imv_profile:
                 uploadPicture();
                 break;
+            case R.id.txv_resetPassword:
+                goTo(this, ForgotPasswordActivity.class,false);
+                break;
+
         }
     }
 

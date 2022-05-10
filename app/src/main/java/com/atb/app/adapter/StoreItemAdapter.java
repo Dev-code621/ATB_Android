@@ -93,6 +93,14 @@ public class StoreItemAdapter extends RecyclerView.Adapter<StoreItemAdapter.View
                 listener.OnEditSelect(position);
             }
         });
+
+        if(newsFeedEntity.getIs_active() ==1 ){
+            holder.txv_make_post.setTextColor(context.getResources().getColor(R.color.white));
+            holder.txv_make_post.setEnabled(true);
+        }else{
+            holder.txv_make_post.setTextColor(context.getResources().getColor(R.color.white_transparent));
+            holder.txv_make_post.setEnabled(false);
+        }
         holder.lyt_make_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

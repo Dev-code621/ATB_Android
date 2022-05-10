@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
-import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.ContactAdminActivity;
 import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
@@ -36,7 +35,6 @@ import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.ChatFragment;
-import com.atb.app.fragement.MainListFragment;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.SearchFragment;
 import com.atb.app.fragement.StoreFragment;
@@ -63,8 +61,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import java.util.Arrays;
 
 public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 
@@ -133,6 +129,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         LinearLayout lyt_save_post = findViewById(R.id.lyt_save_post);
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
+        LinearLayout lyt_draft_post = findViewById(R.id.lyt_draft_post);
         lyt_on.setVisibility(View.GONE);
         lyt_upgrade_business.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
@@ -151,7 +148,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         imv_rating.setOnClickListener(this);
         imv_profile_chat.setOnClickListener(this);
         lyt_navigation.setOnClickListener(this);
-
+        lyt_draft_post.setOnClickListener(this);
         lyt_follower.setOnClickListener(this);
         lyt_following.setOnClickListener(this);
         lyt_post.setOnClickListener(this);
@@ -332,6 +329,10 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
             case R.id.lyt_save_post:
                 drawer.closeDrawer(GravityCompat.END);
                 goTo(this, SavePostActivity.class,false);
+                break;
+            case R.id.lyt_draft_post:
+                drawer.closeDrawer(GravityCompat.END);
+//                goTo(this, DraftPostActivity.class,false);
                 break;
             case R.id.lyt_logout:
                 drawer.closeDrawer(GravityCompat.END);

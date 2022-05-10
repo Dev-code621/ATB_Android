@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import android.widget.TextView;
 
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
-import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.ContactAdminActivity;
 import com.atb.app.activities.navigationItems.CreateAmendBioActivity;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
@@ -123,6 +123,8 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_tell_frieds = findViewById(R.id.lyt_tell_frieds);
         LinearLayout lyt_purchase = findViewById(R.id.lyt_purchase);
+        LinearLayout lyt_draft_post = findViewById(R.id.lyt_draft_post);
+
         lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
         lyt_busines_description = findViewById(R.id.lyt_busines_description);
         lyt_title = findViewById(R.id.lyt_title);
@@ -148,6 +150,8 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         imv_back.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
         imv_rating.setOnClickListener(this);
+        lyt_draft_post.setOnClickListener(this);
+
         imv_profile_chat.setOnClickListener(this);
         lyt_navigation.setOnClickListener(this);
         imv_facebook.setOnClickListener(this);
@@ -247,7 +251,9 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
             case R.id.imv_post:
                 setColor(2);
                 startActivityForResult(new Intent(this, SelectPostCategoryActivity.class),1);
-                overridePendingTransition(0, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                    overridePendingTransition(0, 0);
+                }
                 break;
             case R.id.imv_search:
                 setColor(1);
@@ -311,6 +317,10 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
             case R.id.lyt_save_post:
                 drawer.closeDrawer(GravityCompat.END);
                 goTo(this, SavePostActivity.class,false);
+                break;
+            case R.id.lyt_draft_post:
+                drawer.closeDrawer(GravityCompat.END);
+//                goTo(this, DraftPostActivity.class,false);
                 break;
             case R.id.lyt_logout:
                 drawer.closeDrawer(GravityCompat.END);

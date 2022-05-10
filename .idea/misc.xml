@@ -34,6 +34,8 @@
         <entry key="app/src/main/res/layout/activity_change_booking.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/activity_chat2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_contact_admin.xml" value="0.24739583333333334" />
+        <entry key="app/src/main/res/layout/activity_create_a_booking.xml" value="0.17753623188405798" />
+        <entry key="app/src/main/res/layout/activity_create_booking2.xml" value="0.17753623188405798" />
         <entry key="app/src/main/res/layout/activity_edit_sales_post.xml" value="0.12487335359675786" />
         <entry key="app/src/main/res/layout/activity_exist_sales_post.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_future_booking.xml" value="0.1405775075987842" />
@@ -48,8 +50,9 @@
         <entry key="app/src/main/res/layout/activity_news_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_notification.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_other_user_profile.xml" value="0.2" />
-        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.11" />
         <entry key="app/src/main/res/layout/activity_profile_naviagation.xml" value="0.11180555555555556" />
+        <entry key="app/src/main/res/layout/activity_profile_user_navigation.xml" value="0.16510416666666666" />
         <entry key="app/src/main/res/layout/activity_purchases.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_report_post.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/activity_review.xml" value="0.1828774062816616" />
@@ -97,6 +100,7 @@
         <entry key="app/src/main/res/layout/select_delivery_option.xml" value="0.17" />
         <entry key="app/src/main/res/layout/signup_email_layout.xml" value="0.20471014492753623" />
         <entry key="app/src/main/res/layout/stock_item.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/store_item.xml" value="0.16510416666666666" />
         <entry key="app/src/main/res/layout/upgrade_business_dialog.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/variation_item.xml" value="0.22327898550724637" />
         <entry key="app/src/main/res/layout/variationselectdialog.xml" value="0.17753623188405798" />

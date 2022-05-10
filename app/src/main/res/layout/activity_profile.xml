@@ -197,6 +197,16 @@
             android:layout_marginTop="20dp"
             style="@style/btn_buttonStyle"
             android:background="@drawable/button_rectangle_round"
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/txv_resetPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Reset Password"
+            android:gravity="center"
+            android:textColor="@color/head_color"
+            android:layout_marginTop="10dp"
+            style="@style/btn_buttonStyle"
             android:layout_marginBottom="30dp"/>
     </LinearLayout>
 </LinearLayout>

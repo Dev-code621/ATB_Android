@@ -687,8 +687,8 @@ public class NewsFeedEntity {
 
             if(jsonObject.has("multi_group"))
                 multi_group = jsonObject.getString("multi_group");
-            if(jsonObject.has("service_id"))
-                service_id = jsonObject.getString("service_id");
+            if(jsonObject.has("id"))
+                service_id = jsonObject.getString("id");
             if(jsonObject.has("product_id"))
                 product_id = jsonObject.getString("product_id");
             if(jsonObject.has("insurance_id"))

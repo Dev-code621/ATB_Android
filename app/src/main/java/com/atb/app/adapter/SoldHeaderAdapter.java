@@ -23,8 +23,10 @@ import com.atb.app.R;
 import com.atb.app.activities.navigationItems.ItemSoldActivity;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.navigationItems.other.ProfileRatingActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.activities.profile.ProfileBusinessNaviagationActivity;
+import com.atb.app.activities.profile.ReviewActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.TransactionEntity;
@@ -73,9 +75,10 @@ public class SoldHeaderAdapter extends SectioningAdapter {
     }
 
     public class ItemViewHolder extends SectioningAdapter.ItemViewHolder{
-        ImageView imv_image,imv_profile,imv_btn_arrow;
+        ImageView imv_image,imv_profile,imv_btn_arrow,imv_rating;
         TextView txv_name,txv_itemnumber,txv_price,txv_time,txv_other_name;
-        LinearLayout lyt_layout;
+        LinearLayout lyt_layout,lyt_profile;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
             imv_image =  itemView.findViewById(R.id.imv_image);
@@ -87,6 +90,8 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             imv_btn_arrow = itemView.findViewById(R.id.imv_btn_arrow);
             txv_other_name = itemView.findViewById(R.id.txv_other_name);
             lyt_layout = itemView.findViewById(R.id.lyt_layout);
+            lyt_profile = itemView.findViewById(R.id.lyt_profile);
+            imv_rating = itemView.findViewById(R.id.imv_rating);
         }
     }
 
@@ -279,14 +284,29 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                 });
                 if(type.equals("purchase")){
 //                    holder.imv_btn_arrow.setImageDrawable(_context.getDrawable(R.drawable.icon_message1));
-                    holder.imv_btn_arrow.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
-                    holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
+//                    holder.imv_btn_arrow.setColorFilter(_context.getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
+//                    holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            ((CommonActivity)_context).gotochat(_context,transactionEntity.getPoster_profile_type(),transactionEntity.getUserModel());
+//                        }
+//                    });
+                    holder.imv_rating.setVisibility(View.VISIBLE);
+                    holder.lyt_profile.setVisibility(View.GONE);
+
+                    holder.imv_rating.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((CommonActivity)_context).gotochat(_context,transactionEntity.getPoster_profile_type(),transactionEntity.getUserModel());
+                            Gson gson = new Gson();
+                            String usermodel = gson.toJson(transactionEntity.getUserModel());
+                            Bundle bundle = new Bundle();
+                            bundle.putString("userModel",usermodel);
+                            ((CommonActivity)_context).goTo(_context, ProfileRatingActivity.class,false,bundle);
                         }
                     });
                 }else{
+                    holder.imv_rating.setVisibility(View.GONE);
+                    holder.lyt_profile.setVisibility(View.VISIBLE);
                     holder.imv_btn_arrow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

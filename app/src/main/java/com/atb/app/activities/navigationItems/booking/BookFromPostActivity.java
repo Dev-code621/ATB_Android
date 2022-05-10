@@ -300,13 +300,19 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         hashMap.clear();
         this.day = day;
         txv_booking.setVisibility(View.GONE);
+        int allday_flag = -1;
         for(int i =0;i<bookingSlot.get(day).size();i++){
             BookingEntity bookingEntity = new BookingEntity();
             bookingEntity.setBooking_datetime(getMilonSecond(bookingSlot.get(day).get(i)));
             bookingEntity.setBookingDuration(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()) +" - " + Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()+1800));
             int bookslot_id = slotBooked(bookingSlot.get(day).get(i));
-            if(bookslot_id>=0)
+            if(bookslot_id>=0){
                 hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(bookslot_id));
+                if(newsFeedEntity.getDuration().equals("99")){
+                    allday_flag = bookslot_id;
+                    break;
+                }
+            }
             else {
                 int disableSlot_id = disableSlot(bookingSlot.get(day).get(i));
                 // bookingEntity.setType(-1);
@@ -318,12 +324,27 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 }
 
             }
+        }
 
-
+        if(allday_flag!=-1){
+            hashMap.clear();
+            for(int i =0;i<bookingSlot.get(day).size();i++) {
+                hashMap.put(bookingSlot.get(day).get(i), bookingEntities.get(allday_flag));
+            }
         }
         selected_bookingSlot.clear();
-        selected_bookingSlot.addAll(bookingSlot.get(day));
+        if(newsFeedEntity.getDuration().equals("99") && allday_flag ==-1){
+            selected_bookingSlot.add(bookingSlot.get(day).get(0));
+            hashMap.clear();
+            BookingEntity bookingEntity = new BookingEntity();
+            bookingEntity.setBooking_datetime(getMilonSecond(bookingSlot.get(day).get(0)));
+            bookingEntity.setBookingDuration("All Day");
+            hashMap.put(bookingSlot.get(day).get(0),bookingEntity);
+        }else{
+            selected_bookingSlot.addAll(bookingSlot.get(day));
+        }
         bookingListAdapter.setRoomData(hashMap,selected_bookingSlot);
+
         Helper.getListViewSize(list_booking);
     }
     int disableSlot(String str){
@@ -351,8 +372,16 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         for(int i =0;i<bookingEntities.size();i++){
             if(bookingEntities.get(i).getState().equals("cancelled") || bookingEntities.get(i).getState().equals("complete"))continue;
             int milionSecond = getMilonSecond(str);
-            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration())) )
+            int end_time = ( bookingEntities.get(i).getBooking_datetime() + 3600 * Integer.parseInt(bookingEntities.get(i).getNewsFeedEntity().getDuration()));
+            if(bookingEntities.get(i).getNewsFeedEntity().getDuration().equals("99")){
+                Date curDate = new Date( bookingEntities.get(i).getBooking_datetime()*1000l);
+                curDate.setHours(24);
+                end_time = (int) (curDate.getTime()/1000l);
+            }
+
+            if(milionSecond >= bookingEntities.get(i).getBooking_datetime() && milionSecond<end_time)
                 return i;
+
         }
 
         return -1;
