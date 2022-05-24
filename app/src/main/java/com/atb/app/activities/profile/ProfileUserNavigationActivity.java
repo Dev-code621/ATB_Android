@@ -38,6 +38,7 @@ import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.navigationItems.booking.MyBookingActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
+import com.atb.app.activities.navigationItems.DraftPostActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
@@ -320,7 +321,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 break;
             case R.id.lyt_draft_post:
                 drawer.closeDrawer(GravityCompat.END);
-//                goTo(this, DraftPostActivity.class,false);
+                goTo(this, DraftPostActivity.class,false);
                 break;
             case R.id.lyt_logout:
                 drawer.closeDrawer(GravityCompat.END);

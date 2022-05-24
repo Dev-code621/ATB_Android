@@ -45,6 +45,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.navigationItems.DraftPostActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen" />
+        <activity
             android:name=".activities.navigationItems.business.BuildBusinessStoreActivity"
             android:exported="true"
             android:screenOrientation="portrait"

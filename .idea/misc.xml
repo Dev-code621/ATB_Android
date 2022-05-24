@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/layout/activity_contact_admin.xml" value="0.24739583333333334" />
         <entry key="app/src/main/res/layout/activity_create_a_booking.xml" value="0.17753623188405798" />
         <entry key="app/src/main/res/layout/activity_create_booking2.xml" value="0.17753623188405798" />
+        <entry key="app/src/main/res/layout/activity_draft_post.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/activity_edit_sales_post.xml" value="0.12487335359675786" />
         <entry key="app/src/main/res/layout/activity_exist_sales_post.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_future_booking.xml" value="0.1405775075987842" />
@@ -72,6 +73,8 @@
         <entry key="app/src/main/res/layout/dialog_confirm.xml" value="0.21" />
         <entry key="app/src/main/res/layout/dialog_profile_select.xml" value="0.14447463768115942" />
         <entry key="app/src/main/res/layout/dialog_select_media.xml" value="0.16510416666666666" />
+        <entry key="app/src/main/res/layout/draft_dialog_confirm.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/draft_item.xml" value="0.1598731884057971" />
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.14447463768115942" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/futurebooking_item.xml" value="0.10864575363427698" />
@@ -86,6 +89,7 @@
         <entry key="app/src/main/res/layout/item_message_sent_middle.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_salespost.xml" value="0.15" />
         <entry key="app/src/main/res/layout/list_booking_simple_item.xml" value="0.17" />
+        <entry key="app/src/main/res/layout/list_item_simple_footer.xml" value="0.1598731884057971" />
         <entry key="app/src/main/res/layout/list_item_simple_header.xml" value="0.11944444444444445" />
         <entry key="app/src/main/res/layout/list_item_simple_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/message_item.xml" value="0.1" />

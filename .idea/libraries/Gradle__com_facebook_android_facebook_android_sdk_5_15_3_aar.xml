@@ -2,7 +2,6 @@
   <library name="Gradle: com.facebook.android:facebook-android-sdk:5.15.3@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3e2a6c893e13e9cafcfec13ca1881c34/jetified-facebook-android-sdk-5.15.3/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3e2a6c893e13e9cafcfec13ca1881c34/jetified-facebook-android-sdk-5.15.3/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3e2a6c893e13e9cafcfec13ca1881c34/jetified-facebook-android-sdk-5.15.3/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>

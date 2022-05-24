@@ -35,6 +35,8 @@ import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.dialog.DraftDialog;
 import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectInsuranceDialog;
 import com.atb.app.dialog.SelectMediaDialog;
@@ -103,6 +105,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     Double duration = 0.5;
     LinearLayout lyt_duration;
     ToggleButton toggle_duration;
+    int isDraft = 0;
+    int saveDraft = 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,6 +188,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 String string = bundle.getString("newsFeedEntity");
                 Gson gson = new Gson();
                 newsFeedEntity = gson.fromJson(string, NewsFeedEntity.class);
+                isDraft = bundle.getInt("draft");
             }
         }
 
@@ -496,7 +501,28 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lyt_back:
-                finish(this);
+                if(isDraft == 0){
+                    if(completedValue.size()>0 || edt_title.getText().toString().length()>0 || edt_description.getText().toString().length()>0 || edt_price.getText().toString().length()>0){
+                        DraftDialog draftDialog = new DraftDialog();
+                        draftDialog.setOnConfirmListener(new DraftDialog.OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                saveDraft = 98;
+                                postService();
+                            }
+
+                            @Override
+                            public void ondisCard() {
+                                finish(NewServiceOfferActivity.this);
+                            }
+                        });
+                        draftDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                    }else{
+                        finish(this);
+                    }
+                }else{
+                    finish(this);
+                }
                 break;
             case R.id.imv_back:
                 finish(this);
@@ -640,6 +666,15 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             params.put("item_title", "");
             params.put("post_condition", "");
             params.put("make_post", String.valueOf(isPosting));
+            if(saveDraft == 98){
+                params.put("is_active", "98");
+
+            }else{
+                if(isDraft == 1){
+                    params.put("is_draft", "1");
+
+                }
+            }
             //File part
             ArrayList<File> post = new ArrayList<>();
             String post_image_uris = "";
@@ -680,13 +715,15 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                     try {
                         if(jsonObject.getBoolean("result")) {
                             ConfirmDialog confirmDialog = new ConfirmDialog();
+                            String str = "ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.";
+                            if(saveDraft == 98) str = "The post has been successfully saved as a draft, you can update it later";
                             confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
                                 @Override
                                 public void onConfirm() {
                                     setResult(RESULT_OK);
                                     finish(NewServiceOfferActivity.this);
                                 }
-                            },"ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.","Thanks");
+                            },str,"Thanks");
                             confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
 
                         }else {

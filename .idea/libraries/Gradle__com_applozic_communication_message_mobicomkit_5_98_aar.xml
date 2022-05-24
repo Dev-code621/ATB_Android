@@ -2,7 +2,6 @@
   <library name="Gradle: com.applozic.communication.message:mobicomkit:5.98@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a6a9058ec49cd6377d92f350f732973/jetified-mobicomkit-5.98/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a6a9058ec49cd6377d92f350f732973/jetified-mobicomkit-5.98/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1a6a9058ec49cd6377d92f350f732973/jetified-mobicomkit-5.98/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>

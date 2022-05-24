@@ -5,7 +5,6 @@
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d38c09a949aaa63dfe2e171955a11d6/jetified-fresco-1.11.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d38c09a949aaa63dfe2e171955a11d6/jetified-fresco-1.11.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5d38c09a949aaa63dfe2e171955a11d6/jetified-fresco-1.11.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>

@@ -29,6 +29,7 @@ import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
 import com.atb.app.activities.navigationItems.booking.BookingSplashActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
+import com.atb.app.activities.navigationItems.DraftPostActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.base.CommonActivity;
@@ -332,7 +333,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
             case R.id.lyt_draft_post:
                 drawer.closeDrawer(GravityCompat.END);
-//                goTo(this, DraftPostActivity.class,false);
+                goTo(this, DraftPostActivity.class,false);
                 break;
             case R.id.lyt_logout:
                 drawer.closeDrawer(GravityCompat.END);

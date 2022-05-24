@@ -104,6 +104,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
     ImageView imv_variation_description;
     boolean editable =false;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
+    int isDraft = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +127,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
             if (bundle != null) {
                 editable= bundle.getBoolean("edit");
                 String string = bundle.getString("newsFeedEntity");
+                isDraft = bundle.getInt("draft");
                 Gson gson = new Gson();
                 newsFeedEntity = gson.fromJson(string, NewsFeedEntity.class);
                 if(editable) {
@@ -666,7 +668,10 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 }
             }
             params.put("post_img_uris", post_image_uris);
+            if(isDraft == 1){
+                params.put("is_draft", "1");
 
+            }
 
             String API_LINK = API.UPDATE_PRODUCT,imageTitle = "post_imgs";
             //Log.d("aaaa",params.toString());

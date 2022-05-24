@@ -51,6 +51,7 @@ import com.atb.app.dialog.AddVariationDialog;
 import com.atb.app.dialog.ConfirmBookingDialog;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.ConfirmVariationDialog;
+import com.atb.app.dialog.DraftDialog;
 import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.NewsFeedEntity;
@@ -117,6 +118,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     MultiPostFeedAdapter postFeedAdapter;
     ImageView imv_variation_description;
     LinearLayout lyt_text;
+    int saveDraft= 0 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -394,7 +396,24 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.lyt_back:
-                finish(this);
+                if(completedValue.size()>0 || edt_title.getText().toString().length()>0 || edt_description.getText().toString().length()>0 || edt_price.getText().toString().length()>0){
+                    DraftDialog draftDialog = new DraftDialog();
+                    draftDialog.setOnConfirmListener(new DraftDialog.OnConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            saveDraft = 98;
+                            postSale();
+                        }
+
+                        @Override
+                        public void ondisCard() {
+                            finish(NewSalePostActivity.this);
+                        }
+                    });
+                    draftDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                }else{
+                    finish(this);
+                }
                 break;
             case R.id.txv_singlepost:
                 txv_singlepost.setBackground(getResources().getDrawable(R.drawable.button_rectangle_round));
@@ -691,6 +710,9 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                 attributes.put(jsonObject);
             }
             params.put("attributes",attributes.toString());
+            if(saveDraft == 98){
+                params.put("is_active", "98");
+            }
             //File part
             ArrayList<File> post = new ArrayList<>();
             if(newsFeedEntity.getMedia_type() ==1) {
@@ -720,8 +742,22 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                                 updateProductVariants(newsFeedEntity,newsFeedEntity1,total_number);
                             }else if(total_number==0) {
                                 closeProgress();
-                                setResult(RESULT_OK);
-                                finish(NewSalePostActivity.this);
+                                if(saveDraft == 98){
+                                    ConfirmDialog confirmDialog = new ConfirmDialog();
+                                    String str = "The post has been successfully saved as a draft, you can update it later";
+                                    confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            setResult(RESULT_OK);
+                                            finish(NewSalePostActivity.this);
+                                        }
+                                    },str,"Thanks");
+                                    confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                                }else{
+                                    setResult(RESULT_OK);
+                                    finish(NewSalePostActivity.this);
+                                }
+
                             }
                         }else {
                             showAlertDialog(jsonObject.getString("msg"));
