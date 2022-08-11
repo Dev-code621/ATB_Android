@@ -207,6 +207,31 @@
                         android:layout_gravity="center"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lyt_social_link"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/link_icon"
+                        android:tint="@color/head_color"
+                        android:layout_gravity="center" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/textTheme"
+                        android:text="Social Link"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/txt_color"/>
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/lyt_create_bio"
                     android:layout_width="match_parent"

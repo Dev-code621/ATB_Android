@@ -595,7 +595,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 if(newsFeedEntity.getDuration().equals("99"))
                     txv_duration.setText("All Day");
                 if(newsFeedEntity.getInsuranceModels().size()==0){
-                    txv_insure.setText("No");
+                    txv_insure.setText("N/A");
                     imv_insure.setVisibility(View.GONE);
                 }else {
                     txv_insure.setText("Yes");
@@ -604,7 +604,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                 }
 
                   if(newsFeedEntity.getQualifications().size()==0){
-                    txv_qualitfied.setText("No");
+                    txv_qualitfied.setText("N/A");
                     imv_qualitfied.setVisibility(View.GONE);
                 }else {
                       txv_qualitfied.setText("Yes");
@@ -1059,7 +1059,16 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         Bundle bundle = new Bundle();
         bundle.putString("userModel",usermodel);
         bundle.putInt("userType",usertype);
-        goTo(this, OtherUserProfileActivity.class,false,bundle);
+        if(userModel.getId() == Commons.g_user.getId()){
+            if(usertype == 1){
+                goTo(this, ProfileBusinessNaviagationActivity.class,false,bundle);
+            }else{
+                goTo(this, ProfileUserNavigationActivity.class,false,bundle);
+            }
+        }else{
+            goTo(this, OtherUserProfileActivity.class,false,bundle);
+
+        }
     }
 
     void deletePost(){
@@ -1241,7 +1250,11 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                         .setChannel("facebook")
                         .setFeature("sharing")
                         .addControlParameter("nav_here",String.valueOf(newsFeedEntity.getId()))
-                        .addControlParameter("android_url", "https://play.google.com/store");
+                        .addControlParameter("nav_type","0")
+                        .addControlParameter("ios_url", "https://apps.apple.com/app/id1501095031")
+                        .addControlParameter("android_url", "http://play.google.com/store/apps/details?id=com.atb.app");
+
+
                 String path = "";
                 if(newsFeedEntity.getPostImageModels().size()>0)
                     path = newsFeedEntity.getPostImageModels().get(0).getPath();

@@ -258,6 +258,12 @@ public class CommentAdapter extends BaseAdapter {
         }
         Glide.with(_context).load(commentModel.getUserImage()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
+        holder.imv_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CommonActivity)_context).getuserProfile(commentModel.getCommenter_user_id(),commentModel.getIs_business());
+            }
+        });
         holder.txv_time.setText(commentModel.getRead_created());
         holder.lyt_reply.setOnClickListener(new View.OnClickListener() {
             @Override

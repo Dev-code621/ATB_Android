@@ -18,7 +18,16 @@ public class CommentModel {
     int level =1;
     int parentPosstion =0;
     ArrayList<String>image_url = new ArrayList<>();
+    int is_business;
     boolean like,hidden;
+
+    public int getIs_business() {
+        return is_business;
+    }
+
+    public void setIs_business(int is_business) {
+        this.is_business = is_business;
+    }
 
     public int getCommenter_user_id() {
         return commenter_user_id;
@@ -152,6 +161,7 @@ public class CommentModel {
             setHidden(jsonObject.getBoolean("hidden"));
             setParentPosstion(parentnumber);
             setRead_created(jsonObject.getString("read_created"));
+            setIs_business(jsonObject.getInt("is_business"));
             JSONArray replies_array = jsonObject.getJSONArray("replies");
             for(int i =0;i<replies_array.length();i++){
                 CommentModel commentModel = new CommentModel();

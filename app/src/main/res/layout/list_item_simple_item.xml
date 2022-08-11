@@ -61,6 +61,7 @@
                             android:layout_height="wrap_content"
                             android:text="JESSICA MCLAURENCE"
                             android:layout_weight="3"
+                            android:layout_gravity="center_vertical"
                             style="@style/boldtextTheme"
                             android:textColor="@color/txt_color"
                             android:textSize="14sp" />
@@ -112,15 +113,39 @@
                     style="@style/textTheme"
                     android:visibility="gone"
                     android:textColor="@color/txt_color"
-
                     android:textSize="15sp" />
+                <LinearLayout
+                    android:id="@+id/lyt_profile2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:id="@+id/txv_other_name2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ricard Guard"
+                        android:singleLine="true"
+                        style="@style/boldtextTheme"
+                        android:textColor="@color/head_color"
+                        android:textSize="13sp" />
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/btn_arrow"
+                        app:tint="@color/head_color"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"/>
+                </LinearLayout>
                 <TextView
                     android:id="@+id/txv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Order Total: $4.90"
                     style="@style/textTheme"
-                    android:layout_marginTop="5dp"
                     android:textColor="@color/head_color"
                     android:textSize="15sp" />
                 <LinearLayout

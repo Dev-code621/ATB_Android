@@ -20,6 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
+import com.atb.app.activities.profile.OtherUserProfileActivity;
+import com.atb.app.activities.profile.ReviewActivity;
 import com.atb.app.adapter.SoldHeaderAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -31,6 +33,7 @@ import com.atb.app.model.UserModel;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -201,5 +204,16 @@ public class ItemSoldActivity extends CommonActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    @Override
+    public void UserProfile(UserModel userModel, int usertype){
+
+        Gson gson = new Gson();
+        String usermodel = gson.toJson(userModel);
+        Bundle bundle = new Bundle();
+        bundle.putString("userModel",usermodel);
+        bundle.putInt("userType",usertype);
+        goTo(this, OtherUserProfileActivity.class,false,bundle);
     }
 }

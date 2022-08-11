@@ -231,9 +231,14 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
-                noti_type= Integer.parseInt(bundle.getString("type"));
-                related_id= bundle.getString("related_id");
-                processNotification();
+                try{
+                    noti_type= Integer.parseInt(bundle.getString("type"));
+                    related_id= bundle.getString("related_id");
+                    processNotification();
+                }catch (Exception e){
+
+                }
+
             }
         }
 
@@ -872,23 +877,36 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     }
     @Override
     public void UserProfile(UserModel userModel,int usertype){
-        if(Integer.parseInt(related_id) == 10){
-            if( noti_type == 10){
-                Gson gson = new Gson();
-                String usermodel = gson.toJson(userModel);
-                Bundle bundle = new Bundle();
-                bundle.putString("userModel",usermodel);
-                bundle.putBoolean("editable",true);
-                goTo(this,ReviewActivity.class,false,bundle);
-                return;
+        try{
+            if(Integer.parseInt(related_id) == 10){
+                if( noti_type == 10){
+                    Gson gson = new Gson();
+                    String usermodel = gson.toJson(userModel);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userModel",usermodel);
+                    bundle.putBoolean("editable",true);
+                    goTo(this,ReviewActivity.class,false,bundle);
+                    return;
+                }
             }
+        }catch (Exception e){
+
         }
-        Gson gson = new Gson();
-        String usermodel = gson.toJson(userModel);
-        Bundle bundle = new Bundle();
-        bundle.putString("userModel",usermodel);
-        bundle.putInt("userType",usertype);
-        goTo(this, OtherUserProfileActivity.class,false,bundle);
+        if(userModel.getId() == Commons.g_user.getId()){
+            if(usertype == 0 ){
+                goTo(this,ProfileUserNavigationActivity.class,false);
+            }else{
+                goTo(this,ProfileBusinessNaviagationActivity.class,false);
+            }
+        }else {
+            Gson gson = new Gson();
+            String usermodel = gson.toJson(userModel);
+            Bundle bundle = new Bundle();
+            bundle.putString("userModel",usermodel);
+            bundle.putInt("userType",usertype);
+            goTo(this, OtherUserProfileActivity.class,false,bundle);
+        }
+
     }
 
     @Override

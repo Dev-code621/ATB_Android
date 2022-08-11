@@ -76,8 +76,8 @@ public class SoldHeaderAdapter extends SectioningAdapter {
 
     public class ItemViewHolder extends SectioningAdapter.ItemViewHolder{
         ImageView imv_image,imv_profile,imv_btn_arrow,imv_rating;
-        TextView txv_name,txv_itemnumber,txv_price,txv_time,txv_other_name;
-        LinearLayout lyt_layout,lyt_profile;
+        TextView txv_name,txv_itemnumber,txv_price,txv_time,txv_other_name,txv_other_name2;
+        LinearLayout lyt_layout,lyt_profile,lyt_profile2;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -92,6 +92,8 @@ public class SoldHeaderAdapter extends SectioningAdapter {
             lyt_layout = itemView.findViewById(R.id.lyt_layout);
             lyt_profile = itemView.findViewById(R.id.lyt_profile);
             imv_rating = itemView.findViewById(R.id.imv_rating);
+            txv_other_name2 = itemView.findViewById(R.id.txv_other_name2);
+            lyt_profile2 = itemView.findViewById(R.id.lyt_profile2);
         }
     }
 
@@ -269,6 +271,14 @@ public class SoldHeaderAdapter extends SectioningAdapter {
 
                 }else {
                     holder.txv_other_name.setText(transactionEntity.getUserModel().getUserName());
+                    holder.txv_other_name.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((CommonActivity)_context).getuserProfile(transactionEntity.getUserModel().getId(),0);
+
+
+                        }
+                    });
                 }
                 holder.lyt_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -293,6 +303,7 @@ public class SoldHeaderAdapter extends SectioningAdapter {
 //                    });
                     holder.imv_rating.setVisibility(View.VISIBLE);
                     holder.lyt_profile.setVisibility(View.GONE);
+                    holder.lyt_profile2.setVisibility(View.VISIBLE);
 
                     holder.imv_rating.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -304,6 +315,29 @@ public class SoldHeaderAdapter extends SectioningAdapter {
                             ((CommonActivity)_context).goTo(_context, ProfileRatingActivity.class,false,bundle);
                         }
                     });
+                    if(transactionEntity.getPoster_profile_type() == 1){
+                        holder.txv_other_name2.setText(transactionEntity.getUserModel().getBusinessModel().getBusiness_name());
+                        holder.txv_other_name2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((CommonActivity)_context).getuserProfile(transactionEntity.getUserModel().getId(),1);
+
+
+                            }
+                        });
+
+                    }else {
+                        holder.txv_other_name2.setText(transactionEntity.getUserModel().getUserName());
+                        holder.txv_other_name2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((CommonActivity)_context).getuserProfile(transactionEntity.getUserModel().getId(),0);
+
+
+                            }
+                        });
+                    }
+
                 }else{
                     holder.imv_rating.setVisibility(View.GONE);
                     holder.lyt_profile.setVisibility(View.VISIBLE);

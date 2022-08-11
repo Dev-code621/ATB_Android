@@ -3,12 +3,13 @@ package com.atb.app.api;
 public class API {
     public static  String DOMAIN_URL = "https://test.myatb.co.uk/";
     public static String API_BASE_URL = "https://test.myatb.co.uk/api/";
+
+
+//    public static final String DOMAIN_URL = "https://staging.atb-app.com/";
+//    public static final String API_BASE_URL = "https://staging.atb-app.com/api/";
     public static final String USERSESSION = "userSession";
     public static final String LOGIN = "User/login/authenticate";
     public static final String INVITE_URL = DOMAIN_URL + "invite?code=";
-
-//public static final String DOMAIN_URL = "http://localhost/ATB"
-//public static final String API_BASE_URL = "http://localhost/ATB/api/"
 
     public static final String STAGE_ONE_REGISTER_API = API_BASE_URL + "auth/register_stage_one";
     public static final String LOGIN_API = API_BASE_URL + "auth/login";

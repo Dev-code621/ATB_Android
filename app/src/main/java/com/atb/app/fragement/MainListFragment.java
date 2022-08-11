@@ -194,6 +194,8 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                 bundle.putBoolean("CommentVisible",true);
                 startActivityForResult(new Intent(context, NewsDetailActivity.class).putExtra("data",bundle),1);
                 Commons.feed_id = -1;
+            }else if(Commons.selectedProfile_id !=-1){
+                ((CommonActivity)(context)).getuserProfile(Commons.selectedProfile_id,1);
             }
 
 

@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.DraftPostActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.activities.newpost.SelectProductCategoryActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
@@ -62,6 +64,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import io.branch.indexing.BranchUniversalObject;
+import io.branch.referral.util.LinkProperties;
 
 public class ProfileBusinessNaviagationActivity extends CommonActivity implements View.OnClickListener , SmartTabLayout.TabProvider  {
 
@@ -131,6 +136,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         LinearLayout lyt_logout = findViewById(R.id.lyt_logout);
         LinearLayout lyt_busines_upgrade = findViewById(R.id.lyt_busines_upgrade);
         LinearLayout lyt_draft_post = findViewById(R.id.lyt_draft_post);
+        LinearLayout lyt_social_link= findViewById(R.id.lyt_social_link);
         lyt_on.setVisibility(View.GONE);
         lyt_upgrade_business.setOnClickListener(this);
         lyt_show_notis.setOnClickListener(this);
@@ -143,6 +149,8 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         lyt_set_range.setOnClickListener(this);
         lyt_create_bio.setOnClickListener(this);
         lyt_item_sold.setOnClickListener(this);
+        lyt_social_link.setOnClickListener(this);
+
         lyt_booking.setOnClickListener(this);
         imv_back.setOnClickListener(this);
         lyt_profile.setOnClickListener(this);
@@ -261,6 +269,34 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         return flag;
     }
 
+    public void onShare() {
+        LinkProperties linkProperties = new LinkProperties()
+                .setChannel("facebook")
+                .setFeature("sharing")
+                .addControlParameter("nav_here",String.valueOf(Commons.g_user.getId()))
+                .addControlParameter("nav_type","3")
+                .addControlParameter("ios_url", "https://apps.apple.com/app/id1501095031")
+                .addControlParameter("android_url", "http://play.google.com/store/apps/details?id=com.atb.app");
+
+
+        String path = Commons.g_user.getBusinessModel().getBusiness_logo();
+
+        BranchUniversalObject branchUniversalObject = new BranchUniversalObject()
+                .setCanonicalIdentifier("content/" + String.valueOf(Commons.g_user.getId()))
+                .setTitle(Commons.g_user.getBusinessModel().getBusiness_name())
+                .setContentDescription(Commons.g_user.getBusinessModel().getBusiness_bio())
+                .setContentImageUrl(path)
+                .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
+                .addContentMetadata("property1", "blue")
+                .addContentMetadata("property2", "red");
+
+        String url  = branchUniversalObject.getShortUrl(this,
+                linkProperties);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/html");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(url));
+        startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -304,6 +340,11 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("bussiness",true);
                 goTo(this, ItemSoldActivity.class,false,bundle);
+                break;
+            case R.id.lyt_social_link:
+                drawer.closeDrawer(GravityCompat.END);
+                onShare();
+
                 break;
             case R.id.lyt_create_bio:
                 drawer.closeDrawer(GravityCompat.END);
