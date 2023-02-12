@@ -85,7 +85,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Only £4.99 per month"
+        android:text="Only £0.99 in 7 day trial"
         style="@style/boldtextTheme"
         android:gravity="center"
         android:textColor="@color/white"

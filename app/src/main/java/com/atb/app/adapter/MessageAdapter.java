@@ -9,13 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.applozic.mobicomkit.api.conversation.Message;
-import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
-import com.applozic.mobicomkit.contact.AppContactService;
-import com.applozic.mobicommons.ApplozicService;
-import com.applozic.mobicommons.commons.core.utils.DateUtils;
-import com.applozic.mobicommons.commons.core.utils.Utils;
-import com.applozic.mobicommons.people.contact.Contact;
 import com.atb.app.R;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.commons.Commons;
@@ -30,20 +23,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.applozic.mobicommons.commons.core.utils.DateUtils.isSameDay;
-
 public class MessageAdapter extends BaseAdapter {
 
     private Context _context;
 
     public List<RoomModel> _roomDatas = new ArrayList<>();
-    private MessageDatabaseService messageDatabaseService;
 
     public MessageAdapter(Context context) {
         super();
         this._context = context;
-        this.messageDatabaseService = new MessageDatabaseService(context);
 
     }
 
@@ -93,10 +81,7 @@ public class MessageAdapter extends BaseAdapter {
         holder.txv_lastmessage.setText(roomModel.getLast_message());
 
         holder.txv_time.setText(getFormattedDateAndTime(_context,
-                roomModel.getLastMessageTime()/10000,
-                R.string.JUST_NOW,
-                R.plurals.MINUTES,
-                R.plurals.HOURS));
+                roomModel.getLastMessageTime()/10000));
         holder.unreadSmsCount.setVisibility(View.GONE);
 
         if(roomModel.getUnReadCount()>0){
@@ -106,44 +91,19 @@ public class MessageAdapter extends BaseAdapter {
         Glide.with(_context).load(roomModel.getImage()).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder))).into(holder.imv_profile);
         if(roomModel.isOnline()){
-            holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.online_circle));
+            holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.green_circle));
         }else {
-            holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.offline_circle));
+            holder.imv_online.setImageDrawable(_context.getResources().getDrawable(R.drawable.red_circle));
         }
 
         return convertView;
     }
 
-    public static String getFormattedDateAndTime(Context context, Long timestamp, int justNow, int min, int hr) {
-        boolean sameDay = isSameDay(timestamp);
+    public static String getFormattedDateAndTime(Context context, Long timestamp) {
+
         Date date = new Date(timestamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
-        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM");
-        Date newDate = new Date();
-
-        try {
-            if (sameDay) {
-                long currentTime = newDate.getTime() - date.getTime();
-                long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(currentTime);
-                long diffHours = TimeUnit.MILLISECONDS.toHours(currentTime);
-                if (diffMinutes <= 1 && diffHours == 0) {
-                    return Utils.getString(context, justNow);
-                }
-                if (diffMinutes <= 59 && diffHours == 0) {
-                    return ApplozicService.getContext(context).getResources().getQuantityString(min, (int) diffMinutes, diffMinutes);
-                }
-
-                if (diffMinutes > 59 && diffHours <= 2) {
-                    return ApplozicService.getContext(context).getResources().getQuantityString(hr, (int) diffHours, diffHours);
-                }
-                return simpleDateFormat.format(date);
-            }
-            return fullDateFormat.format(date);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM hh:mm aa");
+        return fullDateFormat.format(date);
     }
 
     public class CustomHolder {

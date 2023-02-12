@@ -12,11 +12,11 @@ public class BookingEntity {
     String state,email,full_name,phone,total_cost,remaining;
     long created_at,updated_at;
     UserModel userModel = new UserModel();
-    BusinessModel businessModel = new BusinessModel();
+    UserModel businessModel = new UserModel();
     ArrayList<TransactionEntity>transactionEntities = new ArrayList<>();
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     String bookingDuration = "";
-    double paid_amount =0.0;
+    double paid_amount =0.00;
     //0 free slot, 1: booked slot : -1: disalbe solot
 
 
@@ -166,11 +166,11 @@ public class BookingEntity {
         this.userModel = userModel;
     }
 
-    public BusinessModel getBusinessModel() {
+    public UserModel getBusinessModel() {
         return businessModel;
     }
 
-    public void setBusinessModel(BusinessModel businessModel) {
+    public void setBusinessModel(UserModel businessModel) {
         this.businessModel = businessModel;
     }
 
@@ -209,9 +209,9 @@ public class BookingEntity {
                 transactionEntity.setUser_id(object.getInt("user_id"));
                 transactionEntity.setIs_business(object.getInt("is_business"));
                 transactionEntity.setTransaction_id(object.getString("transaction_id"));
-                transactionEntity.setTransaction_type(object.getString("transaction_type"));
+//                transactionEntity.setTransaction_type(object.getString("transaction_type"));
                 transactionEntity.setTarget_id(object.getString("target_id"));
-                transactionEntity.setAmount(object.getDouble("amount"));
+                transactionEntity.setAmount(object.getDouble("amount")/100);
                 transactionEntity.setPayment_method(object.getString("payment_method"));
                 transactionEntity.setPayment_source(object.getString("payment_source"));
                 transactionEntity.setQuantity(object.getInt("quantity"));
@@ -219,10 +219,10 @@ public class BookingEntity {
                 if (!object.getString("delivery_option").equals("null"))
                     transactionEntity.setDelivery_option(object.getInt("delivery_option"));
                 transactionEntity.setCreated_at(object.getLong("created_at"));
-                if(transactionEntity.getTransaction_type().equals("Sale"))
-                    paid_amount += Math.abs(transactionEntity.getAmount());
+                paid_amount += Math.abs(transactionEntity.getAmount());
                 transactionEntities.add(transactionEntity);
             }
+//            paid_amount/= 100;
             if(jsonObject.has("user")){
                 JSONArray users = jsonObject.getJSONArray("user");
                 if(users.length()>0)

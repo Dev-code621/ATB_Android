@@ -42,7 +42,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.applozic.mobicommons.file.FileUtils;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetOperatingActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
@@ -112,7 +111,6 @@ import java.util.Map;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
 
-import static com.applozic.mobicomkit.uiwidgets.conversation.adapter.MobiComAttachmentGridViewAdapter.REQUEST_CODE;
 
 public class UpdateBusinessActivity extends CommonActivity implements View.OnClickListener , ImageUtils.ImageAttachmentListener{
     ImageView imv_back,imv_profile,imv_fb_selector,imv_instagram_selector,imv_twitter_selector;
@@ -415,7 +413,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -464,7 +462,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -522,7 +520,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1126,7 +1124,8 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                         // Get the Uri of the selected file
                         Uri uri = data.getData();
 
-                        String filePath = FileUtils.getPath(this, uri);
+                        String filePath = Helper.getPath(this, uri);
+
                         insuranceFile_path = filePath;
                         addInsuranceDialog.setFileName();
                         Log.d("file===", filePath + "      " + uri.toString()) ;
@@ -1280,7 +1279,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

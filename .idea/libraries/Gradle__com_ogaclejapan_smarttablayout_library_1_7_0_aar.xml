@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.ogaclejapan.smarttablayout:library:1.7.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ac3da231255faa0a9994b6cde0082be/jetified-library-1.7.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ac3da231255faa0a9994b6cde0082be/jetified-library-1.7.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ac3da231255faa0a9994b6cde0082be/jetified-library-1.7.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a75b35b55bd484bc07038829d2a2bee4/jetified-library-1.7.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a75b35b55bd484bc07038829d2a2bee4/jetified-library-1.7.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a75b35b55bd484bc07038829d2a2bee4/jetified-library-1.7.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ogaclejapan.smarttablayout/library/1.7.0/3e72a78f56dea3707de3433030e568822f27435f/library-1.7.0-javadoc.jar!/" />

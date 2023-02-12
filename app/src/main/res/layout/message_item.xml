@@ -35,7 +35,7 @@
                 android:id="@+id/imv_online"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:src="@drawable/offline_circle"
+                android:src="@drawable/red_circle"
                 android:layout_gravity="right|bottom"/>
         </FrameLayout>
         <LinearLayout

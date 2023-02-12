@@ -246,7 +246,7 @@ public class ProfilePinActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

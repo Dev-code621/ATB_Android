@@ -38,6 +38,8 @@ import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
 import com.atb.app.activities.navigationItems.business.BusinessProfilePaymentActivity;
 import com.atb.app.activities.navigationItems.business.UpdateBusinessActivity;
 import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
+import com.atb.app.activities.profile.boost.ApprovePaymentActivity;
+import com.atb.app.activities.profile.boost.ProfilePinActivity;
 import com.atb.app.adapter.MultiPostFeedAdapter;
 import com.atb.app.adapter.PostFeedAdapter;
 import com.atb.app.adapter.StockAdapter;
@@ -532,7 +534,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -594,19 +596,50 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             }
         }
 
-        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+//        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+//            GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+//            confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+//                @Override
+//                public void onConfirm() {
+//                    getPaymentToken();
+//                }
+//            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+//            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+//        }
+        if(Commons.g_user.getStripe_connect_account().length()>0){
+
+            retrieveCard();
+
+        }
+        else{
             GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
             confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
                 @Override
                 public void onConfirm() {
-                    getPaymentToken();
+                    addCard();
                 }
-            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+            },"Setup Payment card", "To be able to use the card payment method and take payment for your item directly in the app you will need to add your card.","Add Card", "Cancel");
             confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
-        }else
-            postSale();
+        }
+//            postSale();
 
     }
+
+    @Override
+    public void successAddCard() {
+        super.successAddCard();
+        postSale();
+    }
+
+    @Override
+    public void InputCardDetail(String link) {
+        super.InputCardDetail(link);
+        Bundle bundle = new Bundle();
+        bundle.putString("web_link",link);
+        startActivityForResult(new Intent(this, ApprovePaymentActivity.class).putExtra("data",bundle),1);
+        overridePendingTransition(0, 0);
+    }
+
     void postSale(){
 
         NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
@@ -620,7 +653,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
         newsFeedEntity.setPrice(edt_price.getText().toString());
         newsFeedEntity.setIs_deposit_required("0");
         newsFeedEntity.setCategory_title(spiner_category_type.getSelectedItem().toString());
-        newsFeedEntity.setLocation_id(txv_location.getText().toString());
+        newsFeedEntity.setLocation_id(Commons.location);
         newsFeedEntity.setLang(Commons.lng);
         newsFeedEntity.setLat(Commons.lat);
         if(cash && paypal)
@@ -817,7 +850,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -929,7 +962,10 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == 100) {
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            successAddCard();
+        }
+        else if (resultCode == Activity.RESULT_OK && requestCode == 100) {
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             if(completedValue.size()>maxImagecount)return;
 
@@ -944,7 +980,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
             maxImagecount = 9;
             initLayout();
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.location);
+            txv_location.setText(Commons.location.split("\\|")[0]);
         }else if (requestCode == REQUEST_PAYMENT_CODE) {
             if (resultCode == RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
@@ -1004,7 +1040,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1116,7 +1152,7 @@ public class NewSalePostActivity extends CommonActivity implements View.OnClickL
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

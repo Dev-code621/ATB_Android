@@ -141,9 +141,8 @@ public class ItemSoldActivity extends CommonActivity {
                                     transactionEntity.setUser_id(object.getInt("user_id"));
                                     transactionEntity.setIs_business(object.getInt("is_business"));
                                     transactionEntity.setTransaction_id(object.getString("transaction_id"));
-                                    transactionEntity.setTransaction_type(object.getString("transaction_type"));
                                     transactionEntity.setTarget_id(object.getString("target_id"));
-                                    transactionEntity.setAmount(object.getDouble("amount"));
+                                    transactionEntity.setAmount(object.getDouble("amount")/100);
                                     transactionEntity.setPayment_method(object.getString("payment_method"));
                                     transactionEntity.setPayment_source(object.getString("payment_source"));
                                     transactionEntity.setQuantity(object.getInt("quantity"));
@@ -184,7 +183,7 @@ public class ItemSoldActivity extends CommonActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

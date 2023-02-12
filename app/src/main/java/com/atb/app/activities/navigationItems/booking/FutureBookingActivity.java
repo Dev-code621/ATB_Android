@@ -119,7 +119,7 @@ public class FutureBookingActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

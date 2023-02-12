@@ -2,12 +2,13 @@ package com.atb.app.model;
 
 public class TransactionEntity {
     int id,user_id,is_business,quantity,delivery_option;
-    String transaction_id,transaction_type,target_id,payment_method,payment_source,purchase_type;
+    String transaction_id,target_id,payment_method,payment_source,purchase_type;
     int poster_profile_type = 0;
     double amount;
     long created_at;
     String imv_url,title ;
     UserModel userModel = new UserModel();
+    String image, name;
     NewsFeedEntity newsFeedEntity= new NewsFeedEntity();
 
     public NewsFeedEntity getNewsFeedEntity() {
@@ -100,13 +101,13 @@ public class TransactionEntity {
         this.transaction_id = transaction_id;
     }
 
-    public String getTransaction_type() {
-        return transaction_type;
-    }
-
-    public void setTransaction_type(String transaction_type) {
-        this.transaction_type = transaction_type;
-    }
+//    public String getTransaction_type() {
+//        return transaction_type;
+//    }
+//
+//    public void setTransaction_type(String transaction_type) {
+//        this.transaction_type = transaction_type;
+//    }
 
     public String getTarget_id() {
         return target_id;
@@ -154,5 +155,21 @@ public class TransactionEntity {
 
     public void setCreated_at(long created_at) {
         this.created_at = created_at;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

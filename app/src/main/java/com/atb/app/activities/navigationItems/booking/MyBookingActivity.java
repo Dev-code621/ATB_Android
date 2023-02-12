@@ -122,7 +122,7 @@ public class MyBookingActivity extends CommonActivity implements View.OnClickLis
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        ////showToast(error.getMessage());
 
                     }
                 }) {

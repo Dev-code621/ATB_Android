@@ -54,7 +54,7 @@
                 android:gravity="center"
                 android:textColor="@color/txt_color"
                 android:textSize="13sp"
-                android:text="@string/account_disconnection_message"
+                android:text="Would you like to disconnect account?"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:textStyle="bold" />

@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -36,6 +37,7 @@ import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.commons.Commons;
 import com.atb.app.dialog.ConfirmDialog;
+import com.atb.app.dialog.GenralConfirmDialog;
 import com.atb.app.dialog.SelectProfileDialog;
 import com.atb.app.model.BoostModel;
 import com.atb.app.model.BusinessModel;
@@ -54,6 +56,9 @@ import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.zoom.ZoomAnimation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.kittinunf.fuel.Fuel;
+import com.github.kittinunf.fuel.core.FuelError;
+import com.github.kittinunf.fuel.core.Handler;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -72,6 +77,12 @@ import com.pubnub.api.models.consumer.objects_api.member.PNSetChannelMembersResu
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
 import com.shockwave.pdfium.PdfDocument;
 import com.shockwave.pdfium.PdfiumCore;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
+//import com.stripe.android.PaymentConfiguration;
+//import com.stripe.android.paymentsheet.PaymentSheet;
+//import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,12 +106,16 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
 
 public abstract class CommonActivity extends BaseActivity {
+    PaymentSheet paymentSheet;
+    String paymentIntentClientSecret;
+    PaymentSheet.CustomerConfiguration customerConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         TouchEffectsFactory.initTouchEffects(this);
         super.onCreate(savedInstanceState);
         Commons.g_commentActivity = this;
+        paymentSheet =  new PaymentSheet((ComponentActivity) _context, this::onPaymentSheetResult);
 
     }
 
@@ -264,7 +279,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -317,7 +332,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -393,7 +408,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -413,10 +428,11 @@ public abstract class CommonActivity extends BaseActivity {
 
     public void paymentProcessing( Map<String, String> payment_params ,int type){
         String api_link = API.MAKE_CASH_PAYMENT;
+        //Stripe Payment
         if(type == 1){
-            api_link = API.ADD_PP_SUB;
+            api_link = API.STRIPE_SUBSCRIPTION;
         }else if(type == 0){
-            api_link = API.MAKE_PP_PAYMENT;
+            api_link = API.MAKE_STRIPE_PAYMENT;
         }
         showProgress();
         StringRequest myRequest = new StringRequest(
@@ -428,22 +444,33 @@ public abstract class CommonActivity extends BaseActivity {
                         closeProgress();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
+                            Log.d("aaaaa",json.toString());
                             if(!jsonObject.getBoolean("result"))
                                 showAlertDialog(jsonObject.getString("msg"));
                             else {
                                 String id ="";
-                                if(type ==0 ) {
-                                    JSONArray jsonArray = jsonObject.getJSONArray("msg");
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);
-                                        if (object.getString("transaction_type").equals("Sale")) {
-                                            id = object.getString("id");
-                                            break;
-                                        }
+                                String customer_id = jsonObject.getJSONObject("extra").getString("customer_id");
+                                String ephemeral_key_secret = jsonObject.getJSONObject("extra").getString("ephemeral_key_secret");
+                                String payment_intent_client_secret = jsonObject.getJSONObject("extra").getString("payment_intent_client_secret");
+                                String publishable_key = jsonObject.getJSONObject("extra").getString("publishable_key");
 
-                                    }
-                                }
-                                finishPayment(id);
+
+                                PaymentConfiguration.init(_context, publishable_key);
+                                paymentIntentClientSecret = payment_intent_client_secret;
+                                customerConfig = new PaymentSheet.CustomerConfiguration(
+                                        customer_id,
+                                        ephemeral_key_secret
+                                );
+                                PaymentSheet.Configuration configuration = new PaymentSheet.Configuration.Builder("My ATB")
+                                        .customer(customerConfig)
+                                        .allowsDelayedPaymentMethods(true)
+                                        .build();
+
+                                paymentSheet.presentWithPaymentIntent(
+                                        paymentIntentClientSecret,
+                                        configuration
+                                );
+
                             }
 
                         } catch (JSONException e) {
@@ -456,7 +483,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -472,8 +499,78 @@ public abstract class CommonActivity extends BaseActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         AppController.getInstance().addToRequestQueue(myRequest, "tag");
+        // Paypal payment
+//        if(type == 1){
+//            api_link = API.ADD_PP_SUB;
+//        }else if(type == 0){
+//            api_link = API.MAKE_PP_PAYMENT;
+//        }
+//        showProgress();
+//        StringRequest myRequest = new StringRequest(
+//                Request.Method.POST,
+//                api_link ,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String json) {
+//                        closeProgress();
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(json);
+//                            if(!jsonObject.getBoolean("result"))
+//                                showAlertDialog(jsonObject.getString("msg"));
+//                            else {
+//                                String id ="";
+//                                if(type ==0 ) {
+//                                    JSONArray jsonArray = jsonObject.getJSONArray("msg");
+//                                    for (int i = 0; i < jsonArray.length(); i++) {
+//                                        JSONObject object = jsonArray.getJSONArray(i).getJSONObject(0);
+//                                        if (object.getString("transaction_type").equals("Sale")) {
+//                                            id = object.getString("id");
+//                                            break;
+//                                        }
+//
+//                                    }
+//                                }
+//                                finishPayment(id);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        closeProgress();
+//                        //showToast(error.getMessage());
+//
+//                    }
+//                }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params  =   payment_params;
+//                return params;
+//            }
+//        };
+//        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+//                10000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
+    private void onPaymentSheetResult(PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Log.d("aaaaa","Canceled");
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Log.e("App", "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            // Display for example, an order confirmation screen
+            finishPayment("");
+        }
+    }
     public void processPayment(String price, String clicent_id, String clicnet_token,NewsFeedEntity newsFeedEntity,int deliveryOption,ArrayList<String> selected_Variation){
 
     }
@@ -713,7 +810,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -813,7 +910,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -848,7 +945,7 @@ public abstract class CommonActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1013,6 +1110,128 @@ public abstract class CommonActivity extends BaseActivity {
         }
     }
     public void successRelogin(){
+
+    }
+
+    public void retrieveCard(){
+
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.RETRIVE_CARD,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            Log.d("aaaa",json);
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+//                                Commons.g_user.setBt_paypal_account(jsonObject.getString("msg"));
+                                Boolean charge_enable = jsonObject.getJSONObject("extra").getBoolean("charges_enabled");
+                                if(charge_enable)
+                                    successAddCard();
+                                else{
+                                    GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+                                    confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+                                        @Override
+                                        public void onConfirm() {
+                                            addCard();
+                                        }
+                                    },"Setup Payment card", "To be able to use the card payment method and take payment for your item directly in the app you will need to add your card.","Add Card", "Cancel");
+                                    confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                                }
+                            }else {
+//                                showAlertDialog(jsonObject.getString("msg"));
+                                GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+                                confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        addCard();
+                                    }
+                                },"Setup Payment card", "To be able to use the card payment method and take payment for your item directly in the app you will need to add your card.","Add Card", "Cancel");
+                                confirmDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        //showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> payment_params = new HashMap<>();
+                payment_params.put("token",Commons.token);
+                return payment_params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+    public void addCard(){
+
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.ADD_CARD,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+                        try {
+                            Log.d("aaaa",json);
+                            JSONObject jsonObject = new JSONObject(json);
+                            if(jsonObject.getBoolean("result")){
+                                String account_link = jsonObject.getJSONObject("extra").getString("account_link");
+                                Commons.g_user.setStripe_connect_account(jsonObject.getJSONObject("extra").getString("connect_id"));
+                                InputCardDetail(account_link);
+                            }else {
+                                showAlertDialog(jsonObject.getString("msg"));
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        //showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> payment_params = new HashMap<>();
+                payment_params.put("token",Commons.token);
+                return payment_params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+
+    public void successAddCard(){
+
+    }
+    public void InputCardDetail(String link){
 
     }
 

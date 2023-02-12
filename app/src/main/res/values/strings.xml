@@ -100,7 +100,7 @@
     <string name="payment_option">Payment Options</string>
     <string name="payment_description">Please select the options you"'"d like to be paid with</string>
     <string name="cash">Cash on collection</string>
-    <string name="paypal">Paypal</string>
+    <string name="paypal">Card</string>
     <string name="delivery_option">Delivery Options</string>
     <string name="delivery_option_description">Select with options for delivery will you allow this product have </string>
     <string name="free_postage">Free postage</string>
@@ -220,7 +220,7 @@
     <string name="deposit">Deposit</string>
     <string name="payment_pending">Payment Pending</string>
     <string name="have_user_cash">Has the user paid by cash</string>
-    <string name="request_paypal">Request Payment by Paypal</string>
+    <string name="request_paypal">Request Payment by card</string>
     <string name="request_payment1">Request Payment</string>
     <string name="request_change">Request a Change</string>
     <string name="request_rating">Request Rating</string>
@@ -321,5 +321,7 @@
     <string name="no_internet">No internet connection</string>
     <string name="message_not_sent">Message not sent</string>
     <string name="lorem_ipsum_long" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pharetra blandit nisi in porta. Suspendisse sed libero iaculis, posuere nunc id, dictum lectus. Integer sagittis nulla vitae nisl ornare porta. Maecenas ut sagittis erat. Quisque egestas eu lorem ac facilisis. Nulla ultricies enim vel arcu scelerisque viverra.</string>
+    <string name="card_stripe"><b>Card</b> powered by <b>Stripe</b></string>
+
 
 </resources>

@@ -226,7 +226,7 @@ public class CreateBooking2Activity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -358,7 +358,7 @@ public class CreateBooking2Activity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

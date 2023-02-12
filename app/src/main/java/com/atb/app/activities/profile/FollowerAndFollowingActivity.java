@@ -160,7 +160,7 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -294,7 +294,7 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -351,7 +351,7 @@ public class FollowerAndFollowingActivity extends CommonActivity implements View
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

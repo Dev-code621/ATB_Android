@@ -191,7 +191,7 @@ public class SearchActivity extends CommonActivity implements View.OnClickListen
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

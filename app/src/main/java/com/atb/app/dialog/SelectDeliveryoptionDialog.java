@@ -98,6 +98,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
         }if(delivery_cost -1>=0){
             postage = true;
         }
+//        txv_description.setText(newsFeedEntity.getPost_location());
 
         txv_deliver.setText("+£" + newsFeedEntity.getDelivery_cost());
 
@@ -186,7 +187,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_postage));
             txv_type.setText("Free postage");
-            txv_description.setText(getContext().getResources().getString(R.string.str_postage) +" " +  newsFeedEntity.getPost_location());
+//            txv_description.setText(newsFeedEntity.getPost_location());
             selected_type = 1;
 
         }else if(type ==1){
@@ -196,7 +197,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_collect));
             txv_type.setText("Buyer Collects");
-            txv_description.setText(getContext().getResources().getString(R.string.str_collect));
+//            txv_description.setText("Please see location of the item");
             selected_type = 3;
         }else if(type ==2){
             if(!deliver){
@@ -205,7 +206,7 @@ public class SelectDeliveryoptionDialog extends DialogFragment {
             }
             imv_select.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ico_deliver));
             txv_type.setText("Deliver by Post");
-            txv_description.setText("This product includes delivery cost £" + String.format("%.2f",Double.parseDouble(newsFeedEntity.getDelivery_cost()) )+ " at your current location:" +" " +  newsFeedEntity.getPost_location());
+//            txv_description.setText( newsFeedEntity.getPost_location());
             txv_cost.setText(newsFeedEntity.getDelivery_cost());
             selected_type = 5;
 

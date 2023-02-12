@@ -256,7 +256,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -431,7 +431,20 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                         @Override
                         public void onPurchase() {
                             ArrayList<String> selected_Variation = new ArrayList<>();
-                            getPaymentToken(String.valueOf(newsFeedEntity.getDeposit()),newsFeedEntity,0,selected_Variation);
+                            payment_params.clear();
+                            payment_params.put("token",Commons.token);
+                            payment_params.put("amount",String.valueOf(newsFeedEntity.getDeposit()));
+                            payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
+                            payment_params.put("is_business","1");
+                            payment_params.put("quantity","1");
+                            payment_params.put("service_id",String.valueOf(newsFeedEntity.getService_id()));
+                            payment_params.put("created_by","0");
+                            payment_params.put("business_user_id",String.valueOf(newsFeedEntity.getUser_id()));
+                            payment_params.put("booking_datetime", String.valueOf(bookingEntity.getBooking_datetime()));
+                            payment_params.put("total_cost",String.valueOf(newsFeedEntity.getPrice()));
+                            payment_params.put("is_reminder_enabled","0");
+
+                            paymentProcessing(payment_params,0);
                         }
                     },newsFeedEntity);
                     depositDialog.show(getSupportFragmentManager(), "DeleteMessage");
@@ -451,7 +464,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
         payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
         payment_params.put("is_business","1");
         payment_params.put("quantity","1");
-        payment_params.put("serviceId",String.valueOf(newsFeedEntity.getService_id()));
+        payment_params.put("service_id",String.valueOf(newsFeedEntity.getService_id()));
         DropInRequest dropInRequest = new DropInRequest()
                 .clientToken(clicnet_token)
                 .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
@@ -513,7 +526,21 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
 
     @Override
     public void finishPayment(String transaction_id) {
-        createBooking(transaction_id);
+        ServiceBookingSuccessDialog serviceBookingSuccessDialog = new ServiceBookingSuccessDialog();
+        serviceBookingSuccessDialog.setOnConfirmListener(new ServiceBookingSuccessDialog.OnConfirmListener() {
+            @Override
+            public void onPurchase() {
+                setResult(-200);
+                goTo(BookFromPostActivity.this,MyBookingActivity.class,true);
+            }
+            @Override
+            public void returnMyATB() {
+                setResult(-200);
+                finish(BookFromPostActivity.this);
+            }
+        },newsFeedEntity);
+        serviceBookingSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+
     }
 
     void createBooking(String transaction_id){
@@ -525,13 +552,25 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onResponse(String json) {
                         try {
+                            closeProgress();
                             JSONObject jsonObject = new JSONObject(json);
-                            if(jsonObject.getBoolean("result")){
+                            if(jsonObject.getBoolean("result")) {
                                 String booking_id = jsonObject.getJSONObject("extra").getString("id");
-                                updateTransaction(transaction_id,booking_id);
-                            }else {
-                                closeProgress();
-
+//                                updateTransaction(transaction_id,booking_id);
+                                ServiceBookingSuccessDialog serviceBookingSuccessDialog = new ServiceBookingSuccessDialog();
+                                serviceBookingSuccessDialog.setOnConfirmListener(new ServiceBookingSuccessDialog.OnConfirmListener() {
+                                    @Override
+                                    public void onPurchase() {
+                                        setResult(-200);
+                                        goTo(BookFromPostActivity.this,MyBookingActivity.class,true);
+                                    }
+                                    @Override
+                                    public void returnMyATB() {
+                                        setResult(-200);
+                                        finish(BookFromPostActivity.this);
+                                    }
+                                },newsFeedEntity);
+                                serviceBookingSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
                             }
                         }catch (Exception e){
 
@@ -542,7 +581,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -556,6 +595,60 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                 params.put("is_reminder_enabled", "0");
                 params.put("total_cost", newsFeedEntity.getPrice());
                 params.put("user_id", String.valueOf(Commons.g_user.getId()));
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
+    }
+
+    void checkout( Map<String, String> params){
+        showProgress();
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.MAKE_STRIPE_PAYMENT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        closeProgress();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            Log.d("aaaaa",jsonObject.toString());
+                            if(jsonObject.getBoolean("result")){
+                                ServiceBookingSuccessDialog serviceBookingSuccessDialog = new ServiceBookingSuccessDialog();
+                                serviceBookingSuccessDialog.setOnConfirmListener(new ServiceBookingSuccessDialog.OnConfirmListener() {
+                                    @Override
+                                    public void onPurchase() {
+                                        setResult(-200);
+                                        goTo(BookFromPostActivity.this,MyBookingActivity.class,true);
+                                    }
+                                    @Override
+                                    public void returnMyATB() {
+                                        setResult(-200);
+                                        finish(BookFromPostActivity.this);
+                                    }
+                                },newsFeedEntity);
+                                serviceBookingSuccessDialog.show(getSupportFragmentManager(), "DeleteMessage");
+                            }
+                        }catch (Exception e){
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        //showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
                 return params;
             }
         };
@@ -602,7 +695,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -664,7 +757,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -739,7 +832,7 @@ public class BookFromPostActivity extends CommonActivity implements View.OnClick
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

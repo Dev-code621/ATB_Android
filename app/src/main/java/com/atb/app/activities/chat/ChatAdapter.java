@@ -1,7 +1,5 @@
 package com.atb.app.activities.chat;
 
-import static com.applozic.mobicommons.commons.core.utils.DateUtils.isSameDay;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -18,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applozic.mobicommons.ApplozicService;
-import com.applozic.mobicommons.commons.core.utils.Utils;
 import com.atb.app.R;
 import com.atb.app.activities.register.CreateFeedActivity;
 import com.atb.app.commons.Commons;
@@ -79,10 +75,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             holder.txv_message2.setVisibility(View.VISIBLE);
             holder.imv_imgmsg2.setVisibility(View.GONE);
             holder.txv_time2.setText(getFormattedDateAndTime(context,
-                    message.getCreateAt()/10000,
-                    R.string.JUST_NOW,
-                    R.plurals.MINUTES,
-                    R.plurals.HOURS));
+                    message.getCreateAt()/10000));
 
             if(message.getMessageType().equals("Image")){
                 holder.txv_message2.setVisibility(View.GONE);
@@ -108,10 +101,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             holder.txv_message1.setVisibility(View.VISIBLE);
             holder.imv_imgmsg1.setVisibility(View.GONE);
             holder.txv_time1.setText(getFormattedDateAndTime(context,
-                    message.getCreateAt()/10000,
-                    R.string.JUST_NOW,
-                    R.plurals.MINUTES,
-                    R.plurals.HOURS));
+                    message.getCreateAt()/10000));
             holder.lyt_friend.setBackground(context.getResources().getDrawable(R.drawable.bg_balloon_g));
             if(message.getMessageType().equals("Image")){
                 holder.txv_message1.setVisibility(View.GONE);
@@ -165,36 +155,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public static String getFormattedDateAndTime(Context context, Long timestamp, int justNow, int min, int hr) {
-        boolean sameDay = isSameDay(timestamp);
+    public static String getFormattedDateAndTime(Context context, Long timestamp) {
+
         Date date = new Date(timestamp);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
-        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM");
-        Date newDate = new Date();
-
-        try {
-            if (sameDay) {
-                long currentTime = newDate.getTime() - date.getTime();
-                long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(currentTime);
-                long diffHours = TimeUnit.MILLISECONDS.toHours(currentTime);
-                if (diffMinutes <= 1 && diffHours == 0) {
-                    return Utils.getString(context, justNow);
-                }
-                if (diffMinutes <= 59 && diffHours == 0) {
-                    return ApplozicService.getContext(context).getResources().getQuantityString(min, (int) diffMinutes, diffMinutes);
-                }
-
-                if (diffMinutes > 59 && diffHours <= 2) {
-                    return ApplozicService.getContext(context).getResources().getQuantityString(hr, (int) diffHours, diffHours);
-                }
-                return simpleDateFormat.format(date);
-            }
-            return fullDateFormat.format(date);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd MMM hh:mm aa");
+        return fullDateFormat.format(date);
     }
 
 }

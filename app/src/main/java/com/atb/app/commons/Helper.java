@@ -1,5 +1,13 @@
 package com.atb.app.commons;
 
+import static com.atb.app.BuildConfig.DEBUG;
+import static com.atb.app.application.AppController.TAG;
+import static com.atb.app.commons.RealPathUtil.getDataColumn;
+import static com.atb.app.commons.RealPathUtil.isDownloadsDocument;
+import static com.atb.app.commons.RealPathUtil.isExternalStorageDocument;
+import static com.atb.app.commons.RealPathUtil.isGooglePhotosUri;
+import static com.atb.app.commons.RealPathUtil.isMediaDocument;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -25,7 +33,6 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 
 import com.atb.app.R;
-import com.atb.app.util.BitmapUtils;
 
 import java.io.File;
 import okhttp3.MediaType;
@@ -77,6 +84,74 @@ public class Helper {
         return dp * context.getResources().getDisplayMetrics().density;
     }
 
+    public static String getPath(final Context context, final Uri uri) {
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+                try {
+                    final String id = DocumentsContract.getDocumentId(uri);
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return DocumentsContract.getDocumentId(uri);
+                }
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String getUriRealPathAboveKitkat(Context ctx, Uri uri) {
@@ -281,61 +356,6 @@ public class Helper {
     public static String[] thumbColumns = { MediaStore.Video.Thumbnails.DATA };
     public static String[] mediaColumns = { MediaStore.Video.Media._ID };
 
-    public static String getThumbnailPathForLocalFile(Activity context,
-                                                      Uri fileUri) {
-
-        long fileId = getFileId(context, fileUri);
-
-        MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(),
-                fileId, MediaStore.Video.Thumbnails.MICRO_KIND, null);
-
-        Cursor thumbCursor = null;
-        try {
-
-            thumbCursor = context.managedQuery(
-                    MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
-                    thumbColumns, MediaStore.Video.Thumbnails.VIDEO_ID + " = "
-                            + fileId, null, null);
-
-            if (thumbCursor.moveToFirst()) {
-                String thumbPath = thumbCursor.getString(thumbCursor
-                        .getColumnIndex(MediaStore.Video.Thumbnails.DATA));
-
-                return thumbPath;
-            }
-
-        } finally {
-        }
-
-        return null;
-    }
-
-    public static File getThumbnailPathForLocalFile(Activity context,
-                                                    String filepath) {
-        Bitmap thumb = null;
-
-        File file = new File(filepath);
-
-        if (!file.exists())
-            return null;
-
-        try {
-            thumb = ThumbnailUtils.createVideoThumbnail(filepath,
-                    MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-
-            String filename = BitmapUtils.getVideoThumbFolderPath() + Commons.fileNameWithoutExtFromPath(filepath) + ".png";
-            File thumbFile = new File(filename);
-
-            if (thumb != null)
-                BitmapUtils.saveOutput(thumbFile, thumb);
-            return thumbFile;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
     public static long getFileId(Activity context, Uri fileUri) {
 

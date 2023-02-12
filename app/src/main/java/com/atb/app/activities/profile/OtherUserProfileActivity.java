@@ -1,5 +1,6 @@
 package com.atb.app.activities.profile;
 
+import androidx.activity.ComponentActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -25,10 +26,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.applozic.mobicomkit.contact.AppContactService;
-import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
-import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
-import com.applozic.mobicommons.people.contact.Contact;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.PurchasesActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
@@ -59,6 +56,8 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import org.json.JSONObject;
 
@@ -121,6 +120,7 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
         lyt_post.setOnClickListener(this);
         lyt_following_on.setOnClickListener(this);
         lyt_on.setOnClickListener(this);
+        txv_id.setOnClickListener(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -278,6 +278,16 @@ public class OtherUserProfileActivity extends CommonActivity implements View.OnC
         switch (v.getId()) {
             case R.id.imv_back:
                 finish(this);
+                break;
+            case R.id.txv_id:
+                if(userType == 1){
+                    String url = txv_id.getText().toString();
+                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                        url = "http://" + url;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url) );
+                    startActivity(browserIntent);
+                }
+
                 break;
             case R.id.imv_rating:
                 Gson gson = new Gson();

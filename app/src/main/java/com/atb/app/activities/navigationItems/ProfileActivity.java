@@ -29,13 +29,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.MainActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
+import com.atb.app.activities.profile.ProfileUserNavigationActivity;
 import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.activities.register.Signup1Activity;
 import com.atb.app.activities.register.forgotPassword.ForgotPasswordActivity;
@@ -44,10 +48,14 @@ import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.commons.Helper;
+import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.dialog.PickImageDialog;
 import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.fragement.PostsFragment;
 import com.atb.app.fragement.StoreFragment;
+import com.atb.app.model.UserModel;
+import com.atb.app.preference.PrefConst;
+import com.atb.app.preference.Preference;
 import com.atb.app.util.ImageUtils;
 import com.atb.app.util.MediaPicker;
 import com.atb.app.util.MultiPartRequest;
@@ -72,6 +80,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zxy.tiny.Tiny;
 import com.zxy.tiny.callback.FileCallback;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -88,7 +97,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
     ImageView imv_profile,imv_selector2,imv_selector1;
     FrameLayout lyt_addpicture;
     EditText edt_firstname,edt_lastname,edt_email;
-    TextView txv_update,txv_male,txv_female,txv_location,edt_birthday,txv_resetPassword;
+    TextView txv_update,txv_male,txv_female,txv_location,edt_birthday,txv_resetPassword,txv_closeaccount;
     String photoPath = "",birthday = "";
     int gender = 0 ;
     private ImageUtils imageUtils;
@@ -111,6 +120,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
         edt_birthday = findViewById(R.id.edt_birthday);
         txv_update = findViewById(R.id.txv_update);
         txv_resetPassword = findViewById(R.id.txv_resetPassword);
+        txv_closeaccount = findViewById(R.id.txv_closeaccount);
         lyt_back.setOnClickListener(this);
         txv_female.setOnClickListener(this);
         txv_male.setOnClickListener(this);
@@ -119,6 +129,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
         edt_birthday.setOnClickListener(this);
         imv_profile.setOnClickListener(this);
         txv_resetPassword.setOnClickListener(this);
+        txv_closeaccount.setOnClickListener(this);
         Keyboard();
         imageUtils = new ImageUtils(this);
         initLayout();
@@ -207,8 +218,63 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
             case R.id.txv_resetPassword:
                 goTo(this, ForgotPasswordActivity.class,false);
                 break;
+            case R.id.txv_closeaccount:
+                ConfirmDialog confirmDialog = new ConfirmDialog();
+                confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        closeAccount();
+                    }
+                },"Would you like to close this account?");
+                confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
 
         }
+    }
+
+    void closeAccount(){
+        StringRequest myRequest = new StringRequest(
+                Request.Method.POST,
+                API.CLOSEACCOUNT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String json) {
+                        Log.d("delete account ", json);
+                        // closeProgress();
+
+                        try {
+                            Preference.getInstance().put(ProfileActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
+                            Preference.getInstance().put(ProfileActivity.this, PrefConst.PREFKEY_USERPWD, "");
+
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }catch (Exception e){
+                            Log.d("aaaaaa",e.toString());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgress();
+                        //showToast(error.getMessage());
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("token", Commons.token);
+
+                return params;
+            }
+        };
+        myRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        AppController.getInstance().addToRequestQueue(myRequest, "tag");
     }
 
     void updateProfile(){

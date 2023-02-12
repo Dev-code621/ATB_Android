@@ -67,7 +67,7 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
             }
         }
         if(subscriptionType>0){
-            txv_next.setText("Upgrade Now Only £4.99/Month");
+            txv_next.setText("Upgrade Now Only £0.99/Week");
         }
         for(int i =0;i<Constants.slideImage.length;i++){
             SlideModel slideModel = new SlideModel();
@@ -95,7 +95,10 @@ public class UpgradeBusinessSplashActivity extends CommonActivity {
                 if(subscriptionType == 0)
                     goTo(UpgradeBusinessSplashActivity.this, UpdateBusinessActivity.class,true);
                 else {
-                    getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
+//                    getPaymentToken("4.99", new NewsFeedEntity(),0,new ArrayList<>());
+                    payment_params.clear();
+                    payment_params.put("token", Commons.token);
+                    paymentProcessing(payment_params,1);
                 }
             }
         });

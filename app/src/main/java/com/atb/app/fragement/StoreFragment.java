@@ -198,7 +198,7 @@ public class StoreFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -291,7 +291,7 @@ public class StoreFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -331,7 +331,10 @@ public class StoreFragment extends Fragment {
                     ((CommonActivity)context).gotochat(context,newsFeedEntities.get(posstion).getPoster_profile_type(),newsFeedEntities.get(posstion).getUserModel());
 
                 }else {
-                    ((CommonActivity)context).getPaymentToken(String.valueOf(price),newsFeedEntities.get(posstion),deliveryOption,selected_Variation);
+//                    ((CommonActivity)context).getPaymentToken(String.valueOf(price),newsFeedEntities.get(posstion),deliveryOption,selected_Variation);
+                    Map<String, String> payment_params = new HashMap<>();
+                    payment_params.put("token", Commons.token);
+                    ((CommonActivity)context).paymentProcessing(payment_params,1);
                 }
             }
         },newsFeedEntities.get(posstion),type,selected_Variation);

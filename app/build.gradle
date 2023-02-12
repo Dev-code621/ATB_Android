@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.atb.app"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -210,7 +210,7 @@ dependencies {
     implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2'
 
     //applozic chat sdk
-    implementation 'com.applozic.communication.uiwidget:mobicomkitui:5.98'
+//    implementation 'com.applozic.communication.uiwidget:mobicomkitui:5.98'
 
     //calendaly view
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
@@ -271,6 +271,9 @@ dependencies {
     implementation("com.otaliastudios:autocomplete:1.1.0")
     // image picker
 //    implementation 'com.github.braver-tool:Android11FilePicker:1.0.0'
+    //stripe
+    implementation 'com.stripe:stripe-android:20.5.0'
+
 
 
 }

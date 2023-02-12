@@ -49,6 +49,8 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+//        TerminalApplicationDelegate.onCreate(this);
+
         MultiDex.install(this);
         Tiny.getInstance().init(this);
         // Branch logging for debugging

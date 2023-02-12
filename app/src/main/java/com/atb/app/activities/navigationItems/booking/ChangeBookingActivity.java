@@ -101,7 +101,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
                 defaultBooking = gson.fromJson(feed, BookingEntity.class);
                 newsFeedEntity = defaultBooking.getNewsFeedEntity();
                 userModel.setId(newsFeedEntity.getUser_id());
-                userModel.setBusinessModel(defaultBooking.getBusinessModel());
+                userModel.setBusinessModel(defaultBooking.getBusinessModel().getBusinessModel());
             }
         }
 
@@ -229,7 +229,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -452,7 +452,7 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

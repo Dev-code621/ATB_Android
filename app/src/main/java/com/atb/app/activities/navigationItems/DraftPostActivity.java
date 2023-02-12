@@ -165,7 +165,7 @@ public class DraftPostActivity extends CommonActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

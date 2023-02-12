@@ -52,12 +52,14 @@ public class BusinessItemAdapter extends RecyclerView.Adapter<BusinessItemAdapte
 
 
         if(position>=roomData.size()){
+            holder.lyt_container.setVisibility(View.GONE);
             holder.imv_profile.setVisibility(View.GONE);
             holder.imv_add.setVisibility(View.VISIBLE);
             holder.txv_add.setVisibility(View.VISIBLE);
             holder.txv_name.setVisibility(View.GONE);
             holder.txv_name.setText("Boost your\nBusiness");
         }else {
+            holder.lyt_container.setVisibility(View.VISIBLE);
             UserModel boostModel = roomData.get(position);
             holder.imv_profile.setVisibility(View.VISIBLE);
             holder.imv_add.setVisibility(View.GONE);

@@ -55,7 +55,7 @@ public class RequestPaypalDialog extends DialogFragment {
         if(type==0){
 
         }else {
-            txv_title.setText("Pay now with your\nPaypal account");
+            txv_title.setText("Pay now with your\nStripe account");
             txv_description.setText("You can pay now the complete the bill from your phone. You can also pay by cash the day of the service");
             txv_button.setText("Pay £" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()));
         }

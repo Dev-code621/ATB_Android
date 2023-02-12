@@ -71,7 +71,7 @@ public class PaymentBookingDialog extends DialogFragment {
         TextView txv_cash2 = view.findViewById(R.id.txv_cash2);
         ImageView imv_cash2 = view.findViewById(R.id.imv_cash2);
         TextView txv_pay = view.findViewById(R.id.txv_pay);
-
+        LinearLayout lyt_fee = view.findViewById(R.id.lyt_fee);
         imv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,8 +91,11 @@ public class PaymentBookingDialog extends DialogFragment {
                 imv_cash2.setColorFilter(getResources().getColor(R.color.head_color), PorterDuff.Mode.SRC_IN);
                 txv_cash1.setTextColor(getResources().getColor(R.color.txt_color));
                 txv_cash2.setTextColor(getResources().getColor(R.color.head_color));
-                txv_pay.setText("Pay £" +String.format("%.2f",total_price) );
+                lyt_fee.setVisibility(View.VISIBLE);
+                double  price = total_price + (total_price*0.036 + total_price*0.014 + 0.2);
+                txv_pay.setText("Pay £" +String.format("%.2f",price) );
                 payment_type = 0;
+                lyt_fee.setVisibility(View.VISIBLE);
 
             }
         });
@@ -110,7 +113,7 @@ public class PaymentBookingDialog extends DialogFragment {
                 txv_paypal.setTextColor(getResources().getColor(R.color.txt_color));
 //                txv_pay.setText("Be in touch with the seller");
                 payment_type = 1;
-
+                lyt_fee.setVisibility(View.GONE);
             }
         });
         txv_pay.setOnClickListener(new View.OnClickListener() {

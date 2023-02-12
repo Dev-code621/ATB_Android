@@ -116,7 +116,7 @@ public class InputVerificationCodeActivity extends CommonActivity implements Vie
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -155,7 +155,7 @@ public class InputVerificationCodeActivity extends CommonActivity implements Vie
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

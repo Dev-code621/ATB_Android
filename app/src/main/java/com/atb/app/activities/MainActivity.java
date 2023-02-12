@@ -353,7 +353,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -479,7 +479,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -586,7 +586,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -668,7 +668,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -847,7 +847,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

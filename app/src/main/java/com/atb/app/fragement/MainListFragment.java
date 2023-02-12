@@ -117,7 +117,7 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

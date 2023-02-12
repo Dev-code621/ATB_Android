@@ -105,6 +105,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
     boolean editable =false;
     NewsFeedEntity newsFeedEntity = new NewsFeedEntity();
     int isDraft = 0;
+    String location = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,7 +190,8 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                         cash = true;
                         toggle_cash.setToggleOn();
                     }
-                    txv_location.setText(newsFeedEntity.getPost_location());
+                    location = newsFeedEntity.getPost_location();
+                    txv_location.setText(newsFeedEntity.getPost_location().split("\\|")[0]);
 
                     int delivery_option = newsFeedEntity.getDelivery_option();
                     if(delivery_option-5>=0){
@@ -748,7 +750,7 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -875,7 +877,8 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
             maxImagecount = 9;
             initLayout();
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.location);
+            location = Commons.location;
+            txv_location.setText(Commons.location.split("\\|")[0]);
         }
     }
 

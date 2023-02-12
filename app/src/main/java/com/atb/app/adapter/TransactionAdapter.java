@@ -1,6 +1,8 @@
 package com.atb.app.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.NotificationActivity;
 import com.atb.app.activities.navigationItems.TransactionHistoryActivity;
+import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.commons.Commons;
 import com.atb.app.model.NotiEntity;
 import com.atb.app.model.TransactionEntity;
@@ -76,13 +79,17 @@ public class TransactionAdapter extends BaseAdapter {
 //        holder.txv_title.setText(noti_item.getTitle());
 //        holder.txv_content.setText(noti_item.getContent());
 //        holder.txv_time.setText(noti_item.getTime());
-        String imv_url = Commons.g_user.getImvUrl();
-        String username = Commons.g_user.getUserName();
-        if(transactionEntity.getIs_business() == 1) {
-            imv_url = Commons.g_user.getBusinessModel().getBusiness_logo();
-            username = Commons.g_user.getBusinessModel().getBusiness_name();
+        String imv_url = "";
+        String username = "ATB";
+        if(!transactionEntity.getPurchase_type().equals("subscription")){
+            imv_url = transactionEntity.getUserModel().getImvUrl();
+            username =transactionEntity.getUserModel().getUserName();
+            if(transactionEntity.getIs_business() == 1) {
+                imv_url = transactionEntity.getUserModel().getBusinessModel().getBusiness_logo();
+                username = transactionEntity.getUserModel().getBusinessModel().getBusiness_name();
+            }
         }
-        Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate()
+        Glide.with(_context).load(imv_url).placeholder(R.drawable.logo).dontAnimate()
                 .apply(RequestOptions.bitmapTransform(
                         new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A8C3E7", Commons.glide_boder)))
                 .into(holder.imv_profile);
@@ -90,7 +97,9 @@ public class TransactionAdapter extends BaseAdapter {
         holder.txv_price.setText("£" + String.valueOf(Math.abs(transactionEntity.getAmount())));
         holder.txv_username.setText(username);
         holder.txv_time.setText(Commons.getDisplayDate4(transactionEntity.getCreated_at()));
-        holder.txv_category.setText(transactionEntity.getTransaction_type());
+        holder.txv_category.setText(transactionEntity.getPurchase_type());
+
+
         return convertView;
     }
 

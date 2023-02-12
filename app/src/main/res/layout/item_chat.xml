@@ -29,8 +29,6 @@
             android:layout_marginLeft="12dp"
             android:layout_marginTop="12dp"
             android:scaleType="centerCrop"
-            app:civ_border_width="0dp"
-            app:civ_border_color="#00000000"
             app:cardCornerRadius="15dp"
             app:cardUseCompatPadding="false">
 
@@ -129,9 +127,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="12dp"
             android:scaleType="centerCrop"
-            app:civ_border_width="0dp"
-            app:civ_border_color="#00000000"
-            app:cardCornerRadius="15dp"
             app:cardUseCompatPadding="false"
             android:layout_marginTop="10dp">
 

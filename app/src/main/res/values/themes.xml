@@ -55,8 +55,8 @@
 
          <item name="colorControlActivated">@color/head_color</item>
          <item name="colorControlHighlight">@color/head_color</item>
-         <item name="android:textColorPrimary">@color/applozic_theme_primary_text</item>
-         <item name="android:textColorSecondary">@color/applozic_theme_secondary_text</item>
+<!--         <item name="android:textColorPrimary">@color/applozic_theme_primary_text</item>-->
+<!--         <item name="android:textColorSecondary">@color/applozic_theme_secondary_text</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

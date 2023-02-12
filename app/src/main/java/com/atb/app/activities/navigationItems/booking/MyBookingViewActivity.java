@@ -54,6 +54,7 @@ import com.fxn.pix.Pix;
 import com.google.gson.Gson;
 import com.zcw.togglebutton.ToggleButton;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,6 +78,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
     TextView txv_finish;
     BookingEntity bookingEntity = new BookingEntity();
     Map<String, String> payment_params = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
     void loadLayout(){
         String imv_url = "";
         if(bookingEntity.getUser_id()>=0) {
-            imv_url = bookingEntity.getBusinessModel().getBusiness_logo();
+            imv_url = bookingEntity.getBusinessModel().getBusinessModel().getBusiness_logo();
         }
         Glide.with(_context).load(imv_url).placeholder(R.drawable.profile_pic).dontAnimate().apply(RequestOptions.bitmapTransform(
                 new RoundedCornersTransformation(_context, Commons.glide_radius, Commons.glide_magin, "#A6BFDE", Commons.glide_boder))).into(imv_profile);
@@ -131,8 +133,8 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
         txv_date.setText(getDisplayDate(bookingEntity.getBooking_datetime()));
         txv_time.setText(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()));
         txv_booking_price.setText("£" + bookingEntity.getNewsFeedEntity().getPrice());
-        txv_deposit.setText("£" + String.valueOf(bookingEntity.getPaid_amount()));
-        txv_pending_funds.setText("£" + String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()));
+        txv_deposit.setText("£" +  String.valueOf(new DecimalFormat("0.00").format(bookingEntity.getPaid_amount())) );
+        txv_pending_funds.setText("£" + String.valueOf(new DecimalFormat("0.00").format(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount())));
         txv_booking_description.setText(bookingEntity.getNewsFeedEntity().getDescription());
         if(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount() ==0)
             lyt_request_paypal.setVisibility(View.GONE);
@@ -150,7 +152,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
             case R.id.lyt_message:
                 if(bookingEntity.getUser_id()>0) {
                     UserModel userModel = new UserModel();
-                    userModel.setBusinessModel(bookingEntity.getBusinessModel());
+                    userModel.setBusinessModel(bookingEntity.getBusinessModel().getBusinessModel());
                     userModel.setId(bookingEntity.getBusiness_user_id());
                     gotochat(this, 1, userModel);
                 }
@@ -163,7 +165,16 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                 requestPaypalDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
                     @Override
                     public void onConfirm() {
-                        getPaymentToken( String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()),bookingEntity.getNewsFeedEntity(),0, new ArrayList<>());
+//                        getPaymentToken( String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()),bookingEntity.getNewsFeedEntity(),0, new ArrayList<>());
+                        payment_params.clear();
+                        payment_params.put("token",Commons.token);
+                        payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+                        payment_params.put("amount",String.valueOf(Double.parseDouble(bookingEntity.getNewsFeedEntity().getPrice()) - bookingEntity.getPaid_amount()));
+                        payment_params.put("toUserId", String.valueOf(bookingEntity.getNewsFeedEntity().getUser_id()));
+                        payment_params.put("booking_id", String.valueOf(bookingEntity.getId()));
+                        payment_params.put("is_business",String.valueOf(bookingEntity.getNewsFeedEntity().getPoster_profile_type() ));
+                        payment_params.put("quantity","1");
+                        paymentProcessing(payment_params,0);
                     }
                 });
                 requestPaypalDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
@@ -291,7 +302,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -348,7 +359,7 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

@@ -236,7 +236,7 @@ public class PinPointActivity extends CommonActivity implements View.OnClickList
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

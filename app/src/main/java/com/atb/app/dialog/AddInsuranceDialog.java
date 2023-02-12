@@ -76,7 +76,7 @@ public class AddInsuranceDialog extends DialogFragment {
             if (type == 0) {
                 txv_title.setText("Add Insurance");
                 txv_addtitle.setText("Add Insurance");
-                edt_company.setHint("Insurance Company");
+                edt_company.setHint("Insurance Type e.g. Public Liabilty");
                 edt_number.setHint("Insurance Number");
                 txv_time.setHint("Insurance Expiry");
             } else if (type == 1) {
@@ -90,7 +90,7 @@ public class AddInsuranceDialog extends DialogFragment {
             if (type == 0) {
                 txv_title.setText("Update Insurance");
                 txv_addtitle.setText("Update Insurance");
-                edt_company.setHint("Insurance Company");
+                edt_company.setHint("Insurance Type e.g. Public Liabilty");
                 edt_number.setHint("Insurance Number");
                 txv_time.setHint("Insurance Expiry");
             } else if (type == 1) {

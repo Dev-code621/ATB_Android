@@ -25,11 +25,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.applozic.mobicomkit.Applozic;
-import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
-import com.applozic.mobicomkit.api.account.user.User;
-import com.applozic.mobicomkit.listners.AlLoginHandler;
-import com.applozic.mobicomkit.listners.AlPushNotificationHandler;
+
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.BookingActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
@@ -280,7 +276,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -311,7 +307,7 @@ public class LoginActivity extends CommonActivity implements View.OnClickListene
     void parseResponse(String json,int type){
         try {
             JSONObject jsonObject = new JSONObject(json);
-            if(jsonObject.getBoolean("result")== false)
+            if(!jsonObject.getBoolean("result"))
                 showAlertDialog(jsonObject.getString("msg"));
             else {
                 Commons.token = jsonObject.getString("msg");

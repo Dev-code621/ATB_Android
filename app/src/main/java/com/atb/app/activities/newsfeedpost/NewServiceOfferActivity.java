@@ -30,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
+import com.atb.app.activities.profile.boost.ApprovePaymentActivity;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
 import com.atb.app.base.CommonActivity;
@@ -107,6 +108,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     ToggleButton toggle_duration;
     int isDraft = 0;
     int saveDraft = 0 ;
+    ImageView img_deposit,img_stripe;
+    String location;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +169,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         imv_profile = findViewById(R.id.imv_profile);
         imv_imageicon = findViewById(R.id.imv_imageicon);
         toggle_deposit = findViewById(R.id.toggle_deposit);
+        img_deposit = findViewById(R.id.img_deposit);
+        img_stripe = findViewById(R.id.img_stripe);
 
         imv_videothumnail.setOnClickListener(this);
         lyt_back.setOnClickListener(this);
@@ -180,6 +185,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         imv_back.setOnClickListener(this);
         txv_duration_minus.setOnClickListener(this);
         txv_duration_plus.setOnClickListener(this);
+        img_deposit.setOnClickListener(this);
+        img_stripe.setOnClickListener(this);
         if (getIntent() != null) {
             Bundle bundle = getIntent().getBundleExtra("data");
             if (bundle != null) {
@@ -394,7 +401,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             edt_price.setText(newsFeedEntity.getPrice());
             edt_deposit.setText(newsFeedEntity.getDeposit());
             candellation = Integer.parseInt(newsFeedEntity.getCancellations());
-            txv_location.setText(newsFeedEntity.getPost_location());
+            txv_location.setText(newsFeedEntity.getPost_location().split("\\|")[0]);
+            location = newsFeedEntity.getPost_location();
             txt_duration.setText(newsFeedEntity.getDuration());
             if(Double.parseDouble(newsFeedEntity.getDeposit())>0)
                 toggle_deposit.setToggleOn();
@@ -466,7 +474,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -576,6 +584,24 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 duration+= 0.5;
                 initLayout();
                 break;
+            case R.id.img_deposit:
+                ConfirmVariationDialog confirmBookingDialog = new ConfirmVariationDialog(1);
+                confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                    }
+                });
+                confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
+            case R.id.img_stripe:
+                confirmBookingDialog = new ConfirmVariationDialog(4);
+                confirmBookingDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                    }
+                });
+                confirmBookingDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+                break;
         }
     }
 
@@ -596,6 +622,9 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }else if(edt_price.getText().toString().length() ==0){
             showAlertDialog("Please input price.");
             return;
+        }else if(edt_deposit.getText().toString().length() >0 && Integer.parseInt(edt_deposit.getText().toString())<10){
+            showAlertDialog("Deposit amount need to start from 10£");
+            return;
         }else if(txv_location.getText().toString().length()==0){
             showAlertDialog("Please input the location");
             return;
@@ -603,17 +632,47 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             showAlertDialog("Please input payment option.");
             return;
         }
-        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+//        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
+//            GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
+//            confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
+//                @Override
+//                public void onConfirm() {
+//                    getPaymentToken();
+//                }
+//            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+//            confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
+//        }else
+//            postService();
+        if(Commons.g_user.getStripe_connect_account().length()>0){
+
+            retrieveCard();
+
+        }
+        else{
             GenralConfirmDialog confirmDialog = new GenralConfirmDialog();
             confirmDialog.setOnConfirmListener(new GenralConfirmDialog.OnConfirmListener() {
                 @Override
                 public void onConfirm() {
-                    getPaymentToken();
+                    addCard();
                 }
-            },"Setup Paypal Account", "To be able to use the PayPal payment method and take payment for your item directly in the app you will need to add your PayPal.","Add Paypal", "Cancel");
+            },"Setup Payment card", "To be able to use the card payment method and take payment for your item directly in the app you will need to add your card.","Add Card", "Cancel");
             confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
-        }else
-            postService();
+        }
+    }
+
+    @Override
+    public void successAddCard() {
+        super.successAddCard();
+        postService();
+    }
+
+    @Override
+    public void InputCardDetail(String link) {
+        super.InputCardDetail(link);
+        Bundle bundle = new Bundle();
+        bundle.putString("web_link",link);
+        startActivityForResult(new Intent(this, ApprovePaymentActivity.class).putExtra("data",bundle),1);
+        overridePendingTransition(0, 0);
     }
     @SuppressLint("SuspiciousIndentation")
     void postService(){
@@ -640,7 +699,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             params.put("deposit_amount", String.valueOf(deposit_amount));
             params.put("cancellations", String.valueOf(candellation));
             params.put("category_title", spiner_category_type.getSelectedItem().toString());
-            params.put("location_id", txv_location.getText().toString());
+            params.put("location_id", location);
             params.put("lat", String.valueOf(Commons.lat));
             params.put("lng", String.valueOf(Commons.lng));
             params.put("duration", String.valueOf(duration));
@@ -807,7 +866,10 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == 100) {
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            successAddCard();
+        }
+        else if (resultCode == Activity.RESULT_OK && requestCode == 100) {
             ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
             if(completedValue.size()>maxImagecount)return;
 
@@ -818,7 +880,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             videovalue = returnValue.get(0);
             reloadVideo();
         }else if(resultCode == Commons.location_code){
-            txv_location.setText(Commons.location);
+            location = Commons.location;
+            txv_location.setText(Commons.location.split("\\|")[0]);
         }else if (requestCode == REQUEST_PAYMENT_CODE) {
             if (resultCode == RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
@@ -877,7 +940,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -948,7 +1011,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

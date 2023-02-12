@@ -185,12 +185,12 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
     int REQUEST_EDITFEED =23232;
     Map<String, String> payment_params = new HashMap<>();
     int deliveryOption = 0;
-    TextView txv_buy_mesasge,txv_quantity,txv_condition;
+    TextView txv_quantity,txv_condition;
     ListView list_user;
     CommentUserListAdapter commentUserListAdapter;
     ArrayList<AutoCompleteModel>commentUser = new ArrayList<>();
    HashMap<int[], AutoCompleteModel>hashMap = new HashMap<>();
-
+ImageView txv_buy_mesasge;
     private Autocomplete mentionsAutocomplete;
 
     @Override
@@ -427,7 +427,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -477,7 +477,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -981,25 +981,31 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
         paymentBookingDialog.setOnConfirmListener(new PaymentBookingDialog.OnConfirmListener() {
             @Override
             public void onConfirm(int payment_type,double price) {
+                payment_params.clear();
+                payment_params.put("token",Commons.token);
+                payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
+                payment_params.put("is_business",String.valueOf(newsFeedEntity.getPoster_profile_type() ));
+                payment_params.put("quantity","1");
+                payment_params.put("delivery_option",String.valueOf(deliveryOption));
+                //amount with stripe
+                payment_params.put("amount",String.valueOf(price));
+
+                if(selected_Variation.size()>0){
+                    VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
+                    payment_params.put("variation_id",String.valueOf(variationModel.getId()));
+                    // payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
+                }else {
+                    payment_params.put("product_id",String.valueOf(newsFeedEntity.getProduct_id()));
+                }
                 if(payment_type ==1){
                    // gotochat(NewsDetailActivity.this,newsFeedEntity.getPoster_profile_type(),newsFeedEntity.getUserModel());
-                    payment_params.clear();
-                    payment_params.put("token",Commons.token);
-                    payment_params.put("toUserId", String.valueOf(newsFeedEntity.getUser_id()));
-                    payment_params.put("is_business",String.valueOf(newsFeedEntity.getPoster_profile_type() ));
-                    payment_params.put("quantity","1");
-                    payment_params.put("delivery_option",String.valueOf(deliveryOption));
-                    if(selected_Variation.size()>0){
-                        VariationModel variationModel = newsFeedEntity.productHasStock(selected_Variation);
-                        payment_params.put("variation_id",String.valueOf(variationModel.getId()));
-                        // payment_params.put("product_id",String.valueOf(variationModel.getProduct_id()));
-                    }else {
-                        payment_params.put("product_id",String.valueOf(newsFeedEntity.getProduct_id()));
-                    }
                     paymentProcessing(payment_params,2);
 
                 }else {
-                    getPaymentToken(String.valueOf(price),newsFeedEntity,deliveryOption,selected_Variation);
+                    //Paypal Payment
+//                    getPaymentToken(String.valueOf(price),newsFeedEntity,deliveryOption,selected_Variation);
+                    paymentProcessing(payment_params,0);
+
                 }
             }
         },newsFeedEntity,type,selected_Variation);
@@ -1102,7 +1108,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1305,7 +1311,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1361,7 +1367,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1404,7 +1410,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1451,7 +1457,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1495,7 +1501,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1708,7 +1714,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1758,7 +1764,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -1812,7 +1818,7 @@ public class NewsDetailActivity extends CommonActivity implements View.OnClickLi
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

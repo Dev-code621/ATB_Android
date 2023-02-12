@@ -150,6 +150,7 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         lyt_create_bio.setOnClickListener(this);
         lyt_item_sold.setOnClickListener(this);
         lyt_social_link.setOnClickListener(this);
+        txv_id.setOnClickListener(this);
 
         lyt_booking.setOnClickListener(this);
         imv_back.setOnClickListener(this);
@@ -344,6 +345,14 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
             case R.id.lyt_social_link:
                 drawer.closeDrawer(GravityCompat.END);
                 onShare();
+
+                break;
+            case R.id.txv_id:
+                String url = txv_id.getText().toString();
+                if (!url.startsWith("http://") && !url.startsWith("https://"))
+                    url = "http://" + url;
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url) );
+                startActivity(browserIntent);
 
                 break;
             case R.id.lyt_create_bio:

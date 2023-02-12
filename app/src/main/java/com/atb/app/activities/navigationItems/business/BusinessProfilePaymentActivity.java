@@ -65,12 +65,16 @@ public class BusinessProfilePaymentActivity extends CommonActivity implements Vi
                     finish(this);
                 break;
             case R.id.txv_terms:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://test.myatb.co.uk/landing"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://app.termly.io/document/terms-of-use-for-online-marketplace/cbadd502-052f-40a2-8eae-30b1bb3ae9b1"));
                 startActivity(browserIntent);
                 break;
             case R.id.lyt_paypal:
                 if(checkbox.isChecked()) {
-                    getPaymentToken("4.99", new NewsFeedEntity(), 0, new ArrayList<>());
+//                    getPaymentToken("4.99", new NewsFeedEntity(), 0, new ArrayList<>());
+                    payment_params.clear();
+                    payment_params.put("token", Commons.token);
+                    paymentProcessing(payment_params,1);
+
                 }else{
                     showAlertDialog("Please check T&C's");
                 }

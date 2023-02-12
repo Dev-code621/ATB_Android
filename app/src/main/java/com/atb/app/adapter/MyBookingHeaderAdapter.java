@@ -275,7 +275,7 @@ public class MyBookingHeaderAdapter extends SectioningAdapter {
         if(type == 1)
             holder.txv_price.setText(bookingEntity.getUserModel().getUserName());
         else
-            holder.txv_price.setText(bookingEntity.getBusinessModel().getBusiness_name());
+            holder.txv_price.setText(bookingEntity.getBusinessModel().getBusinessModel().getBusiness_name());
         holder.txv_time.setText(Commons.gettimeFromMilionSecond(bookingEntity.getBooking_datetime()));
         Calendar calendar=Calendar.getInstance();
         calendar.setTimeInMillis(bookingEntity.getBooking_datetime()*1000l);
@@ -291,6 +291,7 @@ public class MyBookingHeaderAdapter extends SectioningAdapter {
                 String bookingModel = gson.toJson(bookingEntity);
                 bundle = new Bundle();
                 bundle.putString("bookModel",bookingModel);
+                bundle.putString("business_logo",bookingEntity.getBusinessModel().getBusinessModel().getBusiness_logo());
                 if (type == 0) {
 
                     ((CommonActivity)(_context)).startActivityForResult(new Intent(_context, MyBookingViewActivity.class).putExtra("data",bundle),1);

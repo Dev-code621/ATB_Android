@@ -57,7 +57,7 @@ public class API {
     public static final String GET_SELECTED_FEED_API = API_BASE_URL + "post/search";
     public static final String GET_ALL_FEED_API = API_BASE_URL + "post/get_home_feed";
     public static final String GET_POST_DETAIL_API = API_BASE_URL + "post/get_post_detail";
-    public static final String GET_MULTI_GROUP_ID = API_BASE_URL + "post/get_multi_group_id";
+    public static final String GET_MULTI_GROUP_ID = API_BASE_URL + "post/g![](../../../../../../../../../../../../../../var/folders/8x/k96yqvpx36l87smfy92xytpr0000gn/T/TemporaryItems/NSIRD_screencaptureui_XHs3T0/Screenshot 2023-01-18 at 07.58.20.png)et_multi_group_id";
 
     public static final String GET_PRODUCT_MULTI_GROUP_ID  =   API_BASE_URL + "profile/get_multi_group_id";
 
@@ -104,7 +104,6 @@ public class API {
     public static final String SET_SOLD = API_BASE_URL + "post/set_sold";
     public static final String RELIST = API_BASE_URL + "post/relist";
 
-    public static final String GET_TRANSACTIONS = API_BASE_URL + "profile/get_transactions";
 
     public static final String COUNT_SERVICE_POST = API_BASE_URL + "post/count_service_posts";
     public static final String COUNT_SALE_POST = API_BASE_URL + "post/count_sales_posts";
@@ -138,9 +137,12 @@ public class API {
     public static final String UPDATE_SERVICE_FILE = API_BASE_URL + "profile/update_service_file";
     public static final String ADD_SOCIAL = API_BASE_URL + "profile/add_social";
     public static final String REMOVE_SOCIAL = API_BASE_URL + "profile/remove_social";
-    public static final String  GET_ITEMS_SOLD =   API_BASE_URL + "transaction/get_items_sold";
     public static final String UPDATE_PRODUCT_VARIANT = API_BASE_URL + "profile/update_variant_product";
     public static final String GET_PURCHASES       =   API_BASE_URL + "transaction/get_purchases";
+    public static final String GET_TRANSACTIONS = API_BASE_URL + "transaction/all";
+    public static final String  GET_ITEMS_SOLD =   API_BASE_URL + "transaction/get_items_sold";
+    public static final String  GET_STRIPE_HISTORY =   API_BASE_URL + "transaction/express";
+
     public static final String GET_DRAFTS       =   API_BASE_URL + "profile/get_drafts";
 
     public static final String GET_BOOKING       =   API_BASE_URL + "booking/get_bookings";
@@ -172,5 +174,12 @@ public class API {
     public static final String GETBUSINESS = API_BASE_URL + "search/spotlight";
     public static final String GETALLUSER = API_BASE_URL + "search/users";
     public static final String UPLOADIMAGES = API_BASE_URL + "post/send_files";
+
+    public static final String STRIPE_SUBSCRIPTION = API_BASE_URL + "profile/subscribe";
+    public static final String MAKE_STRIPE_PAYMENT = API_BASE_URL + "profile/checkout";
+    public static final String ADD_CARD = API_BASE_URL + "profile/onboard_user";
+    public static final String RETRIVE_CARD = API_BASE_URL + "profile/retrieve_connect_user";
+    public static final String CLOSEACCOUNT = API_BASE_URL + "profile/delete_account";
+
 
 }

@@ -34,179 +34,196 @@
             android:orientation="vertical"
             android:layout_centerInParent="true" />
     </RelativeLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-        <FrameLayout
-            android:id="@+id/lyt_addpicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_user_info_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                app:cardCornerRadius="50dp"
-                android:layout_gravity="center"
-                app:cardElevation="0dp"
-                app:cardUseCompatPadding="false">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/imv_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:actualImageScaleType="centerCrop"
-                    app:placeholderImage="@drawable/profile_pic"/>
-            </androidx.cardview.widget.CardView>
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/camera"
-                android:layout_gravity="right|bottom"
-                android:padding="10dp"
-                android:background="@drawable/round_button_theme"/>
-        </FrameLayout>
-        <EditText android:id="@+id/edt_firstname"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:singleLine="true"
-            android:inputType="textEmailAddress"
-            android:hint="@string/first_name"
-            style="@style/edit_inputtext"
-            android:layout_marginTop="10dp"/>
-        <EditText android:id="@+id/edt_lastname"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:singleLine="true"
-            android:inputType="textEmailAddress"
-            android:hint="@string/last_name"
-            style="@style/edit_inputtext"
-            android:layout_marginTop="10dp"/>
-        <EditText android:id="@+id/edt_email"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:singleLine="true"
-            android:inputType="textEmailAddress"
-            android:hint="@string/email_address"
-            android:layout_marginTop="10dp"
-            style="@style/edit_inputtext" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-            <TextView android:id="@+id/txv_location"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:hint="@string/location"
-                style="@style/edit_inputtext" />
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/icon_location"
-                android:layout_gravity="right|center"
-                android:layout_marginRight="10dp" />
-        </FrameLayout>
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
             <FrameLayout
-                android:layout_width="0dp"
+                android:id="@+id/lyt_addpicture"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-                <TextView android:id="@+id/txv_male"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:singleLine="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/male"
-                    style="@style/edit_inputtext" />
-                <ImageView
-                    android:id="@+id/imv_selector1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_checked"
-                    android:layout_gravity="right|center"
-                    android:layout_marginRight="10dp" />
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:layout_marginLeft="20dp">
-                <TextView android:id="@+id/txv_female"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:singleLine="true"
-                    android:gravity="center_vertical"
-                    android:text="@string/female"
-                    style="@style/edit_inputtext" />
+                android:layout_gravity="center_horizontal">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_user_info_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    app:cardCornerRadius="50dp"
+                    android:layout_gravity="center"
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="false">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/imv_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:actualImageScaleType="centerCrop"
+                        app:placeholderImage="@drawable/profile_pic"/>
+                </androidx.cardview.widget.CardView>
                 <ImageView
-                    android:id="@+id/imv_selector2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_checked"
-                    android:visibility="gone"
-                    android:layout_gravity="right|center"
-                    android:layout_marginRight="10dp" />
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/camera"
+                    android:layout_gravity="right|bottom"
+                    android:padding="10dp"
+                    android:background="@drawable/round_button_theme"/>
             </FrameLayout>
-        </LinearLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
-            <TextView android:id="@+id/edt_birthday"
+            <EditText android:id="@+id/edt_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:singleLine="true"
-                android:inputType="date"
-                android:gravity="center_vertical"
-                android:hint="@string/birthday"
+                android:inputType="textEmailAddress"
+                android:hint="@string/first_name"
+                style="@style/edit_inputtext"
+                android:layout_marginTop="10dp"/>
+            <EditText android:id="@+id/edt_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                android:hint="@string/last_name"
+                style="@style/edit_inputtext"
+                android:layout_marginTop="10dp"/>
+            <EditText android:id="@+id/edt_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email_address"
+                android:layout_marginTop="10dp"
                 style="@style/edit_inputtext" />
-            <ImageView
-                android:layout_width="wrap_content"
+
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_birthday"
-                android:layout_gravity="right|center"
-                android:layout_marginRight="10dp" />
-        </FrameLayout>
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/txv_update"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="@string/update_profile"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            style="@style/btn_buttonStyle"
-            android:background="@drawable/button_rectangle_round"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:id="@+id/txv_resetPassword"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Reset Password"
-            android:gravity="center"
-            android:textColor="@color/head_color"
-            android:layout_marginTop="10dp"
-            style="@style/btn_buttonStyle"
-            android:layout_marginBottom="30dp"/>
-    </LinearLayout>
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <TextView android:id="@+id/txv_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:hint="@string/location"
+                    style="@style/edit_inputtext" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_location"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="10dp" />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <TextView android:id="@+id/txv_male"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:singleLine="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/male"
+                        style="@style/edit_inputtext" />
+                    <ImageView
+                        android:id="@+id/imv_selector1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_checked"
+                        android:layout_gravity="right|center"
+                        android:layout_marginRight="10dp" />
+                </FrameLayout>
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp">
+                    <TextView android:id="@+id/txv_female"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:singleLine="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/female"
+                        style="@style/edit_inputtext" />
+                    <ImageView
+                        android:id="@+id/imv_selector2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_checked"
+                        android:visibility="gone"
+                        android:layout_gravity="right|center"
+                        android:layout_marginRight="10dp" />
+                </FrameLayout>
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <TextView android:id="@+id/edt_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:inputType="date"
+                    android:gravity="center_vertical"
+                    android:hint="@string/birthday"
+                    style="@style/edit_inputtext" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_birthday"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="10dp" />
+            </FrameLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/txv_update"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/update_profile"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_marginTop="20dp"
+                style="@style/btn_buttonStyle"
+                android:background="@drawable/button_rectangle_round"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/txv_resetPassword"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Reset Password"
+                android:gravity="center"
+                android:textColor="@color/head_color"
+                android:layout_marginTop="10dp"
+                style="@style/btn_buttonStyle"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/txv_closeaccount"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Close Account"
+                android:gravity="center"
+                android:textColor="@color/alizarin_crimson"
+                android:layout_marginTop="20dp"
+                style="@style/btn_buttonStyle"
+                android:background="@drawable/rectangle_red_round"
+
+                android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

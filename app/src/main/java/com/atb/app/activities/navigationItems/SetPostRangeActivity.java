@@ -220,7 +220,7 @@ public class SetPostRangeActivity extends CommonActivity implements View.OnClick
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     closeProgress();
-                                    showToast(error.getMessage());
+                                    //showToast(error.getMessage());
 
                                 }
                             }) {

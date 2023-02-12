@@ -39,7 +39,7 @@ public class ApprovePaymentActivity extends CommonActivity {
     private class HelloWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.contains("payment/success")){
+            if(url.contains("onboard/return")){
                 setResult(RESULT_OK);
                 finish(ApprovePaymentActivity.this);
             }

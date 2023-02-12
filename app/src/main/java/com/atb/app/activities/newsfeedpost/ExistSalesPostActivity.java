@@ -250,7 +250,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -299,7 +299,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {
@@ -406,7 +406,7 @@ public class ExistSalesPostActivity extends CommonActivity implements View.OnCli
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         closeProgress();
-                        showToast(error.getMessage());
+                        //showToast(error.getMessage());
 
                     }
                 }) {

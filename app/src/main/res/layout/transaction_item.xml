@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:id="@+id/lyt_content"
         android:orientation="horizontal"
         android:background="@drawable/edit_rectangle_round"
         android:layout_marginTop="5dp">

@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:text="We just need your pyament details to\n finalise your account"
+                android:text="We just need your payment details to\n finalise your account"
                 style="@style/textTheme"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
@@ -122,14 +122,14 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/ic_paymentpaypal"
+                    android:src="@drawable/card_3"
                     android:tint="@color/white"
                     android:layout_gravity="center"/>
                 <TextView
                     android:id="@+id/txv_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Pay with Paypal"
+                    android:text="Pay with Card"
                     android:gravity="center"
                     android:textColor="@color/white"
                     style="@style/boldtextTheme"
