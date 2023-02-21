@@ -1,8 +1,6 @@
 package com.atb.app.activities.navigationItems;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -77,8 +75,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-import com.zxy.tiny.Tiny;
-import com.zxy.tiny.callback.FileCallback;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,6 +89,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
+
 public class ProfileActivity extends CommonActivity  implements View.OnClickListener , ImageUtils.ImageAttachmentListener{
     LinearLayout lyt_back;
     ImageView imv_profile,imv_selector2,imv_selector1;
@@ -102,6 +103,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
     int gender = 0 ;
     private ImageUtils imageUtils;
     String locationText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -367,7 +369,7 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
     }
     void uploadPicture(){
         Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .withPermissions( getPermission())
                 .withListener(allPermissionsListener_profile)
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override
@@ -429,9 +431,13 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
                 });
                 pickImageDialog.show(getSupportFragmentManager(), "pick image");
                 mediaPicker.chooseImage();
+
+
             }
         });
         selectMediaDialog.show(getSupportFragmentManager(), "action picker");
+
+
     }
 
     @Override
@@ -441,13 +447,13 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 final Uri resultUri = result.getUri();
-                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
-                options.size = 500;
-                File file = new File(Helper.getUriRealPathAboveKitkat(ProfileActivity.this, resultUri));
-                if (imageUtils.getImage(file).getWidth() > 1024) {
-                    options.width = 1024;
-                    options.height = 1024;
-                }
+//                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
+//                options.size = 500;
+//                File file = new File(Helper.getUriRealPathAboveKitkat(ProfileActivity.this, resultUri));
+//                if (imageUtils.getImage(file).getWidth() > 1024) {
+//                    options.width = 1024;
+//                    options.height = 1024;
+//                }
 
                 //                  Picasso.get().load(resultUri).resize(200, 200).centerCrop().into(iv_profile);
                 //                    iv_profile.setImageURI(resultUri);

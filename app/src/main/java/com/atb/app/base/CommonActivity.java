@@ -1,10 +1,12 @@
 package com.atb.app.base;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.transition.ChangeBounds;
 import androidx.transition.Scene;
@@ -1245,5 +1248,29 @@ public abstract class CommonActivity extends BaseActivity {
         }else{
             return String.valueOf(day)+"th";
         }
+    }
+
+
+    public static String[] storge_permissions = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,Manifest.permission.READ_CALENDAR,Manifest.permission.WRITE_CALENDAR
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    public static String[] storge_permissions_33 = {
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO,
+            Manifest.permission.CAMERA,Manifest.permission.READ_CALENDAR,Manifest.permission.WRITE_CALENDAR
+    };
+    public static String[] getPermission() {
+        String[] p;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            p = storge_permissions_33;
+        } else {
+            p = storge_permissions;
+        }
+        return p;
     }
 }

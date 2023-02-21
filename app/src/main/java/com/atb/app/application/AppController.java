@@ -24,7 +24,6 @@ import com.lky.toucheffectsmodule.types.TouchEffectsViewType;
 import com.lky.toucheffectsmodule.types.TouchEffectsWholeType;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.zxy.tiny.Tiny;
 
 import java.util.function.Supplier;
 
@@ -52,7 +51,7 @@ public class AppController extends Application {
 //        TerminalApplicationDelegate.onCreate(this);
 
         MultiDex.install(this);
-        Tiny.getInstance().init(this);
+//        Tiny.getInstance().init(this);
         // Branch logging for debugging
         Branch.enableLogging();
         // Branch object initialization

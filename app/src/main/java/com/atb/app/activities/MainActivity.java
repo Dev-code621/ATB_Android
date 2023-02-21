@@ -120,8 +120,8 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     BusinessItemAdapter businessItemAdapter ;
     ChatFragment chatFragment;
     ImageView imv_title;
-    int noti_type;
-    String related_id = "-1";
+    public int noti_type;
+    public String related_id = "-1";
     int busines_pager = 1;
     ArrayList<UserModel>businessUsers = new ArrayList<>();
     @Override
@@ -247,61 +247,66 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
     void  setPubnubToken(){
 
         List<String> channels = new ArrayList<>();
-        Commons.mPubNub.getAllChannelsMetadata()
-                .includeCustom(true)
-                .async(new PNCallback<PNGetAllChannelsMetadataResult>() {
-                    @Override
-                    public void onResponse(@Nullable final PNGetAllChannelsMetadataResult result, @NotNull final PNStatus status) {
+        try{
+            Commons.mPubNub.getAllChannelsMetadata()
+                    .includeCustom(true)
+                    .async(new PNCallback<PNGetAllChannelsMetadataResult>() {
+                        @Override
+                        public void onResponse(@Nullable final PNGetAllChannelsMetadataResult result, @NotNull final PNStatus status) {
 
-                        if (status.isError()) {
+                            if (status.isError()) {
 
-                        } else {
-                                                       List<PNChannelMetadata> channelMetadata = new ArrayList<>();
-                            channelMetadata.clear();
-                            channelMetadata = result.getData();
-                            for(int i = 0 ;i<channelMetadata.size();i++){
+                            } else {
+                                List<PNChannelMetadata> channelMetadata = new ArrayList<>();
+                                channelMetadata.clear();
+                                channelMetadata = result.getData();
+                                for(int i = 0 ;i<channelMetadata.size();i++){
 
-                                PNChannelMetadata channel = channelMetadata.get(i);
-                                try {
-                                    JsonObject custom = (JsonObject) channel.getCustom();
-                                    RoomModel roomModel = new RoomModel();
-                                    String str = channel.getId();
-                                    String[] array = str.split("_");
-                                    if(array.length<1)continue;
-                                    if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
-                                        channels.add(channel.getId());
-                                    }else if(array[1].equals(String.valueOf(Commons.g_user.getId()))){
-                                        channels.add(channel.getId());
-                                    }else{
-                                        if(Commons.g_user.getAccount_type() == 1){
-                                            String business_account = String.valueOf(Commons.g_user.getId())+"#"+ String.valueOf(Commons.g_user.getBusinessModel().getId());
-                                            if(str.contains(business_account)){
-                                                channels.add(channel.getId());
+                                    PNChannelMetadata channel = channelMetadata.get(i);
+                                    try {
+                                        JsonObject custom = (JsonObject) channel.getCustom();
+                                        RoomModel roomModel = new RoomModel();
+                                        String str = channel.getId();
+                                        String[] array = str.split("_");
+                                        if(array.length<1)continue;
+                                        if(custom.get("owner_id").getAsInt() == Commons.g_user.getId()){
+                                            channels.add(channel.getId());
+                                        }else if(array[1].equals(String.valueOf(Commons.g_user.getId()))){
+                                            channels.add(channel.getId());
+                                        }else{
+                                            if(Commons.g_user.getAccount_type() == 1){
+                                                String business_account = String.valueOf(Commons.g_user.getId())+"#"+ String.valueOf(Commons.g_user.getBusinessModel().getId());
+                                                if(str.contains(business_account)){
+                                                    channels.add(channel.getId());
 
+                                                }
                                             }
                                         }
-                                    }
-                                }catch (Exception e){
+                                    }catch (Exception e){
 
-                                    Log.d("Exception==" ,e.toString());
+                                        Log.d("Exception==" ,e.toString());
+                                    }
+
                                 }
+                                Commons.pubnub_channels = channels;
+                                Commons.mPubNub.addPushNotificationsOnChannels()
+                                        .pushType(PNPushType.FCM)
+                                        .channels(channels)
+                                        .deviceId(Commons.fcmtoken)
+                                        .async(new PNCallback<PNPushAddChannelResult>() {
+                                            @Override
+                                            public void onResponse(PNPushAddChannelResult result, PNStatus status) {
+
+                                            }
+                                        });
 
                             }
-                            Commons.pubnub_channels = channels;
-                            Commons.mPubNub.addPushNotificationsOnChannels()
-                                    .pushType(PNPushType.FCM)
-                                    .channels(channels)
-                                    .deviceId(Commons.fcmtoken)
-                                    .async(new PNCallback<PNPushAddChannelResult>() {
-                                        @Override
-                                        public void onResponse(PNPushAddChannelResult result, PNStatus status) {
-
-                                        }
-                                    });
-
                         }
-                    }
-                });
+                    });
+        }catch (Exception e){
+
+        }
+
 
 //        Commons.mPubNub.grant()
 //                .channels(Commons.pubnub_channels)
@@ -441,7 +446,7 @@ public class MainActivity extends CommonActivity implements View.OnClickListener
             goTo(this, ChatActivity.class,false,bundle);
         }
     }
-    void getBookingByID(){
+    public void getBookingByID(){
     showProgress();
         StringRequest myRequest = new StringRequest(
                 Request.Method.POST,

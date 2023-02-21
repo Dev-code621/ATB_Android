@@ -92,7 +92,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-import com.zxy.tiny.Tiny;
+
 
 import org.angmarch.views.NiceSpinner;
 import org.json.JSONArray;
@@ -931,7 +931,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
 
     void selectInsuranceFile(){
         Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .withPermissions(getPermission())
                 .withListener(allPermissionsListener)
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override
@@ -944,7 +944,7 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
     }
     void selectProfilePicture(){
         Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .withPermissions(getPermission())
                 .withListener(allPermissionsListener_profile)
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override
@@ -1083,13 +1083,13 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 final Uri resultUri = result.getUri();
-                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
-                options.size = 500;
-                File file = new File(Helper.getUriRealPathAboveKitkat(UpdateBusinessActivity.this, resultUri));
-                if (imageUtils.getImage(file).getWidth() > 1024) {
-                    options.width = 1024;
-                    options.height = 1024;
-                }
+//                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
+//                options.size = 500;
+//                File file = new File(Helper.getUriRealPathAboveKitkat(UpdateBusinessActivity.this, resultUri));
+//                if (imageUtils.getImage(file).getWidth() > 1024) {
+//                    options.width = 1024;
+//                    options.height = 1024;
+//                }
                 imv_profile.setPadding(0, 0, 0, 0);
                 imv_profile.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 if(!insurance_camera) {

@@ -1,15 +1,14 @@
 package com.atb.app.api;
 
 public class API {
-    public static  String DOMAIN_URL = "https://test.myatb.co.uk/";
-    public static String API_BASE_URL = "https://test.myatb.co.uk/api/";
+    //staging
+//    public static String API_BASE_URL = "https://test.myatb.co.uk/api/";
 
-
-//    public static final String DOMAIN_URL = "https://staging.atb-app.com/";
-//    public static final String API_BASE_URL = "https://staging.atb-app.com/api/";
+// prod server
+    public static final String API_BASE_URL = "https://api.atb-app.com/api/";
     public static final String USERSESSION = "userSession";
     public static final String LOGIN = "User/login/authenticate";
-    public static final String INVITE_URL = DOMAIN_URL + "invite?code=";
+//    public static final String INVITE_URL = DOMAIN_URL + "invite?code=";
 
     public static final String STAGE_ONE_REGISTER_API = API_BASE_URL + "auth/register_stage_one";
     public static final String LOGIN_API = API_BASE_URL + "auth/login";
@@ -57,7 +56,7 @@ public class API {
     public static final String GET_SELECTED_FEED_API = API_BASE_URL + "post/search";
     public static final String GET_ALL_FEED_API = API_BASE_URL + "post/get_home_feed";
     public static final String GET_POST_DETAIL_API = API_BASE_URL + "post/get_post_detail";
-    public static final String GET_MULTI_GROUP_ID = API_BASE_URL + "post/g![](../../../../../../../../../../../../../../var/folders/8x/k96yqvpx36l87smfy92xytpr0000gn/T/TemporaryItems/NSIRD_screencaptureui_XHs3T0/Screenshot 2023-01-18 at 07.58.20.png)et_multi_group_id";
+    public static final String GET_MULTI_GROUP_ID = API_BASE_URL + "post/get_multi_group_id";
 
     public static final String GET_PRODUCT_MULTI_GROUP_ID  =   API_BASE_URL + "profile/get_multi_group_id";
 

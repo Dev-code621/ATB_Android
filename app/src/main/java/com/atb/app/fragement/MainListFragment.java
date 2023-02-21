@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -24,6 +25,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.MainActivity;
+import com.atb.app.activities.navigationItems.ItemSoldActivity;
+import com.atb.app.activities.navigationItems.PurchasesActivity;
+import com.atb.app.activities.navigationItems.business.UpgradeBusinessSplashActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.adapter.MainFeedAdapter;
 import com.atb.app.api.API;
@@ -196,6 +200,29 @@ public class MainListFragment extends Fragment  implements SwipyRefreshLayout.On
                 Commons.feed_id = -1;
             }else if(Commons.selectedProfile_id !=-1){
                 ((CommonActivity)(context)).getuserProfile(Commons.selectedProfile_id,1);
+            }else if(Commons.nav_type == 4){
+                Bundle bundle = new Bundle();
+                bundle.putInt("subScriptionType",0);
+                ((CommonActivity)(context)).goTo((CommonActivity)(context), UpgradeBusinessSplashActivity.class,false,bundle);
+
+            }else if(Commons.nav_type == 5){
+                ((MainActivity)(context)).noti_type = 9;
+                ((MainActivity)(context)).related_id = Commons.booking_id;
+                ((MainActivity)(context)).getBookingByID();
+
+            }else if(Commons.nav_type == 6){
+                ((MainActivity)(context)).noti_type = 6;
+                ((MainActivity)(context)).related_id = Commons.booking_id;
+                ((MainActivity)(context)).getBookingByID();
+
+            }else if(Commons.nav_type == 7){
+
+                ((CommonActivity)(context)).goTo(context, PurchasesActivity.class,false);
+
+            }else if(Commons.nav_type == 8){
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("bussiness",true);
+                ((CommonActivity)(context)).goTo(context, ItemSoldActivity.class,false,bundle);
             }
 
 

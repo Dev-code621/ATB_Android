@@ -53,7 +53,8 @@ public class Commons {
     public static int subscription_code = -11111;
     public static int REQUEST_PAYMENT_CODE =10034;
     public static String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    public static int feed_id =-1, selectedProfile_id = -1;
+    public static int feed_id =-1, selectedProfile_id = -1,nav_type = 0;
+    public static String booking_id;
     public static HashMap<String, ArrayList<String>>region = new HashMap<>();
     public static ArrayList<String> county = new ArrayList<>();
     public static HashMap<String, LatLng>LatLang = new HashMap<>();

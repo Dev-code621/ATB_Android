@@ -87,6 +87,7 @@ public class ContactAdminActivity extends CommonActivity {
                     @Override
                     public void onResponse(String json) {
                         closeProgress();
+                        finish();
                         try {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
@@ -111,7 +112,7 @@ public class ContactAdminActivity extends CommonActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 params.put("post_id", "");
-                params.put("user_id", String.valueOf(Commons.g_user.getId()));
+//                params.put("user_id", String.valueOf(Commons.g_user.getId()));
                 params.put("reason", edt_question.getText().toString());
                 params.put("content", edt_description.getText().toString());
                 return params;

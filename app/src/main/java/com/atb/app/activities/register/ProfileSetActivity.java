@@ -67,10 +67,10 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import com.otaliastudios.cameraview.FileCallback;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-import com.zxy.tiny.Tiny;
-import com.zxy.tiny.callback.FileCallback;
+
 
 import org.json.JSONObject;
 
@@ -426,7 +426,7 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
 
     void uploadPicture(){
         Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .withPermissions(getPermission())
                 .withListener(allPermissionsListener_profile)
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override
@@ -500,27 +500,28 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 final Uri resultUri = result.getUri();
-                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
-                options.size = 500;
-                File file = new File(Helper.getUriRealPathAboveKitkat(ProfileSetActivity.this, resultUri));
-                if (imageUtils.getImage(file).getWidth() > 1024) {
-                    options.width = 1024;
-                    options.height = 1024;
-                }
+//                Tiny.FileCompressOptions options = new Tiny.FileCompressOptions();
+//                options.size = 500;
+//                File file = new File(Helper.getUriRealPathAboveKitkat(ProfileSetActivity.this, resultUri));
+//                if (imageUtils.getImage(file).getWidth() > 1024) {
+//                    options.width = 1024;
+//                    options.height = 1024;
+//                }
 
-                Tiny.getInstance().source(file).asFile().withOptions(options).compress(new FileCallback() {
-                    @Override
-                    public void callback(boolean isSuccess, String outfile, Throwable t) {
-                        //return the compressed file path
-                        if (isSuccess) {
-                            Log.e("IMAGE", outfile);
-                            profileImage = new File(outfile);
-
-                        } else {
-                            profileImage = new File(Helper.getUriRealPathAboveKitkat(ProfileSetActivity.this, resultUri));
-                        }
-                    }
-                });
+//                Tiny.getInstance().source(file).asFile().withOptions(options).compress(new FileCallback() {
+//                    @Override
+//                    public void callback(boolean isSuccess, String outfile, Throwable t) {
+//                        //return the compressed file path
+//                        if (isSuccess) {
+//                            Log.e("IMAGE", outfile);
+//                            profileImage = new File(outfile);
+//
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+                profileImage = new File(Helper.getUriRealPathAboveKitkat(ProfileSetActivity.this, resultUri));
                 //                  Picasso.get().load(resultUri).resize(200, 200).centerCrop().into(iv_profile);
                 //                    iv_profile.setImageURI(resultUri);
                 imv_profile.setPadding(0, 0, 0, 0);

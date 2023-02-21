@@ -168,21 +168,24 @@ public class StoreFragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(json);
                             if(jsonObject.getBoolean("result")){
                                 closeProgress();
-                                if(newsFeedEntity.getPost_type() == 3){
-                                    ConfirmDialog confirmDialog = new ConfirmDialog();
-                                    confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
-                                        @Override
-                                        public void onConfirm() {
-                                            ((CommonActivity)context).setResult(RESULT_OK);
-                                            ((CommonActivity)context).finish(context);
-                                        }
-                                    },"ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.","Thanks");
-                                    confirmDialog.show(getChildFragmentManager(), "DeleteMessage");
+//                                if(newsFeedEntity.getPost_type() == 3){
+//                                    ConfirmDialog confirmDialog = new ConfirmDialog();
+//                                    confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
+//                                        @Override
+//                                        public void onConfirm() {
+//                                            ((CommonActivity)context).setResult(RESULT_OK);
+//                                            ((CommonActivity)context).finish(context);
+//                                        }
+//                                    },"ATB admin is currently reviewing your post, the review process can take up to 24 hours so please be patient.","Thanks");
+//                                    confirmDialog.show(getChildFragmentManager(), "DeleteMessage");
+//
+//                                }else{
+//                                    ((CommonActivity)context).setResult(RESULT_OK);
+//                                    ((CommonActivity)context).finish(context);
+//                                }
 
-                                }else{
-                                    ((CommonActivity)context).setResult(RESULT_OK);
-                                    ((CommonActivity)context).finish(context);
-                                }
+                                ((CommonActivity)context).setResult(RESULT_OK);
+                                ((CommonActivity)context).finish(context);
 
 
                             }else {
