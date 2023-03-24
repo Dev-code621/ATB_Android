@@ -42,12 +42,8 @@ import com.atb.app.model.VariationModel;
 import com.atb.app.preference.PrefConst;
 import com.atb.app.preference.Preference;
 import com.atb.app.util.RoundedCornersTransformation;
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInRequest;
-import com.braintreepayments.api.dropin.DropInResult;
-import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+
 import com.braintreepayments.api.models.VenmoAccountNonce;
-import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Pix;
@@ -223,12 +219,12 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
         payment_params.put("is_business",String.valueOf(newsFeedEntity1.getPoster_profile_type() ));
         payment_params.put("quantity","1");
 
-        DropInRequest dropInRequest = new DropInRequest()
-                .clientToken(clicnet_token)
-                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
-                .collectDeviceData(true)
-                .vaultManager(true);
-        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
+//        DropInRequest dropInRequest = new DropInRequest()
+//                .clientToken(clicnet_token)
+//                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+//                .collectDeviceData(true)
+//                .vaultManager(true);
+//        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
     }
 
     @Override
@@ -259,29 +255,29 @@ public class MyBookingViewActivity extends CommonActivity implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == REQUEST_PAYMENT_CODE) {
-            if (resultCode == RESULT_OK) {
-                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
-                if(result.getPaymentMethodType().name().equals("PAYPAL")){
-                    payment_params.put("paymentMethod","Paypal");
-                }else {
-                    payment_params.put("paymentMethod","Card");
-                }
-                paymentProcessing(payment_params,0);
-
-                String deviceData = result.getDeviceData();
-                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
-                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
-                    String venmoUsername = venmoAccountNonce.getUsername();
-                }
-                // use the result to update your UI and send the payment method nonce to your server
-            } else if (resultCode == RESULT_CANCELED) {
-                // the user canceled
-            } else {
-                // handle errors here, an exception may be available in
-                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-                Log.d("error:", error.toString());
-            }
+//            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+//                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+//                    payment_params.put("paymentMethod","Paypal");
+//                }else {
+//                    payment_params.put("paymentMethod","Card");
+//                }
+//                paymentProcessing(payment_params,0);
+//
+//                String deviceData = result.getDeviceData();
+//                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+//                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+//                    String venmoUsername = venmoAccountNonce.getUsername();
+//                }
+//                // use the result to update your UI and send the payment method nonce to your server
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // the user canceled
+//            } else {
+//                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+//                Log.d("error:", error.toString());
+//            }
         }
     }
 

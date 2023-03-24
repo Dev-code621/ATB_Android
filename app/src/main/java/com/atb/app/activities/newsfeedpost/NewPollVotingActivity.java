@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -52,6 +53,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -60,7 +62,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnMultiSelectedListener;
 
 public class NewPollVotingActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_addimage,lyt_imvselect;
@@ -436,18 +442,20 @@ public class NewPollVotingActivity extends CommonActivity implements View.OnClic
 
 
     void selectImage(){
-        Options options = Options.init()
-                .setRequestCode(100)                                           //Request code for activity results
-                .setCount(5-completedValue.size())                                                   //Number of images to restict selection count
-                .setFrontfacing(false)                                         //Front Facing camera on start
-                .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
-                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                .setPath("/pix/images");                                       //Custom Path For media Storage
+        if(completedValue.size()==5)return;
+        TedImagePicker.with(NewPollVotingActivity.this)
+                .max(5,"You can select only " + String.valueOf(5-completedValue.size()) + " Images")
+                .startMultiImage(new OnMultiSelectedListener() {
+                    @Override
+                    public void onSelected(@NotNull List<? extends Uri> uriList) {
 
-        Pix.start(NewPollVotingActivity.this, options);
+                        if(completedValue.size()>5)return;
+                        for(int i = 0 ; i <uriList.size() ; i ++){
+                            completedValue.add(  getRealPathFromURI(uriList.get(i).toString()));
+                        }
+                        reloadImages();
+                    }
+                });
     }
 
     @Override

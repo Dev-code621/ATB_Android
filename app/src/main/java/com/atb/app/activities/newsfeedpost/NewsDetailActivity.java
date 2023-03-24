@@ -87,12 +87,8 @@ import com.atb.app.model.VariationModel;
 import com.atb.app.model.submodel.VotingModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInRequest;
-import com.braintreepayments.api.dropin.DropInResult;
-import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+
 import com.braintreepayments.api.models.VenmoAccountNonce;
-import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
@@ -586,11 +582,10 @@ ImageView txv_buy_mesasge;
             case 3:
                 lyt_advice_image.setVisibility(View.VISIBLE);
                 lyt_offered.setVisibility(View.VISIBLE);
-                txv_startprice.setText(newsFeedEntity.getPrice());
-                txv_depist_price.setText("£"+ newsFeedEntity.getDeposit());
-                txv_depist_price.setText("£"+newsFeedEntity.getDeposit());
+                txv_startprice.setText("£" + newsFeedEntity.getPrice());
+                txv_depist_price.setText("£"+ String.format("%.2f",Float.parseFloat(newsFeedEntity.getDeposit())));
                 txv_cancelday.setText(newsFeedEntity.getCancellations()+" days");
-                txv_areacovered.setText(newsFeedEntity.getPost_location());
+                txv_areacovered.setText(newsFeedEntity.getPost_location().split("\\|")[0]);
                 txv_duration.setText(newsFeedEntity.getDuration() + "hr");
                 if(newsFeedEntity.getDuration().equals("99"))
                     txv_duration.setText("All Day");
@@ -1029,12 +1024,12 @@ ImageView txv_buy_mesasge;
         }else {
             payment_params.put("product_id",String.valueOf(newsFeedEntity.getProduct_id()));
         }
-        DropInRequest dropInRequest = new DropInRequest()
-                .clientToken(clicnet_token)
-                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
-                .collectDeviceData(true)
-                .vaultManager(true);
-        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
+//        DropInRequest dropInRequest = new DropInRequest()
+//                .clientToken(clicnet_token)
+//                .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+//                .collectDeviceData(true)
+//                .vaultManager(true);
+//        startActivityForResult(dropInRequest.getIntent(this), REQUEST_PAYMENT_CODE);
     }
 
     @Override
@@ -1203,6 +1198,15 @@ ImageView txv_buy_mesasge;
                     goTo(NewsDetailActivity.this, ReportPostActivity.class, false,bundle);
                 }else
                     stockOut();
+            }
+
+            @Override
+            public void reportUser() {
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId", postId);
+                bundle.putString("reportType" ,"User");
+
+                goTo(NewsDetailActivity.this, ReportPostActivity.class, false,bundle);
             }
 
             @Override
@@ -1889,29 +1893,29 @@ ImageView txv_buy_mesasge;
             completedValue.addAll(returnValue);
             reloadImages();
         }else  if (requestCode == REQUEST_PAYMENT_CODE) {
-            if (resultCode == RESULT_OK) {
-                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                payment_params.put("paymentNonce",Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
-                if(result.getPaymentMethodType().name().equals("PAYPAL")){
-                    payment_params.put("paymentMethod","Paypal");
-                }else {
-                    payment_params.put("paymentMethod","Card");
-                }
-                paymentProcessing(payment_params,0);
-
-                String deviceData = result.getDeviceData();
-                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
-                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
-                    String venmoUsername = venmoAccountNonce.getUsername();
-                }
-                // use the result to update your UI and send the payment method nonce to your server
-            } else if (resultCode == RESULT_CANCELED) {
-                // the user canceled
-            } else {
-                // handle errors here, an exception may be available in
-                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-                Log.d("error:", error.toString());
-            }
+//            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+//                payment_params.put("paymentNonce",Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+//                    payment_params.put("paymentMethod","Paypal");
+//                }else {
+//                    payment_params.put("paymentMethod","Card");
+//                }
+//                paymentProcessing(payment_params,0);
+//
+//                String deviceData = result.getDeviceData();
+//                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+//                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+//                    String venmoUsername = venmoAccountNonce.getUsername();
+//                }
+//                // use the result to update your UI and send the payment method nonce to your server
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // the user canceled
+//            } else {
+//                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+//                Log.d("error:", error.toString());
+//            }
         }else if(resultCode ==-200){
             finish(this);
         }else  if(resultCode == RESULT_OK && requestCode == REQUEST_EDITFEED){

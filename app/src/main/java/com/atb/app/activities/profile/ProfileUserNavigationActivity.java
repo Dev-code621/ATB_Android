@@ -58,6 +58,10 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentStatePagerItemAdapter;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 
 public class ProfileUserNavigationActivity extends CommonActivity implements View.OnClickListener, SmartTabLayout.TabProvider  {
     ImageView imv_back,imv_profile,imv_business,imv_rating,imv_profile_chat,imv_dot,imv_facebook,imv_instagram,imv_twitter,imv_feed,imv_post,imv_chat,imv_search;
@@ -389,7 +393,9 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
             public void onConfirm() {
                 Preference.getInstance().put(ProfileUserNavigationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
                 Preference.getInstance().put(ProfileUserNavigationActivity.this, PrefConst.PREFKEY_USERPWD, "");
-
+                Preference.getInstance().put(ProfileUserNavigationActivity.this, PrefConst.PREFKEY_SELECTED_USERTYPE, 0);
+                Preference.getInstance().put(ProfileUserNavigationActivity.this, PrefConst.PREFKEY_CALENDERLIST, "[]");
+                pubnubTokenLogout();
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -397,7 +403,22 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         },getString(R.string.logout_description));
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
     }
+    void pubnubTokenLogout(){
 
+        Commons.mPubNub.removePushNotificationsFromChannels()
+                .channels(Commons.pubnub_channels)
+                .pushType(PNPushType.FCM)
+                .deviceId(Commons.fcmtoken)
+                .async(new PNCallback<PNPushRemoveChannelResult>() {
+                    @Override
+                    public void onResponse(PNPushRemoveChannelResult result, PNStatus status) {
+//
+//                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+                    }
+                });
+    }
     @SuppressLint("ResourceAsColor")
     public void setColor(int id){
         chatFragment = null;

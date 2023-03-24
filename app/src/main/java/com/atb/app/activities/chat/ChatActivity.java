@@ -43,9 +43,7 @@ import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.MultiPartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.atb.app.view.zoom.ZoomAnimation;
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInResult;
-import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+
 import com.braintreepayments.api.models.VenmoAccountNonce;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;

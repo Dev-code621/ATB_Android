@@ -42,12 +42,8 @@ import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.model.submodel.DisableSlotModel;
 import com.atb.app.model.submodel.HolidayModel;
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInRequest;
-import com.braintreepayments.api.dropin.DropInResult;
-import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+
 import com.braintreepayments.api.models.VenmoAccountNonce;
-import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -395,31 +391,31 @@ public class ChangeBookingActivity extends CommonActivity implements View.OnClic
         super.onResume();
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Commons.REQUEST_PAYMENT_CODE) {
-            if (resultCode == RESULT_OK) {
-                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
-                if(result.getPaymentMethodType().name().equals("PAYPAL")){
-                    payment_params.put("paymentMethod","Paypal");
-                }else {
-                    payment_params.put("paymentMethod","Card");
-                }
-                Log.d("aaaaa",payment_params.toString());
-
-                paymentProcessing(payment_params,0);
-
-                String deviceData = result.getDeviceData();
-                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
-                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
-                    String venmoUsername = venmoAccountNonce.getUsername();
-                }
-                // use the result to update your UI and send the payment method nonce to your server
-            } else if (resultCode == RESULT_CANCELED) {
-                // the user canceled
-            } else {
-                // handle errors here, an exception may be available in
-                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-                Log.d("error:", error.toString());
-            }
+//            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+//                payment_params.put("paymentNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+//                    payment_params.put("paymentMethod","Paypal");
+//                }else {
+//                    payment_params.put("paymentMethod","Card");
+//                }
+//                Log.d("aaaaa",payment_params.toString());
+//
+//                paymentProcessing(payment_params,0);
+//
+//                String deviceData = result.getDeviceData();
+//                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+//                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+//                    String venmoUsername = venmoAccountNonce.getUsername();
+//                }
+//                // use the result to update your UI and send the payment method nonce to your server
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // the user canceled
+//            } else {
+//                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+//                Log.d("error:", error.toString());
+//            }
         }
 
     }

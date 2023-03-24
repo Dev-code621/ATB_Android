@@ -480,8 +480,14 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
         confirmDialog.setOnConfirmListener(new ConfirmDialog.OnConfirmListener() {
             @Override
             public void onConfirm() {
+                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
+                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USERPWD, "");
+                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_SELECTED_USERTYPE, 0);
+                Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_CALENDERLIST, "[]");
                 pubnubTokenLogout();
-
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         },getString(R.string.logout_description));
         confirmDialog.show(this.getSupportFragmentManager(), "DeleteMessage");
@@ -496,13 +502,8 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 .async(new PNCallback<PNPushRemoveChannelResult>() {
                     @Override
                     public void onResponse(PNPushRemoveChannelResult result, PNStatus status) {
-                        // Handle status, response
-                        Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USEREMAIL, "");
-                        Preference.getInstance().put(ProfileBusinessNaviagationActivity.this, PrefConst.PREFKEY_USERPWD, "");
 
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+
                     }
                 });
     }

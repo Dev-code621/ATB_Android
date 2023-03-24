@@ -95,7 +95,7 @@ public class PurchasesActivity extends CommonActivity {
                             if(jsonObject.getBoolean("result")){
                                 JSONArray jsonArray = jsonObject.getJSONArray("msg");
                                 if(jsonArray.length()==0){
-                                    showAlertDialog("No any purchase yet!");
+                                    showAlertDialog("No Purchases Yet!");
                                     return;
                                 }
                                 transactionEntities.clear();

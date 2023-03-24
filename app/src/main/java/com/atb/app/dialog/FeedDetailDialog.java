@@ -52,6 +52,7 @@ public class FeedDetailDialog extends DialogFragment {
         LinearLayout lyt_block = view.findViewById(R.id.lyt_block);
         LinearLayout lyt_follow = view.findViewById(R.id.lyt_follow);
         LinearLayout lyt_share = view.findViewById(R.id.lyt_share);
+        LinearLayout lyt_report_user = view.findViewById(R.id.lyt_report_user);
         ImageView imv_share = view.findViewById(R.id.imv_share);
         ImageView imv_follow = view.findViewById(R.id.imv_follow);
         ImageView imv_block = view.findViewById(R.id.imv_block);
@@ -62,6 +63,7 @@ public class FeedDetailDialog extends DialogFragment {
         TextView txv_block = view.findViewById(R.id.txv_block);
         TextView txv_canel = view.findViewById(R.id.txv_canel);
         if(!type){
+            lyt_report_user.setVisibility(View.GONE);
             if(newsFeedEntity.getPost_type()!=2){
                 lyt_report.setVisibility(View.GONE);
             }else {
@@ -93,7 +95,13 @@ public class FeedDetailDialog extends DialogFragment {
                 dismiss();
             }
         });
-
+        lyt_report_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.reportUser();
+                dismiss();
+            }
+        });
         lyt_block.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,9 +148,11 @@ public class FeedDetailDialog extends DialogFragment {
 
     public interface OnConfirmListener {
         void onReportPost();
+        void reportUser();
         void onBlockUser();
         void onFollowUser();
         void onShare();
+
     }
 }
 

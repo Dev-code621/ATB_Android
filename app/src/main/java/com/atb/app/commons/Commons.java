@@ -224,6 +224,7 @@ public class Commons {
     public static String gettimeFromMilionSecond(int time){
         Date d = new Date(time*1000l);
         SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         String localtime = df.format(d);
 
         return localtime;

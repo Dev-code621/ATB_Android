@@ -127,15 +127,19 @@ public class StoreFragment extends Fragment {
                     makePost(newsFeedEntities.get(posstion));
                 else {
                     if(newsFeedEntities.get(posstion).getPost_type() == 2) {
-                        ProductVariationSelectDialog productVariationSelectDialog = new ProductVariationSelectDialog();
-                        productVariationSelectDialog.setOnConfirmListener(new ProductVariationSelectDialog.OnConfirmListener() {
-                            @Override
-                            public void onPurchase(ArrayList<String> Variation) {
-                                selected_Variation = Variation;
-                                selectDeliveryDialog(posstion);
-                            }
-                        }, newsFeedEntities.get(posstion), selected_Variation);
-                        productVariationSelectDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
+                        if(selected_Variation.size()==newsFeedEntities.get(posstion).getAttribute_map().size()){
+                            selectDeliveryDialog(posstion);
+                        }else {
+                            ProductVariationSelectDialog productVariationSelectDialog = new ProductVariationSelectDialog();
+                            productVariationSelectDialog.setOnConfirmListener(new ProductVariationSelectDialog.OnConfirmListener() {
+                                @Override
+                                public void onPurchase(ArrayList<String> Variation) {
+                                    selected_Variation = Variation;
+                                    selectDeliveryDialog(posstion);
+                                }
+                            }, newsFeedEntities.get(posstion), selected_Variation);
+                            productVariationSelectDialog.show(getActivity().getSupportFragmentManager(), "DeleteMessage");
+                        }
                     }else if(newsFeedEntities.get(posstion).getPost_type()==3){
                         if(newsFeedEntities.get(posstion).getIs_active() !=1){
                             ((CommonActivity)context).showAlertDialog("The service is currently pending for admin approval, please wait until it's get approved");

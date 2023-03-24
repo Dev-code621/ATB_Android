@@ -1,5 +1,6 @@
 package com.atb.app.activities.newsfeedpost;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.transition.Scene;
@@ -9,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -65,13 +67,21 @@ import com.zcw.togglebutton.ToggleButton;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnErrorListener;
+import gun0912.tedimagepicker.builder.listener.OnMultiSelectedListener;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
+import gun0912.tedimagepicker.builder.type.MediaType;
 
 public class EditSalesPostActivity extends CommonActivity implements View.OnClickListener {
     LinearLayout lyt_back,lyt_header;
@@ -798,18 +808,19 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
                 @Override
                 public void OnCamera() {
                     if(completedValue.size()==maxImagecount)return;
-                    Options options = Options.init()
-                            .setRequestCode(100)                                           //Request code for activity results
-                            .setCount(maxImagecount-completedValue.size())                                                   //Number of images to restict selection count
-                            .setFrontfacing(false)                                         //Front Facing camera on start
-                            .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                            .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                            .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
-                            .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                            .setPath("/pix/images");                                       //Custom Path For media Storage
+                    TedImagePicker.with(EditSalesPostActivity.this)
+                            .max(maxImagecount,"You can select only " + String.valueOf(maxImagecount-completedValue.size()) + " Images")
+                            .startMultiImage(new OnMultiSelectedListener() {
+                                @Override
+                                public void onSelected(@NotNull List<? extends Uri> uriList) {
 
-                    Pix.start(EditSalesPostActivity.this, options);
+                                    if(completedValue.size()>maxImagecount)return;
+                                    for(int i = 0 ; i <uriList.size() ; i ++){
+                                        completedValue.add(  getRealPathFromURI(uriList.get(i).toString()));
+                                    }
+                                    reloadImages();
+                                }
+                            });
                 }
 
                 @Override
@@ -846,18 +857,24 @@ public class EditSalesPostActivity extends CommonActivity implements View.OnClic
     }
     void selectVideo(){
 
-        Options options = Options.init()
-                .setRequestCode(200)                                           //Request code for activity results
-                .setCount(1)                                                   //Number of images to restict selection count
-                .setFrontfacing(false)                                         //Front Facing camera on start
-                .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                .setMode(Options.Mode.Video)                                     //Option to select only pictures or videos or both
-                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                .setPath("/pix/images");                                       //Custom Path For media Storage
+        TedImagePicker.with(EditSalesPostActivity.this)
+                .mediaType(MediaType.VIDEO)
+                .video()
+                .title("Select Video")
 
-        Pix.start(this, options);
+                .errorListener(new OnErrorListener() {
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        Log.d("error======" , throwable.toString());
+                    }
+                })
+                .start(new OnSelectedListener() {
+                    @Override
+                    public void onSelected(@NotNull Uri uri) {
+                        videovalue = getRealVideoPathFromURI(uri);
+                        reloadVideo();
+                    }
+                });
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

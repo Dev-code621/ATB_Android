@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -44,6 +46,7 @@ import com.atb.app.dialog.SelectMediaDialog;
 import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.UserModel;
 import com.atb.app.util.CustomMultipartRequest;
+import com.atb.app.util.ImageUtils;
 import com.atb.app.util.RoundedCornersTransformation;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -55,12 +58,20 @@ import com.google.gson.Gson;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnErrorListener;
+import gun0912.tedimagepicker.builder.listener.OnMultiSelectedListener;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
+import gun0912.tedimagepicker.builder.type.MediaType;
 
 public class NewAdviceActivity extends CommonActivity implements View.OnClickListener {
     NiceSpinner spiner_media_type,spiner_category_type;
@@ -357,13 +368,14 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                         }
 
                     }catch (Exception e){
-
+                        Log.d("post Server error ", e.toString());
                     }
                 }
             }, new Response.ErrorListener() {
                 @SuppressLint("WrongConstant")
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
+                    Log.d("post Server error ", volleyError.toString());
                     showToast("File upload failed");
                     closeProgress();
                 }
@@ -410,18 +422,19 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
                 @Override
                 public void OnCamera() {
                     if(completedValue.size()==maxImagecount)return;
-                    Options options = Options.init()
-                            .setRequestCode(100)                                           //Request code for activity results
-                            .setCount(maxImagecount-completedValue.size())                                                   //Number of images to restict selection count
-                            .setFrontfacing(false)                                         //Front Facing camera on start
-                            .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                            .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                            .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
-                            .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                            .setPath("/pix/images");                                       //Custom Path For media Storage
+                    TedImagePicker.with(NewAdviceActivity.this)
+                            .max(maxImagecount,"You can select only " + String.valueOf(maxImagecount-completedValue.size()) + " Images")
+                            .startMultiImage(new OnMultiSelectedListener() {
+                                @Override
+                                public void onSelected(@NotNull List<? extends Uri> uriList) {
 
-                    Pix.start(NewAdviceActivity.this, options);
+                                    if(completedValue.size()>maxImagecount)return;
+                                    for(int i = 0 ; i <uriList.size() ; i ++){
+                                        completedValue.add(  getRealPathFromURI(uriList.get(i).toString()));
+                                    }
+                                    reloadImages();
+                                }
+                            });
                 }
 
                 @Override
@@ -436,19 +449,24 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
         }
     }
     void selectVideo(){
+        TedImagePicker.with(NewAdviceActivity.this)
+                .mediaType(MediaType.VIDEO)
+                .video()
+                .title("Select Video")
 
-        Options options = Options.init()
-                .setRequestCode(200)                                           //Request code for activity results
-                .setCount(1)                                                   //Number of images to restict selection count
-                .setFrontfacing(false)                                         //Front Facing camera on start
-                .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                .setMode(Options.Mode.Video)                                     //Option to select only pictures or videos or both
-                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                .setPath("/pix/images");                                       //Custom Path For media Storage
-
-        Pix.start(this, options);
+                .errorListener(new OnErrorListener() {
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        Log.d("error======" , throwable.toString());
+                    }
+                })
+                .start(new OnSelectedListener() {
+                    @Override
+                    public void onSelected(@NotNull Uri uri) {
+                        videovalue = getRealVideoPathFromURI(uri);
+                        reloadVideo();
+                    }
+                });
     }
 
 
@@ -469,17 +487,7 @@ public class NewAdviceActivity extends CommonActivity implements View.OnClickLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == 100) {
-            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-            if(completedValue.size()>maxImagecount)return;
-
-            completedValue.addAll(returnValue);
-            reloadImages();
-        }else  if(resultCode == Activity.RESULT_OK && requestCode == 200) {
-            ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-            videovalue = returnValue.get(0);
-            reloadVideo();
-        }else if(resultCode == Commons.subscription_code){
+        if(resultCode == Commons.subscription_code){
             business_user = true;
             maxImagecount = 9;
             initLayout();

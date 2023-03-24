@@ -39,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.LoginActivity;
 import com.atb.app.activities.SplashActivity;
+import com.atb.app.activities.navigationItems.ProfileActivity;
 import com.atb.app.activities.navigationItems.SetPostRangeActivity;
 import com.atb.app.activities.navigationItems.booking.CreateABookingActivity;
 import com.atb.app.activities.navigationItems.booking.CreateBooking2Activity;
@@ -72,6 +73,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -82,6 +84,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
 
 public class ProfileSetActivity extends CommonActivity implements View.OnClickListener , ImageUtils.ImageAttachmentListener,TextWatcher{
     ViewGroup sceneRoot;
@@ -472,22 +477,33 @@ public class ProfileSetActivity extends CommonActivity implements View.OnClickLi
 
             @Override
             public void OnAlbum() {
-                MediaPicker mediaPicker = new MediaPicker(ProfileSetActivity.this);
-                PickImageDialog pickImageDialog = new PickImageDialog();
-                pickImageDialog.setImagePickListener(mediaPicker.getAllShownImagesPath(ProfileSetActivity.this), new PickImageDialog.OnImagePickListener() {
-                    @Override
-                    public void OnImagePick(String path) {
-                        Uri uri = Uri.fromFile(new File(path));
+//                MediaPicker mediaPicker = new MediaPicker(ProfileSetActivity.this);
+//                PickImageDialog pickImageDialog = new PickImageDialog();
+//                pickImageDialog.setImagePickListener(mediaPicker.getAllShownImagesPath(ProfileSetActivity.this), new PickImageDialog.OnImagePickListener() {
+//                    @Override
+//                    public void OnImagePick(String path) {
+//                        Uri uri = Uri.fromFile(new File(path));
+//
+//                        Intent intent = CropImage.activity(uri)
+//                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
+//                                .getIntent(ProfileSetActivity.this);
+//
+//                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+//                    }
+//                });
+//                pickImageDialog.show(getSupportFragmentManager(), "pick image");
+//                mediaPicker.chooseImage();
+                TedImagePicker.with(ProfileSetActivity.this)
+                        .start(new OnSelectedListener() {
+                            @Override
+                            public void onSelected(@NotNull Uri uri) {
+                                Intent intent = CropImage.activity(uri)
+                                        .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
+                                        .getIntent(ProfileSetActivity.this);
 
-                        Intent intent = CropImage.activity(uri)
-                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
-                                .getIntent(ProfileSetActivity.this);
-
-                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
-                });
-                pickImageDialog.show(getSupportFragmentManager(), "pick image");
-                mediaPicker.chooseImage();
+                                startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+                            }
+                        });
             }
         });
         selectMediaDialog.show(getSupportFragmentManager(), "action picker");

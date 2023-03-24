@@ -480,10 +480,10 @@ public class BookingActivity extends CommonActivity implements View.OnClickListe
                 Map<String, String> params = new HashMap<>();
                 params.put("token", Commons.token);
                 if(!flag) {
-                    int day_timestamp = milionSecond - Commons.getMilionSecond(Commons.gettimeFromMilionSecond(milionSecond));
+                    int day_timestamp = milionSecond - Commons.getMilionSecond(Commons.gettimeFromMilionSecond(milionSecond))-3600;
                     params.put("day_timestamp", String.valueOf(day_timestamp));
                     params.put("start", Commons.getUTCtimeFromMilionSecond(milionSecond));
-                    params.put("end", Commons.getUTCtimeFromMilionSecond(milionSecond + 3600));
+                    params.put("end", Commons.getUTCtimeFromMilionSecond(milionSecond + 1800));
                     Log.d("aaaaaaa",params.toString());
                 }else{
                     for(int i = 0; i< Commons.g_user.getBusinessModel().getDisableSlotModels().size(); i++){

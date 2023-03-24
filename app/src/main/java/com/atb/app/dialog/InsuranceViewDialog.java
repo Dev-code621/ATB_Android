@@ -121,7 +121,7 @@ public class InsuranceViewDialog extends DialogFragment {
                 .setRotation(30)
                 .setTextSize(15)
                 .setTextColor(getResources().getColor(R.color.app_theme_color))
-                .setTextShadow(0.1f, 5, 5, getContext().getColor(R.color.grey));
+                .setTextShadow(0.1f, 5, 5, getContext().getColor(R.color.signup_textcolor));
 //        WatermarkImage watermarkImage = new WatermarkImage(getContext(),R.drawable.atb_approved); // for an image from Resource.
 
         WatermarkBuilder.create(getContext(), imageView)

@@ -45,6 +45,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.atb.app.R;
 import com.atb.app.activities.navigationItems.SetOperatingActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
+import com.atb.app.activities.register.ProfileSetActivity;
 import com.atb.app.adapter.InsuranceAdapter;
 import com.atb.app.api.API;
 import com.atb.app.application.AppController;
@@ -95,6 +96,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 
 import org.angmarch.views.NiceSpinner;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,6 +110,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
 
@@ -1054,22 +1058,17 @@ public class UpdateBusinessActivity extends CommonActivity implements View.OnCli
 
             @Override
             public void OnAlbum() {
-                MediaPicker mediaPicker = new MediaPicker(UpdateBusinessActivity.this);
-                PickImageDialog pickImageDialog = new PickImageDialog();
-                pickImageDialog.setImagePickListener(mediaPicker.getAllShownImagesPath(UpdateBusinessActivity.this), new PickImageDialog.OnImagePickListener() {
-                    @Override
-                    public void OnImagePick(String path) {
-                        Uri uri = Uri.fromFile(new File(path));
+                TedImagePicker.with(UpdateBusinessActivity.this)
+                        .start(new OnSelectedListener() {
+                            @Override
+                            public void onSelected(@NotNull Uri uri) {
+                                Intent intent = CropImage.activity(uri)
+                                        .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
+                                        .getIntent(UpdateBusinessActivity.this);
 
-                        Intent intent = CropImage.activity(uri)
-                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
-                                .getIntent(UpdateBusinessActivity.this);
-
-                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
-                });
-                pickImageDialog.show(getSupportFragmentManager(), "pick image");
-                mediaPicker.chooseImage();
+                                startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+                            }
+                        });
             }
         });
         selectMediaDialog.show(getSupportFragmentManager(), "action picker");

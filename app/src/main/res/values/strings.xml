@@ -322,6 +322,7 @@
     <string name="message_not_sent">Message not sent</string>
     <string name="lorem_ipsum_long" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse pharetra blandit nisi in porta. Suspendisse sed libero iaculis, posuere nunc id, dictum lectus. Integer sagittis nulla vitae nisl ornare porta. Maecenas ut sagittis erat. Quisque egestas eu lorem ac facilisis. Nulla ultricies enim vel arcu scelerisque viverra.</string>
     <string name="card_stripe"><b>Card</b> powered by <b>Stripe</b></string>
+    <string name="terms_condition">I agree to the <font color="#FF0000">Privacy Policy</font> and the <font color="#FF0000">Terms and Use</font></string>
 
 
 </resources>

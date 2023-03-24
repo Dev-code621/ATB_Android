@@ -77,6 +77,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -89,9 +90,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.internal.Intrinsics;
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
+
 
 public class ProfileActivity extends CommonActivity  implements View.OnClickListener , ImageUtils.ImageAttachmentListener{
     LinearLayout lyt_back;
@@ -377,6 +378,8 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
                     }
                 })
                 .check();
+
+
     }
 
     private MultiplePermissionsListener allPermissionsListener_profile = new MultiplePermissionsListener() {
@@ -415,24 +418,17 @@ public class ProfileActivity extends CommonActivity  implements View.OnClickList
 
             @Override
             public void OnAlbum() {
-                MediaPicker mediaPicker = new MediaPicker(ProfileActivity.this);
-                PickImageDialog pickImageDialog = new PickImageDialog();
-                pickImageDialog.setImagePickListener(mediaPicker.getAllShownImagesPath(ProfileActivity.this), new PickImageDialog.OnImagePickListener() {
-                    @Override
-                    public void OnImagePick(String path) {
-                        Uri uri = Uri.fromFile(new File(path));
+                TedImagePicker.with(ProfileActivity.this)
+                        .start(new OnSelectedListener() {
+                            @Override
+                            public void onSelected(@NotNull Uri uri) {
+                                Intent intent = CropImage.activity(uri)
+                                        .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
+                                        .getIntent(ProfileActivity.this);
 
-                        Intent intent = CropImage.activity(uri)
-                                .setGuidelines(CropImageView.Guidelines.ON).setCropShape(CropImageView.CropShape.RECTANGLE).setAspectRatio(1, 1)
-                                .getIntent(ProfileActivity.this);
-
-                        startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-                    }
-                });
-                pickImageDialog.show(getSupportFragmentManager(), "pick image");
-                mediaPicker.chooseImage();
-
-
+                                startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+                            }
+                        });
             }
         });
         selectMediaDialog.show(getSupportFragmentManager(), "action picker");

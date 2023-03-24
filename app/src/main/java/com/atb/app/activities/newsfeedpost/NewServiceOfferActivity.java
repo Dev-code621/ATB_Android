@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -45,12 +48,8 @@ import com.atb.app.model.NewsFeedEntity;
 import com.atb.app.model.submodel.InsuranceModel;
 import com.atb.app.util.CustomMultipartRequest;
 import com.atb.app.util.RoundedCornersTransformation;
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInRequest;
-import com.braintreepayments.api.dropin.DropInResult;
-import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+
 import com.braintreepayments.api.models.VenmoAccountNonce;
-import com.braintreepayments.cardform.view.CardForm;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Options;
@@ -60,16 +59,26 @@ import com.zcw.togglebutton.ToggleButton;
 
 import org.angmarch.views.NiceSpinner;
 import org.angmarch.views.OnSpinnerItemSelectedListener;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static com.atb.app.commons.Commons.REQUEST_PAYMENT_CODE;
+
+import androidx.annotation.NonNull;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.listener.OnErrorListener;
+import gun0912.tedimagepicker.builder.listener.OnMultiSelectedListener;
+import gun0912.tedimagepicker.builder.listener.OnSelectedListener;
+import gun0912.tedimagepicker.builder.type.MediaType;
 
 public class NewServiceOfferActivity extends CommonActivity implements View.OnClickListener {
 
@@ -229,6 +238,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
                 ss.setSpan(boldSpan, 0, finalStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 txv_post.setText(ss);
+                changePostButton();
             }
         });
         toggle_deposit.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
@@ -237,10 +247,12 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 if(on){
                     lyt_deposit.setVisibility(View.VISIBLE);
                     is_deposit_required = 1;
+                    changePostButton();
                 }
                 else {
                     lyt_deposit.setVisibility(View.GONE);
                     is_deposit_required =0;
+                    changePostButton();
                 }
             }
         });
@@ -248,12 +260,14 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             @Override
             public void onToggle(boolean on) {
                 cash = on;
+                changePostButton();
             }
         });
         toggle_paypal.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
                 paypal = on;
+                changePostButton();
             }
         });
         toggle_duration.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
@@ -318,6 +332,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 }
             });
         }
+        txv_post.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+        txv_post.setEnabled(false);
         loadingQalification_Insurance();
         initLayout();
     }
@@ -351,6 +367,87 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }
         txt_cancelday.setText(String.valueOf(candellation));
         txt_duration.setText(String.valueOf(duration));
+
+        edt_title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePostButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edt_description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePostButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edt_price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePostButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        txv_location.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePostButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        edt_deposit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changePostButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
 
@@ -439,6 +536,8 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                 lyt_duration.setVisibility(View.GONE);
                 duration = Double.valueOf(99);
             }
+            txv_post.setTextColor(_context.getResources().getColor(R.color.white));
+            txv_post.setEnabled(true);
             initLayout();
         }
     }
@@ -605,6 +704,37 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }
     }
 
+    void changePostButton(){
+        Boolean status = true;
+        if(media_type==1 && completedValue.size() ==0){
+            status = false;
+        }else if(media_type==2 && videovalue.length() ==0){
+            status = false;
+        }
+        else if(edt_title.getText().toString().length()==0){
+            status = false;
+        }else if(edt_description.getText().toString().length()==0){
+            status = false;
+        }else if(edt_price.getText().toString().length() ==0){
+            status = false;
+        }else if(Integer.parseInt(edt_price.getText().toString())<20){
+            status = false;
+        }else if(is_deposit_required == 1 && Integer.parseInt(edt_deposit.getText().toString())<10){
+            status = false;
+        }else if(txv_location.getText().toString().length()==0){
+            status = false;
+        }else if(!cash && !paypal){
+            status = false;
+        }
+        if(status){
+            txv_post.setTextColor(_context.getResources().getColor(R.color.white));
+            txv_post.setEnabled(true);
+        }else{
+            txv_post.setTextColor(_context.getResources().getColor(R.color.white_transparent));
+            txv_post.setEnabled(false);
+        }
+    }
+
     void postVerification(){
         if(media_type==1 && completedValue.size() ==0){
             showAlertDialog("Please add image for your service");
@@ -622,14 +752,20 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }else if(edt_price.getText().toString().length() ==0){
             showAlertDialog("Please input price.");
             return;
-        }else if(edt_deposit.getText().toString().length() >0 && Integer.parseInt(edt_deposit.getText().toString())<10){
-            showAlertDialog("Deposit amount need to start from 10£");
+        }else if(Integer.parseInt(edt_price.getText().toString())<20){
+            showAlertDialog("Minimum service price shold be £20");
+            return;
+        }else if(is_deposit_required == 1 && Integer.parseInt(edt_deposit.getText().toString())<10){
+            showAlertDialog("Deposit amount need to start from £10");
             return;
         }else if(txv_location.getText().toString().length()==0){
             showAlertDialog("Please input the location");
             return;
         }else if(!cash && !paypal){
             showAlertDialog("Please input payment option.");
+            return;
+        }else if(is_deposit_required == 1 && !paypal){
+            showAlertDialog("Please select stripe option.");
             return;
         }
 //        if(paypal && Commons.g_user.getBt_paypal_account().equals("")){
@@ -817,18 +953,24 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
     }
 
     void selectVideo(){
-        Options options = Options.init()
-                .setRequestCode(200)                                           //Request code for activity results
-                .setCount(1)                                                   //Number of images to restict selection count
-                .setFrontfacing(false)                                         //Front Facing camera on start
-                .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                .setMode(Options.Mode.Video)                                     //Option to select only pictures or videos or both
-                .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                .setPath("/pix/images");                                       //Custom Path For media Storage
+        TedImagePicker.with(NewServiceOfferActivity.this)
+                .mediaType(MediaType.VIDEO)
+                .video()
+                .title("Select Video")
 
-        Pix.start(this, options);
+                .errorListener(new OnErrorListener() {
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+                        Log.d("error======" , throwable.toString());
+                    }
+                })
+                .start(new OnSelectedListener() {
+                    @Override
+                    public void onSelected(@NotNull Uri uri) {
+                        videovalue = getRealVideoPathFromURI(uri);
+                        reloadVideo();
+                    }
+                });
     }
 
 
@@ -838,18 +980,19 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             @Override
             public void OnCamera() {
                 if(completedValue.size()==maxImagecount)return;
-                Options options = Options.init()
-                        .setRequestCode(100)                                           //Request code for activity results
-                        .setCount(maxImagecount-completedValue.size())                                                   //Number of images to restict selection count
-                        .setFrontfacing(false)                                         //Front Facing camera on start
-                        .setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                        .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                        .setMode(Options.Mode.Picture)                                     //Option to select only pictures or videos or both
-                        .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                        .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                        .setPath("/pix/images");                                       //Custom Path For media Storage
+                TedImagePicker.with(NewServiceOfferActivity.this)
+                        .max(maxImagecount,"You can select only " + String.valueOf(maxImagecount-completedValue.size()) + " Images")
+                        .startMultiImage(new OnMultiSelectedListener() {
+                            @Override
+                            public void onSelected(@NotNull List<? extends Uri> uriList) {
 
-                Pix.start(NewServiceOfferActivity.this, options);
+                                if(completedValue.size()>maxImagecount)return;
+                                for(int i = 0 ; i <uriList.size() ; i ++){
+                                    completedValue.add(  getRealPathFromURI(uriList.get(i).toString()));
+                                }
+                                reloadImages();
+                            }
+                        });
             }
 
             @Override
@@ -882,34 +1025,35 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         }else if(resultCode == Commons.location_code){
             location = Commons.location;
             txv_location.setText(Commons.location.split("\\|")[0]);
+            changePostButton();
         }else if (requestCode == REQUEST_PAYMENT_CODE) {
-            if (resultCode == RESULT_OK) {
-                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
-                Map<String, String> payment_params = new HashMap<>();
-                payment_params.put("token",Commons.token);
-                payment_params.put("paymentMethodNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
-                payment_params.put("customerId",Commons.g_user.getBt_customer_id());
-//                if(result.getPaymentMethodType().name().equals("PAYPAL")){
-//                    payment_params.put("paymentMethod","Paypal");
-//                }else {
-//                    payment_params.put("paymentMethod","Card");
+//            if (resultCode == RESULT_OK) {
+//                DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+//                Map<String, String> payment_params = new HashMap<>();
+//                payment_params.put("token",Commons.token);
+//                payment_params.put("paymentMethodNonce", Objects.requireNonNull(result.getPaymentMethodNonce()).getNonce());
+//                payment_params.put("customerId",Commons.g_user.getBt_customer_id());
+////                if(result.getPaymentMethodType().name().equals("PAYPAL")){
+////                    payment_params.put("paymentMethod","Paypal");
+////                }else {
+////                    payment_params.put("paymentMethod","Card");
+////                }
+////                paymentProcessing(payment_params,0);
+//
+//                String deviceData = result.getDeviceData();
+//                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
+//                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
+//                    String venmoUsername = venmoAccountNonce.getUsername();
 //                }
-//                paymentProcessing(payment_params,0);
-
-                String deviceData = result.getDeviceData();
-                if (result.getPaymentMethodType() == PaymentMethodType.PAY_WITH_VENMO) {
-                    VenmoAccountNonce venmoAccountNonce = (VenmoAccountNonce) result.getPaymentMethodNonce();
-                    String venmoUsername = venmoAccountNonce.getUsername();
-                }
-                retrievePayPal(payment_params);
-                // use the result to update your UI and send the payment method nonce to your server
-            } else if (resultCode == RESULT_CANCELED) {
-                // the user canceled
-            } else {
-                // handle errors here, an exception may be available in
-                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
-                Log.d("error:", error.toString());
-            }
+//                retrievePayPal(payment_params);
+//                // use the result to update your UI and send the payment method nonce to your server
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // the user canceled
+//            } else {
+//                // handle errors here, an exception may be available in
+//                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+//                Log.d("error:", error.toString());
+//            }
         }
     }
 
@@ -966,6 +1110,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
             Glide.with(this).load(completedValue.get(i)).placeholder(R.drawable.icon_image1).dontAnimate().into(imageViews.get(i));
 
         }
+        changePostButton();
     }
     void reloadVideo(){
         //uploadThumbImage = Helper.getThumbnailPathForLocalFile(this, videovalue);
@@ -973,6 +1118,7 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
         Glide.with(this).load(videovalue).placeholder(R.drawable.image_thumnail).dontAnimate().into(imv_videothumnail);
 
         imv_videoicon.setImageDrawable(getResources().getDrawable(R.drawable.icon_player));
+        changePostButton();
 
     }
 
@@ -992,12 +1138,12 @@ public class NewServiceOfferActivity extends CommonActivity implements View.OnCl
                                 String clicent_token = jsonObject.getJSONObject("msg").getString("client_token");
                                 String clicent_id = jsonObject.getJSONObject("msg").getString("customer_id");
                                 Commons.g_user.setBt_customer_id(clicent_id);
-                                DropInRequest dropInRequest = new DropInRequest()
-                                        .clientToken(clicent_token)
-                                        .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
-                                        .collectDeviceData(true)
-                                        .vaultManager(true);
-                                startActivityForResult(dropInRequest.getIntent(NewServiceOfferActivity.this), REQUEST_PAYMENT_CODE);
+//                                DropInRequest dropInRequest = new DropInRequest()
+//                                        .clientToken(clicent_token)
+//                                        .cardholderNameStatus(CardForm.FIELD_OPTIONAL)
+//                                        .collectDeviceData(true)
+//                                        .vaultManager(true);
+//                                startActivityForResult(dropInRequest.getIntent(NewServiceOfferActivity.this), REQUEST_PAYMENT_CODE);
                             }else {
                                 showAlertDialog("Server Connection Error!");
 

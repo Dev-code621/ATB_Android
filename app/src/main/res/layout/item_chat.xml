@@ -83,7 +83,6 @@
                         android:paddingRight="8dp"
                         android:paddingTop="3dp"
                         android:clickable="true"
-                        android:text="@string/continueText"
                         android:autoLink="web"
                         android:paddingBottom="8dp"
                         android:textColor="#333"/>
