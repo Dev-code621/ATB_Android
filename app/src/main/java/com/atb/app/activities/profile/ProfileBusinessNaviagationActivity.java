@@ -36,6 +36,7 @@ import com.atb.app.activities.newpost.SelectProductCategoryActivity;
 import com.atb.app.activities.newsfeedpost.NewsDetailActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.PostsFragment;
@@ -86,6 +87,8 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
     String facebook ="" ,instagra = "",twitter ="";
     int selectIcon =0;
     StoreFragment storeFragment;
+    TextView txv_terms,txv_privacy,txv_eula,txv_policy,txv_disclaim,txv_app_version,txv_cookie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +178,21 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
+
+        txv_terms = findViewById(R.id.txv_terms);
+        txv_privacy = findViewById(R.id.txv_privacy);
+        txv_eula = findViewById(R.id.txv_eula);
+        txv_policy = findViewById(R.id.txv_policy);
+        txv_disclaim = findViewById(R.id.txv_disclaim);
+        txv_app_version = findViewById(R.id.txv_app_version);
+        txv_cookie = findViewById(R.id.txv_cookie);
+        txv_terms.setOnClickListener(this);
+        txv_privacy.setOnClickListener(this);
+        txv_eula.setOnClickListener(this);
+        txv_policy.setOnClickListener(this);
+        txv_disclaim.setOnClickListener(this);
+        txv_app_version.setOnClickListener(this);
+        txv_cookie.setOnClickListener(this);
 
 
     }
@@ -471,6 +489,33 @@ public class ProfileBusinessNaviagationActivity extends CommonActivity implement
                 break;
             case R.id.card_addstore:
                 startActivityForResult(new Intent(this, SelectProductCategoryActivity.class),1);
+                break;
+
+            case R.id.txv_terms:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.terms) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_privacy:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Policy) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_eula:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.EULA) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_policy:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.User_policy) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_cookie:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Cookie) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_disclaim:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Disclaimer) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_app_version:
                 break;
 
         }

@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -42,6 +43,7 @@ import com.atb.app.activities.navigationItems.DraftPostActivity;
 import com.atb.app.activities.newpost.SelectPostCategoryActivity;
 import com.atb.app.base.CommonActivity;
 import com.atb.app.commons.Commons;
+import com.atb.app.commons.Constants;
 import com.atb.app.dialog.ConfirmDialog;
 import com.atb.app.fragement.ChatFragment;
 import com.atb.app.fragement.MainListFragment;
@@ -81,6 +83,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
     int selectIcon =0;
     boolean main_flag;
     FragmentTransaction ft;
+    TextView txv_terms,txv_privacy,txv_eula,txv_policy,txv_disclaim,txv_app_version,txv_cookie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +140,22 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
         lyt_fragement = findViewById(R.id.lyt_fragement);
         frame_chat = findViewById(R.id.frame_chat);
         imv_search = findViewById(R.id.imv_search);
+
+        txv_terms = findViewById(R.id.txv_terms);
+        txv_privacy = findViewById(R.id.txv_privacy);
+        txv_eula = findViewById(R.id.txv_eula);
+        txv_policy = findViewById(R.id.txv_policy);
+        txv_disclaim = findViewById(R.id.txv_disclaim);
+        txv_app_version = findViewById(R.id.txv_app_version);
+        txv_cookie = findViewById(R.id.txv_cookie);
+        txv_terms.setOnClickListener(this);
+        txv_privacy.setOnClickListener(this);
+        txv_eula.setOnClickListener(this);
+        txv_policy.setOnClickListener(this);
+        txv_disclaim.setOnClickListener(this);
+        txv_app_version.setOnClickListener(this);
+        txv_cookie.setOnClickListener(this);
+
         lyt_purchase.setOnClickListener(this);
         imv_search.setOnClickListener(this);
         frame_chat.setOnClickListener(this);
@@ -247,6 +266,7 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
 
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -375,14 +395,40 @@ public class ProfileUserNavigationActivity extends CommonActivity implements Vie
                 goTo(this, FollowerAndFollowingActivity.class,false,bundle1);
                 break;
             case R.id.lyt_post:
-
                 break;
             case R.id.lyt_following_on:
 
                 break;
             case R.id.lyt_on:
-
                 break;
+
+            case R.id.txv_terms:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.terms) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_privacy:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Policy) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_eula:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.EULA) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_policy:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.User_policy) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_cookie:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Cookie) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_disclaim:
+                browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Disclaimer) );
+                startActivity(browserIntent);
+                break;
+            case R.id.txv_app_version:
+                break;
+
 
         }
     }

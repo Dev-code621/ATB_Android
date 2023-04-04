@@ -403,7 +403,7 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginBottom="40dp">
+                    android:layout_marginBottom="20dp">
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -419,6 +419,96 @@
                         android:layout_gravity="center"
                         android:textColor="@color/txt_color"/>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/terms"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/privacy_policy"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_eula"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/eula"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/user_policy"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_cookie"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/cookie_policy"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_disclaim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/disclaimer"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/txt_color"/>
+                <TextView
+                    android:id="@+id/txv_app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/textTheme"
+                    android:text="@string/app_version"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="40dp"
+                    android:textColor="@color/txt_color"/>
             </LinearLayout>
         </ScrollView>
         <LinearLayout
